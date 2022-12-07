@@ -1,0 +1,21 @@
+name: Releases
+
+# 触发条件：git tag
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    # 运行环境
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取项目代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Release
+      - name: Create Release
+        uses: ncipollo/release-action@v1.11.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN  }}
