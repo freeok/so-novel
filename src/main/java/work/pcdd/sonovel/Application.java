@@ -3,6 +3,7 @@ package work.pcdd.sonovel;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.setting.dialect.Props;
 import lombok.SneakyThrows;
 import work.pcdd.sonovel.bean.SearchResultLine;
 import work.pcdd.sonovel.util.SearchNovelUtils;
@@ -38,7 +39,7 @@ public class Application {
             }
 
             ConsoleTable consoleTable = ConsoleTable.create()
-                    .addHeader("序号", "书名", "作者", "最新章节", "更新");
+                    .addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
             // 打印搜索结果
             for (int i = 0; i < results.size(); i++) {
                 SearchResultLine searchResultLine = results.get(i);
@@ -58,19 +59,21 @@ public class Application {
             int end = scanner.nextInt();
             double res = SearchNovelUtils.crawl(results, num, start, end);
 
-            Console.log("<== 下载完毕，耗时{}s", NumberUtil.round(res, 2));
+            Console.log("\n<== 下载完毕，耗时{}s\n", NumberUtil.round(res, 2));
         }
 
     }
 
     private static void printHint() {
+        Props props = new Props("config.properties");
         Console.table(ConsoleTable.create()
                 .addHeader("so-novel")
-                .addHeader("版本：v1.0")
+                .addHeader("版本：" + props.getStr("version"))
                 .addBody("使用须知")
                 .addBody("1.下载速度取决于网络和随机时间间隔，若下载失败请多次尝试或更换网络")
                 .addBody("2.结束程序请输入exit")
         );
         Console.log("==> 请输入书名或作者：");
     }
+
 }
