@@ -67,6 +67,8 @@ public class Application {
     private static void printHint() {
         Props props = new Props("config.properties");
         Console.table(ConsoleTable.create()
+                // 是否转为全角
+                .setSBCMode(false)
                 .addHeader("so-novel")
                 .addHeader("版本：" + props.getStr("version"))
                 .addBody("使用须知")
