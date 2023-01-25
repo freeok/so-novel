@@ -18,4 +18,5 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.11.2
         with:
+          bodyFile: "README.md"
           token: ${{ secrets.GITHUB_TOKEN  }}
