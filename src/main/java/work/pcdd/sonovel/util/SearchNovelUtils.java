@@ -16,15 +16,13 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
- * @author 1907263405@qq.com
- * @date 2021/6/10 17:03
+ * @author pcdd
+ * Created at 2021/6/10 17:03
  */
 public class SearchNovelUtils {
 
@@ -46,11 +44,10 @@ public class SearchNovelUtils {
             searchUrl = pro.get("search_url").toString();
             savePath = pro.get("savePath").toString();
             extName = pro.get("extName").toString();
-            minTimeInterval = Convert.toLong(pro.get("min"), 50L);
-            maxTimeInterval = Convert.toLong(pro.get("max"), 100L);
+            minTimeInterval = Convert.toLong(pro.get("min"), 5000L);
+            maxTimeInterval = Convert.toLong(pro.get("max"), 6000L);
         } catch (IOException e) {
-            Console.log("初始化参数失败：" + e.getMessage());
-            e.printStackTrace();
+            Console.error("初始化参数失败：" + e.getMessage());
         }
     }
 
@@ -63,23 +60,13 @@ public class SearchNovelUtils {
      * @param keyword 关键字
      * @return 匹配的小说列表
      */
+    @SneakyThrows
     public static List<SearchResultLine> search(String keyword) {
         Console.log("==> 正在搜索...");
         long start = System.currentTimeMillis();
         Connection connect = Jsoup.connect(searchUrl);
-        Document document = null;
-
-        try {
-            // 搜索结果页DOM
-            document = connect.data("searchkey", keyword).post();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (document == null) {
-            Console.log("<== 搜索到0条记录");
-            return Collections.emptyList();
-        }
+        // 搜索结果页DOM
+        Document document = connect.data("searchkey", keyword).post();
 
         // tr:nth-child(n+2)表示获取第2个tr开始获取
         Elements elements = document.select("#checkform > table > tbody > tr:nth-child(n+2)");
@@ -112,39 +99,43 @@ public class SearchNovelUtils {
      * @param start 从第几章下载
      * @param end   下载到第几章
      */
+    @SneakyThrows
     public static double crawl(List<SearchResultLine> list, int num, int start, int end) {
-        try {
-            SearchResultLine srl = list.get(num);
-            String bookName = srl.getBookName();
-            String author = srl.getAuthor();
-            // 小说详情页url
-            String url = srl.getLink();
+        SearchResultLine srl = list.get(num);
+        String bookName = srl.getBookName();
+        String author = srl.getAuthor();
+        // 小说详情页url
+        String url = srl.getLink();
 
-            // 小说目录名格式：书名(作者)
-            novelDir = String.format("%s（%s）", bookName, author);
-            File file = new File(savePath + novelDir);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
-            Document document = Jsoup.parse(new URL(url), 10000);
-            // 获取小说目录
-            Elements elements = document.getElementById("list").getElementsByTag("a");
-            Console.log("==> 开始下载：《{}》（{}）", bookName, author);
-
-            long startTime = System.currentTimeMillis();
-            // elements.size()是小说的总章数
-            for (int i = start - 1; i < end && i < elements.size(); i++) {
-                String title = elements.get(i).text();
-                String href = indexUrl + elements.get(i).attr("href");
-                crawlChapter(i + 1, title, href);
-            }
-            return (System.currentTimeMillis() - startTime) / 1000.0;
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        // 小说目录名格式：书名(作者)
+        novelDir = String.format("%s（%s）", bookName, author);
+        File file = new File(savePath + novelDir);
+        if (!file.exists()) {
+            file.mkdirs();
         }
-        return -1;
+
+        Document document = Jsoup.parse(new URL(url), 10000);
+        // 获取小说目录
+        Elements elements = document.getElementById("list").getElementsByTag("a");
+        Console.log("==> 开始下载：《{}》（{}）", bookName, author);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        CountDownLatch countDownLatch = new CountDownLatch(end);
+        long startTime = System.currentTimeMillis();
+
+        // elements.size()是小说的总章数
+        for (int i = start - 1; i < end && i < elements.size(); i++) {
+            int finalI = i;
+            executor.execute(() -> {
+                String title = elements.get(finalI).text();
+                String href = indexUrl + elements.get(finalI).attr("href");
+                crawlChapter(finalI + 1, title, href);
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+
+        return (System.currentTimeMillis() - startTime) / 1000.0;
     }
 
     /**
@@ -159,7 +150,7 @@ public class SearchNovelUtils {
         // 设置时间间隔
         long timeInterval = ThreadLocalRandom.current().nextLong(minTimeInterval, maxTimeInterval);
         TimeUnit.MILLISECONDS.sleep(timeInterval);
-        Console.log("正在下载：【{}】", chapterName);
+        Console.log("正在下载：【{}】 间隔 {} ms", chapterName, timeInterval);
         Document document = Jsoup.parse(new URL(url), 10000);
         String content = document.getElementById("content").html();
         download(chapterNo, chapterName, content);
@@ -177,9 +168,9 @@ public class SearchNovelUtils {
         String path = savePath + novelDir + File.separator
                 + chapterNo + "_" + chapterName
                 + "." + extName;
-        OutputStream fos = new BufferedOutputStream(new FileOutputStream(path));
-        fos.write(content.getBytes(StandardCharsets.UTF_8));
-        fos.close();
+        try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
+            fos.write(content.getBytes(StandardCharsets.UTF_8));
+        }
     }
 
 }

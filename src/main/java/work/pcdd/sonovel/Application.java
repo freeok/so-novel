@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * @author 1907263405@qq.com
- * @date 2021/6/10 16:18
+ * @author pcdd
+ * Created at 2021/6/10 16:18
  */
 public class Application {
 
@@ -24,7 +24,7 @@ public class Application {
         while (true) {
             printHint();
             String keyword = scanner.nextLine().trim();
-            if (keyword.length() == 0) {
+            if (keyword.isEmpty()) {
                 Console.log("<== 关键字不能为空");
                 continue;
             }
@@ -59,7 +59,7 @@ public class Application {
             int end = scanner.nextInt();
             double res = SearchNovelUtils.crawl(results, num, start, end);
 
-            Console.log("\n<== 下载完毕，耗时{}s\n", NumberUtil.round(res, 2));
+            Console.log("\n<== 下载完毕，总耗时{}s\n", NumberUtil.round(res, 2));
         }
 
     }
