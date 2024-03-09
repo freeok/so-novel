@@ -17,22 +17,22 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.3</version>
+            <version>1.17.2</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.21</version>
+            <version>5.8.26</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.30</version>
         </dependency>
     </dependencies>
 
     <build>
-        <!-- 使用 @@ application.yml 获取pom文件中的配置  -->
+        <!-- 使用 @@ application.yml 获取 pom 文件中的配置  -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
