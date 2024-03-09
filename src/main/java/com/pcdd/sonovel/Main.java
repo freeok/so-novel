@@ -1,12 +1,12 @@
-package work.pcdd.sonovel;
+package com.pcdd.sonovel;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.setting.dialect.Props;
+import com.pcdd.sonovel.model.SearchResultLine;
+import com.pcdd.sonovel.util.SearchNovelUtils;
 import lombok.SneakyThrows;
-import work.pcdd.sonovel.bean.SearchResultLine;
-import work.pcdd.sonovel.util.SearchNovelUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -72,8 +72,8 @@ public class Main {
                 .addHeader("so-novel")
                 .addHeader("版本：" + props.getStr("version"))
                 .addBody("使用须知")
-                .addBody("1.下载速度取决于网络和随机时间间隔，若下载失败请多次尝试或更换网络")
-                .addBody("2.结束程序请输入exit")
+                .addBody("1.下载速度取决于书源、网络、爬取间隔，若下载失败可尝试修改爬取间隔")
+                .addBody("2.结束程序请输入 exit")
         );
         Console.log("==> 请输入书名或作者：");
     }
