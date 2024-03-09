@@ -9,7 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import work.pcdd.sonovel.Application;
+import work.pcdd.sonovel.Main;
 import work.pcdd.sonovel.bean.SearchResultLine;
 
 import java.io.*;
@@ -37,7 +37,7 @@ public class SearchNovelUtils {
     // 加载配置文件，初始化参数
     static {
         Properties pro = new Properties();
-        InputStream is = Application.class.getClassLoader().getResourceAsStream("config.properties");
+        InputStream is = Main.class.getClassLoader().getResourceAsStream("config.properties");
         try {
             pro.load(is);
             indexUrl = pro.get("index_url").toString();
