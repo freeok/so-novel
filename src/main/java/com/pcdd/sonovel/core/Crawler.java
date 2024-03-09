@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -113,7 +114,7 @@ public class Crawler {
 
         // 小说目录名格式：书名(作者)
         novelDir = String.format("%s（%s）", bookName, author);
-        File dir = new File(SAVE_PATH + novelDir);
+        File dir = new File(SAVE_PATH + File.separator + novelDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -137,11 +138,12 @@ public class Crawler {
             int finalI = i;
             executor.execute(() -> {
                 download(
-                        crawlChapter(NovelChapter.builder()
+                        Objects.requireNonNull(crawlChapter(NovelChapter.builder()
                                 .chapterNo(finalI + 1)
                                 .title(elements.get(finalI).text())
                                 .url(INDEX_URL + elements.get(finalI).attr("href"))
-                                .build())
+                                .build(), countDownLatch)),
+                        countDownLatch
                 );
                 countDownLatch.countDown();
             });
@@ -158,7 +160,7 @@ public class Crawler {
     }
 
     private static void mergeTxt(String bookName, File dir) {
-        File file = FileUtil.touch(SAVE_PATH + novelDir + File.separator + bookName + ".txt");
+        File file = FileUtil.touch(System.getProperty("user.dir") + File.separator + SAVE_PATH + File.separator + bookName + ".txt");
         FileAppender appender = new FileAppender(file, 16, true);
         // 文件排序
         List<File> files = Arrays.stream(dir.listFiles())
@@ -180,41 +182,51 @@ public class Crawler {
     /**
      * 爬取小说章节
      */
-    @SneakyThrows
-    private static NovelChapter crawlChapter(NovelChapter novelChapter) {
-        // 设置时间间隔
-        long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-        TimeUnit.MILLISECONDS.sleep(timeInterval);
-        Console.log("正在下载：【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
-        Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
-        String content = document.getElementById("content").html();
+    private static NovelChapter crawlChapter(NovelChapter novelChapter, CountDownLatch latch) {
+        try {
+            // 设置时间间隔
+            long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+            TimeUnit.MILLISECONDS.sleep(timeInterval);
+            Console.log("正在下载：【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
+            Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
+            String content = document.getElementById("content").html();
 
-        // txt 格式
-        if ("txt".equals(EXT_NAME)) {
-            content = novelChapter.getTitle() + HtmlUtil.cleanHtmlTag(content)
-                    .replace("&nbsp;", " ")
-                    // 去除其它内容
-                    .replace("最新网址：www.xbiqugu.info", "")
-                    .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
-                    .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
+            // txt 格式
+            if ("txt".equals(EXT_NAME)) {
+                content = novelChapter.getTitle() + HtmlUtil.cleanHtmlTag(content)
+                        .replace("&nbsp;", " ")
+                        // 去除其它内容
+                        .replace("最新网址：www.xbiqugu.info", "")
+                        .replace("(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！", "")
+                        .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
+                        .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
+            }
+            novelChapter.setContent(content);
+
+            return novelChapter;
+        } catch (Exception e) {
+            latch.countDown();
+            Console.error(e, e.getMessage());
         }
-        novelChapter.setContent(content);
-
-        return novelChapter;
+        return null;
     }
 
     /**
      * 下载到本地
      */
-    @SneakyThrows
-    private static void download(NovelChapter novelChapter) {
-        String path = SAVE_PATH + novelDir + File.separator
-                + novelChapter.getChapterNo() + "_" + novelChapter.getTitle()
+    private static void download(NovelChapter novelChapter, CountDownLatch latch) {
+        // Windows 文件名非法字符替换
+        String path = SAVE_PATH + File.separator + novelDir + File.separator
+                + novelChapter.getChapterNo()
+                + "_" + novelChapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
                 + "." + EXT_NAME;
         // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
         // TODO 改为批量保存
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(novelChapter.getContent().getBytes(StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            latch.countDown();
+            Console.error(e, e.getMessage());
         }
     }
 
