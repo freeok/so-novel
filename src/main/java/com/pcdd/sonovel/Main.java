@@ -21,8 +21,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        printHint();
         while (true) {
-            printHint();
             String keyword = scanner.nextLine().trim();
             if (keyword.isEmpty()) {
                 Console.log("<== 关键字不能为空");
@@ -42,21 +42,30 @@ public class Main {
                     .addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
             // 打印搜索结果
             for (int i = 0; i < results.size(); i++) {
-                SearchResult searchResult = results.get(i);
+                SearchResult r = results.get(i);
                 consoleTable.addBody(String.valueOf(i),
-                        searchResult.getBookName(),
-                        searchResult.getAuthor(),
-                        searchResult.getLatestChapter(),
-                        searchResult.getLatestUpdate()
+                        r.getBookName(),
+                        r.getAuthor(),
+                        r.getLatestChapter(),
+                        r.getLatestUpdate()
                 );
             }
             Console.table(consoleTable);
 
             Console.log("==> 请输入下载序号（首列的数字）");
             int num = scanner.nextInt();
-            Console.log("==> 请输起始章(最小为1)和结束章，用空格隔开");
-            int start = scanner.nextInt();
-            int end = scanner.nextInt();
+
+            Console.log("==> 0：下载全本");
+            Console.log("==> 1：下载指定章节");
+            int downloadPolicy = scanner.nextInt();
+            int start = 1;
+            int end = Integer.MAX_VALUE;
+            if (downloadPolicy == 1) {
+                Console.log("==> 请输起始章(最小为1)和结束章，用空格隔开");
+                start = scanner.nextInt();
+                end = scanner.nextInt();
+            }
+
             double res = SearchNovelUtils.crawl(results, num, start, end);
 
             Console.log("\n<== 下载完毕，总耗时 {} s\n", NumberUtil.round(res, 2));

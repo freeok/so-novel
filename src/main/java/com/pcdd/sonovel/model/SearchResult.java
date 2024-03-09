@@ -11,10 +11,10 @@ import lombok.Data;
 @Builder
 public class SearchResult {
 
+    private String url;
     private String bookName;
     private String author;
     private String latestChapter;
     private String latestUpdate;
-    private String link;
 
 }
