@@ -5,7 +5,7 @@ import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.SearchNovelUtils;
+import com.pcdd.sonovel.core.Crawler;
 import lombok.SneakyThrows;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class Main {
                 break;
             }
 
-            List<SearchResult> results = SearchNovelUtils.search(keyword);
+            List<SearchResult> results = Crawler.search(keyword);
             if (results.isEmpty()) {
                 continue;
             }
@@ -66,7 +66,7 @@ public class Main {
                 end = scanner.nextInt();
             }
 
-            double res = SearchNovelUtils.crawl(results, num, start, end);
+            double res = Crawler.crawl(results, num, start, end);
 
             Console.log("\n<== 下载完毕，总耗时 {} s\n", NumberUtil.round(res, 2));
         }
@@ -74,15 +74,16 @@ public class Main {
     }
 
     private static void printHint() {
-        Props props = new Props("config.properties");
+        Props p = new Props("config.properties");
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader("so-novel")
-                .addHeader("版本：" + props.getStr("version"))
+                .addHeader("版本：" + p.getStr("version"))
                 .addBody("使用须知")
-                .addBody("1.下载速度取决于书源、网络、爬取间隔，若下载失败可尝试修改爬取间隔")
-                .addBody("2.结束程序请输入 exit")
+                .addBody("1. 下载速度受书源、网络、爬取间隔等因素影响，若下载失败可尝试修改爬取间隔")
+                .addBody("2. 结束程序请输入 exit")
+                .addBody("3. 请按要求输入")
         );
         Console.log("==> 请输入书名或作者：");
     }

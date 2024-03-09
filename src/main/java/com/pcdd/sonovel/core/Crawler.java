@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.util;
+package com.pcdd.sonovel.core;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.StopWatch;
@@ -25,7 +25,7 @@ import java.util.concurrent.*;
  * @author pcdd
  * Created at 2021/6/10 17:03
  */
-public class SearchNovelUtils {
+public class Crawler {
 
     private static String indexUrl;
     private static String searchUrl;
@@ -35,7 +35,7 @@ public class SearchNovelUtils {
     private static long minTimeInterval;
     private static long maxTimeInterval;
 
-    // 加载配置文件，初始化参数
+    // 加载配置文件参数
     static {
         Properties p = new Properties();
         InputStream is = Main.class.getClassLoader().getResourceAsStream("config.properties");
@@ -48,11 +48,11 @@ public class SearchNovelUtils {
             minTimeInterval = Convert.toLong(p.get("min"), 0L);
             maxTimeInterval = Convert.toLong(p.get("max"), 1L);
         } catch (IOException e) {
-            Console.error("初始化参数失败：" + e.getMessage());
+            Console.error("加载配置文件参数失败：" + e.getMessage());
         }
     }
 
-    private SearchNovelUtils() {
+    private Crawler() {
     }
 
     /**
