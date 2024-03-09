@@ -1,10 +1,9 @@
 package com.pcdd.sonovel.core;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
-import com.pcdd.sonovel.Main;
+import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
@@ -13,12 +12,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.*;
 
 /**
@@ -27,29 +28,25 @@ import java.util.concurrent.*;
  */
 public class Crawler {
 
-    private static String indexUrl;
-    private static String searchUrl;
-    private static String savePath;
-    private static String extName;
+    private static final String INDEX_URL;
+    private static final String SEARCH_URL;
+    private static final String EXT_NAME;
+    private static final String SAVE_PATH;
     private static String novelDir;
-    private static long minTimeInterval;
-    private static long maxTimeInterval;
+    private static final int THREADS;
+    private static final long MIN_TIME_INTERVAL;
+    private static final long MAX_TIME_INTERVAL;
 
     // 加载配置文件参数
     static {
-        Properties p = new Properties();
-        InputStream is = Main.class.getClassLoader().getResourceAsStream("config.properties");
-        try {
-            p.load(is);
-            indexUrl = p.get("index_url").toString();
-            searchUrl = p.get("search_url").toString();
-            savePath = p.get("savePath").toString();
-            extName = p.get("extName").toString();
-            minTimeInterval = Convert.toLong(p.get("min"), 0L);
-            maxTimeInterval = Convert.toLong(p.get("max"), 1L);
-        } catch (IOException e) {
-            Console.error("加载配置文件参数失败：" + e.getMessage());
-        }
+        Props p = Props.getProp("config.properties", StandardCharsets.UTF_8);
+        INDEX_URL = p.getStr("index_url");
+        SEARCH_URL = p.getStr("search_url");
+        EXT_NAME = p.getStr("extName");
+        SAVE_PATH = p.getStr("savePath");
+        THREADS = p.getInt("threads");
+        MIN_TIME_INTERVAL = p.getLong("min");
+        MAX_TIME_INTERVAL = p.getLong("max");
     }
 
     private Crawler() {
@@ -64,8 +61,9 @@ public class Crawler {
     @SneakyThrows
     public static List<SearchResult> search(String keyword) {
         Console.log("==> 正在搜索...");
-        long start = System.currentTimeMillis();
-        Connection connect = Jsoup.connect(searchUrl);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Connection connect = Jsoup.connect(SEARCH_URL);
         // 搜索结果页DOM
         Document document = connect.data("searchkey", keyword).post();
 
@@ -84,9 +82,10 @@ public class Crawler {
             list.add(searchResult);
         }
 
+        stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s\n",
                 elements.size(),
-                NumberUtil.round((System.currentTimeMillis() - start) / 1000.0, 2)
+                NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2)
         );
 
         return list;
@@ -110,7 +109,7 @@ public class Crawler {
 
         // 小说目录名格式：书名(作者)
         novelDir = String.format("%s（%s）", bookName, author);
-        File file = new File(savePath + novelDir);
+        File file = new File(SAVE_PATH + novelDir);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -121,7 +120,9 @@ public class Crawler {
         Console.log("==> 开始下载：《{}》（{}）", bookName, author);
 
         // 线程池
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+        ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1
+                ? Runtime.getRuntime().availableProcessors() * 2
+                : THREADS);
         // 阻塞主线程，用于计时
         CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
@@ -132,7 +133,7 @@ public class Crawler {
             int finalI = i;
             executor.execute(() -> {
                 String title = elements.get(finalI).text();
-                String chapterUrl = indexUrl + elements.get(finalI).attr("href");
+                String chapterUrl = INDEX_URL + elements.get(finalI).attr("href");
                 crawlChapter(finalI + 1, title, chapterUrl);
                 countDownLatch.countDown();
             });
@@ -153,7 +154,7 @@ public class Crawler {
     @SneakyThrows
     private static void crawlChapter(int chapterNo, String chapterName, String chapterUrl) {
         // 设置时间间隔
-        long timeInterval = ThreadLocalRandom.current().nextLong(minTimeInterval, maxTimeInterval);
+        long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
         TimeUnit.MILLISECONDS.sleep(timeInterval);
         Console.log("正在下载：【{}】 间隔 {} ms", chapterName, timeInterval);
         Document document = Jsoup.parse(new URL(chapterUrl), 10000);
@@ -170,9 +171,10 @@ public class Crawler {
      */
     @SneakyThrows
     private static void download(int chapterNo, String chapterName, String content) {
-        String path = savePath + novelDir + File.separator
+        String path = SAVE_PATH + novelDir + File.separator
                 + chapterNo + "_" + chapterName
-                + "." + extName;
+                + "." + EXT_NAME;
+        // TODO fix 载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(content.getBytes(StandardCharsets.UTF_8));
         }
