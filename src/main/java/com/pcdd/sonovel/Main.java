@@ -20,12 +20,12 @@ public class Main {
     @SneakyThrows
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
         printHint();
+
         while (true) {
             String keyword = scanner.nextLine().trim();
             if (keyword.isEmpty()) {
-                Console.log("<== 关键字不能为空");
+                Console.log("==> 请输入书名或作者：");
                 continue;
             }
             if ("exit".equals(keyword)) {
