@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class SearchResultLine {
+public class SearchResult {
 
     private String bookName;
     private String author;

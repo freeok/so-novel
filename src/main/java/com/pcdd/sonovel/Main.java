@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.setting.dialect.Props;
-import com.pcdd.sonovel.model.SearchResultLine;
+import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.SearchNovelUtils;
 import lombok.SneakyThrows;
 
@@ -33,7 +33,7 @@ public class Main {
                 break;
             }
 
-            List<SearchResultLine> results = SearchNovelUtils.search(keyword);
+            List<SearchResult> results = SearchNovelUtils.search(keyword);
             if (results.isEmpty()) {
                 continue;
             }
@@ -42,12 +42,12 @@ public class Main {
                     .addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
             // 打印搜索结果
             for (int i = 0; i < results.size(); i++) {
-                SearchResultLine searchResultLine = results.get(i);
+                SearchResult searchResult = results.get(i);
                 consoleTable.addBody(String.valueOf(i),
-                        searchResultLine.getBookName(),
-                        searchResultLine.getAuthor(),
-                        searchResultLine.getLatestChapter(),
-                        searchResultLine.getLatestUpdate()
+                        searchResult.getBookName(),
+                        searchResult.getAuthor(),
+                        searchResult.getLatestChapter(),
+                        searchResult.getLatestUpdate()
                 );
             }
             Console.table(consoleTable);
@@ -59,7 +59,7 @@ public class Main {
             int end = scanner.nextInt();
             double res = SearchNovelUtils.crawl(results, num, start, end);
 
-            Console.log("\n<== 下载完毕，总耗时{}s\n", NumberUtil.round(res, 2));
+            Console.log("\n<== 下载完毕，总耗时 {} s\n", NumberUtil.round(res, 2));
         }
 
     }
