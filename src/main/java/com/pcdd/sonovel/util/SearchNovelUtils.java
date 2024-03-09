@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.Main;
@@ -27,25 +28,25 @@ import java.util.concurrent.*;
 public class SearchNovelUtils {
 
     private static String indexUrl;
-    private static String searchUrl = null;
-    private static String savePath = null;
-    private static String extName = null;
+    private static String searchUrl;
+    private static String savePath;
+    private static String extName;
+    private static String novelDir;
     private static long minTimeInterval;
     private static long maxTimeInterval;
-    private static String novelDir = null;
 
     // 加载配置文件，初始化参数
     static {
-        Properties pro = new Properties();
+        Properties p = new Properties();
         InputStream is = Main.class.getClassLoader().getResourceAsStream("config.properties");
         try {
-            pro.load(is);
-            indexUrl = pro.get("index_url").toString();
-            searchUrl = pro.get("search_url").toString();
-            savePath = pro.get("savePath").toString();
-            extName = pro.get("extName").toString();
-            minTimeInterval = Convert.toLong(pro.get("min"), 0L);
-            maxTimeInterval = Convert.toLong(pro.get("max"), 1L);
+            p.load(is);
+            indexUrl = p.get("index_url").toString();
+            searchUrl = p.get("search_url").toString();
+            savePath = p.get("savePath").toString();
+            extName = p.get("extName").toString();
+            minTimeInterval = Convert.toLong(p.get("min"), 0L);
+            maxTimeInterval = Convert.toLong(p.get("max"), 1L);
         } catch (IOException e) {
             Console.error("初始化参数失败：" + e.getMessage());
         }
@@ -78,12 +79,12 @@ public class SearchNovelUtils {
                     .author(element.child(2).text())
                     .latestChapter(element.child(1).text())
                     .latestUpdate(element.child(3).text())
-                    .link(element.child(0).getElementsByAttribute("href").attr("href"))
+                    .url(element.child(0).getElementsByAttribute("href").attr("href"))
                     .build();
             list.add(searchResult);
         }
 
-        Console.log("<== 搜索到{}条记录，耗时{}s",
+        Console.log("<== 搜索到 {} 条记录，耗时 {} s\n",
                 elements.size(),
                 NumberUtil.round((System.currentTimeMillis() - start) / 1000.0, 2)
         );
@@ -101,11 +102,11 @@ public class SearchNovelUtils {
      */
     @SneakyThrows
     public static double crawl(List<SearchResult> list, int num, int start, int end) {
-        SearchResult srl = list.get(num);
-        String bookName = srl.getBookName();
-        String author = srl.getAuthor();
+        SearchResult r = list.get(num);
+        String bookName = r.getBookName();
+        String author = r.getAuthor();
         // 小说详情页url
-        String url = srl.getLink();
+        String url = r.getUrl();
 
         // 小说目录名格式：书名(作者)
         novelDir = String.format("%s（%s）", bookName, author);
@@ -119,23 +120,27 @@ public class SearchNovelUtils {
         Elements elements = document.getElementById("list").getElementsByTag("a");
         Console.log("==> 开始下载：《{}》（{}）", bookName, author);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        CountDownLatch countDownLatch = new CountDownLatch(end);
-        long startTime = System.currentTimeMillis();
+        // 线程池
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        // 阻塞主线程，用于计时
+        CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         // elements.size()是小说的总章数
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             int finalI = i;
             executor.execute(() -> {
                 String title = elements.get(finalI).text();
-                String href = indexUrl + elements.get(finalI).attr("href");
-                crawlChapter(finalI + 1, title, href);
+                String chapterUrl = indexUrl + elements.get(finalI).attr("href");
+                crawlChapter(finalI + 1, title, chapterUrl);
                 countDownLatch.countDown();
             });
         }
         countDownLatch.await();
+        stopWatch.stop();
 
-        return (System.currentTimeMillis() - startTime) / 1000.0;
+        return stopWatch.getTotalTimeSeconds();
     }
 
     /**
@@ -143,15 +148,15 @@ public class SearchNovelUtils {
      *
      * @param chapterNo   章节序号
      * @param chapterName 章节名
-     * @param url         小说详情页url
+     * @param chapterUrl  小说正文页 url
      */
     @SneakyThrows
-    private static void crawlChapter(int chapterNo, String chapterName, String url) {
+    private static void crawlChapter(int chapterNo, String chapterName, String chapterUrl) {
         // 设置时间间隔
         long timeInterval = ThreadLocalRandom.current().nextLong(minTimeInterval, maxTimeInterval);
         TimeUnit.MILLISECONDS.sleep(timeInterval);
         Console.log("正在下载：【{}】 间隔 {} ms", chapterName, timeInterval);
-        Document document = Jsoup.parse(new URL(url), 10000);
+        Document document = Jsoup.parse(new URL(chapterUrl), 10000);
         String content = document.getElementById("content").html();
         download(chapterNo, chapterName, content);
     }
