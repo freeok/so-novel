@@ -1,16 +1,16 @@
-package work.pcdd.sonovel.util;
+package com.pcdd.sonovel.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import com.pcdd.sonovel.Main;
+import com.pcdd.sonovel.model.SearchResultLine;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import work.pcdd.sonovel.Main;
-import work.pcdd.sonovel.bean.SearchResultLine;
 
 import java.io.*;
 import java.net.URL;
@@ -44,8 +44,8 @@ public class SearchNovelUtils {
             searchUrl = pro.get("search_url").toString();
             savePath = pro.get("savePath").toString();
             extName = pro.get("extName").toString();
-            minTimeInterval = Convert.toLong(pro.get("min"), 5000L);
-            maxTimeInterval = Convert.toLong(pro.get("max"), 6000L);
+            minTimeInterval = Convert.toLong(pro.get("min"), 100L);
+            maxTimeInterval = Convert.toLong(pro.get("max"), 200L);
         } catch (IOException e) {
             Console.error("初始化参数失败：" + e.getMessage());
         }
