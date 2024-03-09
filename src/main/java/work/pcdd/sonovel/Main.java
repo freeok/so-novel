@@ -15,7 +15,7 @@ import java.util.Scanner;
  * @author pcdd
  * Created at 2021/6/10 16:18
  */
-public class Application {
+public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
