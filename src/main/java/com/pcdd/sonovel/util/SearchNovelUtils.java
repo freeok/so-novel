@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.Main;
-import com.pcdd.sonovel.model.SearchResultLine;
+import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -44,8 +44,8 @@ public class SearchNovelUtils {
             searchUrl = pro.get("search_url").toString();
             savePath = pro.get("savePath").toString();
             extName = pro.get("extName").toString();
-            minTimeInterval = Convert.toLong(pro.get("min"), 100L);
-            maxTimeInterval = Convert.toLong(pro.get("max"), 200L);
+            minTimeInterval = Convert.toLong(pro.get("min"), 0L);
+            maxTimeInterval = Convert.toLong(pro.get("max"), 1L);
         } catch (IOException e) {
             Console.error("初始化参数失败：" + e.getMessage());
         }
@@ -61,7 +61,7 @@ public class SearchNovelUtils {
      * @return 匹配的小说列表
      */
     @SneakyThrows
-    public static List<SearchResultLine> search(String keyword) {
+    public static List<SearchResult> search(String keyword) {
         Console.log("==> 正在搜索...");
         long start = System.currentTimeMillis();
         Connection connect = Jsoup.connect(searchUrl);
@@ -71,16 +71,16 @@ public class SearchNovelUtils {
         // tr:nth-child(n+2)表示获取第2个tr开始获取
         Elements elements = document.select("#checkform > table > tbody > tr:nth-child(n+2)");
 
-        List<SearchResultLine> list = new ArrayList<>();
+        List<SearchResult> list = new ArrayList<>();
         for (Element element : elements) {
-            SearchResultLine searchResultLine = SearchResultLine.builder()
+            SearchResult searchResult = SearchResult.builder()
                     .bookName(element.child(0).text())
                     .author(element.child(2).text())
                     .latestChapter(element.child(1).text())
                     .latestUpdate(element.child(3).text())
                     .link(element.child(0).getElementsByAttribute("href").attr("href"))
                     .build();
-            list.add(searchResultLine);
+            list.add(searchResult);
         }
 
         Console.log("<== 搜索到{}条记录，耗时{}s",
@@ -100,8 +100,8 @@ public class SearchNovelUtils {
      * @param end   下载到第几章
      */
     @SneakyThrows
-    public static double crawl(List<SearchResultLine> list, int num, int start, int end) {
-        SearchResultLine srl = list.get(num);
+    public static double crawl(List<SearchResult> list, int num, int start, int end) {
+        SearchResult srl = list.get(num);
         String bookName = srl.getBookName();
         String author = srl.getAuthor();
         // 小说详情页url
