@@ -160,18 +160,14 @@ public class Crawler {
         Document document = Jsoup.parse(new URL(chapterUrl), 10000);
         String content = document.getElementById("content").html();
 
-        // 去广告内容
-        content = HtmlUtil.cleanHtmlTag(content)
-                .replace("&nbsp;", " ")
-                .replace("最新网址：www.xbiqugu.info", "")
-                .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
-                .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
-        // 4 空格
-        content = "    " + content.trim();
-
-        // html 转 txt
+        // txt 格式
         if ("txt".equals(EXT_NAME)) {
-            content = HtmlUtil.cleanHtmlTag(content).replace("&nbsp;", " ");
+            content = chapterName + HtmlUtil.cleanHtmlTag(content)
+                    .replace("&nbsp;", " ")
+                    // 去除其它内容
+                    .replace("最新网址：www.xbiqugu.info", "")
+                    .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
+                    .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
         }
 
         download(chapterNo, chapterName, content);
