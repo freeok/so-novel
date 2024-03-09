@@ -3,6 +3,7 @@ package com.pcdd.sonovel.core;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.http.HtmlUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
@@ -28,11 +29,11 @@ import java.util.concurrent.*;
  */
 public class Crawler {
 
+    private static String novelDir;
     private static final String INDEX_URL;
     private static final String SEARCH_URL;
     private static final String EXT_NAME;
     private static final String SAVE_PATH;
-    private static String novelDir;
     private static final int THREADS;
     private static final long MIN_TIME_INTERVAL;
     private static final long MAX_TIME_INTERVAL;
@@ -69,15 +70,14 @@ public class Crawler {
 
         // tr:nth-child(n+2)表示获取第2个tr开始获取
         Elements elements = document.select("#checkform > table > tbody > tr:nth-child(n+2)");
-
         List<SearchResult> list = new ArrayList<>();
         for (Element element : elements) {
             SearchResult searchResult = SearchResult.builder()
+                    .url(element.child(0).select("a").attr("href"))
                     .bookName(element.child(0).text())
-                    .author(element.child(2).text())
                     .latestChapter(element.child(1).text())
+                    .author(element.child(2).text())
                     .latestUpdate(element.child(3).text())
-                    .url(element.child(0).getElementsByAttribute("href").attr("href"))
                     .build();
             list.add(searchResult);
         }
@@ -159,6 +159,21 @@ public class Crawler {
         Console.log("正在下载：【{}】 间隔 {} ms", chapterName, timeInterval);
         Document document = Jsoup.parse(new URL(chapterUrl), 10000);
         String content = document.getElementById("content").html();
+
+        // 去广告内容
+        content = HtmlUtil.cleanHtmlTag(content)
+                .replace("&nbsp;", " ")
+                .replace("最新网址：www.xbiqugu.info", "")
+                .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
+                .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
+        // 4 空格
+        content = "    " + content.trim();
+
+        // html 转 txt
+        if ("txt".equals(EXT_NAME)) {
+            content = HtmlUtil.cleanHtmlTag(content).replace("&nbsp;", " ");
+        }
+
         download(chapterNo, chapterName, content);
     }
 
@@ -174,7 +189,8 @@ public class Crawler {
         String path = SAVE_PATH + novelDir + File.separator
                 + chapterNo + "_" + chapterName
                 + "." + EXT_NAME;
-        // TODO fix 载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
+        // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
+        // TODO 改为批量保存
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(content.getBytes(StandardCharsets.UTF_8));
         }
