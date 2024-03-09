@@ -1,4 +1,4 @@
-package work.pcdd.sonovel.bean;
+package com.pcdd.sonovel.model;
 
 import lombok.Builder;
 import lombok.Data;
