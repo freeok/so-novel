@@ -1,0 +1,35 @@
+{
+  "id": "1",
+  "url": "https://www.xbiqugu.info",
+  "comment": "",
+  "book": {
+    "url": "https://www.xbiqugu.info/0/%s/",
+    "bookName": "",
+    "author": "",
+    "description": "",
+    "category": "",
+    "coverUrl": "",
+    "latestChapter": "",
+    "latestUpdate": "",
+    "isEnd": "",
+    "catalog": "//*[@id=\"list\"]"
+  },
+  "chapter": {
+    "url": "https://www.xbiqugu.info/0/%s/%s.html",
+    "chapterNo": 0,
+    "title": "",
+    "content": ""
+  },
+  "search": {
+    "url": "https://www.xbiqugu.info/modules/article/waps.php",
+    "method": "post",
+    "param": {
+      "searchkey": ""
+    },
+    "result": "//*[@id=\"checkform\"]/table/tbody/tr",
+    "bookName": "td[@class='even']/a",
+    "latestChapter": "td[@class='odd']/a",
+    "author": "td[@class='even'][2]",
+    "update": "td[@class='odd'][2]"
+  }
+}
