@@ -23,9 +23,9 @@ public class Parser {
 
     private final Rule rule;
 
-    public Parser(int ruleId) {
+    public Parser(int sourceId) {
         // 根据 ruleId 获取对应 json 文件内容
-        String jsonStr = FileUtil.readString("rule/rule" + ruleId + ".json", StandardCharsets.UTF_8);
+        String jsonStr = FileUtil.readString("rule/rule" + sourceId + ".json", StandardCharsets.UTF_8);
         // json 封装进 Rule
         this.rule = JSONUtil.toBean(jsonStr, Rule.class);
     }
