@@ -97,7 +97,7 @@ public class Crawler {
         String url = r.getUrl();
 
         // 小说目录名格式：书名(作者)
-        novelDir = String.format("%s（%s）", bookName, author);
+        novelDir = String.format("%s (%s)", bookName, author);
         File dir = new File(SAVE_PATH + File.separator + novelDir);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -106,15 +106,15 @@ public class Crawler {
         Document document = Jsoup.parse(new URL(url), 10000);
         // 获取小说目录
         Elements elements = document.getElementById("list").getElementsByTag("a");
-        Console.log("==> 开始下载：《{}》（{}）", bookName, author);
-
+        int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
         // 线程池
         ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1
-                ? Runtime.getRuntime().availableProcessors() * 2
+                ? autoThreads
                 : THREADS);
         // 阻塞主线程，用于计时
         CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
+        Console.log("==> 开始下载：《{}》著：{} 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         // elements.size()是小说的总章数
@@ -132,7 +132,7 @@ public class Crawler {
         countDownLatch.await();
 
         if ("txt".equals(EXT_NAME)) {
-            Console.log("<== 下载完成，开始合并 txt");
+            Console.log("\n<== 下载完毕，开始合并 txt");
             mergeTxt(dir, bookName, author);
         }
 
@@ -148,7 +148,7 @@ public class Crawler {
             // 设置时间间隔
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
-            Console.log("正在下载：【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
+            Console.log("正在下载: 【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
             String content = document.getElementById("content").html();
 
@@ -192,7 +192,7 @@ public class Crawler {
     }
 
     private static void mergeTxt(File dir, String... args) {
-        String path = StrUtil.format("{}{}{}({}).txt",
+        String path = StrUtil.format("{}{}{} ({}).txt",
                 System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
