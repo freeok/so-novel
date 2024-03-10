@@ -5,15 +5,14 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.NovelChapter;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedOutputStream;
@@ -22,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -35,8 +33,8 @@ import java.util.concurrent.*;
 public class Crawler {
 
     private static String novelDir;
+    private static final int SOURCE_ID;
     private static final String INDEX_URL;
-    private static final String SEARCH_URL;
     private static final String EXT_NAME;
     private static final String SAVE_PATH;
     private static final int THREADS;
@@ -46,8 +44,8 @@ public class Crawler {
     // 加载配置文件参数
     static {
         Props p = Props.getProp("config.properties", StandardCharsets.UTF_8);
+        SOURCE_ID = p.getInt("source_id");
         INDEX_URL = p.getStr("index_url");
-        SEARCH_URL = p.getStr("search_url");
         EXT_NAME = p.getStr("extName");
         SAVE_PATH = p.getStr("savePath");
         THREADS = p.getInt("threads");
@@ -70,7 +68,7 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        Parser parser = new Parser(1);
+        Parser parser = new Parser(SOURCE_ID);
         List<SearchResult> searchResults = parser.parseSearchResult(keyword);
 
         stopWatch.stop();
@@ -123,14 +121,11 @@ public class Crawler {
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             int finalI = i;
             executor.execute(() -> {
-                download(
-                        Objects.requireNonNull(crawlChapter(NovelChapter.builder()
-                                .chapterNo(finalI + 1)
-                                .title(elements.get(finalI).text())
-                                .url(INDEX_URL + elements.get(finalI).attr("href"))
-                                .build(), countDownLatch)),
-                        countDownLatch
-                );
+                download(Objects.requireNonNull(crawlChapter(NovelChapter.builder()
+                        .chapterNo(finalI + 1)
+                        .title(elements.get(finalI).text())
+                        .url(INDEX_URL + elements.get(finalI).attr("href"))
+                        .build(), countDownLatch)), countDownLatch);
                 countDownLatch.countDown();
             });
         }
@@ -138,31 +133,11 @@ public class Crawler {
 
         if ("txt".equals(EXT_NAME)) {
             Console.log("<== 下载完成，开始合并 txt");
-            mergeTxt(bookName, dir);
+            mergeTxt(dir, bookName, author);
         }
 
         stopWatch.stop();
         return stopWatch.getTotalTimeSeconds();
-    }
-
-    private static void mergeTxt(String bookName, File dir) {
-        File file = FileUtil.touch(System.getProperty("user.dir") + File.separator + SAVE_PATH + File.separator + bookName + ".txt");
-        FileAppender appender = new FileAppender(file, 16, true);
-        // 文件排序
-        List<File> files = Arrays.stream(dir.listFiles())
-                .sorted((o1, o2) -> {
-                    String s1 = o1.getName();
-                    String s2 = o2.getName();
-                    int no1 = Integer.parseInt(s1.substring(0, s1.indexOf("_")));
-                    int no2 = Integer.parseInt(s2.substring(0, s2.indexOf("_")));
-                    return no1 - no2;
-                })
-                .toList();
-        for (File item : files) {
-            String s = FileUtil.readString(item, StandardCharsets.UTF_8);
-            appender.append(s);
-        }
-        appender.flush();
     }
 
     /**
@@ -208,13 +183,33 @@ public class Crawler {
                 + "_" + novelChapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
                 + "." + EXT_NAME;
         // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
-        // TODO 改为批量保存
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(novelChapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             latch.countDown();
             Console.error(e, e.getMessage());
         }
+    }
+
+    private static void mergeTxt(File dir, String... args) {
+        String path = StrUtil.format("{}{}{}({}).txt",
+                System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
+        File file = FileUtil.touch(path);
+        FileAppender appender = new FileAppender(file, 16, true);
+        // 文件排序，按文件名升序
+        List<File> files = Arrays.stream(dir.listFiles())
+                .sorted((o1, o2) -> {
+                    String s1 = o1.getName();
+                    String s2 = o2.getName();
+                    int no1 = Integer.parseInt(s1.substring(0, s1.indexOf("_")));
+                    int no2 = Integer.parseInt(s2.substring(0, s2.indexOf("_")));
+                    return no1 - no2;
+                }).toList();
+        for (File item : files) {
+            String s = FileUtil.readString(item, StandardCharsets.UTF_8);
+            appender.append(s);
+        }
+        appender.flush();
     }
 
 }
