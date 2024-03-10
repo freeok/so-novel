@@ -34,6 +34,7 @@ public class Main {
             }
             List<SearchResult> results = Crawler.search(keyword);
             if (results.isEmpty()) {
+                Console.log("==> 请输入书名或作者：");
                 continue;
             }
 
@@ -52,8 +53,8 @@ public class Main {
             Console.log("==> 请输入下载序号（首列的数字）");
             int num = scanner.nextInt();
 
-            Console.log("==> 0：下载全本");
-            Console.log("==> 1：下载指定章节");
+            Console.log("==> 0: 下载全本");
+            Console.log("==> 1: 下载指定章节");
             int downloadPolicy = scanner.nextInt();
             int start = 1;
             int end = Integer.MAX_VALUE;
@@ -65,7 +66,7 @@ public class Main {
 
             double res = Crawler.crawl(results, num, start, end);
 
-            Console.log("\n<== 下载完毕，总耗时 {} s\n", NumberUtil.round(res, 2));
+            Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
         }
 
     }
