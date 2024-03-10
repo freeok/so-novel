@@ -69,31 +69,17 @@ public class Crawler {
         Console.log("==> 正在搜索...");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Connection connect = Jsoup.connect(SEARCH_URL);
-        // 搜索结果页DOM
-        Document document = connect.data("searchkey", keyword).post();
 
-        // tr:nth-child(n+2)表示获取第2个tr开始获取
-        Elements elements = document.select("#checkform > table > tbody > tr:nth-child(n+2)");
-        List<SearchResult> list = new ArrayList<>();
-        for (Element element : elements) {
-            SearchResult searchResult = SearchResult.builder()
-                    .url(element.child(0).select("a").attr("href"))
-                    .bookName(element.child(0).text())
-                    .latestChapter(element.child(1).text())
-                    .author(element.child(2).text())
-                    .latestUpdate(element.child(3).text())
-                    .build();
-            list.add(searchResult);
-        }
+        Parser parser = new Parser(1);
+        List<SearchResult> searchResults = parser.parseSearchResult(keyword);
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s\n",
-                elements.size(),
+                searchResults.size(),
                 NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2)
         );
 
-        return list;
+        return searchResults;
     }
 
     /**
@@ -197,6 +183,7 @@ public class Crawler {
                         .replace("&nbsp;", " ")
                         // 去除其它内容
                         .replace("最新网址：www.xbiqugu.info", "")
+                        .replace("一秒记住【文学巴士 】，精彩无弹窗免费阅读！", "")
                         .replace("(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！", "")
                         .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
                         .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
