@@ -23,6 +23,7 @@ public class Main {
         printHint();
 
         while (true) {
+            // 1. 输入书名或作者
             String keyword = scanner.nextLine().trim();
             if (keyword.isEmpty()) {
                 Console.log("==> 请输入书名或作者：");
@@ -38,8 +39,8 @@ public class Main {
                 continue;
             }
 
+            // 2. 打印搜索结果
             ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
-            // 打印搜索结果
             for (int i = 0; i < results.size(); i++) {
                 SearchResult r = results.get(i);
                 consoleTable.addBody(String.valueOf(i),
@@ -50,9 +51,9 @@ public class Main {
             }
             Console.table(consoleTable);
 
+            // 3. 选择后下载
             Console.log("==> 请输入下载序号（首列的数字）");
             int num = scanner.nextInt();
-
             Console.log("==> 0: 下载全本");
             Console.log("==> 1: 下载指定章节");
             int downloadPolicy = scanner.nextInt();
@@ -63,9 +64,7 @@ public class Main {
                 start = scanner.nextInt();
                 end = scanner.nextInt();
             }
-
             double res = Crawler.crawl(results, num, start, end);
-
             Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
         }
 
@@ -81,7 +80,7 @@ public class Main {
                 .addBody("使用须知")
                 .addBody("1. 下载速度受书源、网络、爬取间隔等因素影响，若下载失败可尝试修改爬取间隔")
                 .addBody("2. 结束程序请输入 exit")
-                .addBody("3. 请按要求输入"));
+                .addBody("3. 请按要求输入，然后按回车（Enter）执行"));
         Console.log("==> 请输入书名或作者：");
     }
 
