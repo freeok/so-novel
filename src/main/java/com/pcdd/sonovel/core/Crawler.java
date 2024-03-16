@@ -6,7 +6,6 @@ import cn.hutool.core.io.file.FileAppender;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HtmlUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.NovelChapter;
 import com.pcdd.sonovel.model.SearchResult;
@@ -153,32 +152,15 @@ public class Crawler {
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("正在下载: 【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
-            // html 格式
-            String content = document.getElementById("content").html();
-
-            // txt 格式
-            if ("txt".equals(EXT_NAME)) {
-                content = novelChapter.getTitle() + HtmlUtil.cleanHtmlTag(content)
-                        .replace("&nbsp;", " ")
-                        // 去除其它内容
-                        .replace("最新网址：www.xbiqugu.info", "")
-                        .replace("一秒记住【文学巴士 】，精彩无弹窗免费阅读！", "")
-                        .replace("(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！", "")
-                        .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
-                        .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
-            }
-            // epub 格式
-            if ("epub".equals(EXT_NAME)) {
-                Console.log("功能开发中");
-            }
-
-            novelChapter.setContent(content);
-            return novelChapter;
+            // 小说正文 html 格式
+            novelChapter.setContent(document.getElementById("content").html());
+            return ChapterConverter.convert(novelChapter, EXT_NAME);
 
         } catch (Exception e) {
             latch.countDown();
             Console.error(e, e.getMessage());
         }
+
         return null;
     }
 
