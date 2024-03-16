@@ -68,8 +68,8 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        Parser parser = new Parser(SOURCE_ID);
-        List<SearchResult> searchResults = parser.parseSearchResult(keyword);
+        SearchResultParser searchResultParser = new SearchResultParser(SOURCE_ID);
+        List<SearchResult> searchResults = searchResultParser.parse(keyword);
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s\n",
@@ -135,6 +135,9 @@ public class Crawler {
             Console.log("\n<== 下载完毕，开始合并 txt");
             mergeTxt(dir, bookName, author);
         }
+        if ("epub".equals(EXT_NAME)) {
+            Console.log("\n<== 下载完毕，开始转换为 epub");
+        }
 
         stopWatch.stop();
         return stopWatch.getTotalTimeSeconds();
@@ -150,6 +153,7 @@ public class Crawler {
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("正在下载: 【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
+            // html 格式
             String content = document.getElementById("content").html();
 
             // txt 格式
@@ -163,9 +167,14 @@ public class Crawler {
                         .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
                         .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
             }
-            novelChapter.setContent(content);
+            // epub 格式
+            if ("epub".equals(EXT_NAME)) {
+                Console.log("功能开发中");
+            }
 
+            novelChapter.setContent(content);
             return novelChapter;
+
         } catch (Exception e) {
             latch.countDown();
             Console.error(e, e.getMessage());
@@ -177,11 +186,13 @@ public class Crawler {
      * 下载到本地
      */
     private static void download(NovelChapter novelChapter, CountDownLatch latch) {
+        // epub 格式转换前为 html
+        String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
         // Windows 文件名非法字符替换
         String path = SAVE_PATH + File.separator + novelDir + File.separator
                 + novelChapter.getChapterNo()
                 + "_" + novelChapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
-                + "." + EXT_NAME;
+                + "." + extName;
         // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(novelChapter.getContent().getBytes(StandardCharsets.UTF_8));

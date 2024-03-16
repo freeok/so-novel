@@ -19,11 +19,11 @@ import java.util.stream.Stream;
 /**
  * @author pcdd
  */
-public class Parser {
+public class SearchResultParser {
 
     private final Rule rule;
 
-    public Parser(int sourceId) {
+    public SearchResultParser(int sourceId) {
         // 根据 ruleId 获取对应 json 文件内容
         String jsonStr = FileUtil.readString("rule/rule" + sourceId + ".json", StandardCharsets.UTF_8);
         // json 封装进 Rule
@@ -31,7 +31,7 @@ public class Parser {
     }
 
     @SneakyThrows
-    List<SearchResult> parseSearchResult(String keyword) {
+    List<SearchResult> parse(String keyword) {
         Rule.Search search = rule.getSearch();
         Connection connect = Jsoup.connect(search.getUrl());
         // 搜索结果页DOM
