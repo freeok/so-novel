@@ -63,7 +63,7 @@ class CrawlTest {
 
 
         // String path = UUID.fastUUID() + ".txt";
-        String path = "1.txt";
+        String path = "chapter.html";
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(content.getBytes(StandardCharsets.UTF_8));
         }
