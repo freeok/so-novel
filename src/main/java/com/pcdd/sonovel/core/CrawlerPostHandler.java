@@ -35,11 +35,11 @@ public class CrawlerPostHandler {
     public void handle(String extName, Book book, File saveDir) {
         switch (extName) {
             case "txt":
-                Console.log("\n<== 下载完毕，开始合并 txt");
+                Console.log("\n<== {}》下载完毕，开始合并 txt", book.getBookName());
                 mergeTxt(saveDir, book.getBookName(), book.getAuthor());
                 break;
             case "epub":
-                Console.log("\n<== 下载完毕，开始转换为 epub");
+                Console.log("\n<== <{}》下载完毕，开始转换为 epub", book.getBookName());
                 convertToEpub(saveDir, book);
                 break;
             default:

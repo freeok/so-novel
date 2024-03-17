@@ -23,19 +23,18 @@ public class Main {
         printHint();
 
         while (true) {
+            Console.log("==> 请输入书名或作者：");
             // 1. 输入书名或作者
             String keyword = scanner.nextLine().trim();
             if (keyword.isEmpty()) {
-                Console.log("==> 请输入书名或作者：");
                 continue;
             }
             if ("exit".equals(keyword)) {
-                Console.log("<== bye bye ^-^");
+                Console.log("<== bye ^-^");
                 break;
             }
             List<SearchResult> results = Crawler.search(keyword);
             if (results.isEmpty()) {
-                Console.log("==> 请输入书名或作者：");
                 continue;
             }
 
@@ -75,13 +74,13 @@ public class Main {
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader("so-novel")
-                .addHeader("版本：" + p.getStr("version"))
+                .addHeader("so-novel v" + p.getStr("version"))
+                .addHeader("当前书源：" + p.getStr("index_url"))
+                .addHeader("导出格式：" + p.getStr("extName"))
                 .addBody("使用须知")
                 .addBody("1. 下载速度受书源、网络、爬取间隔等因素影响，若下载失败可尝试修改爬取间隔")
                 .addBody("2. 结束程序请输入 exit")
                 .addBody("3. 请按要求输入，然后按回车（Enter）执行"));
-        Console.log("==> 请输入书名或作者：");
     }
 
 }

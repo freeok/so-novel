@@ -101,7 +101,7 @@ public class Crawler {
 
         Book book = new BookParser(SOURCE_ID).parse(url);
         Document document = Jsoup.parse(new URL(url), 10000);
-        // 获取小说目录
+        // 获取小说目录 TODO 抽取为 CatalogParser
         Elements elements = document.getElementById("list").getElementsByTag("a");
         int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
         // 线程池
@@ -136,8 +136,7 @@ public class Crawler {
     }
 
     /**
-     * 爬取小说章节
-     * TODO 抽取为 ChapterParser
+     * 爬取小说章节 TODO 抽取为 ChapterParser
      */
     private static Chapter crawlChapter(Chapter chapter, CountDownLatch latch) {
         try {
