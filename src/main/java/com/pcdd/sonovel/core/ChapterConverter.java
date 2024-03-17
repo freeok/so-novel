@@ -19,7 +19,7 @@ public class ChapterConverter {
 
     public Chapter convert(Chapter chapter, String extName) {
         // 默认为 html 格式
-        String content = ChapterFilter.filterAds(chapter.getContent());
+        String content = ChapterFilter.filter(chapter.getContent());
 
         // txt 格式
         if ("txt".equals(extName)) {
@@ -29,13 +29,13 @@ public class ChapterConverter {
         if ("epub".equals(extName)) {
             TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
             // 符合 epub 标准的模板
-            Template template = engine.getTemplate("chapter_epub_style1.flt");
+            Template template = engine.getTemplate("chapter_epub_style2.flt");
             Map<String, String> map = new HashMap<>();
             map.put("title", chapter.getTitle());
             // 构建符合 epub 标准的正文格式
-            content = content.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "<p>")
-                    .replaceAll("<br>\\s*<br>", "</p>")
-                    .replaceAll("\\s+|&.*;", "");
+            content = "<br>".concat(content.replaceAll("&nbsp;|\\s+", ""))
+                    .replaceAll("<br>(.*?)<br>", "<p>$1</p>")
+                    .replaceAll("<p></p>|<br>", "");
             map.put("content", content);
             content = template.render(map);
         }
