@@ -5,7 +5,7 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.http.HtmlUtil;
-import com.pcdd.sonovel.model.NovelChapter;
+import com.pcdd.sonovel.model.Chapter;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
@@ -17,13 +17,13 @@ import java.util.Map;
 @UtilityClass
 public class ChapterConverter {
 
-    public NovelChapter convert(NovelChapter novelChapter, String extName) {
+    public Chapter convert(Chapter chapter, String extName) {
         // 默认为 html 格式
-        String content = ChapterFilter.filterAds(novelChapter.getContent());
+        String content = ChapterFilter.filterAds(chapter.getContent());
 
         // txt 格式
         if ("txt".equals(extName)) {
-            content = novelChapter.getTitle() + HtmlUtil.cleanHtmlTag(content).replace("&nbsp;", " ");
+            content = chapter.getTitle() + HtmlUtil.cleanHtmlTag(content).replace("&nbsp;", " ");
         }
         // epub 格式
         if ("epub".equals(extName)) {
@@ -31,18 +31,17 @@ public class ChapterConverter {
             // 符合 epub 标准的模板
             Template template = engine.getTemplate("chapter_epub.flt");
             Map<String, String> map = new HashMap<>();
-            map.put("title", novelChapter.getTitle());
+            map.put("title", chapter.getTitle());
             // 构建符合 epub 标准的正文格式
             content = content.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "<p>")
                     .replaceAll("<br>\\s*<br>", "</p>")
-                    .replaceAll("\\s+", "");
+                    .replaceAll("\\s+|&.*;", "");
             map.put("content", content);
             content = template.render(map);
         }
 
-
-        novelChapter.setContent(content);
-        return novelChapter;
+        chapter.setContent(content);
+        return chapter;
     }
 
 }

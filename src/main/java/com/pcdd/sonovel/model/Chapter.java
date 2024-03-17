@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class NovelChapter {
+public class Chapter {
 
     private String url;
     private Integer chapterNo;

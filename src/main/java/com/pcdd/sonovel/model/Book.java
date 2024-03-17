@@ -6,7 +6,7 @@ import lombok.Data;
  * @author pcdd
  */
 @Data
-public class NovelInfo {
+public class Book {
 
     private String url;
     private String bookName;
