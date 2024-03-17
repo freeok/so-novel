@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>${title}</title>
+  <style type="text/css">
+    body {
+      max-width: 800px;
+      margin: 100px auto;
+      background: #111;
+    }
+
+    h1 {
+      color: #939392;
+    }
+
+    p {
+      text-indent: 2em;
+      letter-spacing: 0.2em;
+      color: #939392;
+      font-size: 25px;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>${title}</h1>
+  <div>
+    ${content}
+  </div>
+</body>
+</html>
