@@ -29,7 +29,7 @@ public class ChapterConverter {
         if ("epub".equals(extName)) {
             TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
             // 符合 epub 标准的模板
-            Template template = engine.getTemplate("chapter_epub.flt");
+            Template template = engine.getTemplate("chapter_epub_style1.flt");
             Map<String, String> map = new HashMap<>();
             map.put("title", chapter.getTitle());
             // 构建符合 epub 标准的正文格式
