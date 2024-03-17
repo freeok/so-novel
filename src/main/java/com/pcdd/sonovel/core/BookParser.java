@@ -2,7 +2,7 @@ package com.pcdd.sonovel.core;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
-import com.pcdd.sonovel.model.NovelInfo;
+import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -14,11 +14,11 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author pcdd
  */
-public class NovelInfoParser {
+public class BookParser {
 
     private final Rule rule;
 
-    public NovelInfoParser(int sourceId) {
+    public BookParser(int sourceId) {
         // 根据 ruleId 获取对应 json 文件内容
         String jsonStr = FileUtil.readString("rule/rule" + sourceId + ".json", StandardCharsets.UTF_8);
         // json 封装进 Rule
@@ -26,7 +26,7 @@ public class NovelInfoParser {
     }
 
     @SneakyThrows
-    public NovelInfo parse(String url) {
+    public Book parse(String url) {
         Rule.Book r = rule.getBook();
         Document document = Jsoup.parse(new URL(url), 10000);
         String bookName = document.selectXpath(r.getBookName()).text();
@@ -34,14 +34,14 @@ public class NovelInfoParser {
         String description = document.selectXpath(r.getDescription()).text();
         String coverUrl = document.selectXpath(r.getCoverUrl()).attr("src");
 
-        NovelInfo novelInfo = new NovelInfo();
-        novelInfo.setUrl(url);
-        novelInfo.setBookName(bookName);
-        novelInfo.setAuthor(author);
-        novelInfo.setDescription(description);
-        novelInfo.setCoverUrl(coverUrl);
+        Book book = new Book();
+        book.setUrl(url);
+        book.setBookName(bookName);
+        book.setAuthor(author);
+        book.setDescription(description);
+        book.setCoverUrl(coverUrl);
 
-        return novelInfo;
+        return book;
     }
 
 }

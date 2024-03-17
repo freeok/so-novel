@@ -6,11 +6,10 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.setting.dialect.Props;
-import com.pcdd.sonovel.model.NovelInfo;
+import com.pcdd.sonovel.model.Book;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubWriter;
 
@@ -33,27 +32,27 @@ public class CrawlerPostHandler {
         SAVE_PATH = p.getStr("savePath");
     }
 
-    public void handle(String extName, NovelInfo novelInfo, File saveDir) {
+    public void handle(String extName, Book book, File saveDir) {
         switch (extName) {
             case "txt":
                 Console.log("\n<== 下载完毕，开始合并 txt");
-                mergeTxt(saveDir, novelInfo.getBookName(), novelInfo.getAuthor());
+                mergeTxt(saveDir, book.getBookName(), book.getAuthor());
                 break;
             case "epub":
                 Console.log("\n<== 下载完毕，开始转换为 epub");
-                convertToEpub(saveDir, novelInfo);
+                convertToEpub(saveDir, book);
                 break;
             default:
         }
     }
 
     @SneakyThrows
-    private void convertToEpub(File dir, NovelInfo novelInfo) {
-        Book book = new Book();
-        book.getMetadata().addTitle(novelInfo.getBookName());
-        book.getMetadata().addAuthor(new Author(novelInfo.getAuthor()));
-        book.getMetadata().addDescription(novelInfo.getDescription());
-        byte[] bytes = HttpUtil.downloadBytes(novelInfo.getCoverUrl());
+    private void convertToEpub(File dir, Book b) {
+        nl.siegmann.epublib.domain.Book book = new nl.siegmann.epublib.domain.Book();
+        book.getMetadata().addTitle(b.getBookName());
+        book.getMetadata().addAuthor(new Author(b.getAuthor()));
+        book.getMetadata().addDescription(b.getDescription());
+        byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
         book.setCoverImage(new Resource(bytes, ".jpg"));
 
         int i = 0;
@@ -67,7 +66,7 @@ public class CrawlerPostHandler {
 
         EpubWriter epubWriter = new EpubWriter();
 
-        String savePath = StrUtil.format("{}/{}.epub", dir.getParent(), novelInfo.getBookName());
+        String savePath = StrUtil.format("{}/{}.epub", dir.getParent(), b.getBookName());
         epubWriter.write(book, new FileOutputStream(savePath));
     }
 

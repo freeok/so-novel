@@ -4,8 +4,8 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.setting.dialect.Props;
-import com.pcdd.sonovel.model.NovelChapter;
-import com.pcdd.sonovel.model.NovelInfo;
+import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -35,7 +35,7 @@ public class Crawler {
     private static final int THREADS;
     private static final long MIN_TIME_INTERVAL;
     private static final long MAX_TIME_INTERVAL;
-    private static String novelDir;
+    private static String bookDir;
 
     // 加载配置文件参数
     static {
@@ -93,14 +93,13 @@ public class Crawler {
         String url = r.getUrl();
 
         // 小说目录名格式：书名(作者)
-        novelDir = String.format("%s (%s)", bookName, author);
-        File dir = new File(SAVE_PATH + File.separator + novelDir);
+        bookDir = String.format("%s (%s)", bookName, author);
+        File dir = new File(SAVE_PATH + File.separator + bookDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        NovelInfo novelInfo = new NovelInfoParser(SOURCE_ID).parse(url);
-
+        Book book = new BookParser(SOURCE_ID).parse(url);
         Document document = Jsoup.parse(new URL(url), 10000);
         // 获取小说目录
         Elements elements = document.getElementById("list").getElementsByTag("a");
@@ -119,7 +118,7 @@ public class Crawler {
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             int finalI = i;
             executor.execute(() -> {
-                download(Objects.requireNonNull(crawlChapter(NovelChapter.builder()
+                download(Objects.requireNonNull(crawlChapter(Chapter.builder()
                         .chapterNo(finalI + 1)
                         .title(elements.get(finalI).text())
                         .url(INDEX_URL + elements.get(finalI).attr("href"))
@@ -130,7 +129,7 @@ public class Crawler {
         // 等待全部下载完毕
         countDownLatch.await();
 
-        CrawlerPostHandler.handle(EXT_NAME, novelInfo, dir);
+        CrawlerPostHandler.handle(EXT_NAME, book, dir);
 
         stopWatch.stop();
         return stopWatch.getTotalTimeSeconds();
@@ -138,17 +137,18 @@ public class Crawler {
 
     /**
      * 爬取小说章节
+     * TODO 抽取为 ChapterParser
      */
-    private static NovelChapter crawlChapter(NovelChapter novelChapter, CountDownLatch latch) {
+    private static Chapter crawlChapter(Chapter chapter, CountDownLatch latch) {
         try {
             // 设置时间间隔
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
-            Console.log("正在下载: 【{}】 间隔 {} ms", novelChapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(new URL(novelChapter.getUrl()), 10000);
+            Console.log("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
+            Document document = Jsoup.parse(new URL(chapter.getUrl()), 10000);
             // 小说正文 html 格式
-            novelChapter.setContent(document.getElementById("content").html());
-            return ChapterConverter.convert(novelChapter, EXT_NAME);
+            chapter.setContent(document.getElementById("content").html());
+            return ChapterConverter.convert(chapter, EXT_NAME);
 
         } catch (Exception e) {
             latch.countDown();
@@ -161,17 +161,17 @@ public class Crawler {
     /**
      * 下载到本地
      */
-    private static void download(NovelChapter novelChapter, CountDownLatch latch) {
+    private static void download(Chapter chapter, CountDownLatch latch) {
         // epub 格式转换前为 html
         String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
-        // Windows 文件名非法字符替换
-        String path = SAVE_PATH + File.separator + novelDir + File.separator
-                + novelChapter.getChapterNo()
-                + "_" + novelChapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
+        String path = SAVE_PATH + File.separator + bookDir + File.separator
+                + chapter.getChapterNo()
+                // Windows 文件名非法字符替换
+                + "_" + chapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
                 + "." + extName;
         // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
-            fos.write(novelChapter.getContent().getBytes(StandardCharsets.UTF_8));
+            fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             latch.countDown();
             Console.error(e, e.getMessage());
