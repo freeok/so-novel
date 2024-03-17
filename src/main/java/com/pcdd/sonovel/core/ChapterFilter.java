@@ -20,7 +20,7 @@ public class ChapterFilter {
     );
 
     /**
-     * 过滤正文广告
+     * 过滤词汇
      */
     public String filter(String content) {
         StringBuilder filteredContent = new StringBuilder(content);
@@ -35,6 +35,13 @@ public class ChapterFilter {
 
         // 过滤 <script> 及其内容
         return filteredContent.toString().replaceAll(HtmlUtil.RE_SCRIPT, "");
+    }
+
+    /**
+     * 过滤广告，仅限书源 1，不同书源广告 html 可能不同
+     */
+    public String filterAds(String content) {
+        return HtmlUtil.removeHtmlTag(content, "div", "p");
     }
 
 }

@@ -1,13 +1,11 @@
 package com.pcdd.sonovel.core;
 
 import cn.hutool.core.date.StopWatch;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileAppender;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.NovelChapter;
+import com.pcdd.sonovel.model.NovelInfo;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -20,7 +18,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -31,7 +28,6 @@ import java.util.concurrent.*;
  */
 public class Crawler {
 
-    private static String novelDir;
     private static final int SOURCE_ID;
     private static final String INDEX_URL;
     private static final String EXT_NAME;
@@ -39,6 +35,7 @@ public class Crawler {
     private static final int THREADS;
     private static final long MIN_TIME_INTERVAL;
     private static final long MAX_TIME_INTERVAL;
+    private static String novelDir;
 
     // 加载配置文件参数
     static {
@@ -80,7 +77,7 @@ public class Crawler {
     }
 
     /**
-     * 爬取小说
+     * 爬取小说 TODO 解耦
      *
      * @param list  搜索到的小说列表
      * @param num   下载序号
@@ -102,6 +99,8 @@ public class Crawler {
             dir.mkdirs();
         }
 
+        NovelInfo novelInfo = new NovelInfoParser(SOURCE_ID).parse(url);
+
         Document document = Jsoup.parse(new URL(url), 10000);
         // 获取小说目录
         Elements elements = document.getElementById("list").getElementsByTag("a");
@@ -116,7 +115,7 @@ public class Crawler {
         Console.log("==> 开始下载：《{}》著：{} 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        // elements.size()是小说的总章数
+        // 爬取章节并下载
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             int finalI = i;
             executor.execute(() -> {
@@ -128,15 +127,10 @@ public class Crawler {
                 countDownLatch.countDown();
             });
         }
+        // 等待全部下载完毕
         countDownLatch.await();
 
-        if ("txt".equals(EXT_NAME)) {
-            Console.log("\n<== 下载完毕，开始合并 txt");
-            mergeTxt(dir, bookName, author);
-        }
-        if ("epub".equals(EXT_NAME)) {
-            Console.log("\n<== 下载完毕，开始转换为 epub");
-        }
+        CrawlerPostHandler.handle(EXT_NAME, novelInfo, dir);
 
         stopWatch.stop();
         return stopWatch.getTotalTimeSeconds();
@@ -182,27 +176,6 @@ public class Crawler {
             latch.countDown();
             Console.error(e, e.getMessage());
         }
-    }
-
-    private static void mergeTxt(File dir, String... args) {
-        String path = StrUtil.format("{}{}{} ({}).txt",
-                System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
-        File file = FileUtil.touch(path);
-        FileAppender appender = new FileAppender(file, 16, true);
-        // 文件排序，按文件名升序
-        List<File> files = Arrays.stream(dir.listFiles())
-                .sorted((o1, o2) -> {
-                    String s1 = o1.getName();
-                    String s2 = o2.getName();
-                    int no1 = Integer.parseInt(s1.substring(0, s1.indexOf("_")));
-                    int no2 = Integer.parseInt(s2.substring(0, s2.indexOf("_")));
-                    return no1 - no2;
-                }).toList();
-        for (File item : files) {
-            String s = FileUtil.readString(item, StandardCharsets.UTF_8);
-            appender.append(s);
-        }
-        appender.flush();
     }
 
 }
