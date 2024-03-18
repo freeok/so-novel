@@ -100,7 +100,7 @@ public class Crawler {
         }
 
         Book book = new BookParser(SOURCE_ID).parse(url);
-        Document document = Jsoup.parse(new URL(url), 10000);
+        Document document = Jsoup.parse(new URL(url), 30_000);
         // 获取小说目录 TODO 抽取为 CatalogParser
         Elements elements = document.getElementById("list").getElementsByTag("a");
         int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
@@ -144,7 +144,7 @@ public class Crawler {
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(new URL(chapter.getUrl()), 10000);
+            Document document = Jsoup.parse(new URL(chapter.getUrl()), 30_000);
             // 小说正文 html 格式
             chapter.setContent(document.getElementById("content").html());
             return ChapterConverter.convert(chapter, EXT_NAME);

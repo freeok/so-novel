@@ -28,7 +28,7 @@ public class BookParser {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = rule.getBook();
-        Document document = Jsoup.parse(new URL(url), 10000);
+        Document document = Jsoup.parse(new URL(url), 30_000);
         String bookName = document.selectXpath(r.getBookName()).text();
         String author = document.selectXpath(r.getAuthor()).attr("content");
         String description = document.selectXpath(r.getDescription()).text();
