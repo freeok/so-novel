@@ -1,7 +1,8 @@
 package com.pcdd.sonovel;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.http.HtmlUtil;
+import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.core.ChapterFilter;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
@@ -9,6 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedOutputStream;
@@ -22,10 +24,8 @@ import java.util.List;
 
 class CrawlTest {
 
-    /**
-     * 解析搜索结果页
-     */
     @Test
+    @DisplayName("解析搜索结果页")
     @SneakyThrows
     void test01() {
         Connection connect = Jsoup.connect("https://www.xbiqugu.info/modules/article/waps.php");
@@ -46,30 +46,26 @@ class CrawlTest {
     }
 
     @Test
+    @DisplayName("爬取章节并下载")
     @SneakyThrows
     void test02() {
-        Document document = Jsoup.parse(new URL("https://www.xbiqugu.info/116/116314/43917573.html"), 10000);
-
-        String titile = "第1章 逆天悟性，觉醒霸王色";
+        Document document = Jsoup.parse(new URL("https://www.xbiqugu.info/116/116314/43917573.html"), 30_000);
+        String title = document.selectXpath("//*[@class='bookname']/h1").text();
+        System.out.println(title);
         String content = document.getElementById("content").html();
-        content = HtmlUtil.cleanHtmlTag(content)
-                .replace("&nbsp;", " ")
-                .replace("最新网址：www.xbiqugu.info", "")
-                .replace("亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!", "")
-                .replace("手机站全新改版升级地址：https://wap.xbiqugu.info，数据和书签与电脑站同步，无广告清新阅读！", "");
-        // 4 空格
-        content = titile + content;
-        System.out.println(content);
+        content = ChapterFilter.filter(content);
+        content = "<br>".concat(content.replaceAll("&nbsp;|\\s+", ""))
+                .replaceAll("<br>(.*?)<br>", "<p>$1</p>")
+                .replaceAll("<p></p>|<br>", "");
 
-
-        // String path = UUID.fastUUID() + ".txt";
-        String path = "chapter.html";
+        String path = StrUtil.format("{}.html", title);
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(content.getBytes(StandardCharsets.UTF_8));
         }
     }
 
     @Test
+    @DisplayName("目录排序")
     void test03() {
         File dir = FileUtil.file("D:\\Code\\IdeaProjects\\so-novel\\download\\斗罗大陆（唐家三少）");
         List<File> files = Arrays.stream(dir.listFiles())
@@ -84,13 +80,6 @@ class CrawlTest {
         for (File item : files) {
             System.out.println(item.getName());
         }
-    }
-
-    @Test
-    void test04() {
-        String s = "\\a/b?c*d<e>f";
-        // Windows 文件名非法字符替换
-        System.out.println(s.replaceAll("\\\\|/|:|\\*|\\?|<|>", ""));
     }
 
 }
