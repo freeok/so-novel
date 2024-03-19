@@ -76,8 +76,10 @@
                         </manifest>
                     </archive>
                     <descriptorRefs>
+                        <!-- 必须加，固定写法，表示将项目的编译结果和依赖库打包到一个 JAR 文件中 -->
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>app</finalName>
                 </configuration>
                 <executions>
                     <execution>
