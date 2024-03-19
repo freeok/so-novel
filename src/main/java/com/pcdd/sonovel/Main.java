@@ -3,13 +3,17 @@ package com.pcdd.sonovel;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
+
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -23,14 +27,14 @@ public class Main {
         printHint();
 
         while (true) {
-            Console.log("==> 请输入书名或作者：");
+            Console.log(render("==> @|blue 请输入书名或作者：|@"));
             // 1. 输入书名或作者
             String keyword = scanner.nextLine().trim();
             if (keyword.isEmpty()) {
                 continue;
             }
-            if ("exit".equals(keyword)) {
-                Console.log("<== bye ^-^");
+            if ("exit".equals(keyword.toLowerCase().trim())) {
+                Console.log("<== bye :)");
                 break;
             }
             List<SearchResult> results = Crawler.search(keyword);
@@ -70,17 +74,18 @@ public class Main {
     }
 
     private static void printHint() {
-        Props p = new Props("config.properties");
+        Props p = Props.getProp("config.properties", StandardCharsets.UTF_8);
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader("so-novel v" + p.getStr("version"))
+                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", p.getStr("version"))))
                 .addHeader("当前书源：" + p.getStr("index_url"))
-                .addHeader("导出格式：" + p.getStr("extName"))
+                .addHeader(render("导出格式：@|blue " + p.getStr("extName") + "|@"))
                 .addBody("使用须知")
-                .addBody("1. 下载速度受书源、网络、爬取间隔等因素影响，若下载失败可尝试修改爬取间隔")
-                .addBody("2. 结束程序请输入 exit")
-                .addBody("3. 请按要求输入，然后按回车（Enter）执行"));
+                .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试增大爬取间隔")
+                .addBody("2. 请按要求输入，然后按回车（Enter）执行")
+                .addBody("3. 结束程序请输入 exit")
+        );
     }
 
 }
