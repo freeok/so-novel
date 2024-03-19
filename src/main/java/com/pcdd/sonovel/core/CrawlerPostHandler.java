@@ -35,11 +35,11 @@ public class CrawlerPostHandler {
     public void handle(String extName, Book book, File saveDir) {
         switch (extName) {
             case "txt":
-                Console.log("\n<== {}》下载完毕，开始合并 txt", book.getBookName());
+                Console.log("\n<== 《{}》（著：{}）下载完毕，开始合并 txt", book.getBookName(), book.getAuthor());
                 mergeTxt(saveDir, book.getBookName(), book.getAuthor());
                 break;
             case "epub":
-                Console.log("\n<== <{}》下载完毕，开始转换为 epub", book.getBookName());
+                Console.log("\n<== 《{}》（著：{}）下载完毕，开始转换为 epub", book.getBookName(), book.getAuthor());
                 convertToEpub(saveDir, book);
                 break;
             default:
@@ -55,6 +55,10 @@ public class CrawlerPostHandler {
         byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
         book.setCoverImage(new Resource(bytes, ".jpg"));
 
+        // TODO 创建 guide
+        // Guide guide = book.getGuide();
+        // guide.addReference(new GuideReference(new Resource(bytes, "1.jpg"), "cover.jpg", GuideReference.COVER));
+
         int i = 0;
         // 遍历下载后的目录，添加章节
         for (File file : files(dir)) {
@@ -62,6 +66,7 @@ public class CrawlerPostHandler {
             String title = StrUtil.subAfter(FileUtil.mainName(file), "_", false);
             Resource resource = new Resource(FileUtil.readBytes(file), ++i + ".html");
             book.addSection(title, resource);
+            // guide.addReference(new GuideReference(resource, i + ".html", GuideReference.TEXT));
         }
 
         EpubWriter epubWriter = new EpubWriter();
