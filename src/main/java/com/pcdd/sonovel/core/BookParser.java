@@ -1,6 +1,6 @@
 package com.pcdd.sonovel.core;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author pcdd
@@ -20,7 +19,7 @@ public class BookParser {
 
     public BookParser(int sourceId) {
         // 根据 ruleId 获取对应 json 文件内容
-        String jsonStr = FileUtil.readString("rule/rule" + sourceId + ".json", StandardCharsets.UTF_8);
+        String jsonStr = ResourceUtil.readUtf8Str("rule/rule" + sourceId + ".json");
         // json 封装进 Rule
         this.rule = JSONUtil.toBean(jsonStr, Rule.class);
     }

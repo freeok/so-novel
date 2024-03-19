@@ -1,6 +1,6 @@
 package com.pcdd.sonovel.core;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,8 +23,8 @@ public class SearchResultParser {
     private final Rule rule;
 
     public SearchResultParser(int sourceId) {
-        // 根据 ruleId 获取对应 json 文件内容
-        String jsonStr = FileUtil.readString("rule/rule" + sourceId + ".json", StandardCharsets.UTF_8);
+        // 根据 ruleId 获取对应 json 文件内容，不要使用 FileUtil.readString()！！因为不支持从 JAR 文件中读取文件
+        String jsonStr = ResourceUtil.readUtf8Str("rule/rule" + sourceId + ".json");
         // json 封装进 Rule
         this.rule = JSONUtil.toBean(jsonStr, Rule.class);
     }
@@ -52,6 +51,7 @@ public class SearchResultParser {
             if (Stream.of(url, bookName, latestChapter, author, update).anyMatch(String::isEmpty)) {
                 continue;
             }
+            // TODO 完全匹配的行标注颜色
             SearchResult build = SearchResult.builder()
                     .url(url)
                     .bookName(bookName)
