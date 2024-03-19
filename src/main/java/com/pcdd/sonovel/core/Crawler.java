@@ -60,7 +60,7 @@ public class Crawler {
      */
     @SneakyThrows
     public static List<SearchResult> search(String keyword) {
-        Console.log("==> 正在搜索...");
+        Console.log("<== 正在搜索...");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -111,7 +111,7 @@ public class Crawler {
         // 阻塞主线程，用于计时
         CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
-        Console.log("==> 开始下载：《{}》著：{} 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
+        Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         // 爬取章节并下载
@@ -143,7 +143,7 @@ public class Crawler {
             // 设置时间间隔
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
-            Console.log("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
+            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(new URL(chapter.getUrl()), 30_000);
             // 小说正文 html 格式
             chapter.setContent(document.getElementById("content").html());
