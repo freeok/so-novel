@@ -31,7 +31,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
         </dependency>
-        <!-- txt2epub -->
         <dependency>
             <groupId>nl.siegmann.epublib</groupId>
             <artifactId>epublib-core</artifactId>
@@ -48,21 +47,48 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.32</version>
         </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>2.4.1</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!--
+                maven-jar-plugin 打包生成的 jar，只包含该工程下源码编译结果，不包含依赖内容
+                使用以下插件将所有外部库打包进 jar
+             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.0</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <mainClass>com.pcdd.sonovel.Main</mainClass>
                         </manifest>
                     </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <!-- 报红也不要删 -->
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <!-- 使用 @@ application.yml 获取 pom 文件中的配置  -->
@@ -75,6 +101,7 @@
     </build>
 
     <repositories>
+        <!-- epublib -->
         <repository>
             <id>psiegman-repo</id>
             <url>https://github.com/psiegman/mvn-repo/raw/master/releases</url>

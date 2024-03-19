@@ -51,7 +51,6 @@ public class SearchResultParser {
             if (Stream.of(url, bookName, latestChapter, author, update).anyMatch(String::isEmpty)) {
                 continue;
             }
-            // TODO 完全匹配的行标注颜色
             SearchResult build = SearchResult.builder()
                     .url(url)
                     .bookName(bookName)
