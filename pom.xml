@@ -32,9 +32,9 @@
             <version>1.18.30</version>
         </dependency>
         <dependency>
-            <groupId>nl.siegmann.epublib</groupId>
-            <artifactId>epublib-core</artifactId>
-            <version>3.1</version>
+            <groupId>io.documentnode</groupId>
+            <artifactId>epub4j-core</artifactId>
+            <version>4.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -101,13 +101,5 @@
             </resource>
         </resources>
     </build>
-
-    <repositories>
-        <!-- epublib -->
-        <repository>
-            <id>psiegman-repo</id>
-            <url>https://github.com/psiegman/mvn-repo/raw/master/releases</url>
-        </repository>
-    </repositories>
 
 </project>

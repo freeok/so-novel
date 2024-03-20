@@ -7,11 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
+import io.documentnode.epub4j.domain.Author;
+import io.documentnode.epub4j.domain.Resource;
+import io.documentnode.epub4j.epub.EpubWriter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Resource;
-import nl.siegmann.epublib.epub.EpubWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +47,7 @@ public class CrawlerPostHandler {
 
     @SneakyThrows
     private void convertToEpub(File dir, Book b) {
-        nl.siegmann.epublib.domain.Book book = new nl.siegmann.epublib.domain.Book();
+        io.documentnode.epub4j.domain.Book book = new io.documentnode.epub4j.domain.Book();
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
         book.getMetadata().addDescription(b.getDescription());
