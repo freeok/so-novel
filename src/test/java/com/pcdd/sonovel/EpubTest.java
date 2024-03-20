@@ -1,11 +1,11 @@
 package com.pcdd.sonovel;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import io.documentnode.epub4j.domain.Author;
+import io.documentnode.epub4j.domain.Book;
+import io.documentnode.epub4j.domain.Resource;
+import io.documentnode.epub4j.epub.EpubWriter;
 import lombok.SneakyThrows;
-import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Resource;
-import nl.siegmann.epublib.epub.EpubWriter;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;

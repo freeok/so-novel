@@ -7,16 +7,54 @@ on:
       - 'v*'
 
 jobs:
-  release:
-    # 运行环境
-    runs-on: ubuntu-latest
+  release-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
-      # 拉取项目代码
       - name: Checkout code
-        uses: actions/checkout@v3
-      # Release
-      - name: Create Release
-        uses: ncipollo/release-action@v1.11.2
+        uses: actions/checkout@v4
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v4
         with:
-          bodyFile: "README.md"
+          distribution: 'corretto'
+          java-version: '17'
+      - name: Build executable
+        shell: powershell
+        run: sh deploy-windows.sh
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          # 供用户下载使用的最终产物
+          artifacts: "dist/SoNovel-Portable.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN  }}
+
+#  release-linux:
+#    # 运行环境
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: write
+#    steps:
+#      # 拉取项目代码
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#      - name: Set up JDK and Maven
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'corretto'
+#          java-version: '17'
+#      #      - name: Set up mvnd
+#      #        run: |
+#      #          curl -s "https://get.sdkman.io" | bash
+#      #          source "$HOME/.sdkman/bin/sdkman-init.sh"
+#      #          sdk version
+#      #          sdk install mvnd
+#      #          mvnd -v
+#      - name: Build executable
+#        run: sh deploy-linux.sh
+#      - name: Create Release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          # 供用户下载使用的最终产物
+#          artifacts: "app-linux.tar.gz"
+#          token: ${{ secrets.GITHUB_TOKEN  }}
