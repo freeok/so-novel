@@ -1,11 +1,12 @@
 package com.pcdd.sonovel.core;
 
 import cn.hutool.core.date.StopWatch;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.setting.dialect.Props;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -21,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
+
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -94,9 +97,11 @@ public class Crawler {
 
         // 小说目录名格式：书名(作者)
         bookDir = String.format("%s (%s)", bookName, author);
-        File dir = new File(SAVE_PATH + File.separator + bookDir);
+        File dir = FileUtil.mkdir(SAVE_PATH + File.separator + bookDir);
         if (!dir.exists()) {
-            dir.mkdirs();
+            // C:\Program Files 下创建需要管理员权限
+            Console.log(render("@|red 下载目录创建失败，若您将软件安装在 C 盘，请以管理员身份重新运行|@"));
+            return 0;
         }
 
         Book book = new BookParser(SOURCE_ID).parse(url);
@@ -168,7 +173,6 @@ public class Crawler {
                 // Windows 文件名非法字符替换
                 + "_" + chapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
                 + "." + extName;
-        // TODO fix 下载过快时报错：Exception in thread "pool-2-thread-10" java.io.FileNotFoundException: \so-novel-download\史上最强炼气期（李道然）\3141_第三千一百三十二章 万劫不复 为无敌妙妙琪的两顶皇冠加更（2\2）.html (系统找不到指定的路径。)
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
