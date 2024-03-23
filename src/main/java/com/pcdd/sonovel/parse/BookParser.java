@@ -1,14 +1,13 @@
-package com.pcdd.sonovel.core;
+package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-import java.net.URL;
 
 /**
  * @author pcdd
@@ -27,7 +26,7 @@ public class BookParser {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = rule.getBook();
-        Document document = Jsoup.parse(new URL(url), 30_000);
+        Document document = Jsoup.parse(URLUtil.url(url), 30_000);
         String bookName = document.selectXpath(r.getBookName()).text();
         String author = document.selectXpath(r.getAuthor()).attr("content");
         String description = document.selectXpath(r.getDescription()).text();

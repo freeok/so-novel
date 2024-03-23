@@ -21,7 +21,6 @@ public class ChapterConverter {
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        // 默认为 html 格式
         String content = ChapterFilter.filter(chapter.getContent());
         chapter.setContent(content);
 

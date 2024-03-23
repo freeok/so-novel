@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.core;
+package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
@@ -30,7 +30,7 @@ public class SearchResultParser {
     }
 
     @SneakyThrows
-    List<SearchResult> parse(String keyword) {
+    public List<SearchResult> parse(String keyword) {
         Rule.Search search = rule.getSearch();
         Connection connect = Jsoup.connect(search.getUrl());
         // 搜索结果页DOM
