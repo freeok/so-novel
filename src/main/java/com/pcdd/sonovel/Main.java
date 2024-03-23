@@ -36,6 +36,7 @@ public class Main {
             }
             if ("exit".equals(keyword.toLowerCase().trim())) {
                 Console.log("<== bye :)");
+                System.exit(0);
                 break;
             }
             List<SearchResult> results = Crawler.search(keyword);
