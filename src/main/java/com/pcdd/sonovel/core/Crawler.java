@@ -120,7 +120,7 @@ public class Crawler {
         // 阻塞主线程，用于计时
         CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
-        Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
+        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         // 爬取章节并下载
