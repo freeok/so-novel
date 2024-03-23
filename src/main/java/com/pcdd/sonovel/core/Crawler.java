@@ -42,7 +42,7 @@ public class Crawler {
 
     // 加载配置文件参数
     static {
-        Props p = Props.getProp("config.properties", StandardCharsets.UTF_8);
+        Props p = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
         SOURCE_ID = p.getInt("source_id");
         INDEX_URL = p.getStr("index_url");
         EXT_NAME = p.getStr("extName");
