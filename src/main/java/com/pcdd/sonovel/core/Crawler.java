@@ -8,6 +8,7 @@ import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,8 +43,8 @@ public class Crawler {
 
     // 加载配置文件参数
     static {
-        Props sys = Props.getProp("application.properties", StandardCharsets.UTF_8);
-        Props usr = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
+        Props sys = Settings.sys();
+        Props usr = Settings.usr();
 
         SOURCE_ID = sys.getInt("source_id");
         INDEX_URL = sys.getStr("index_url");

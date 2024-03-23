@@ -7,10 +7,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
 
@@ -66,9 +65,8 @@ public class Main {
     }
 
     private static void printHint() {
-        Props sys = Props.getProp("application.properties", StandardCharsets.UTF_8);
-        // classpath 下用户无法修改
-        Props usr = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
+        Props sys = Settings.sys();
+        Props usr = Settings.usr();
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
