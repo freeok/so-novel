@@ -9,6 +9,7 @@ import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
@@ -64,7 +65,9 @@ public class Main {
     }
 
     private static void printHint() {
-        Props p = Props.getProp("config.properties", StandardCharsets.UTF_8);
+
+        // classpath 下用户无法修改
+        Props p = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
