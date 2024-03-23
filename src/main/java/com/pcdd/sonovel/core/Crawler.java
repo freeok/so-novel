@@ -97,10 +97,10 @@ public class Crawler {
 
         // 小说目录名格式：书名(作者)
         bookDir = String.format("%s (%s)", bookName, author);
-        File dir = FileUtil.mkdir(SAVE_PATH + File.separator + bookDir);
+        File dir = FileUtil.mkdir(new File(SAVE_PATH + File.separator + bookDir));
         if (!dir.exists()) {
             // C:\Program Files 下创建需要管理员权限
-            Console.log(render("@|red 下载目录创建失败，若您将软件安装在 C 盘，请以管理员身份重新运行|@"));
+            Console.log(render("@|red 创建下载目录失败，安装目录需要管理员权限|@"));
             return 0;
         }
 

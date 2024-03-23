@@ -1,10 +1,11 @@
 name: Releases
 
 # 触发条件：git tag
-on:
-  push:
-    tags:
-      - 'v*'
+#on:
+#  push:
+#    tags:
+#      - 'v*'
+on: workflow_dispatch
 
 jobs:
   release-windows:

@@ -41,18 +41,8 @@ public class Main {
             if (results.isEmpty()) {
                 continue;
             }
-
             // 2. 打印搜索结果
-            ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
-            for (int i = 0; i < results.size(); i++) {
-                SearchResult r = results.get(i);
-                consoleTable.addBody(String.valueOf(i),
-                        r.getBookName(),
-                        r.getAuthor(),
-                        r.getLatestChapter(),
-                        r.getLatestUpdate());
-            }
-            Console.table(consoleTable);
+            printSearchResult(results);
 
             // 3. 选择后下载
             Console.log("==> 请输入下载序号（首列的数字）");
@@ -86,6 +76,19 @@ public class Main {
                 .addBody("2. 请按要求输入，然后按回车（Enter）执行")
                 .addBody("3. 结束程序请输入 exit")
         );
+    }
+
+    private static void printSearchResult(List<SearchResult> results) {
+        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
+        for (int i = 0; i < results.size(); i++) {
+            SearchResult r = results.get(i);
+            consoleTable.addBody(String.valueOf(i),
+                    r.getBookName(),
+                    r.getAuthor(),
+                    r.getLatestChapter(),
+                    r.getLatestUpdate());
+        }
+        Console.table(consoleTable);
     }
 
 }
