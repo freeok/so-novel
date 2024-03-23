@@ -65,15 +65,15 @@ public class Main {
     }
 
     private static void printHint() {
-
+        Props sys = Props.getProp("application.properties", StandardCharsets.UTF_8);
         // classpath 下用户无法修改
-        Props p = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
+        Props usr = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", p.getStr("version"))))
-                .addHeader("当前书源：" + p.getStr("index_url"))
-                .addHeader(render("导出格式：@|blue " + p.getStr("extName") + "|@"))
+                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", sys.getStr("version"))))
+                .addHeader("当前书源：" + sys.getStr("index_url"))
+                .addHeader(render("导出格式：@|blue " + usr.getStr("extName") + "|@"))
                 .addBody("使用须知")
                 .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试增大爬取间隔")
                 .addBody("2. 请按要求输入，然后按回车（Enter）执行")
