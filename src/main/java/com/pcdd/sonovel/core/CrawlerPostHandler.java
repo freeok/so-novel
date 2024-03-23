@@ -34,6 +34,7 @@ public class CrawlerPostHandler {
     }
 
     public void handle(String extName, Book book, File saveDir) {
+        StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕", book.getBookName(), book.getAuthor()));
         switch (extName) {
             case "txt":
                 mergeTxt(saveDir, book.getBookName(), book.getAuthor());
@@ -43,7 +44,10 @@ public class CrawlerPostHandler {
                 break;
             default:
         }
-        Console.log("\n<== 《{}》({})下载完毕，开始合并为 {}", book.getBookName(), book.getAuthor(), extName);
+        if ("txt".equals(extName) || "epub".equals(extName)) {
+            s.append("，开始合并为 ").append(extName);
+        }
+        Console.log(s);
     }
 
     @SneakyThrows
@@ -76,7 +80,7 @@ public class CrawlerPostHandler {
     }
 
     private void mergeTxt(File dir, String... args) {
-        String path = StrUtil.format("{}{}{} ({}).txt",
+        String path = StrUtil.format("{}{}{}（{}）.txt",
                 System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
