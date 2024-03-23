@@ -4,10 +4,13 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.parse.BookParser;
+import com.pcdd.sonovel.parse.SearchResultParser;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -18,7 +21,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -109,14 +111,12 @@ public class Crawler {
         }
 
         Book book = new BookParser(SOURCE_ID).parse(url);
-        Document document = Jsoup.parse(new URL(url), 30_000);
+        Document document = Jsoup.parse(URLUtil.url(url), 30_000);
         // 获取小说目录 TODO 抽取为 CatalogParser
         Elements elements = document.getElementById("list").getElementsByTag("a");
         int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
         // 线程池
-        ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1
-                ? autoThreads
-                : THREADS);
+        ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1 ? autoThreads : THREADS);
         // 阻塞主线程，用于计时
         CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? elements.size() : end);
 
@@ -137,6 +137,7 @@ public class Crawler {
         }
         // 等待全部下载完毕
         countDownLatch.await();
+        executor.shutdown();
 
         CrawlerPostHandler.handle(EXT_NAME, book, dir);
 
@@ -153,7 +154,7 @@ public class Crawler {
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(new URL(chapter.getUrl()), 30_000);
+            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 30_000);
             // 小说正文 html 格式
             chapter.setContent(document.getElementById("content").html());
             return ChapterConverter.convert(chapter, EXT_NAME);
@@ -175,7 +176,7 @@ public class Crawler {
         String path = SAVE_PATH + File.separator + bookDir + File.separator
                 + chapter.getChapterNo()
                 // Windows 文件名非法字符替换
-                + "_" + chapter.getTitle().replaceAll("\\\\|/|:|\\*|\\?|<|>", "")
+                + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
                 + "." + extName;
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
