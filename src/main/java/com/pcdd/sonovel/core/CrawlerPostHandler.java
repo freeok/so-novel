@@ -28,8 +28,8 @@ public class CrawlerPostHandler {
     private static final String SAVE_PATH;
 
     static {
-        Props p = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
-        SAVE_PATH = p.getStr("savePath");
+        Props usr = Props.getProp(System.getProperty("user.dir") + File.separator + "config.properties", StandardCharsets.UTF_8);
+        SAVE_PATH = usr.getStr("savePath");
     }
 
     public void handle(String extName, Book book, File saveDir) {
