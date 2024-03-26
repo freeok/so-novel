@@ -20,20 +20,15 @@ import java.util.Map;
 /**
  * @author pcdd
  */
-public class BookParser {
-
-    private final Rule rule;
+public class BookParser extends Parser{
 
     public BookParser(int sourceId) {
-        // 根据 ruleId 获取对应 json 文件内容
-        String jsonStr = ResourceUtil.readUtf8Str("rule/rule" + sourceId + ".json");
-        // json 封装进 Rule
-        this.rule = JSONUtil.toBean(jsonStr, Rule.class);
+       super(sourceId);
     }
 
     @SneakyThrows
     public Book parse(String url) {
-        Rule.Book r = rule.getBook();
+        Rule.Book r = this.rule.getBook();
         Document document = Jsoup.parse(URLUtil.url(url), 30_000);
         String bookName = document.selectXpath(r.getBookName()).text();
         String author = document.selectXpath(r.getAuthor()).attr("content");
