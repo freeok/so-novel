@@ -25,7 +25,8 @@ public class ChapterConverter {
         chapter.setContent(content);
 
         if ("txt".equals(extName)) {
-            content = chapter.getTitle() + HtmlUtil.cleanHtmlTag(content).replace("&nbsp;", " ");
+            content = chapter.getTitle() + "\n\n" + HtmlUtil.cleanHtmlTag(content)
+                    .replace("&nbsp;", " ");
         }
         if ("epub".equals(extName) || "html".equals(extName)) {
             content = templateRender(chapter, extName);
