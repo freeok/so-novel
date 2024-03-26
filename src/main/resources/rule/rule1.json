@@ -12,7 +12,7 @@
     "latestChapter": "",
     "latestUpdate": "",
     "isEnd": "",
-    "catalog": "//*[@id=\"list\"]"
+    "catalog": "//*[@id=\"list\"]/dl/dd/a"
   },
   "chapter": {
     "url": "https://www.xbiqugu.info/0/%s/%s.html",
