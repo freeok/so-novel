@@ -35,6 +35,11 @@ public class CrawlerPostHandler {
 
     public void handle(String extName, Book book, File saveDir) {
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕", book.getBookName(), book.getAuthor()));
+        if ("txt".equals(extName) || "epub".equals(extName)) {
+            s.append("，开始合并为 ").append(extName);
+        }
+        Console.log(s);
+
         switch (extName) {
             case "txt":
                 mergeTxt(saveDir, book.getBookName(), book.getAuthor());
@@ -44,10 +49,6 @@ public class CrawlerPostHandler {
                 break;
             default:
         }
-        if ("txt".equals(extName) || "epub".equals(extName)) {
-            s.append("，开始合并为 ").append(extName);
-        }
-        Console.log(s);
     }
 
     @SneakyThrows
@@ -61,20 +62,24 @@ public class CrawlerPostHandler {
 
         // TODO 创建 guide
         // Guide guide = book.getGuide();
-        // guide.addReference(new GuideReference(new Resource(bytes, "1.jpg"), "cover.jpg", GuideReference.COVER));
+        // guide.addReference(new GuideReference(new Resource(bytes, ".jpg"), "cover.jpg", GuideReference.COVER));
 
-        int i = 0;
+        int i = 1;
         // 遍历下载后的目录，添加章节
         for (File file : files(dir)) {
             // 截取第一个 _ 后的字符串，即章节名
             String title = StrUtil.subAfter(FileUtil.mainName(file), "_", false);
-            Resource resource = new Resource(FileUtil.readBytes(file), ++i + ".html");
+
+            Resource resource = new Resource(FileUtil.readBytes(file), i + ".html");
+            resource.setId(String.valueOf(i));
+            resource.setTitle(title);
             book.addSection(title, resource);
+
             // guide.addReference(new GuideReference(resource, i + ".html", GuideReference.TEXT));
+            i++;
         }
 
         EpubWriter epubWriter = new EpubWriter();
-
         String savePath = StrUtil.format("{}/{}.epub", dir.getParent(), b.getBookName());
         epubWriter.write(book, new FileOutputStream(savePath));
     }
