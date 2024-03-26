@@ -18,7 +18,7 @@
     "url": "https://www.xbiqugu.info/0/%s/%s.html",
     "chapterNo": 0,
     "title": "",
-    "content": ""
+    "content": "//*[@id=\"content\"]"
   },
   "search": {
     "url": "https://www.xbiqugu.info/modules/article/waps.php",

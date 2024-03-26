@@ -10,6 +10,7 @@ import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
+import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
@@ -24,7 +25,9 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -39,8 +42,6 @@ public class Crawler {
     private static final String EXT_NAME;
     private static final String SAVE_PATH;
     private static final int THREADS;
-    private static final long MIN_TIME_INTERVAL;
-    private static final long MAX_TIME_INTERVAL;
     private static String bookDir;
 
     // 加载配置文件参数
@@ -54,8 +55,6 @@ public class Crawler {
         EXT_NAME = usr.getStr("extName");
         SAVE_PATH = usr.getStr("savePath");
         THREADS = usr.getInt("threads");
-        MIN_TIME_INTERVAL = usr.getLong("min");
-        MAX_TIME_INTERVAL = usr.getLong("max");
     }
 
     private Crawler() {
@@ -123,15 +122,18 @@ public class Crawler {
         Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, elements.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+        ChapterParser chapterParser = new ChapterParser(SOURCE_ID);
         // 爬取章节并下载
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             int finalI = i;
             executor.execute(() -> {
-                download(Objects.requireNonNull(crawlChapter(Chapter.builder()
+                Chapter build = Chapter.builder()
                         .chapterNo(finalI + 1)
                         .title(elements.get(finalI).text())
                         .url(INDEX_URL + elements.get(finalI).attr("href"))
-                        .build(), countDownLatch)), countDownLatch);
+                        .build();
+                Chapter parse = chapterParser.parse(build, countDownLatch);
+                download(parse, countDownLatch);
                 countDownLatch.countDown();
             });
         }
@@ -143,28 +145,6 @@ public class Crawler {
 
         stopWatch.stop();
         return stopWatch.getTotalTimeSeconds();
-    }
-
-    /**
-     * 爬取小说章节 TODO 抽取为 ChapterParser
-     */
-    private static Chapter crawlChapter(Chapter chapter, CountDownLatch latch) {
-        try {
-            // 设置时间间隔
-            long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-            TimeUnit.MILLISECONDS.sleep(timeInterval);
-            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 30_000);
-            // 小说正文 html 格式
-            chapter.setContent(document.getElementById("content").html());
-            return ChapterConverter.convert(chapter, EXT_NAME);
-
-        } catch (Exception e) {
-            latch.countDown();
-            Console.error(e, e.getMessage());
-        }
-
-        return null;
     }
 
     /**
