@@ -18,10 +18,6 @@
 
 ## 使用
 
-下载最新版 https://github.com/pcdd-group/so-novel/releases
+下载最新免安装版 https://github.com/pcdd-group/so-novel/releases
 
-Windows 默认安装路径为 C:\Program Files，不建议在此安装，否则首次运行或下载目录不存在时都要以管理员身份运行
-
-## ✅TODO
-
-- txt 格式适配 koodo-reader 书名
+解压即用
