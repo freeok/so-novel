@@ -1,7 +1,5 @@
 package com.pcdd.sonovel.parse;
 
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
@@ -18,20 +16,15 @@ import java.util.stream.Stream;
 /**
  * @author pcdd
  */
-public class SearchResultParser {
-
-    private final Rule rule;
+public class SearchResultParser extends Parser {
 
     public SearchResultParser(int sourceId) {
-        // 根据 ruleId 获取对应 json 文件内容，不要使用 FileUtil.readString()！！因为不支持从 JAR 文件中读取文件
-        String jsonStr = ResourceUtil.readUtf8Str("rule/rule" + sourceId + ".json");
-        // json 封装进 Rule
-        this.rule = JSONUtil.toBean(jsonStr, Rule.class);
+        super(sourceId);
     }
 
     @SneakyThrows
     public List<SearchResult> parse(String keyword) {
-        Rule.Search search = rule.getSearch();
+        Rule.Search search = this.rule.getSearch();
         Connection connect = Jsoup.connect(search.getUrl());
         // 搜索结果页DOM
         Document document = connect.data("searchkey", keyword).post();
