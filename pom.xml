@@ -86,14 +86,13 @@
                         <id>make-assembly</id> <!-- this is used for inheritance merges -->
                         <phase>package</phase> <!-- bind to the packaging phase -->
                         <goals>
-                            <!-- 报红也不要删 -->
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
-        <!-- 使用 @@ application.yml 获取 pom 文件中的配置  -->
+        <!-- 用 @..@ 获取 pom 文件中的配置  -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
