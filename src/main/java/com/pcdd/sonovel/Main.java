@@ -23,7 +23,7 @@ public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = Console.scanner();
         printHint();
 
         while (true) {
@@ -35,7 +35,6 @@ public class Main {
             }
             if ("exit".equals(keyword.toLowerCase().trim())) {
                 Console.log("<== bye :)");
-                System.exit(0);
                 break;
             }
             List<SearchResult> results = Crawler.search(keyword);
