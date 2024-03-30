@@ -1,0 +1,29 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+      - name: Build executable
+        shell: powershell
+        run: sh bin/deploy.sh
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          # 供用户使用的最终产物
+          artifacts: "target/SoNovel_win.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN  }}
