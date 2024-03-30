@@ -13,6 +13,9 @@
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- <resource.delimiter>@</resource.delimiter> -->
     </properties>
 
     <dependencies>
@@ -91,6 +94,53 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <!--运行方式，控制台-->
+                            <headerType>console</headerType>
+                            <!--输出的exe文件-->
+                            <outfile>target/SoNovel/SoNovel.exe</outfile>
+                            <!--输出的jar-->
+                            <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
+                            <classPath>
+                                <!--换成自己的主类-->
+                                <mainClass>com.pcdd.sonovel.Main</mainClass>
+                                <addDependencies>true</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <!--配置jre-->
+                            <jre>
+                                <minVersion>1.8</minVersion>
+                                <!-- <path>./jre</path> -->
+                            </jre>
+                            <icon>${project.basedir}/assets/logo.ico</icon>
+                            <!--一些版本信息配置，根据需要配置-->
+                            <versionInfo>
+                                <fileVersion>${project.version}.0</fileVersion>
+                                <txtFileVersion>${project.version}.0</txtFileVersion>
+                                <fileDescription>Open source online novel search tool</fileDescription>
+                                <copyright>Copyright (C) 2024 pcdd. All rights reserved.</copyright>
+                                <productVersion>${project.version}.0</productVersion>
+                                <txtProductVersion>${project.version}.0</txtProductVersion>
+                                <productName>github.com/pcdd-group</productName>
+                                <internalName>So Novel</internalName>
+                                <originalFilename>So Novel.exe</originalFilename>
+                                <language>SIMPLIFIED_CHINESE</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <!-- 用 @..@ 获取 pom 文件中的配置  -->
         <resources>
@@ -100,5 +150,4 @@
             </resource>
         </resources>
     </build>
-
 </project>
