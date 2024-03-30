@@ -1,3 +1,5 @@
+# jpackage 支持 Windows、MacOS
+
 mvn clean package "-DskipTests"
 
 mkdir -p nobug/jpackage
