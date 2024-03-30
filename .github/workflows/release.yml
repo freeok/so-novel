@@ -1,11 +1,11 @@
 name: Releases
 
 # 触发条件：git tag
-#on:
-#  push:
-#    tags:
-#      - 'v*'
-on: workflow_dispatch
+on:
+  push:
+    tags:
+      - 'v*'
+#on: workflow_dispatch
 
 jobs:
   release-windows:
@@ -27,16 +27,14 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           # 供用户下载使用的最终产物
-          artifacts: "dist/SoNovel-Portable.tar.gz"
+          artifacts: "dist/SoNovel_win.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN  }}
 
 #  release-linux:
-#    # 运行环境
 #    runs-on: ubuntu-latest
 #    permissions:
 #      contents: write
 #    steps:
-#      # 拉取项目代码
 #      - name: Checkout code
 #        uses: actions/checkout@v4
 #      - name: Set up JDK and Maven
@@ -56,6 +54,5 @@ jobs:
 #      - name: Create Release
 #        uses: ncipollo/release-action@v1
 #        with:
-#          # 供用户下载使用的最终产物
-#          artifacts: "app-linux.tar.gz"
+#          artifacts: "dist/SoNovel_linux.tar.gz"
 #          token: ${{ secrets.GITHUB_TOKEN  }}
