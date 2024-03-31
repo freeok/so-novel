@@ -17,11 +17,11 @@ jobs:
           java-version: '17'
       - name: Build executable
         shell: powershell
-        run: sh deploy-windows.sh
+        run: sh jpackage-windows.sh
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "target/SoNovel_win.tar.gz"
+          artifacts: "target/sonovel-win.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN  }}
 
   release-linux:
