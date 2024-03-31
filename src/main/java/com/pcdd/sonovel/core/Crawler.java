@@ -1,9 +1,11 @@
 package com.pcdd.sonovel.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
@@ -108,13 +110,19 @@ public class Crawler {
         }
 
         // 获取小说目录
-        List<Chapter> catalog = new CatalogParser(SOURCE_ID).parse(url, start, end);
+        CatalogParser catalogParser = new CatalogParser(SOURCE_ID);
+        List<Chapter> catalog = catalogParser.parse(url, start, end);
+        // 防止 start、end 超出范围
+        if (CollUtil.isEmpty(catalog)) {
+            Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", catalogParser.parse(url).size())));
+            return 0;
+        }
 
         int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
         // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1 ? autoThreads : THREADS);
         // 阻塞主线程，用于计时
-        CountDownLatch countDownLatch = new CountDownLatch(end == Integer.MAX_VALUE ? catalog.size() : end);
+        CountDownLatch countDownLatch = new CountDownLatch(catalog.size());
 
         Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalog.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
