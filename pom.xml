@@ -110,7 +110,7 @@
                             <headerType>console</headerType>
                             <outfile>target/SoNovel/SoNovel.exe</outfile>
                             <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
-                            <icon>input/logo.ico</icon>
+                            <icon>assets/logo.ico</icon>
                             <errTitle>SoNovel</errTitle>
                             <!-- 崩溃时重新启动 -->
                             <restartOnCrash>true</restartOnCrash>
