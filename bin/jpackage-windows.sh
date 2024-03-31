@@ -17,4 +17,4 @@ cp config.ini dist/SoNovel
 rm dist/SoNovel/*.ico
 
 echo "开始打包压缩"
-tar czvf dist/SoNovel_win.tar.gz dist/SoNovel
+tar czvf dist/sonovel-win.tar.gz dist/SoNovel
