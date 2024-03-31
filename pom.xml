@@ -15,7 +15,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- <resource.delimiter>@</resource.delimiter> -->
     </properties>
 
     <dependencies>
@@ -105,36 +104,41 @@
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
+                        <!-- https://launch4j.sourceforge.net/docs.html#Configuration_file -->
                         <configuration>
-                            <!--运行方式，控制台-->
+                            <!-- 运行方式 gui|console|jniGui32|jniConsole32 -->
                             <headerType>console</headerType>
-                            <!--输出的exe文件-->
                             <outfile>target/SoNovel/SoNovel.exe</outfile>
-                            <!--输出的jar-->
                             <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
+                            <icon>${project.basedir}/assets/logo.ico</icon>
+                            <errTitle>SoNovel</errTitle>
+                            <!-- 崩溃时重新启动 -->
+                            <restartOnCrash>true</restartOnCrash>
                             <classPath>
-                                <!--换成自己的主类-->
                                 <mainClass>com.pcdd.sonovel.Main</mainClass>
                                 <addDependencies>true</addDependencies>
                                 <preCp>anything</preCp>
                             </classPath>
-                            <!--配置jre-->
                             <jre>
-                                <minVersion>1.8</minVersion>
-                                <!-- <path>./jre</path> -->
+                                <minVersion>17</minVersion>
+                                <!-- jre 目录，动态配置：-DjrePath=runtime -->
+                                <path>${jrePath}</path>
                             </jre>
-                            <icon>${project.basedir}/assets/logo.ico</icon>
-                            <!--一些版本信息配置，根据需要配置-->
+                            <!-- Windows 资源管理器显示的可选版本信息 -->
                             <versionInfo>
                                 <fileVersion>${project.version}.0</fileVersion>
                                 <txtFileVersion>${project.version}.0</txtFileVersion>
+                                <!-- 中文会乱码，待解决 -->
                                 <fileDescription>Open source online novel search tool</fileDescription>
                                 <copyright>Copyright (C) 2024 pcdd. All rights reserved.</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}.0</txtProductVersion>
-                                <productName>github.com/freeok</productName>
-                                <internalName>So Novel</internalName>
-                                <originalFilename>So Novel.exe</originalFilename>
+                                <!-- 中文会乱码，待解决 -->
+                                <productName>So Novel</productName>
+                                <companyName>github.com/freeok</companyName>
+                                <internalName>SoNovel</internalName>
+                                <originalFilename>SoNovel.exe</originalFilename>
+                                <trademarks>freeok</trademarks>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
                         </configuration>
@@ -142,7 +146,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <!-- 用 @..@ 获取 pom 文件中的配置  -->
+        <!-- resources 的文件用 @..@ 获取 pom.xml 的 properties -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
