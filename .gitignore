@@ -12,4 +12,4 @@ buildNumber.properties
 *.iml
 .idea
 download/
-dist/
+out/
