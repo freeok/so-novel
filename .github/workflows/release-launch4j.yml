@@ -20,10 +20,12 @@ jobs:
           java-version: '17'
       - name: Build executable
         shell: powershell
-        run: sh bin/deploy.sh
+        run: |
+          sh bin/deploy.sh
+          sh bin/deploy.sh jre
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          # 供用户使用的最终产物
-          artifacts: "target/SoNovel_win.tar.gz"
+          # 表示要上传到 Release 的产出文件。这可能是单个路径或以逗号分隔的路径列表（或 globs）
+          artifacts: "target/sonovel-win.tar.gz,target/sonovel-win-with-jre.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN  }}
