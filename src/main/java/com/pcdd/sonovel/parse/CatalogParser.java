@@ -29,6 +29,16 @@ public class CatalogParser extends Parser {
         super(sourceId);
     }
 
+    /**
+     * 解析全章
+     */
+    public List<Chapter> parse(String url) {
+        return parse(url, 1, Integer.MAX_VALUE);
+    }
+
+    /**
+     * 解析指定范围章节
+     */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
         Document document = Jsoup.parse(URLUtil.url(url), 30_000);
