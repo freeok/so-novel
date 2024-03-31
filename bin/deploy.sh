@@ -19,12 +19,14 @@ project_path=$(
   pwd
 )
 cd "$project_path" || exit
+mkdir out
 
 $maven_command
-cp config.ini target/SoNovel
+cp config.ini input/*.txt target/SoNovel
 if [ "$1" == "jre" ]; then
-  cp input/*.txt input/*.rar target/SoNovel
+  cp input/*.rar target/SoNovel
 fi
 
 cd target
 tar czvf $artifacts SoNovel
+cp  $artifacts $project_path/out
