@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class Settings {
 
     public Props sys() {
-        return Props.getProp("application.ini", StandardCharsets.UTF_8);
+        return Props.getProp("application.properties", StandardCharsets.UTF_8);
     }
 
     public Props usr() {
