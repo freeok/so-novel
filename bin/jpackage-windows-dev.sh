@@ -15,7 +15,7 @@ jpackage \
 --win-console \
 --input "target/jpackage" \
 --dest dist \
---icon input/logo.ico \
+--icon assets/logo.ico \
 --app-version 1.5.3 \
 --copyright "Copyright (C) 2024 pcdd. All rights reserved." \
 --description "开源搜书神器" \
