@@ -149,11 +149,13 @@ public class Crawler {
     private static void download(Chapter chapter, CountDownLatch latch) {
         // epub 格式转换前为 html
         String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
-        String path = SAVE_PATH + File.separator + bookDir + File.separator
-                + chapter.getChapterNo()
-                // Windows 文件名非法字符替换
-                + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
-                + "." + extName;
+        String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
+        String path = switch (EXT_NAME) {
+            case "html" -> parentPath + chapter.getChapterNo() + "." + extName;
+            default -> parentPath + chapter.getChapterNo()
+                    // Windows 文件名非法字符替换
+                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
+        };
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
