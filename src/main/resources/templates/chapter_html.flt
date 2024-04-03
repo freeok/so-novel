@@ -1,6 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>${title}</title>
+  <meta charset="UTF-8">
+  <link href="https://cdn.staticfile.net/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
   <style type="text/css">
     body {
       max-width: 800px;
@@ -14,17 +16,66 @@
 
     p {
       text-indent: 2em;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.1em;
       color: #939392;
       font-size: 25px;
       margin: 40px 0;
     }
+
+    .bottom-bar {
+      margin-top: 100px;
+    }
   </style>
 </head>
+
 <body>
   <h1>${title}</h1>
-  <div>
+  <div class="content">
     ${content}
   </div>
+  <div class="bottom-bar d-flex justify-content-between">
+    <button id="btn-pre" type="button" class="btn btn-primary btn-lg w-25" onclick="turnPage('pre')">上一页</button>
+    <button id="btn-next" type="button" class="btn btn-primary btn-lg w-25" onclick="turnPage('next')">下一页</button>
+  </div>
 </body>
+
+<script src="https://cdn.staticfile.net/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  // 当前页面 URL
+  const url = decodeURI(location.href)
+  const prefixUrl = url.substring(0, url.lastIndexOf('/') + 1)
+
+  // 获取当前文件名
+  let index = url.match(/(\d+)\.html/)[1]
+  console.log('当前页索引', index)
+
+  if (index <= 1) {
+    document.getElementById('btn-pre').disabled = true
+  }
+
+  function turnPage(action) {
+    action === 'next' ? ++index : --index
+    if (index < 1) {
+      index = 1
+      return
+    }
+    location.href = prefixUrl + index + '.html'
+  }
+
+  // 监听键盘按下事件
+  document.addEventListener('keyup', function (e) {
+    // 检查按下的是左箭头键还是右箭头键
+    switch (e.key) {
+      case 'ArrowRight':
+        turnPage('next')
+        break
+      case 'ArrowLeft':
+        turnPage('pre')
+        break
+      default:
+        break
+    }
+  })
+</script>
+
 </html>
