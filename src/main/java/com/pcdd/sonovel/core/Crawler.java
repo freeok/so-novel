@@ -37,7 +37,6 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class Crawler {
 
     private static final int SOURCE_ID;
-    private static final String INDEX_URL;
     private static final String EXT_NAME;
     private static final String SAVE_PATH;
     private static final int THREADS;
@@ -49,7 +48,6 @@ public class Crawler {
         Props usr = Settings.usr();
 
         SOURCE_ID = sys.getInt("source_id");
-        INDEX_URL = sys.getStr("index_url");
 
         EXT_NAME = usr.getStr("extName");
         SAVE_PATH = usr.getStr("savePath");
@@ -102,10 +100,11 @@ public class Crawler {
 
         // 小说目录名格式：书名(作者)
         bookDir = String.format("%s (%s)", bookName, author);
+        // 必须 new File()，否则无法使用 . 和 ..
         File dir = FileUtil.mkdir(new File(SAVE_PATH + File.separator + bookDir));
         if (!dir.exists()) {
             // C:\Program Files 下创建需要管理员权限
-            Console.log(render("@|red 创建下载目录失败，需要管理员权限|@"));
+            Console.log(render("@|red 创建下载目录失败\n1. 检查下载路径是否合法\n2. 尝试以管理员身份运行（C 盘部分目录需要管理员权限）|@"));
             return 0;
         }
 
