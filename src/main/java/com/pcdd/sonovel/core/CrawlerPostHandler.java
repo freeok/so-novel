@@ -2,7 +2,10 @@ package com.pcdd.sonovel.core;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
+import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.setting.dialect.Props;
@@ -17,6 +20,7 @@ import lombok.experimental.UtilityClass;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,20 +38,19 @@ public class CrawlerPostHandler {
     }
 
     public void handle(String extName, Book book, File saveDir) {
-        StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕", book.getBookName(), book.getAuthor()));
+        StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
         if ("txt".equals(extName) || "epub".equals(extName)) {
-            s.append("，开始合并为 ").append(extName);
+            s.append("开始合并为 ").append(extName);
+        }
+        if ("html".equals(extName)) {
+            s.append("开始生成目录文件");
         }
         Console.log(s);
 
         switch (extName) {
-            case "txt":
-                mergeTxt(saveDir, book.getBookName(), book.getAuthor());
-                break;
-            case "epub":
-                convertToEpub(saveDir, book);
-                break;
-            default:
+            case "txt" -> mergeTxt(saveDir, book.getBookName(), book.getAuthor());
+            case "epub" -> convertToEpub(saveDir, book);
+            case "html" -> generateCatalog(saveDir);
         }
     }
 
@@ -89,12 +92,32 @@ public class CrawlerPostHandler {
                 System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
+        appender.append("文件名\t章节名");
 
         for (File item : files(dir)) {
             String s = FileUtil.readString(item, StandardCharsets.UTF_8);
             appender.append(s);
         }
         appender.flush();
+    }
+
+    private static void generateCatalog(File saveDir) {
+        List<String> strings = new ArrayList<>();
+        List<File> files = files(saveDir);
+        String regex = "<title>(.*?)</title>";
+
+        strings.add("文件名\t\t章节名");
+        int i = 1;
+        for (File file : files) {
+            FileReader fr = FileReader.create(file, StandardCharsets.UTF_8);
+            // 获取 title 标签内容
+            String title = ReUtil.getGroup1(regex, fr.readString());
+            strings.add(StrUtil.format("{}_.html\t\t{}", i++, title));
+        }
+
+        File file = FileUtil.touch(saveDir + File.separator, "0_目录.txt");
+        FileWriter fw = FileWriter.create(file, StandardCharsets.UTF_8);
+        fw.writeLines(strings);
     }
 
     // 文件排序，按文件名升序
