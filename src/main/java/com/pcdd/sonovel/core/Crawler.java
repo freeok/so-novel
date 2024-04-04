@@ -151,7 +151,7 @@ public class Crawler {
         String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
         String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
         String path = switch (EXT_NAME) {
-            case "html" -> parentPath + chapter.getChapterNo() + "." + extName;
+            case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
             default -> parentPath + chapter.getChapterNo()
                     // Windows 文件名非法字符替换
                     + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
