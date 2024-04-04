@@ -2,7 +2,8 @@
 
 若无压缩文件，则说明您下载的是无 JRE 版本，默认您已安装了 JDK 或 JRE
 
-然后运行 exe 文件
+Windows 运行 exe 文件
+mscOS、Linux 运行 run.sh
 
 提示：
 1. config.ini 是配置文件，下载格式在此修改，保存后重新运行 exe 文件才能生效
