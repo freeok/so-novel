@@ -8,7 +8,7 @@
 
 可根据书名、作者搜索并下载小说
 
-支持导出格式：epub、txt、html
+支持导出格式：epub、txt、html（支持翻页）
 
 结合以下电子书阅读器使用更佳
 - 电脑：[koodo-reader](https://www.koodoreader.com/zh)
