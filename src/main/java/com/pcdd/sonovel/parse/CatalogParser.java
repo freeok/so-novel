@@ -57,8 +57,4 @@ public class CatalogParser extends Parser {
         return catalog;
     }
 
-    public static void main(String[] args) {
-        new CatalogParser(1).parse("https://www.xbiqugu.info/66/66747/", 1, 50);
-    }
-
 }
