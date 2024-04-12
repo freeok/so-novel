@@ -28,7 +28,7 @@ class CrawlTest {
     @DisplayName("解析搜索结果页")
     @SneakyThrows
     void test01() {
-        Connection connect = Jsoup.connect("https://www.xbiqugu.info/modules/article/waps.php");
+        Connection connect = Jsoup.connect("http://www.xbiqugu.net/modules/article/waps.php");
         // 搜索结果页DOM
         Document document = connect.data("searchkey", "斗罗大陆").post();
         Elements elements = document.selectXpath("//*[@id=\"checkform\"]/table/tbody/tr");
@@ -49,7 +49,7 @@ class CrawlTest {
     @DisplayName("爬取章节并下载")
     @SneakyThrows
     void test02() {
-        Document document = Jsoup.parse(new URL("https://www.xbiqugu.info/116/116314/43917573.html"), 30_000);
+        Document document = Jsoup.parse(new URL("http://www.xbiqugu.net/116/116314/43917573.html"), 30_000);
         String title = document.selectXpath("//*[@class='bookname']/h1").text();
         System.out.println(title);
         String content = document.getElementById("content").html();
@@ -64,7 +64,7 @@ class CrawlTest {
         }
     }
 
-    // @Test
+    @Test
     @DisplayName("目录排序")
     void test03() {
         File dir = FileUtil.file("D:\\Code\\IdeaProjects\\so-novel\\download\\斗罗大陆（唐家三少）");

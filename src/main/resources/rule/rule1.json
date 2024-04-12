@@ -1,9 +1,9 @@
 {
   "id": "1",
-  "url": "https://www.xbiqugu.info",
+  "url": "http://www.xbiqugu.net",
   "comment": "",
   "book": {
-    "url": "https://www.xbiqugu.info/0/%s/",
+    "url": "http://www.xbiqugu.net/0/%s/",
     "bookName": "//*[@id=\"info\"]/h1",
     "author": "/html/head/meta[13]",
     "description": "//*[@id=\"intro\"]/p[2]",
@@ -15,13 +15,13 @@
     "catalog": "//*[@id=\"list\"]/dl/dd/a"
   },
   "chapter": {
-    "url": "https://www.xbiqugu.info/0/%s/%s.html",
+    "url": "http://www.xbiqugu.net/0/%s/%s.html",
     "chapterNo": 0,
     "title": "",
     "content": "//*[@id=\"content\"]"
   },
   "search": {
-    "url": "https://www.xbiqugu.info/modules/article/waps.php",
+    "url": "http://www.xbiqugu.net/modules/article/waps.php",
     "method": "post",
     "param": {
       "searchkey": ""
