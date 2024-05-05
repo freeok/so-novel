@@ -11,5 +11,5 @@ buildNumber.properties
 
 *.iml
 .idea
-download/
+downloads/
 out/
