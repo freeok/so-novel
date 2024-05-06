@@ -1,0 +1,1 @@
+./runtime/Contents/Home/bin/java -jar app.jar
