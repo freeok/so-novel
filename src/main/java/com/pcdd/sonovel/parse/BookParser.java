@@ -1,11 +1,9 @@
 package com.pcdd.sonovel.parse;
 
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import lombok.SneakyThrows;
@@ -20,10 +18,10 @@ import java.util.Map;
 /**
  * @author pcdd
  */
-public class BookParser extends Parser{
+public class BookParser extends Parser {
 
     public BookParser(int sourceId) {
-       super(sourceId);
+        super(sourceId);
     }
 
     @SneakyThrows
