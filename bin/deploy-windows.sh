@@ -1,5 +1,11 @@
 # launch4j-maven-plugin 仅支持 windows
 
+# JRE 升级后需要修改下面两个变量
+# JRE 文件名
+jre_filename="jre-17.0.11+9-x64_windows.tar.gz"
+# JRE 解压后的目录名
+jre_dirname="jdk-17.0.11+9-jre"
+
 # 定义 Maven 命令并保存到变量中
 maven_command=""
 artifacts=""
@@ -31,8 +37,8 @@ fi
 cd target
 if [ "$1" == "jre" ]; then
   cd SoNovel
-  tar zxf jre-17.0.11+9-x64_windows.tar.gz && rm jre-17.0.11+9-x64_windows.tar.gz
-  mv jdk-17.0.11+9-jre runtime
+  tar zxf "$filename" && rm "$filename"
+  mv "$jre_dirname" runtime
   cd ..
 fi
 tar czf $artifacts SoNovel
