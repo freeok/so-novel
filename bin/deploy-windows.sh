@@ -12,10 +12,10 @@ artifacts=""
 # 根据传入的参数执行不同的操作
 if [ "$1" == "jre" ]; then
   maven_command="mvn clean package -DskipTests -DjrePath=runtime"
-  artifacts="sonovel-win-with-jre.tar.gz"
+  artifacts="sonovel-win64-with-jre.tar.gz"
 else
   maven_command="mvn clean package -DskipTests"
-  artifacts="sonovel-win.tar.gz"
+  artifacts="sonovel-win64.tar.gz"
 fi
 
 # 项目根目录，根据当前文件所在路径获取相对路径
