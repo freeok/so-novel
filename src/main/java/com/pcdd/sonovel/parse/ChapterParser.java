@@ -13,6 +13,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import static org.fusesource.jansi.AnsiRenderer.render;
+
 /**
  * @author pcdd
  */
@@ -46,7 +48,7 @@ public class ChapterParser extends Parser {
 
         } catch (Exception e) {
             latch.countDown();
-            Console.error(e, e.getMessage());
+            Console.error(render("==> @|red 章节下载失败：【{}】({})，原因：{}|@"), chapter.getTitle(), chapter.getUrl(), e.getMessage());
         }
 
         return null;
