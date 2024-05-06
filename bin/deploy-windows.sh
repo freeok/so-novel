@@ -37,7 +37,7 @@ fi
 cd target
 if [ "$1" == "jre" ]; then
   cd SoNovel
-  tar zxf "$filename" && rm "$filename"
+  tar zxf "$jre_filename" && rm "$jre_filename"
   mv "$jre_dirname" runtime
   cd ..
 fi
