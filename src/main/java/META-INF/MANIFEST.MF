@@ -1,2 +1,2 @@
-Manifest-Version: 1.5.4
+Manifest-Version: 1.5.5
 Main-Class: com.pcdd.sonovel.Main
