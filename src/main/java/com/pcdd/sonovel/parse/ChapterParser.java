@@ -39,7 +39,7 @@ public class ChapterParser extends Parser {
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 30_000);
+            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 15_000);
             // 小说正文 html 格式
             chapter.setContent(document.selectXpath(this.rule.getChapter().getContent()).html());
             return ChapterConverter.convert(chapter, EXT_NAME);
