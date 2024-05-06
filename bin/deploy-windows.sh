@@ -19,14 +19,15 @@ project_path=$(
   pwd
 )
 cd "$project_path" || exit
-mkdir out
+# -p 表示：如果存在则没有错误，根据需要创建父目录
+mkdir -p out
 
 $maven_command
 cp config.ini input/*.txt target/SoNovel
 if [ "$1" == "jre" ]; then
-  cp input/*.rar target/SoNovel
+  cp input/*windows.rar target/SoNovel
 fi
 
 cd target
 tar czvf $artifacts SoNovel
-cp  $artifacts $project_path/out
+cp $artifacts $project_path/out

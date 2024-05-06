@@ -21,8 +21,8 @@ jobs:
       - name: Build executable
         shell: powershell
         run: |
-          sh bin/deploy.sh
-          sh bin/deploy.sh jre
+          sh bin/deploy-windows.sh
+          sh bin/deploy-windows.sh jre
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
