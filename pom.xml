@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.5.4</version>
+    <version>1.5.5</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -26,12 +26,12 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.26</version>
+            <version>5.8.27</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.32</version>
         </dependency>
         <dependency>
             <groupId>io.documentnode</groupId>
@@ -54,11 +54,6 @@
             <artifactId>jansi</artifactId>
             <version>2.4.1</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.7.5</version>
-        </dependency> -->
     </dependencies>
 
     <build>
