@@ -1,6 +1,6 @@
 # launch4j-maven-plugin 仅支持 windows
 
-# JRE 升级后需要修改下面两个变量
+# JRE 升级后需要修改下面两个版本号
 # JRE 文件名
 jre_filename="jre-17.0.11+9-x64_windows.tar.gz"
 # JRE 解压后的目录名
@@ -43,3 +43,4 @@ if [ "$1" == "jre" ]; then
 fi
 tar czf $artifacts SoNovel
 mv $artifacts $project_path/out
+
