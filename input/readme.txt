@@ -1,6 +1,5 @@
 Windows 用户
-若有压缩文件，则需要先解压
-若无压缩文件，则说明您下载的是无 JRE 版本，默认您已安装了 JDK 17 或 JRE 17
+若无 runtime 目录，则说明您下载的是无 JRE 版本，默认您已安装了 JDK 17 或 JRE 17
 然后运行 exe 文件启动
 
 macOS、Linux 用户
