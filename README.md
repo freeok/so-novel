@@ -25,7 +25,7 @@
 ## 使用
 
 1. 下载最新版 https://github.com/freeok/so-novel/releases
-2. 根据 [help.txt](input%2Fhelp.txt) 使用
+2. 根据 [readme.txt](input%2Freadme.txt) 使用
 
 > [!NOTE]
 >
