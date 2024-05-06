@@ -147,6 +147,9 @@ public class Crawler {
      * 下载章节
      */
     private static void download(Chapter chapter, CountDownLatch latch) {
+        if (chapter == null) {
+            return;
+        }
         // epub 格式转换前为 html
         String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
         String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
