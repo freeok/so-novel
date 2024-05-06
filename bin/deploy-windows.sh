@@ -23,11 +23,17 @@ cd "$project_path" || exit
 mkdir -p out
 
 $maven_command
-cp config.ini input/*.txt target/SoNovel
+cp config.ini input/readme.txt target/SoNovel
 if [ "$1" == "jre" ]; then
-  cp input/*windows.rar target/SoNovel
+  cp input/*windows.tar.gz target/SoNovel
 fi
 
 cd target
-tar czvf $artifacts SoNovel
-cp $artifacts $project_path/out
+if [ "$1" == "jre" ]; then
+  cd SoNovel
+  tar zxf jre-17.0.11+9-x64_windows.tar.gz && rm jre-17.0.11+9-x64_windows.tar.gz
+  mv jdk-17.0.11+9-jre runtime
+  cd ..
+fi
+tar czf $artifacts SoNovel
+mv $artifacts $project_path/out
