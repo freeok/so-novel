@@ -32,3 +32,14 @@
 > 由于书源 URL 经常变动，旧版基本无法使用，请使用最新版
 >
 > 若最新版也无法使用，请 New issue，将尽快修复
+>
+
+## Star History
+
+<a href="https://star-history.com/#pcdd-group/so-novel&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline" />
+ </picture>
+</a>
