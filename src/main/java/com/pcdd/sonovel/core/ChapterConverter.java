@@ -48,7 +48,9 @@ public class ChapterConverter {
         // 构建符合 epub 标准的正文格式
         content = "<br>".concat(content.replaceAll("&nbsp;|\\s+", ""))
                 .replaceAll("<br>(.*?)<br>", "<p>$1</p>")
-                .replaceAll("<p></p>|<br>", "");
+                .replaceAll("<p></p>|<br>", "")
+                // 替换非法的 &..; 会导致乱码的字符
+                .replaceAll("&.+?;", "");
         map.put("content", content);
         content = template.render(map);
         return content;
