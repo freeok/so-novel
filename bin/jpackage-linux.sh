@@ -17,8 +17,8 @@ jpackage \
 --app-version 1.5.3 \
 --copyright "Copyright (C) 2024 pcdd. All rights reserved." \
 --description "开源搜书神器" \
---vendor "github.com/pcdd-group" \
---about-url "github.com/pcdd-group/so-novel" \
+--vendor "github.com/freeok" \
+--about-url "github.com/freeok/so-novel" \
 --main-jar "app-jar-with-dependencies.jar"
 
 cp config.ini dist/SoNovel

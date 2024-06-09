@@ -24,7 +24,7 @@
 
 ## 使用
 
-1. 下载最新版 https://github.com/pcdd-group/so-novel/releases
+1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](input%2Freadme.txt) 使用
 
 > [!NOTE]
@@ -36,10 +36,10 @@
 
 ## Star History
 
-<a href="https://star-history.com/#pcdd-group/so-novel&Timeline">
+<a href="https://star-history.com/#freeok/so-novel&Timeline">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pcdd-group/so-novel&type=Timeline" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline" />
  </picture>
 </a>

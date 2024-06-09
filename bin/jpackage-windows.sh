@@ -9,7 +9,7 @@ jpackage --version
 echo "开始构建exe"
 
 # GitHub Actions 日志: "Error: Invalid Option: [target]" 一个奇怪的错误
-jpackage --name "SoNovel" --type "app-image" --input "nobug/jpackage" --dest dist --icon assets/logo.ico --app-version 1.5.3 --copyright "Copyright (C) 2024 pcdd. All rights reserved." --description "开源搜书神器" --vendor "github.com/pcdd-group" --main-jar "app-jar-with-dependencies.jar" --win-console
+jpackage --name "SoNovel" --type "app-image" --input "nobug/jpackage" --dest dist --icon assets/logo.ico --app-version 1.5.3 --copyright "Copyright (C) 2024 pcdd. All rights reserved." --description "开源搜书神器" --vendor "github.com/freeok" --main-jar "app-jar-with-dependencies.jar" --win-console
 
 # cp: cannot create regular file 'dist/SoNovel': No such file or directory
 cp config.ini dist/SoNovel
@@ -46,7 +46,7 @@ tar czvf dist/sonovel-win.tar.gz dist/SoNovel
 #--app-version 1.5.3 \
 #--copyright "Copyright (C) 2024 pcdd. All rights reserved." \
 #--description "开源搜书神器" \
-#--vendor "github.com/pcdd-group" \
+#--vendor "github.com/freeok" \
 #--main-jar "app-jar-with-dependencies.jar"
 
 # msi 表示安装版
@@ -65,7 +65,7 @@ tar czvf dist/sonovel-win.tar.gz dist/SoNovel
 #--win-shortcut `
 #--win-shortcut-prompt `
 #--win-menu `
-#--vendor "github.com/pcdd-group" `
-#--about-url "github.com/pcdd-group/so-novel" `
-#--win-update-url "github.com/pcdd-group/so-novel/release" `
+#--vendor "github.com/freeok" `
+#--about-url "github.com/freeok/so-novel" `
+#--win-update-url "github.com/freeok/so-novel/release" `
 #--main-jar app-jar-with-dependencies.jar
