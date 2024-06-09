@@ -130,10 +130,10 @@
                                 <txtProductVersion>${project.version}.0</txtProductVersion>
                                 <!-- 中文会乱码，待解决 -->
                                 <productName>So Novel</productName>
-                                <companyName>github.com/pcdd-group</companyName>
+                                <companyName>github.com/freeok</companyName>
                                 <internalName>SoNovel</internalName>
                                 <originalFilename>SoNovel.exe</originalFilename>
-                                <trademarks>pcdd-group</trademarks>
+                                <trademarks>freeok</trademarks>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
                         </configuration>
