@@ -31,11 +31,11 @@ public class ChapterFilter {
     private String filterCharacters(String content) {
         /*  匹配现代汉字                     [\u4e00-\u9fa5]
             匹配更广泛的汉字                  [\u4e00-\u9fff]
-            匹配中文标点                     ·【】、；’，。！￥…（）—：“”《》？
+            匹配中文标点                     ·【】「」、；’，。！￥…（）—：“”《》？
             匹配 ASCII 字符（字母、数字、符号） [\x00-\x7F]
             匹配 ASCII 控制字符              [\x00-\x1F\x7F]
         */
-        return content.replaceAll("[^\\u4e00-\\u9fff·【】、；’，。！￥…（）—：“”《》？\\x00-\\x7F]|[\\x00-\\x1F\\x7F]", "");
+        return content.replaceAll("[^\\u4e00-\\u9fff·【】「」、；’，。！￥…（）—：“”《》？\\x00-\\x7F]|[\\x00-\\x1F\\x7F]", "");
     }
 
     /**
