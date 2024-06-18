@@ -60,6 +60,7 @@ public class CrawlerPostHandler {
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
         book.getMetadata().addDescription(b.getDescription());
+        book.getMetadata().setLanguage("zh");
         byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
         book.setCoverImage(new Resource(bytes, ".jpg"));
 
