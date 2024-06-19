@@ -1,1 +1,1 @@
-./runtime/Contents/Home/bin/java -jar app.jar
+./runtime/Contents/Home/bin/java -Dconfig.file=config.ini -jar app.jar
