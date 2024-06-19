@@ -60,6 +60,7 @@ public class CrawlerPostHandler {
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
         book.getMetadata().addDescription(b.getDescription());
+        // 不设置会导致部分阅读器出现问题（例如ibooks无法使用中文字体）
         book.getMetadata().setLanguage("zh");
         byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
         book.setCoverImage(new Resource(bytes, ".jpg"));
