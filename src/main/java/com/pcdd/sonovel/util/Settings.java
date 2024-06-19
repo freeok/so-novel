@@ -5,6 +5,8 @@ import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author pcdd
@@ -17,8 +19,22 @@ public class Settings {
     }
 
     public Props usr() {
-        // classpath 下的配置文件用户无法修改，因为已经打包进 jar
-        return Props.getProp(System.getProperty("user.dir") + File.separator + "config.ini", StandardCharsets.UTF_8);
-    }
+        try {
+            String configFilePath = System.getProperty("config.file");
 
+            if ((configFilePath == null) || configFilePath.isEmpty()) {
+                throw new IllegalArgumentException(
+                    "Config file path is not specified or is empty.");
+            }
+
+            Path absolutePath = Paths.get(configFilePath).toAbsolutePath();
+
+            return Props.getProp(absolutePath.toString(), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+
+            return null;
+        }
+    }
 }
