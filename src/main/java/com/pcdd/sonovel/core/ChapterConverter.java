@@ -45,12 +45,10 @@ public class ChapterConverter {
         Template template = engine.getTemplate(StrUtil.format("chapter_{}.flt", extName));
         Map<String, String> map = new HashMap<>();
         map.put("title", chapter.getTitle());
-        // 构建符合 epub 标准的正文格式
+        // 构建符合 epub 标准的正文格式，仅适用于书源 1
         content = "<br>".concat(content.replaceAll("&nbsp;|\\s+", ""))
                 .replaceAll("<br>(.*?)<br>", "<p>$1</p>")
-                .replaceAll("<p></p>|<br>", "")
-                // 替换非法的 &..; 会导致乱码的字符
-                .replaceAll("&.+?;", "");
+                .replaceAll("<p></p>|<br>", "");
         map.put("content", content);
         content = template.render(map);
         return content;
