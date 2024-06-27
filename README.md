@@ -12,7 +12,7 @@
 
 结合以下电子书阅读器使用更佳
 - 电脑：[koodo-reader](https://www.koodoreader.com/zh)
-- 手机：[Apple Books](https://www.apple.com/apple-books/)（iOS 图书）、微信读书
+- 手机：[Apple Books](https://www.apple.com/apple-books/)（iOS 图书）、~~微信读书~~（2024.4 更新后非付费会员每月最多导入三本书，先培养用户习惯，后开始收割）
 
 > [!WARNING]
 >
