@@ -2,25 +2,14 @@
 <head>
   <title>${title}</title>
   <style type="text/css">
-    body {
-      margin: 0 auto;
-      background: #111;
-    }
-
-    h1 {
-      color: #939392;
-    }
-
     p {
       text-indent: 2em;
-      letter-spacing: 2px;
-      color: #939392;
-      font-size: 25px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 <body>
-  <h1>${title}</h1>
+  <h2>${title}</h2>
   <div>
     ${content}
   </div>
