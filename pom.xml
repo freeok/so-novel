@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -133,7 +133,7 @@
                                 <companyName>github.com/freeok</companyName>
                                 <internalName>SoNovel</internalName>
                                 <originalFilename>SoNovel.exe</originalFilename>
-                                <trademarks>freeok</trademarks>
+                                <trademarks>pcdd</trademarks>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
                         </configuration>
