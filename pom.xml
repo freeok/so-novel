@@ -89,12 +89,13 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
                 <version>2.5.1</version>
                 <executions>
                     <execution>
-                        <id>l4j-clui</id>
+                        <id>launch4j-exe</id>
                         <phase>package</phase>
                         <goals>
                             <goal>launch4j</goal>
@@ -115,16 +116,16 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <minVersion>17</minVersion>
                                 <!-- jre 目录，动态配置：-DjrePath=runtime -->
                                 <path>${jrePath}</path>
+                                <minVersion>17</minVersion>
                             </jre>
                             <!-- Windows 资源管理器显示的可选版本信息 -->
                             <versionInfo>
                                 <fileVersion>${project.version}.0</fileVersion>
                                 <txtFileVersion>${project.version}.0</txtFileVersion>
                                 <!-- 中文会乱码，待解决 -->
-                                <fileDescription>Open source online novel search tool</fileDescription>
+                                <fileDescription>Open source online novel download tool</fileDescription>
                                 <copyright>Copyright (C) 2024 pcdd. All rights reserved.</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}.0</txtProductVersion>
