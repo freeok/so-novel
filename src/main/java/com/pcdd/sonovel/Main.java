@@ -46,16 +46,17 @@ public class Main {
 
             // 3. 选择后下载
             Console.log("==> 请输入下载序号（首列的数字）");
-            int num = scanner.nextInt();
+            int num = Integer.parseInt(scanner.nextLine());
             Console.log("==> 0: 下载全本");
             Console.log("==> 1: 下载指定章节");
-            int downloadPolicy = scanner.nextInt();
+            int downloadPolicy = Integer.parseInt(scanner.nextLine());
             int start = 1;
             int end = Integer.MAX_VALUE;
             if (downloadPolicy == 1) {
                 Console.log("==> 请输起始章(最小为1)和结束章，用空格隔开");
-                start = scanner.nextInt();
-                end = scanner.nextInt();
+                String[] split = scanner.nextLine().split("\\s+");
+                start = Integer.parseInt(split[0]);
+                end = Integer.parseInt(split[1]);
             }
             double res = Crawler.crawl(results, num, start, end);
             Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
