@@ -43,12 +43,13 @@ public class ChapterParser extends Parser {
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 15_000);
             // 小说正文 html 格式
-            chapter.setContent(document.selectXpath(this.rule.getChapter().getContent()).html());
+            chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
             return ChapterConverter.convert(chapter, EXT_NAME);
 
         } catch (Exception e) {
             latch.countDown();
             Console.error(render("==> @|red 章节下载失败：【{}】({})，原因：{}|@"), chapter.getTitle(), chapter.getUrl(), e.getMessage());
+            // TODO retry
         }
 
         return null;
