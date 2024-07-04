@@ -27,7 +27,7 @@ public class SearchResultParser extends Parser {
         Rule.Search search = this.rule.getSearch();
         Connection connect = Jsoup.connect(search.getUrl());
         // 搜索结果页DOM
-        Document document = connect.data("searchkey", keyword).post();
+        Document document = connect.data(search.getParamName().getKeyword(), keyword).post();
         Elements elements = document.select(search.getResult());
 
         List<SearchResult> list = new ArrayList<>();
