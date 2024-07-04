@@ -42,7 +42,7 @@ public class CatalogParser extends Parser {
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
         Document document = Jsoup.parse(URLUtil.url(url), 30_000);
-        Elements elements = document.selectXpath(this.rule.getBook().getCatalog());
+        Elements elements = document.select(this.rule.getBook().getCatalog());
         List<Chapter> catalog = new ArrayList<>();
 
         for (int i = start - 1; i < end && i < elements.size(); i++) {
