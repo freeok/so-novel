@@ -67,7 +67,6 @@ public class CrawlerPostHandler {
 
         // TODO 创建 guide
         // Guide guide = book.getGuide();
-        // guide.addReference(new GuideReference(new Resource(bytes, ".jpg"), "cover.jpg", GuideReference.COVER));
 
         int i = 1;
         // 遍历下载后的目录，添加章节
@@ -80,7 +79,6 @@ public class CrawlerPostHandler {
             resource.setTitle(title);
             book.addSection(title, resource);
 
-            // guide.addReference(new GuideReference(resource, i + ".html", GuideReference.TEXT));
             i++;
         }
 

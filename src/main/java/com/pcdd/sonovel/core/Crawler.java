@@ -157,7 +157,8 @@ public class Crawler {
             case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
             default -> parentPath + chapter.getChapterNo()
                     // Windows 文件名非法字符替换
-                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
+                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
+                    + "." + extName;
         };
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
