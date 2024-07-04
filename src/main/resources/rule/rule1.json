@@ -1,18 +1,18 @@
 {
   "id": "1",
   "url": "http://www.xbiqugu.net",
-  "comment": "",
+  "comment": "无限流",
   "book": {
     "url": "http://www.xbiqugu.net/0/%s/",
-    "bookName": "//*[@id=\"info\"]/h1",
-    "author": "/html/head/meta[13]",
-    "description": "//*[@id=\"intro\"]/p[2]",
-    "category": "",
-    "coverUrl": "//*[@id=\"fmimg\"]/img",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "description": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "#fmimg > img",
     "latestChapter": "",
     "latestUpdate": "",
     "isEnd": "",
-    "catalog": "//*[@id=\"list\"]/dl/dd/a"
+    "catalog": "#list > dl > dd > a"
   },
   "chapter": {
     "url": "http://www.xbiqugu.net/0/%s/%s.html",
