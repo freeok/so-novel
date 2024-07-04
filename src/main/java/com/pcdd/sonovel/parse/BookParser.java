@@ -28,10 +28,10 @@ public class BookParser extends Parser {
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
         Document document = Jsoup.parse(URLUtil.url(url), 30_000);
-        String bookName = document.selectXpath(r.getBookName()).text();
-        String author = document.selectXpath(r.getAuthor()).attr("content");
-        String description = document.selectXpath(r.getDescription()).text();
-        String coverUrl = document.selectXpath(r.getCoverUrl()).attr("src");
+        String bookName = document.select(r.getBookName()).attr("content");
+        String author = document.select(r.getAuthor()).attr("content");
+        String description = document.select(r.getDescription()).attr("content");
+        String coverUrl = document.select(r.getCoverUrl()).attr("src");
 
         Book book = new Book();
         book.setUrl(url);
