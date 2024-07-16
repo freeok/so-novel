@@ -12,13 +12,13 @@
 
 结合以下电子书阅读器使用更佳
 - 电脑：[koodo-reader](https://www.koodoreader.com/zh)
-- 手机：[Apple Books](https://www.apple.com/apple-books/)（iOS 图书）、~~微信读书~~（2024.4 更新后非付费会员每月最多导入三本书，先培养用户习惯，后开始收割）
+- 手机：[Apple Books](https://www.apple.com/apple-books/)、~~微信读书~~（2024.4 更新后非付费会员每月最多导入三本书，先培养用户习惯，后开始收割）
 
 > [!WARNING]
 >
 > iOS 16 Apple Books 目录不能定位到当前章节，如果看到很多章了，就需要从上一直向下划，十分不便
 > 
-> iOS 17 修复了该问题
+> iOS 17 修复了此 BUG
 
 ## 效果
 
@@ -39,13 +39,8 @@
 >
 > 若最新版也无法使用，请 New issue，将尽快修复
 >
+> 欢迎在 issue 推荐高质量书源（最好能搜到[起点人气榜单](https://www.qidian.com/rank/)的书、错别字少、同步更新快）
 
 ## Star History
 
-<a href="https://star-history.com/#freeok/so-novel&Timeline">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=freeok/so-novel&type=Timeline" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=freeok/so-novel&type=Date)](https://star-history.com/#freeok/so-novel&Date)
