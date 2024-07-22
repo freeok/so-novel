@@ -1,0 +1,61 @@
+name: 推荐书源
+description: 我希望 so-novel 增加这个书源
+title: 推荐书源 [此处填写书源 URL]
+labels:
+  - "new source"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 先决条件
+
+  - type: markdown
+    attributes:
+      value: |
+        - 支持搜索
+        - 每日更新
+        - 国内网络可直接访问（优质书源可忽略）
+
+  - type: checkboxes
+    attributes:
+      label: 我确保上述条件满足
+      options:
+        - label: "Yes"
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 填写内容
+
+  - type: input
+    attributes:
+      label: 书源 URL
+      placeholder: https://example.com/
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: 书源类型
+      options:
+        - 网络小说
+        - 轻小说
+        - 其它类（需在补充说明填写具体类型）
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: 勾选满足的条件（满足 3 个及以上为优质书源）
+      options:
+        - label: 无限流
+        - label: 书库全
+        - label: 起点人气榜单的书能搜到（https://www.qidian.com/rank/）
+        - label: 新书热书能同步更新
+        - label: 正文错别字少
+
+  - type: textarea
+    attributes:
+      label: 补充说明
+      description: 可不填
