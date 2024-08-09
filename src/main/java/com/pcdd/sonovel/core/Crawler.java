@@ -130,7 +130,7 @@ public class Crawler {
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
             Chapter chapter = chapterParser.parse(item, countDownLatch);
-            download(chapter, countDownLatch);
+            downloadChapter(chapter, countDownLatch);
             countDownLatch.countDown();
         }));
         // 等待全部下载完毕
@@ -146,26 +146,30 @@ public class Crawler {
     /**
      * 下载章节
      */
-    private static void download(Chapter chapter, CountDownLatch latch) {
+    private static void downloadChapter(Chapter chapter, CountDownLatch latch) {
         if (chapter == null) {
             return;
         }
-        // epub 格式转换前为 html
-        String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
-        String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
-        String path = switch (EXT_NAME) {
-            case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
-            default -> parentPath + chapter.getChapterNo()
-                    // Windows 文件名非法字符替换
-                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
-                    + "." + extName;
-        };
-        try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(path))) {
+        try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(generatePath(chapter)))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             latch.countDown();
             Console.error(e, e.getMessage());
         }
+    }
+
+    private static String generatePath(Chapter chapter) {
+        // epub 格式转换前的格式为 html
+        String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
+        String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
+        return switch (EXT_NAME) {
+            case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
+            case "epub", "txt" -> parentPath + chapter.getChapterNo()
+                    // Windows 文件名非法字符替换
+                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
+                    + "." + extName;
+            default -> throw new IllegalStateException("不支持的下载格式: " + EXT_NAME);
+        };
     }
 
 }
