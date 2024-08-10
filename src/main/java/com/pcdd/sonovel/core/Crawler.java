@@ -129,7 +129,7 @@ public class Crawler {
         ChapterParser chapterParser = new ChapterParser(SOURCE_ID);
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
-            Chapter chapter = chapterParser.parse(item, countDownLatch);
+            Chapter chapter = chapterParser.parse(item, r, countDownLatch);
             downloadChapter(chapter, countDownLatch);
             countDownLatch.countDown();
         }));
