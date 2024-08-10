@@ -56,7 +56,6 @@ public class ChapterParser extends Parser {
 
         } catch (Exception e) {
             latch.countDown();
-            Console.error(render("==> @|red 章节下载失败：【{}】({})，原因：{}|@"), chapter.getTitle(), chapter.getUrl(), e.getMessage());
             saveErrorLog(chapter, sr, e.getMessage());
             // TODO retry
         }
