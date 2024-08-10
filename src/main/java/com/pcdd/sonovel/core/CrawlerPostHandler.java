@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.fusesource.jansi.AnsiRenderer.render;
+
 /**
  * @author pcdd
  */
@@ -56,6 +58,11 @@ public class CrawlerPostHandler {
 
     @SneakyThrows
     private void convertToEpub(File dir, Book b) {
+        if (FileUtil.isDirEmpty(dir)) {
+            Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 epub|@"), b.getBookName(), b.getAuthor());
+            return;
+        }
+
         io.documentnode.epub4j.domain.Book book = new io.documentnode.epub4j.domain.Book();
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
@@ -70,7 +77,7 @@ public class CrawlerPostHandler {
 
         int i = 1;
         // 遍历下载后的目录，添加章节
-        for (File file : files(dir)) {
+        for (File file : sortFilesByName(dir)) {
             // 截取第一个 _ 后的字符串，即章节名
             String title = StrUtil.subAfter(FileUtil.mainName(file), "_", false);
 
@@ -94,7 +101,7 @@ public class CrawlerPostHandler {
         FileAppender appender = new FileAppender(file, 16, true);
         appender.append("文件名\t章节名");
 
-        for (File item : files(dir)) {
+        for (File item : sortFilesByName(dir)) {
             String s = FileUtil.readString(item, StandardCharsets.UTF_8);
             appender.append(s);
         }
@@ -103,7 +110,7 @@ public class CrawlerPostHandler {
 
     private static void generateCatalog(File saveDir) {
         List<String> strings = new ArrayList<>();
-        List<File> files = files(saveDir);
+        List<File> files = sortFilesByName(saveDir);
         String regex = "<title>(.*?)</title>";
 
         strings.add("文件名\t\t章节名");
@@ -121,7 +128,7 @@ public class CrawlerPostHandler {
     }
 
     // 文件排序，按文件名升序
-    private List<File> files(File dir) {
+    private List<File> sortFilesByName(File dir) {
         return Arrays.stream(dir.listFiles())
                 .sorted((o1, o2) -> {
                     String s1 = o1.getName();
