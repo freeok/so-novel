@@ -1,8 +1,11 @@
 Windows 用户
-直接运行 exe 文件启动
+运行 exe 文件启动
 
-macOS、Linux 用户
-直接运行 run.sh 启动
+macOS
+运行 macos-run.sh 启动
+
+Linux 用户
+运行 linux-run.sh 启动
 
 提示：
 1. config.ini 是配置文件，下载格式在此修改，保存后重新运行 exe 才能生效
