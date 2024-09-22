@@ -23,6 +23,7 @@ jobs:
         run: |
           sh bin/deploy-windows.sh
           sh bin/deploy-macos.sh
+          sh bin/deploy-linux.sh
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
