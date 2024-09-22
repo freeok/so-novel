@@ -1,8 +1,7 @@
-# launch4j-maven-plugin 仅支持 windows
+# launch4j-maven-plugin 仅支持 windows，mvn package 触发
 
-# JRE 升级后需要修改下面两个版本号
-
-# JRE 文件名
+# JRE 升级后需要修改下面 2 个版本号
+# JRE 压缩文件名
 jre_filename="jre-17.0.11+9-x64_windows.tar.gz"
 # JRE 解压后的目录名
 jre_dirname="jdk-17.0.11+9-jre"
@@ -26,13 +25,14 @@ $maven_command
 # 拷贝配置文件、使用说明
 cp config.ini input/readme.txt target/SoNovel
 # 拷贝环境依赖（JRE）
-cp input/*windows.tar.gz target/SoNovel
+cp "input/$jre_filename" target/SoNovel
 
-cd target
-cd SoNovel
+cd target/SoNovel
 tar zxf "$jre_filename" && rm "$jre_filename"
 mv "$jre_dirname" runtime
 cd ..
 tar czf $artifacts SoNovel
 mv $artifacts $project_path/out
+
+echo done!
 
