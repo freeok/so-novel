@@ -9,6 +9,15 @@
     <version>1.6.0</version>
     <packaging>jar</packaging>
 
+    <name>so-novel</name>
+    <url>https://github.com/freeok/so-novel</url>
+    <description>交互式网络小说下载器</description>
+    <inceptionYear>2021</inceptionYear>
+    <organization>
+        <name>freeok</name>
+        <url>https://github.com/freeok/</url>
+    </organization>
+
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -65,7 +74,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.7.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -87,6 +96,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <propertiesEncoding>UTF-8</propertiesEncoding>
+                </configuration>
             </plugin>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
