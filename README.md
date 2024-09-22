@@ -4,7 +4,7 @@
 
 ## 介绍
 
-交互式小说下载器，Windows、macOS 解压即用
+交互式小说下载器，Windows、macOS、Linux 解压即用
 
 可根据书名、作者搜索并下载小说
 
