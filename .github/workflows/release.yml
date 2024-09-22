@@ -22,7 +22,6 @@ jobs:
         shell: powershell
         run: |
           sh bin/deploy-windows.sh
-          sh bin/deploy-windows.sh jre
           sh bin/deploy-macos.sh
       - name: Create Release
         uses: ncipollo/release-action@v1

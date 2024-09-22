@@ -1,22 +1,16 @@
 # launch4j-maven-plugin 仅支持 windows
 
 # JRE 升级后需要修改下面两个版本号
+
 # JRE 文件名
 jre_filename="jre-17.0.11+9-x64_windows.tar.gz"
 # JRE 解压后的目录名
 jre_dirname="jdk-17.0.11+9-jre"
 
+# 压缩包文件名
+artifacts="sonovel-windows.tar.gz"
 # 定义 Maven 命令并保存到变量中
-maven_command=""
-artifacts=""
-# 根据传入的参数执行不同的操作
-if [ "$1" == "jre" ]; then
-  maven_command="mvn clean package -DskipTests -DjrePath=runtime"
-  artifacts="sonovel-win64-with-jre.tar.gz"
-else
-  maven_command="mvn clean package -DskipTests"
-  artifacts="sonovel-win64.tar.gz"
-fi
+maven_command="mvn clean package -DskipTests -DjrePath=runtime"
 
 # 项目根目录，根据当前文件所在路径获取相对路径
 project_path=$(
@@ -29,18 +23,16 @@ cd "$project_path" || exit
 mkdir -p out
 
 $maven_command
+# 拷贝配置文件、使用说明
 cp config.ini input/readme.txt target/SoNovel
-if [ "$1" == "jre" ]; then
-  cp input/*windows.tar.gz target/SoNovel
-fi
+# 拷贝环境依赖（JRE）
+cp input/*windows.tar.gz target/SoNovel
 
 cd target
-if [ "$1" == "jre" ]; then
-  cd SoNovel
-  tar zxf "$jre_filename" && rm "$jre_filename"
-  mv "$jre_dirname" runtime
-  cd ..
-fi
+cd SoNovel
+tar zxf "$jre_filename" && rm "$jre_filename"
+mv "$jre_dirname" runtime
+cd ..
 tar czf $artifacts SoNovel
 mv $artifacts $project_path/out
 
