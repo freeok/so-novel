@@ -18,16 +18,15 @@ project_path=$(
   pwd
 )
 cd "$project_path" || exit
-mkdir -p out
 
 mvn clean package -DskipTests
-
+mkdir -p out
 mkdir "target/$dist_dirname_arm64"
 mkdir "target/$dist_dirname_x64"
 
 # 复制配置文件、使用说明、启动脚本、JRE
-cp config.ini input/readme.txt input/run.sh input/*arm64_mac.tar.gz "target/$dist_dirname_arm64"
-cp config.ini input/readme.txt input/run.sh input/*x64_mac.tar.gz "target/$dist_dirname_x64"
+cp config.ini input/readme.txt input/macos-run.sh "input/$jre_filename_arm64" "target/$dist_dirname_arm64"
+cp config.ini input/readme.txt input/macos-run.sh "input/$jre_filename_x64" "target/$dist_dirname_x64"
 
 # 复制 jar
 cd target
@@ -48,6 +47,7 @@ cd ..
 tar czf "$dist_filename_arm64" "$dist_dirname_arm64"
 tar czf "$dist_filename_x64" "$dist_dirname_x64"
 
-# TODO .tar.gz 移动到 out 目录
 mv "$dist_filename_arm64" $project_path/out
 mv "$dist_filename_x64" $project_path/out
+
+echo done!
