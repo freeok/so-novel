@@ -28,8 +28,16 @@
 
 ## 使用
 
+### 普通安装
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](input%2Freadme.txt) 使用
+
+### Scoop 安装 🍨
+```bash
+# 若搜不到 so-novel，请先执行下面这一行命令
+scoop bucket add spc https://ghp.ci/https://github.com/lzwme/scoop-proxy-cn
+scoop install so-novel
+```
 
 > [!TIP]
 >
