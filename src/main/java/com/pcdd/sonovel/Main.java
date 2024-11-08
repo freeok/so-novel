@@ -71,6 +71,7 @@ public class Main {
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", sys.getStr("version"))) + "（本项目开源且免费）")
+                .addHeader("官方地址：https://github.com/freeok/so-novel")
                 .addHeader("当前书源：" + sys.getStr("index_url"))
                 .addHeader(render("导出格式：@|blue " + usr.getStr("extName") + "|@"))
                 .addBody("使用须知")
