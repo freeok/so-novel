@@ -108,6 +108,7 @@ public class Crawler {
             return 0;
         }
 
+        Console.log("<== 正在获取章节目录", bookName);
         // 获取小说目录
         CatalogParser catalogParser = new CatalogParser(SOURCE_ID);
         List<Chapter> catalog = catalogParser.parse(url, start, end);
