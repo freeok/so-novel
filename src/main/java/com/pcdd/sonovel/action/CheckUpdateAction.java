@@ -1,9 +1,12 @@
 package com.pcdd.sonovel.action;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.http.Method;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -12,6 +15,7 @@ import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
+import me.tongfei.progressbar.ProgressBar;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -64,10 +68,8 @@ public class CheckUpdateAction implements Action {
 
             } else {
                 Console.log("<== 已是最新版本！");
-                // download(getDownloadUrl(latestVersion));
             }
         }
-
     }
 
     private String getDownloadUrl(String version) {
@@ -89,22 +91,44 @@ public class CheckUpdateAction implements Action {
     }
 
     private void download(String url) {
+        // HEAD 请求不会下载文件内容，只会返回文件的元数据（例如文件大小）
+        long fileSize = HttpUtil.createRequest(Method.HEAD, url)
+                .timeout(10_000)
+                .execute()
+                .contentLength();
+        // 设置进度条
+        ProgressBar pb = new ProgressBar("Downloading", fileSize);
+
         // 弹出保存文件对话框，获取保存路径
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("选择保存路径");
+        fileChooser.setDialogTitle("选择下载位置");
         // 设置保存模式
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // 显示保存对话框
-        int userSelection = fileChooser.showSaveDialog(null);
+        int selection = fileChooser.showSaveDialog(null);
         // 如果用户选择了保存路径
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
+        if (selection == JFileChooser.APPROVE_OPTION) {
             File selectedDirectory = fileChooser.getSelectedFile();
-            Console.log("<== 文件保存路径：" + selectedDirectory);
-            HttpUtil.downloadFile(url, selectedDirectory);
-            Console.log("<== 文件下载完毕");
+            // 带进度显示的文件下载
+            HttpUtil.downloadFile(url, selectedDirectory, new StreamProgress() {
+                @Override
+                public void start() {
+                    pb.setExtraMessage("下载中...");
+                }
 
-        } else {
-            Console.log("<== 文件保存操作已取消");
+                @Override
+                public void progress(long total, long step) {
+                    // 更新进度条
+                    pb.stepTo(step);
+                }
+
+                @Override
+                public void finish() {
+                    pb.setExtraMessage("下载完成");
+                    pb.close();
+                    Console.log("<== 文件下载位置：" + selectedDirectory + FileUtil.getName(url));
+                }
+            });
         }
     }
 
