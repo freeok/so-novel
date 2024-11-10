@@ -68,6 +68,11 @@
             <artifactId>jline</artifactId>
             <version>3.27.1</version>
         </dependency>
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.10.1</version>
+        </dependency>
     </dependencies>
 
     <build>
