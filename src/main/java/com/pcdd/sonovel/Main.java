@@ -2,16 +2,18 @@ package com.pcdd.sonovel;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
-import com.pcdd.sonovel.core.Crawler;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.util.List;
-import java.util.Scanner;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -23,45 +25,31 @@ public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
-        Scanner scanner = Console.scanner();
-        printHint();
+        List<String> options = List.of("下载小说", "结束程序", "检查更新");
+        Terminal terminal = TerminalBuilder.terminal();
+        LineReader reader = LineReaderBuilder.builder()
+                .terminal(terminal)
+                .completer(new StringsCompleter(options))
+                .build();
+        String prompt = "根据需要选择 (按 Tab 键完成): ";
 
+        printHint();
         while (true) {
-            Console.log(render("==> @|blue 请输入书名或作者：|@"));
-            // 1. 输入书名或作者
-            String keyword = scanner.nextLine().trim();
-            if (keyword.isEmpty()) {
-                continue;
+            String cmd = reader.readLine(prompt).trim();
+            if (!options.contains(cmd)) {
+                Console.error("无效的选项，请重新选择。");
             }
-            if ("exit".equals(keyword.toLowerCase().trim())) {
+
+            if ("下载小说".equals(cmd)) {
+                new DownloadAction().execute(terminal);
+            }
+            if ("结束程序".equals(cmd)) {
                 Console.log("<== bye :)");
                 break;
             }
-            List<SearchResult> results = Crawler.search(keyword);
-            if (results.isEmpty()) {
-                continue;
-            }
-            // 2. 打印搜索结果
-            printSearchResult(results);
-
-            // 3. 选择后下载
-            Console.log("==> 请输入下载序号（首列的数字）");
-            int num = Integer.parseInt(scanner.nextLine());
-            Console.log("==> 0: 下载全本");
-            Console.log("==> 1: 下载指定章节");
-            int downloadPolicy = Integer.parseInt(scanner.nextLine());
-            int start = 1;
-            int end = Integer.MAX_VALUE;
-            if (downloadPolicy == 1) {
-                Console.log("==> 请输起始章(最小为1)和结束章，用空格隔开");
-                String[] split = scanner.nextLine().split("\\s+");
-                start = Integer.parseInt(split[0]);
-                end = Integer.parseInt(split[1]);
-            }
-            double res = Crawler.crawl(results, num, start, end);
-            Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
         }
 
+        terminal.close();
     }
 
     private static void printHint() {
@@ -79,19 +67,6 @@ public class Main {
                 .addBody("2. 请按要求输入，然后按回车（Enter）执行")
                 .addBody("3. 可输入 exit 结束程序")
         );
-    }
-
-    private static void printSearchResult(List<SearchResult> results) {
-        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
-        for (int i = 0; i < results.size(); i++) {
-            SearchResult r = results.get(i);
-            consoleTable.addBody(String.valueOf(i),
-                    r.getBookName(),
-                    r.getAuthor(),
-                    r.getLatestChapter(),
-                    r.getLatestUpdate());
-        }
-        Console.table(consoleTable);
     }
 
 }
