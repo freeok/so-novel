@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
+import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
@@ -42,6 +43,9 @@ public class Main {
 
             if ("下载小说".equals(cmd)) {
                 new DownloadAction().execute(terminal);
+            }
+            if ("检查更新".equals(cmd)) {
+                new CheckUpdateAction().execute(terminal);
             }
             if ("结束程序".equals(cmd)) {
                 Console.log("<== bye :)");
