@@ -63,10 +63,25 @@
             <artifactId>jansi</artifactId>
             <version>2.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.27.1</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- IDEA 的终端无法开发 jline 程序，因此在 wt 中运行 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>com.pcdd.sonovel.Main</mainClass>
+                </configuration>
+            </plugin>
+
             <!--
                 maven-jar-plugin 打包生成的 jar，只包含该工程下源码编译结果，不包含依赖内容
                 使用以下插件将所有外部库打包进 jar
