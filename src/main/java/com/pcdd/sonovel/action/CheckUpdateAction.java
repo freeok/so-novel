@@ -1,0 +1,111 @@
+package com.pcdd.sonovel.action;
+
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.setting.dialect.Props;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
+import com.pcdd.sonovel.util.Settings;
+import lombok.SneakyThrows;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.util.List;
+
+public class CheckUpdateAction implements Action {
+
+    public static final String GHP = "https://ghp.ci/";
+    public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
+
+    @SneakyThrows
+    @Override
+    public void execute(Terminal terminal) {
+        List<String> options = List.of("自动更新", "去官网下载");
+        LineReader reader = LineReaderBuilder.builder()
+                .terminal(terminal)
+                .completer(new StringsCompleter(options))
+                .build();
+        String cmd = reader.readLine("==> 请选择更新方式：").trim();
+
+        if ("去官网下载".equals(cmd)) {
+            Desktop desktop = Desktop.getDesktop();
+            if (!Desktop.isDesktopSupported()) {
+                Console.log("当前平台不支持 java.awt.Desktop");
+            }
+            if (!desktop.isSupported(Desktop.Action.BROWSE)) {
+                Console.log("当前系统不支持打开浏览器功能。");
+            }
+            desktop.browse(URLUtil.toURI("https://github.com/freeok/so-novel/releases"));
+        }
+
+        if ("自动更新".equals(cmd)) {
+            Console.log("<== 检查更新中...");
+
+            Props sys = Settings.sys();
+            String url = "https://api.github.com/repos/freeok/so-novel/releases";
+            JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url));
+            JSONObject latest = JSONUtil.parseObj(arr.get(0));
+            String latestVersion = latest.get("tag_name", String.class);
+            String currentVersion = "v" + sys.getStr("version");
+
+            if (latestVersion.compareTo(currentVersion) > 0) {
+                Console.log("<== 发现新版本：{}", latest.get("tag_name", String.class));
+                download(getDownloadUrl(latestVersion));
+
+            } else {
+                Console.log("<== 已是最新版本！");
+                // download(getDownloadUrl(latestVersion));
+            }
+        }
+
+    }
+
+    private String getDownloadUrl(String version) {
+        OsInfo osInfo = SystemUtil.getOsInfo();
+        String osName = osInfo.getName();
+        String arch = osInfo.getArch();
+        String fileName = "windows";
+
+        if (osName.contains("Windows")) {
+            fileName = "windows";
+        } else if (osName.contains("Mac")) {
+            // 根据架构进一步细分
+            fileName = "aarch64".equals(arch) ? "macos_arm64" : "macos_x64";
+        } else if (osName.contains("Linux")) {
+            fileName = "linux";
+        }
+
+        return GHP + StrUtil.format(ASSETS_URL, version, fileName);
+    }
+
+    private void download(String url) {
+        // 弹出保存文件对话框，获取保存路径
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("选择保存路径");
+        // 设置保存模式
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        // 显示保存对话框
+        int userSelection = fileChooser.showSaveDialog(null);
+        // 如果用户选择了保存路径
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File selectedDirectory = fileChooser.getSelectedFile();
+            Console.log("<== 文件保存路径：" + selectedDirectory);
+            HttpUtil.downloadFile(url, selectedDirectory);
+            Console.log("<== 文件下载完毕");
+
+        } else {
+            Console.log("<== 文件保存操作已取消");
+        }
+    }
+
+}
