@@ -34,14 +34,14 @@ public class CheckUpdateAction implements Action {
     @SneakyThrows
     @Override
     public void execute(Terminal terminal) {
-        List<String> options = List.of("自动更新", "去官网下载");
+        List<String> options = List.of("1.自动更新", "2.去官网下载");
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .completer(new StringsCompleter(options))
                 .build();
-        String cmd = reader.readLine("==> 请选择更新方式：").trim();
+        String cmd = reader.readLine("==> 按 Tab 键选择更新方式：").trim();
 
-        if ("去官网下载".equals(cmd)) {
+        if (options.get(1).equals(cmd)) {
             Desktop desktop = Desktop.getDesktop();
             if (!Desktop.isDesktopSupported()) {
                 Console.log("当前平台不支持 java.awt.Desktop");
@@ -52,7 +52,7 @@ public class CheckUpdateAction implements Action {
             desktop.browse(URLUtil.toURI("https://github.com/freeok/so-novel/releases"));
         }
 
-        if ("自动更新".equals(cmd)) {
+        if (options.get(0).equals(cmd)) {
             Console.log("<== 检查更新中...");
 
             Props sys = Settings.sys();
