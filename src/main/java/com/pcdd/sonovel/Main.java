@@ -21,34 +21,40 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 /**
  * @author pcdd
  * Created at 2021/6/10 16:18
+ * <p>
+ * IDEA 的终端无法开发 jline 程序，因此在 wt 中运行
+ * mvn compile exec:java
  */
 public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> options = List.of("下载小说", "结束程序", "检查更新");
+        List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.结束程序");
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .completer(new StringsCompleter(options))
                 .build();
-        String prompt = "根据需要选择 (按 Tab 键完成): ";
 
         printHint();
+
         while (true) {
-            String cmd = reader.readLine(prompt).trim();
+            String cmd = reader.readLine("按 Tab 键选择功能: ").trim();
             if (!options.contains(cmd)) {
                 Console.error("无效的选项，请重新选择。");
             }
 
-            if ("下载小说".equals(cmd)) {
+            if (options.get(0).equals(cmd)) {
                 new DownloadAction().execute(terminal);
             }
-            if ("检查更新".equals(cmd)) {
+            if (options.get(1).equals(cmd)) {
                 new CheckUpdateAction().execute(terminal);
             }
-            if ("结束程序".equals(cmd)) {
-                Console.log("<== bye :)");
+            if (options.get(2).equals(cmd)) {
+                Console.log(Settings.usr());
+            }
+            if (options.get(3).equals(cmd)) {
+                Console.log("<== Bye :)");
                 break;
             }
         }
