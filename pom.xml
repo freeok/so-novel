@@ -20,6 +20,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <jline.version>3.27.1</jline.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,7 +67,14 @@
         <dependency>
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
-            <version>3.27.1</version>
+            <version>${jline.version}</version>
+        </dependency>
+        <!-- https://github.com/jline/jline3?tab=readme-ov-file#ffm-vs-jni-vs-jansi-vs-jna-vs-exec -->
+        <!-- 不加运行 exe 报错 -->
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal-jni</artifactId>
+            <version>${jline.version}</version>
         </dependency>
         <dependency>
             <groupId>me.tongfei</groupId>
