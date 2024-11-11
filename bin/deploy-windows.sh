@@ -19,7 +19,7 @@ project_path=$(
 )
 cd "$project_path" || exit
 # -p 表示：如果存在则没有错误，根据需要创建父目录
-mkdir -p out
+mkdir -p out/
 
 $maven_command
 # 拷贝配置文件、使用说明
