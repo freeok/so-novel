@@ -30,7 +30,9 @@ public class Main {
     @SneakyThrows
     public static void main(String[] args) {
         List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.结束程序");
-        Terminal terminal = TerminalBuilder.terminal();
+        Terminal terminal = TerminalBuilder.builder()
+                .system(true)
+                .build();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .completer(new StringsCompleter(options))
@@ -40,10 +42,10 @@ public class Main {
 
         while (true) {
             String cmd = reader.readLine("按 Tab 键选择功能: ").trim();
-            if (!options.contains(cmd)) {
-                Console.error("无效的选项，请重新选择。");
-            }
 
+            if (!options.contains(cmd)) {
+                Console.error("无效的选项，请重新选择");
+            }
             if (options.get(0).equals(cmd)) {
                 new DownloadAction().execute(terminal);
             }
@@ -55,6 +57,7 @@ public class Main {
             }
             if (options.get(3).equals(cmd)) {
                 Console.log("<== Bye :)");
+                System.exit(0);
                 break;
             }
         }
@@ -74,7 +77,7 @@ public class Main {
                 .addHeader(render("导出格式：@|blue " + usr.getStr("extName") + "|@"))
                 .addBody("使用须知")
                 .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试增大爬取间隔")
-                .addBody("2. 请按要求输入，然后按回车（Enter）执行")
+                .addBody("2. 请按要求操作，然后按 Enter 键执行")
                 .addBody("3. 可输入 exit 结束程序")
         );
     }
