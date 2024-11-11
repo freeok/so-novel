@@ -39,7 +39,7 @@ public class CheckUpdateAction implements Action {
                 .terminal(terminal)
                 .completer(new StringsCompleter(options))
                 .build();
-        String cmd = reader.readLine("==> 按 Tab 键选择更新方式：").trim();
+        String cmd = reader.readLine("==> 按 Tab 键选择更新方式: ").trim();
 
         if (options.get(1).equals(cmd)) {
             Desktop desktop = Desktop.getDesktop();
@@ -63,7 +63,7 @@ public class CheckUpdateAction implements Action {
             String currentVersion = "v" + sys.getStr("version");
 
             if (latestVersion.compareTo(currentVersion) > 0) {
-                Console.log("<== 发现新版本：{}", latest.get("tag_name", String.class));
+                Console.log("<== 发现新版本: {}", latest.get("tag_name", String.class));
                 download(getDownloadUrl(latestVersion));
 
             } else {
@@ -126,7 +126,7 @@ public class CheckUpdateAction implements Action {
                 public void finish() {
                     pb.setExtraMessage("下载完成");
                     pb.close();
-                    Console.log("<== 文件下载位置：" + selectedDirectory + FileUtil.getName(url));
+                    Console.log("<== 文件下载位置: " + selectedDirectory + FileUtil.getName(url));
                 }
             });
         }
