@@ -50,7 +50,7 @@ public class CrawlerPostHandler {
         Console.log(s);
 
         switch (extName) {
-            case "epub" -> convertToEpub(saveDir, book);
+            case "epub" -> convert2Epub(saveDir, book);
             case "txt" -> mergeTxt(saveDir, book.getBookName(), book.getAuthor());
             case "html" -> generateCatalog(saveDir);
             default -> Console.error("暂不支持的格式：{}", extName);
@@ -58,7 +58,7 @@ public class CrawlerPostHandler {
     }
 
     @SneakyThrows
-    private void convertToEpub(File dir, Book b) {
+    private void convert2Epub(File dir, Book b) {
         if (FileUtil.isDirEmpty(dir)) {
             Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 epub|@"), b.getBookName(), b.getAuthor());
             return;
@@ -68,12 +68,11 @@ public class CrawlerPostHandler {
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
         book.getMetadata().addDescription(b.getDescription());
-        // 不设置会导致部分阅读器出现问题（例如ibooks无法使用中文字体）
+        // 不设置会导致 apple books 无法使用苹方字体
         book.getMetadata().setLanguage("zh");
         byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
         book.setCoverImage(new Resource(bytes, ".jpg"));
 
-        // TODO 创建 guide
         // Guide guide = book.getGuide();
 
         int i = 1;
