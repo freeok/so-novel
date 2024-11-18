@@ -50,9 +50,10 @@ public class CrawlerPostHandler {
         Console.log(s);
 
         switch (extName) {
-            case "txt" -> mergeTxt(saveDir, book.getBookName(), book.getAuthor());
             case "epub" -> convertToEpub(saveDir, book);
+            case "txt" -> mergeTxt(saveDir, book.getBookName(), book.getAuthor());
             case "html" -> generateCatalog(saveDir);
+            default -> Console.error("暂不支持的格式：{}", extName);
         }
     }
 
@@ -128,7 +129,7 @@ public class CrawlerPostHandler {
     }
 
     // 文件排序，按文件名升序
-    private List<File> sortFilesByName(File dir) {
+    public List<File> sortFilesByName(File dir) {
         return Arrays.stream(dir.listFiles())
                 .sorted((o1, o2) -> {
                     String s1 = o1.getName();
