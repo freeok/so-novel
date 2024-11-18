@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -21,8 +21,10 @@
     <properties>
         <java.version>17</java.version>
         <jline.version>3.27.1</jline.version>
-        <!-- 相当于 source + target -->
-        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <!-- 相当于 source + target，这种写法要求 Maven 3.6.0+、JDK 9+。https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html -->
+        <!-- <maven.compiler.release>${java.version}</maven.compiler.release> -->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
