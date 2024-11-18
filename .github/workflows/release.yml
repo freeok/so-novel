@@ -18,6 +18,8 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
+          # 启用 Maven 依赖缓存，以提高构建速度
+          cache: 'maven'
       - name: Build executable
         shell: powershell
         run: |

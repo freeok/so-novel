@@ -169,7 +169,7 @@ public class Crawler {
                     // Windows 文件名非法字符替换
                     + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
                     + "." + extName;
-            default -> throw new IllegalStateException("不支持的下载格式: " + EXT_NAME);
+            default -> throw new IllegalStateException("暂不支持的下载格式: " + EXT_NAME);
         };
     }
 
