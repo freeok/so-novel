@@ -17,9 +17,9 @@ class EpubTest {
     @SneakyThrows
     void createEpub() {
         Book book = new Book();
-        book.getMetadata().addTitle("重生之老子是皇帝");
-        book.getMetadata().addAuthor(new Author("贰蛋"));
-        book.getMetadata().addDescription("醉卧美人膝，醒掌天下权，这才是男人该有的生活！赵洞庭穿越成皇，为这个小目标不断奋斗。");
+        book.getMetadata().addTitle("武神主宰");
+        book.getMetadata().addAuthor(new Author("暗魔师"));
+        book.getMetadata().addDescription("天武大陆一代传奇秦尘，因好友背叛意外陨落武域。三百年后，他转生在一个受尽欺凌的王府私生子身上，利用前世造诣，凝神功、炼神丹，逆天而上，强势崛起，从此踏上一段震惊大陆的惊世之旅。");
         book.setCoverImage(new Resource(ResourceUtil.readBytes("cover.jpg"), "cover.jpg"));
 
         // 循环添加章节
