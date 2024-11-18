@@ -62,7 +62,13 @@ public class BookParser extends Parser {
 
         for (Element e : elements) {
             String name = e.select(".book-mid-info > .book-info-title > a").text();
-            String author = e.select(".book-mid-info > .author > i").text();
+            // 起点作者
+            String author1 = e.select(".book-mid-info > .author > .name").text();
+            // 非起点作者
+            String author2 = e.select(".book-mid-info > .author > i").text();
+            String author = author1.isEmpty() ? author2 : author1;
+
+            System.out.println(name + " " + author);
 
             if (book.getBookName().equals(name) && book.getAuthor().equals(author)) {
                 String coverUrl = e.select(".book-img-box > a > img").attr("src");
