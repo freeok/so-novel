@@ -37,7 +37,7 @@ public class DownloadAction implements Action {
         int start = 1;
         int end = Integer.MAX_VALUE;
         if (downloadPolicy == 1) {
-            String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开").split("\\s+");
+            String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
             start = Integer.parseInt(split[0]);
             end = Integer.parseInt(split[1]);
         }
