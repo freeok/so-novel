@@ -65,7 +65,7 @@ public class ChapterParser extends Parser {
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
         String line = StrUtil.format("下载失败章节：【{}】({})，原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
-        String path = StrUtil.format("{}{}《{}》（{}）下载失败.log", SAVE_PATH, File.separator, sr.getBookName(), sr.getAuthor());
+        String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", SAVE_PATH, File.separator, sr.getBookName(), sr.getAuthor());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, true))) {
             // 自带换行符
