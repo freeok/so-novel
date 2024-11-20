@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import cn.hutool.json.JSONArray;
@@ -16,15 +15,10 @@ import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.util.List;
 
 public class CheckUpdateAction implements Action {
 
@@ -34,14 +28,14 @@ public class CheckUpdateAction implements Action {
     @SneakyThrows
     @Override
     public void execute(Terminal terminal) {
-        List<String> options = List.of("1.自动更新", "2.去官网下载");
+        /* List<String> options = List.of("1.自动更新", "2.去官网下载");
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .completer(new StringsCompleter(options))
                 .build();
-        String cmd = reader.readLine("==> 按 Tab 键选择更新方式: ").trim();
+        String cmd = reader.readLine("==> 按 Tab 键选择更新方式: ").trim(); */
 
-        if (options.get(1).equals(cmd)) {
+        /* if (options.get(1).equals(cmd)) {
             Desktop desktop = Desktop.getDesktop();
             if (!Desktop.isDesktopSupported()) {
                 Console.log("当前平台不支持 java.awt.Desktop");
@@ -50,26 +44,25 @@ public class CheckUpdateAction implements Action {
                 Console.log("当前系统不支持打开浏览器功能。");
             }
             desktop.browse(URLUtil.toURI("https://github.com/freeok/so-novel/releases"));
+        } */
+
+        Console.log("<== 检查更新中...");
+
+        Props sys = Settings.sys();
+        String url = "https://api.github.com/repos/freeok/so-novel/releases";
+        JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url));
+        JSONObject latest = JSONUtil.parseObj(arr.get(0));
+        String latestVersion = latest.get("tag_name", String.class);
+        String currentVersion = "v" + sys.getStr("version");
+
+        if (latestVersion.compareTo(currentVersion) > 0) {
+            Console.log("<== 发现新版本: {}", latest.get("tag_name", String.class));
+            download(getDownloadUrl(latestVersion));
+        } else {
+            Console.log("<== 已是最新版本！");
         }
 
-        if (options.get(0).equals(cmd)) {
-            Console.log("<== 检查更新中...");
-
-            Props sys = Settings.sys();
-            String url = "https://api.github.com/repos/freeok/so-novel/releases";
-            JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url));
-            JSONObject latest = JSONUtil.parseObj(arr.get(0));
-            String latestVersion = latest.get("tag_name", String.class);
-            String currentVersion = "v" + sys.getStr("version");
-
-            if (latestVersion.compareTo(currentVersion) > 0) {
-                Console.log("<== 发现新版本: {}", latest.get("tag_name", String.class));
-                download(getDownloadUrl(latestVersion));
-
-            } else {
-                Console.log("<== 已是最新版本！");
-            }
-        }
+        Console.log(latest.get("html_url", String.class));
     }
 
     private String getDownloadUrl(String version) {
