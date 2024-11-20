@@ -63,6 +63,20 @@ scoop install so-novel
 >
 > 欢迎在 issue 推荐高质量书源（最好能搜到[起点人气榜单](https://www.qidian.com/rank/)的书、错别字少、同步更新快）
 
+## 常见问题
+
+macOS & Linux 运行 .sh 前需要执行命令去除行尾的 ^M
+
+```bash
+dos2unix macos-run.sh
+或
+dos2unix linux-run.sh
+```
+
+macOS & Linux 运行 .sh 报错：./runtime/bin/java: Permission denied
+
+执行命令 `chmod 777 runtime/bin/java`
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=freeok/so-novel&type=Date)](https://star-history.com/#freeok/so-novel&Date)
