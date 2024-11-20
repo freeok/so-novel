@@ -27,13 +27,21 @@ public class DownloadAction implements Action {
         if (results.isEmpty()) return;
 
         // 2. 打印搜索结果
-        printSearchResult(Crawler.search(keyword));
+        printSearchResult(results);
 
+        int num;
+        int downloadPolicy;
         // 3. 选择下载章节
-        int num = Integer.parseInt(reader.readLine("==> 请输入下载序号（首列的数字）"));
-        Console.log("==> 0: 下载全本");
-        Console.log("==> 1: 下载指定章节");
-        int downloadPolicy = Integer.parseInt(reader.readLine(""));
+        do {
+            num = Integer.parseInt(reader.readLine("==> 请输入下载序号（首列的数字）"));
+            SearchResult sr = results.get(num);
+            Console.log("<== 你选择了《{}》({})", sr.getBookName(), sr.getAuthor());
+            Console.log("==> 0: 下载全本");
+            Console.log("==> 1: 下载指定章节");
+            Console.log("==> 2: 重新选择");
+            downloadPolicy = Integer.parseInt(reader.readLine(""));
+        } while (downloadPolicy == 2);
+
         int start = 1;
         int end = Integer.MAX_VALUE;
         if (downloadPolicy == 1) {
