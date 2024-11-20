@@ -78,7 +78,6 @@ public class Main {
                 .addBody("使用须知")
                 .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试增大爬取间隔")
                 .addBody("2. 请按要求操作，然后按 Enter 键执行")
-                .addBody("3. 可输入 exit 结束程序")
         );
     }
 
