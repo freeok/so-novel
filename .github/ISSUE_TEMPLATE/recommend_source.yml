@@ -12,13 +12,14 @@ body:
   - type: markdown
     attributes:
       value: |
+        - 无 Cloudflare 五秒盾
         - 支持搜索
         - 每日更新
         - 国内网络可直接访问（优质书源可忽略）
 
   - type: checkboxes
     attributes:
-      label: 我确保推荐的书源满足上述条件
+      label: 确定推荐的书源满足上述条件？
       options:
         - label: "Yes"
           required: true
