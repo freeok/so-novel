@@ -65,17 +65,13 @@ scoop install so-novel
 
 ## 常见问题
 
-macOS & Linux 运行 .sh 前需要执行命令去除行尾的 ^M
+macOS & Linux 运行 .sh 失败，尝试以下命令
 
 ```bash
 dos2unix macos-run.sh
 或
 dos2unix linux-run.sh
 ```
-
-macOS & Linux 运行 .sh 报错：./runtime/bin/java: Permission denied
-
-执行命令 `chmod 777 runtime/bin/java`
 
 ## Star History
 
