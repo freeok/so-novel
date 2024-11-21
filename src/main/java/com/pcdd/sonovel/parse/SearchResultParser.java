@@ -18,6 +18,8 @@ import java.util.stream.Stream;
  */
 public class SearchResultParser extends Parser {
 
+    private static final int TIMEOUT_MILLS = 15_000;
+
     public SearchResultParser(int sourceId) {
         super(sourceId);
     }
@@ -25,7 +27,7 @@ public class SearchResultParser extends Parser {
     @SneakyThrows
     public List<SearchResult> parse(String keyword) {
         Rule.Search search = this.rule.getSearch();
-        Connection connect = Jsoup.connect(search.getUrl()).timeout(10_000);
+        Connection connect = Jsoup.connect(search.getUrl()).timeout(TIMEOUT_MILLS);
         // 搜索结果页DOM
         Document document = connect.data(search.getParamName().getKeyword(), keyword).post();
         Elements elements = document.select(search.getResult());
