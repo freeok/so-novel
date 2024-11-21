@@ -26,18 +26,22 @@ public class ChapterParser extends Parser {
 
     private static final String EXT_NAME;
     private static final String SAVE_PATH;
-    private static final long MIN_TIME_INTERVAL;
-    private static final long MAX_TIME_INTERVAL;
-    // 下载失败章节最大重试次数
-    private static final int MAX_RETRY_ATTEMPTS = 3;
+    private static final long MIN_INTERVAL;
+    private static final long MAX_INTERVAL;
+    private static final int MAX_RETRY_ATTEMPTS;
+    private static final long RETRY_MIN_INTERVAL;
+    private static final long RETRY_MAX_INTERVAL;
     private static final int TIMEOUT_MILLS = 15_000;
 
     static {
         Props usr = Settings.usr();
-        EXT_NAME = usr.getStr("extName");
-        SAVE_PATH = usr.getStr("savePath");
-        MIN_TIME_INTERVAL = usr.getLong("min");
-        MAX_TIME_INTERVAL = usr.getLong("max");
+        EXT_NAME = usr.getStr("extName", "epub");
+        SAVE_PATH = usr.getStr("savePath", "downloads");
+        MIN_INTERVAL = usr.getLong("min", 10L);
+        MAX_INTERVAL = usr.getLong("max", 100L);
+        MAX_RETRY_ATTEMPTS = usr.getInt("retryCount", 3);
+        RETRY_MIN_INTERVAL = usr.getLong("retryMin", 100L);
+        RETRY_MAX_INTERVAL = usr.getLong("retryMax", 3000L);
     }
 
     public ChapterParser(int sourceId) {
@@ -47,7 +51,7 @@ public class ChapterParser extends Parser {
     public Chapter parse(Chapter chapter, SearchResult sr, CountDownLatch latch) {
         try {
             // 设置时间间隔
-            long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+            long timeInterval = ThreadLocalRandom.current().nextLong(MIN_INTERVAL, MAX_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
@@ -67,7 +71,7 @@ public class ChapterParser extends Parser {
                 Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, MAX_RETRY_ATTEMPTS);
 
                 // 随机时间间隔以避免被反爬机制识别
-                TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextLong(100, 3000));
+                TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextLong(RETRY_MIN_INTERVAL, RETRY_MAX_INTERVAL));
 
                 // 再次尝试下载
                 Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
