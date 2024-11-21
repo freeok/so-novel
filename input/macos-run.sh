@@ -1,1 +1,1 @@
-chmod 777 ./runtime/bin/java && ./runtime/Contents/Home/bin/java -Dconfig.file=config.ini -jar app.jar
+chmod 777 ./runtime/Contents/Home/bin/java && ./runtime/Contents/Home/bin/java -Dconfig.file=config.ini -jar app.jar
