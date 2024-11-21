@@ -73,10 +73,7 @@ public class Crawler {
         List<SearchResult> searchResults = searchResultParser.parse(keyword);
 
         stopWatch.stop();
-        Console.log("<== 搜索到 {} 条记录，耗时 {} s\n",
-                searchResults.size(),
-                NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2)
-        );
+        Console.log("<== 搜索到 {} 条记录，耗时 {} s\n", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
 
         return searchResults;
     }
@@ -122,7 +119,7 @@ public class Crawler {
         // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1 ? autoThreads : THREADS);
         // 阻塞主线程，用于计时
-        CountDownLatch countDownLatch = new CountDownLatch(catalog.size());
+        CountDownLatch latch = new CountDownLatch(catalog.size());
 
         Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalog.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
@@ -130,31 +127,29 @@ public class Crawler {
         ChapterParser chapterParser = new ChapterParser(SOURCE_ID);
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
-            Chapter chapter = chapterParser.parse(item, r, countDownLatch);
-            downloadChapter(chapter, countDownLatch);
-            countDownLatch.countDown();
+            createChapterFile(chapterParser.parse(item, r, latch));
+            Console.log("<== 待下载章节数：{}", latch.getCount());
         }));
-        // 等待全部下载完毕
-        countDownLatch.await();
+
+        // 阻塞主线程，等待章节全部下载完毕
+        latch.await();
         executor.shutdown();
-
         CrawlerPostHandler.handle(EXT_NAME, book, dir);
-
         stopWatch.stop();
+
         return stopWatch.getTotalTimeSeconds();
     }
 
     /**
-     * 下载章节
+     * 保存章节
      */
-    private static void downloadChapter(Chapter chapter, CountDownLatch latch) {
+    private static void createChapterFile(Chapter chapter) {
         if (chapter == null) {
             return;
         }
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(generatePath(chapter)))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            latch.countDown();
             Console.error(e, e.getMessage());
         }
     }
@@ -167,8 +162,7 @@ public class Crawler {
             case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
             case "epub", "txt" -> parentPath + chapter.getChapterNo()
                     // Windows 文件名非法字符替换
-                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "")
-                    + "." + extName;
+                    + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
             default -> throw new IllegalStateException("暂不支持的下载格式: " + EXT_NAME);
         };
     }
