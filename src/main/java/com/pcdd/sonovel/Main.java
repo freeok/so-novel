@@ -76,7 +76,7 @@ public class Main {
                 .addHeader("当前书源：" + sys.getStr("index_url"))
                 .addHeader(render("导出格式：@|blue " + usr.getStr("extName") + "|@"))
                 .addBody("使用须知")
-                .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试增大爬取间隔")
+                .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试修改爬取间隔，直至合适为止")
                 .addBody("2. 请按要求操作，然后按 Enter 键执行")
         );
     }
