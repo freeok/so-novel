@@ -18,6 +18,7 @@ import java.util.List;
 public class CatalogParser extends Parser {
 
     public static final String INDEX_URL;
+    private static final int TIMEOUT_MILLS = 30_000;
 
     // 加载配置文件参数
     static {
@@ -41,7 +42,7 @@ public class CatalogParser extends Parser {
      */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
-        Document document = Jsoup.parse(URLUtil.url(url), 30_000);
+        Document document = Jsoup.parse(URLUtil.url(url), TIMEOUT_MILLS);
         Elements elements = document.select(this.rule.getBook().getCatalog());
         List<Chapter> catalog = new ArrayList<>();
 
