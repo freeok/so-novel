@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public class BookParser extends Parser {
 
+    private static final int TIMEOUT_MILLS = 30_000;
+
     public BookParser(int sourceId) {
         super(sourceId);
     }
@@ -27,7 +29,7 @@ public class BookParser extends Parser {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
-        Document document = Jsoup.parse(URLUtil.url(url), 30_000);
+        Document document = Jsoup.parse(URLUtil.url(url), TIMEOUT_MILLS);
         String bookName = document.select(r.getBookName()).attr("content");
         String author = document.select(r.getAuthor()).attr("content");
         String description = document.select(r.getDescription()).attr("content");
