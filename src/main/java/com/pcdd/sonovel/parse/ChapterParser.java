@@ -11,12 +11,13 @@ import com.pcdd.sonovel.util.Settings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-
-import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -27,6 +28,9 @@ public class ChapterParser extends Parser {
     private static final String SAVE_PATH;
     private static final long MIN_TIME_INTERVAL;
     private static final long MAX_TIME_INTERVAL;
+    // 下载失败章节最大重试次数
+    private static final int MAX_RETRY_ATTEMPTS = 3;
+    private static final int TIMEOUT_MILLS = 15_000;
 
     static {
         Props usr = Settings.usr();
@@ -42,22 +46,44 @@ public class ChapterParser extends Parser {
 
     public Chapter parse(Chapter chapter, SearchResult sr, CountDownLatch latch) {
         try {
-            // 随机抛异常，测试用
-            // int i = System.currentTimeMillis() % 2 == 0 ? 0 : 1 / 0;
-
             // 设置时间间隔
             long timeInterval = ThreadLocalRandom.current().nextLong(MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), 15_000);
+            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
             // 小说正文 html 格式
             chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
+            latch.countDown();
             return ChapterConverter.convert(chapter, EXT_NAME);
 
         } catch (Exception e) {
-            latch.countDown();
-            saveErrorLog(chapter, sr, e.getMessage());
-            // TODO retry
+            return retry(chapter, latch, sr);
+        }
+    }
+
+    private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
+        for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+            try {
+                Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, MAX_RETRY_ATTEMPTS);
+
+                // 随机时间间隔以避免被反爬机制识别
+                TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextLong(100, 3000));
+
+                // 再次尝试下载
+                Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
+                chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
+                Console.log("<== 重试成功: 【{}】", chapter.getTitle());
+                latch.countDown();
+                return ChapterConverter.convert(chapter, EXT_NAME);
+
+            } catch (Exception e) {
+                Console.error("==> 重试失败: 【{}】，原因: {}", chapter.getTitle(), e.getMessage());
+                if (attempt == MAX_RETRY_ATTEMPTS) {
+                    latch.countDown();
+                    // 最终失败时记录日志
+                    saveErrorLog(chapter, sr, e.getMessage());
+                }
+            }
         }
 
         return null;
