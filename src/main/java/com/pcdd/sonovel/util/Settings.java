@@ -1,7 +1,6 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.setting.dialect.Props;
 import lombok.experimental.UtilityClass;
 
