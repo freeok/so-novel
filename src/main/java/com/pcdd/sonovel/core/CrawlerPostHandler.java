@@ -42,12 +42,12 @@ public class CrawlerPostHandler {
     public void handle(String extName, Book book, File saveDir) {
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
         if ("txt".equals(extName) || "epub".equals(extName)) {
-            s.append("开始合并为 ").append(extName);
+            s.append("正在合并为 ").append(extName.toUpperCase());
         }
         if ("html".equals(extName)) {
-            s.append("开始生成目录文件");
+            s.append("正在生成 HTML 目录文件");
         }
-        Console.log(s);
+        Console.log(s.append(" ..."));
 
         switch (extName) {
             case "epub" -> convert2Epub(saveDir, book);
