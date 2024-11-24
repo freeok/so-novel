@@ -7,7 +7,7 @@
     "url": "http://www.xbiqugu.net/0/%s/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
-    "description": "meta[property=\"og:description\"]",
+    "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "#fmimg > img",
     "latestChapter": "",
