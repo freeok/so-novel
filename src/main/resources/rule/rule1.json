@@ -1,7 +1,8 @@
 {
   "id": "1",
   "url": "http://www.xbiqugu.net",
-  "comment": "无限流",
+  "comment": "无限流、五秒盾",
+  "type": "html",
   "book": {
     "url": "http://www.xbiqugu.net/0/%s/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
@@ -23,7 +24,7 @@
   "search": {
     "url": "http://www.xbiqugu.net/modules/article/waps.php",
     "method": "post",
-    "paramName": {
+    "body": {
       "keyword": "searchkey"
     },
     "result": "#checkform > table > tbody > tr",
