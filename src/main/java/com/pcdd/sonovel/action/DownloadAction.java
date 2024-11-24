@@ -29,17 +29,25 @@ public class DownloadAction implements Action {
         // 2. 打印搜索结果
         printSearchResult(results);
 
-        int num;
-        int downloadPolicy;
+        int num = 0;
+        int downloadPolicy = 2;
         // 3. 选择下载章节
         do {
-            num = Integer.parseInt(reader.readLine("==> 请输入下载序号（首列的数字）"));
+            String s = reader.readLine("==> 请输入下载序号（首列的数字）");
+            // 健壮性判断：必须为数字
+            try {
+                num = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            // 健壮性判断：必须为首列的数字
+            if (num < 0 || num >= results.size()) continue;
             SearchResult sr = results.get(num);
             Console.log("<== 你选择了《{}》({})", sr.getBookName(), sr.getAuthor());
             Console.log("==> 0: 下载全本");
             Console.log("==> 1: 下载指定章节");
             Console.log("==> 2: 重新选择");
-            downloadPolicy = Integer.parseInt(reader.readLine(""));
+            downloadPolicy = Integer.parseInt(reader.readLine("==> 请输入数字："));
         } while (downloadPolicy == 2);
 
         int start = 1;
