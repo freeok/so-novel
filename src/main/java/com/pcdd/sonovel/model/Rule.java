@@ -20,7 +20,7 @@ public class Rule {
         private String url;
         private String bookName;
         private String author;
-        private String description;
+        private String intro;
         private String category;
         private String coverUrl;
         private String latestChapter;

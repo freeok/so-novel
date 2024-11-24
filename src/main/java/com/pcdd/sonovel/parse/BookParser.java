@@ -32,14 +32,14 @@ public class BookParser extends Parser {
         Document document = Jsoup.parse(URLUtil.url(url), TIMEOUT_MILLS);
         String bookName = document.select(r.getBookName()).attr("content");
         String author = document.select(r.getAuthor()).attr("content");
-        String description = document.select(r.getDescription()).attr("content");
+        String intro = document.select(r.getIntro()).attr("content");
         String coverUrl = document.select(r.getCoverUrl()).attr("src");
 
         Book book = new Book();
         book.setUrl(url);
         book.setBookName(bookName);
         book.setAuthor(author);
-        book.setDescription(description);
+        book.setIntro(intro);
         book.setCoverUrl(coverUrl);
         book.setCoverUrl(replaceCover(book));
 
