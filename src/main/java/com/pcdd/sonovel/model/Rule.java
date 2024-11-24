@@ -13,7 +13,7 @@ public class Rule {
     private Book book;
     private Chapter chapter;
     private Search search;
-    private ParamName paramName;
+    private Body body;
 
     @Data
     public static class Book {
@@ -42,7 +42,7 @@ public class Rule {
         private String url;
         private String method;
         // 请求载荷的 key
-        private ParamName paramName;
+        private Body body;
         // 以下字段不同书源可能不同
         private String result;
         private String bookName;
@@ -52,7 +52,7 @@ public class Rule {
     }
 
     @Data
-    public static class ParamName {
+    public static class Body {
         // 关键字的参数名
         private String keyword;
     }
