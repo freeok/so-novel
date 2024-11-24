@@ -67,7 +67,7 @@ public class CrawlerPostHandler {
         io.documentnode.epub4j.domain.Book book = new io.documentnode.epub4j.domain.Book();
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
-        book.getMetadata().addDescription(b.getDescription());
+        book.getMetadata().addDescription(b.getIntro());
         // 不设置会导致 apple books 无法使用苹方字体
         book.getMetadata().setLanguage("zh");
         byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
