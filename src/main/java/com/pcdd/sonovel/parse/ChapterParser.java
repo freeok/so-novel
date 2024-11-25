@@ -55,8 +55,14 @@ public class ChapterParser extends Parser {
             TimeUnit.MILLISECONDS.sleep(timeInterval);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
             Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
-            // 小说正文 html 格式
-            chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
+            String contentType = this.rule.getChapter().getContentType();
+            if ("html".equals(contentType)) {
+                // 小说正文 html 格式
+                chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
+            } else if ("text".equals(contentType)) {
+                // 小说正文 text 格式
+                chapter.setContent(document.select(this.rule.getChapter().getContent()).text());
+            }
             latch.countDown();
             return ChapterConverter.convert(chapter, EXT_NAME);
 
