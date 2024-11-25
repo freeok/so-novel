@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.util.URLUtil;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Rule;
 import lombok.SneakyThrows;
@@ -15,7 +16,7 @@ import java.util.Optional;
 /**
  * @author pcdd
  */
-public class CatalogParser extends Parser {
+public class CatalogParser extends Source {
 
     private static final int TIMEOUT_MILLS = 30_000;
 

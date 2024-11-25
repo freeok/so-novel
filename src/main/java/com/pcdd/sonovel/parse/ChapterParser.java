@@ -3,11 +3,10 @@ package com.pcdd.sonovel.parse;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.core.ChapterConverter;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.Settings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -19,30 +18,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import static com.pcdd.sonovel.util.ConfigConsts.*;
+
 /**
  * @author pcdd
  */
-public class ChapterParser extends Parser {
+public class ChapterParser extends Source {
 
-    private static final String EXT_NAME;
-    private static final String SAVE_PATH;
-    private static final long MIN_INTERVAL;
-    private static final long MAX_INTERVAL;
-    private static final int MAX_RETRY_ATTEMPTS;
-    private static final long RETRY_MIN_INTERVAL;
-    private static final long RETRY_MAX_INTERVAL;
     private static final int TIMEOUT_MILLS = 15_000;
-
-    static {
-        Props usr = Settings.usr();
-        EXT_NAME = usr.getStr("extName", "epub");
-        SAVE_PATH = usr.getStr("savePath", "downloads");
-        MIN_INTERVAL = usr.getLong("min", 10L);
-        MAX_INTERVAL = usr.getLong("max", 100L);
-        MAX_RETRY_ATTEMPTS = usr.getInt("retryCount", 3);
-        RETRY_MIN_INTERVAL = usr.getLong("retryMin", 100L);
-        RETRY_MAX_INTERVAL = usr.getLong("retryMax", 3000L);
-    }
 
     public ChapterParser(int sourceId) {
         super(sourceId);

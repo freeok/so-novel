@@ -12,6 +12,8 @@ import lombok.experimental.UtilityClass;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.pcdd.sonovel.util.ConfigConsts.SOURCE_ID;
+
 /**
  * @author pcdd
  */
@@ -21,7 +23,7 @@ public class ChapterConverter {
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        String content = ChapterFilter.filter(chapter.getContent());
+        String content = new ChapterFilter(SOURCE_ID).filter(chapter.getContent());
         chapter.setContent(content);
 
         if ("txt".equals(extName)) {
