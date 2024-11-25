@@ -3,6 +3,7 @@ package com.pcdd.sonovel.parse;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.SneakyThrows;
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * @author pcdd
  */
-public class SearchResultParser extends Parser {
+public class SearchResultParser extends Source {
 
     private static final int TIMEOUT_MILLS = 15_000;
 

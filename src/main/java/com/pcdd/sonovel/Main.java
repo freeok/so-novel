@@ -3,7 +3,6 @@ package com.pcdd.sonovel;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.parse.BookParser;
@@ -17,6 +16,7 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.util.List;
 
+import static com.pcdd.sonovel.util.ConfigConsts.*;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -54,7 +54,7 @@ public class Main {
                 new CheckUpdateAction().execute(terminal);
             }
             if (options.get(2).equals(cmd)) {
-                Console.log(Settings.usr());
+                Console.log(cm.getUsr());
             }
             if (options.get(3).equals(cmd)) {
                 Console.log("<== Bye :)");
@@ -67,15 +67,13 @@ public class Main {
     }
 
     private static void printHint() {
-        Props sys = Settings.sys();
-        Props usr = Settings.usr();
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", sys.getStr("version"))) + "（本项目开源且免费）")
+                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", VERSION)) + "（本项目开源且免费）")
                 .addHeader("官方地址：https://github.com/freeok/so-novel")
-                .addHeader(StrUtil.format("当前书源：{} (ID: {})", new BookParser(sys.getInt("source_id")).rule.getUrl(), sys.getInt("source_id")))
-                .addHeader(render("导出格式：@|blue " + usr.getStr("extName") + "|@"))
+                .addHeader(StrUtil.format("当前书源：{} (ID: {})", new BookParser(SOURCE_ID).rule.getUrl(), SOURCE_ID))
+                .addHeader(render("导出格式：@|blue " + EXT_NAME + "|@"))
                 .addBody("使用须知")
                 .addBody("1. 下载受书源、网络等因素影响，若下载失败可尝试修改爬取间隔，直至合适为止")
                 .addBody("2. 请按要求操作，然后按 Enter 键执行")
