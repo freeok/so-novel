@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
@@ -14,7 +13,6 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
-import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
@@ -28,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.pcdd.sonovel.util.ConfigConsts.*;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -36,23 +35,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Crawler {
 
-    private static final int SOURCE_ID;
-    private static final String EXT_NAME;
-    private static final String SAVE_PATH;
-    private static final int THREADS;
     private static String bookDir;
-
-    // 加载配置文件参数
-    static {
-        Props sys = Settings.sys();
-        Props usr = Settings.usr();
-
-        SOURCE_ID = sys.getInt("source_id");
-
-        EXT_NAME = usr.getStr("extName");
-        SAVE_PATH = usr.getStr("savePath");
-        THREADS = usr.getInt("threads");
-    }
 
     private Crawler() {
     }
