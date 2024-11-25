@@ -1,20 +1,21 @@
 package com.pcdd.sonovel.core;
 
 import cn.hutool.http.HtmlUtil;
-import lombok.experimental.UtilityClass;
 
 /**
  * @author pcdd
  * 规则仅适用于书源 1
  */
-@UtilityClass
-public class ChapterFilter {
+public class ChapterFilter extends Source {
 
     /**
      * 使用正则表达式构建匹配模式
      */
-    private final String adsPattern = "一秒记住【文学巴士&nbsp;】，精彩无弹窗免费阅读！" +
-            "|(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！";
+    private final String adsPattern = "一秒记住【文学巴士&nbsp;】，精彩无弹窗免费阅读！|(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！";
+
+    public ChapterFilter(int sourceId) {
+        super(sourceId);
+    }
 
     /*
       匹配现代汉字                     [\u4e00-\u9fa5]
@@ -31,16 +32,7 @@ public class ChapterFilter {
      * 正文内容过滤
      */
     public String filter(String content) {
-        content = filterCharacters(content);
-        return filterAds(content);
-    }
-
-    /**
-     * 过滤广告
-     */
-    private String filterAds(String content) {
-        String filteredContent = content.replaceAll(adsPattern, "");
-        return HtmlUtil.removeHtmlTag(filteredContent, "div", "p", "script");
+        return filterAds(filterCharacters(content));
     }
 
     /**
@@ -49,6 +41,14 @@ public class ChapterFilter {
     private String filterCharacters(String content) {
         // 替换非法的 &..;（HTML字符实体引用），可能会导致ibooks章节报错
         return content.replaceAll("&.+?;", "");
+    }
+
+    /**
+     * 过滤广告
+     */
+    private String filterAds(String content) {
+        String filteredContent = content.replaceAll(adsPattern, "");
+        return HtmlUtil.removeHtmlTag(filteredContent, "div", "p", "script");
     }
 
 }
