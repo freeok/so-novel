@@ -8,9 +8,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.util.Settings;
 import io.documentnode.epub4j.domain.Author;
 import io.documentnode.epub4j.domain.Resource;
 import io.documentnode.epub4j.epub.EpubWriter;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.pcdd.sonovel.util.ConfigConsts.SAVE_PATH;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -31,13 +30,6 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 @UtilityClass
 public class CrawlerPostHandler {
-
-    private static final String SAVE_PATH;
-
-    static {
-        Props usr = Settings.usr();
-        SAVE_PATH = usr.getStr("savePath");
-    }
 
     public void handle(String extName, Book book, File saveDir) {
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
