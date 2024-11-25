@@ -10,10 +10,24 @@ public class Rule {
 
     private int id;
     private String url;
+    private Search search;
     private Book book;
     private Chapter chapter;
-    private Search search;
-    private Body body;
+
+    @Data
+    public static class Search {
+        private String url;
+        private String method;
+        private String param;
+        private String body;
+        private String cookies;
+        // 以下字段不同书源可能不同
+        private String result;
+        private String bookName;
+        private String latestChapter;
+        private String author;
+        private String update;
+    }
 
     @Data
     public static class Book {
@@ -36,26 +50,7 @@ public class Rule {
         private Integer chapterNo;
         private String title;
         private String content;
-    }
-
-    @Data
-    public static class Search {
-        private String url;
-        private String method;
-        // 请求载荷的 key
-        private Body body;
-        // 以下字段不同书源可能不同
-        private String result;
-        private String bookName;
-        private String latestChapter;
-        private String author;
-        private String update;
-    }
-
-    @Data
-    public static class Body {
-        // 关键字的参数名
-        private String keyword;
+        private String contentType;
     }
 
 }
