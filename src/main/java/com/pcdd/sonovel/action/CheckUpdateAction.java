@@ -17,7 +17,6 @@ import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 import org.jline.terminal.Terminal;
 
-import javax.swing.*;
 import java.io.File;
 
 public class CheckUpdateAction implements Action {
@@ -28,41 +27,22 @@ public class CheckUpdateAction implements Action {
     @SneakyThrows
     @Override
     public void execute(Terminal terminal) {
-        /* List<String> options = List.of("1.自动更新", "2.去官网下载");
-        LineReader reader = LineReaderBuilder.builder()
-                .terminal(terminal)
-                .completer(new StringsCompleter(options))
-                .build();
-        String cmd = reader.readLine("==> 按 Tab 键选择更新方式: ").trim(); */
-
-        /* if (options.get(1).equals(cmd)) {
-            Desktop desktop = Desktop.getDesktop();
-            if (!Desktop.isDesktopSupported()) {
-                Console.log("当前平台不支持 java.awt.Desktop");
-            }
-            if (!desktop.isSupported(Desktop.Action.BROWSE)) {
-                Console.log("当前系统不支持打开浏览器功能。");
-            }
-            desktop.browse(URLUtil.toURI("https://github.com/freeok/so-novel/releases"));
-        } */
-
         Console.log("<== 检查更新中...");
 
         Props sys = Settings.sys();
         String url = "https://api.github.com/repos/freeok/so-novel/releases";
         JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url));
         JSONObject latest = JSONUtil.parseObj(arr.get(0));
-        String latestVersion = latest.get("tag_name", String.class);
         String currentVersion = "v" + sys.getStr("version");
+        String latestVersion = latest.get("tag_name", String.class);
+        String latestUrl = latest.get("html_url", String.class);
 
         if (latestVersion.compareTo(currentVersion) > 0) {
-            Console.log("<== 发现新版本: {}", latest.get("tag_name", String.class));
+            Console.log("<== 发现新版本: {} ({})", latestVersion, latestUrl);
             download(getDownloadUrl(latestVersion));
         } else {
-            Console.log("<== 已是最新版本！");
+            Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
         }
-
-        Console.log(latest.get("html_url", String.class));
     }
 
     private String getDownloadUrl(String version) {
@@ -90,39 +70,31 @@ public class CheckUpdateAction implements Action {
                 .execute()
                 .contentLength();
         // 设置进度条
-        ProgressBar pb = new ProgressBar("Downloading", fileSize);
+        ProgressBar pb = new ProgressBar("下载最新版", fileSize);
 
-        // 弹出保存文件对话框，获取保存路径
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("选择下载位置");
-        // 设置保存模式
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        // 显示保存对话框
-        int selection = fileChooser.showSaveDialog(null);
-        // 如果用户选择了保存路径
-        if (selection == JFileChooser.APPROVE_OPTION) {
-            File selectedDirectory = fileChooser.getSelectedFile();
-            // 带进度显示的文件下载
-            HttpUtil.downloadFile(url, selectedDirectory, new StreamProgress() {
-                @Override
-                public void start() {
-                    pb.setExtraMessage("下载中...");
-                }
+        //  下载到上一级路径
+        File file = new File(System.getProperty("user.dir")).getParentFile();
 
-                @Override
-                public void progress(long total, long step) {
-                    // 更新进度条
-                    pb.stepTo(step);
-                }
+        // 带进度显示的文件下载
+        HttpUtil.downloadFile(url, file, new StreamProgress() {
+            @Override
+            public void start() {
+                pb.setExtraMessage("下载中...");
+            }
 
-                @Override
-                public void finish() {
-                    pb.setExtraMessage("下载完成");
-                    pb.close();
-                    Console.log("<== 文件下载位置: " + selectedDirectory + FileUtil.getName(url));
-                }
-            });
-        }
+            @Override
+            public void progress(long total, long step) {
+                // 更新进度条
+                pb.stepTo(step);
+            }
+
+            @Override
+            public void finish() {
+                pb.setExtraMessage("下载完成");
+                pb.close();
+                Console.log("<== 下载位置: {}", file + File.separator + FileUtil.getName(url));
+            }
+        });
     }
 
 }
