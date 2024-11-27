@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.parse;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
@@ -46,16 +47,16 @@ public class SearchResultParser extends Source {
         if (!isPaging) return firstPageResults;
 
         Set<String> urls = new LinkedHashSet<>();
-        // 有分页，集合其余页面的 url
         for (Element e : document.select(search.getPageLink()))
             urls.add(buildUrl(e.attr("href")));
 
-        // TODO 多线程优化
-        List<SearchResult> results = new ArrayList<>(firstPageResults);
-        for (String url : urls)
-            results.addAll(getSearchResults(url, null));
+        // 使用并行流处理分页 URL
+        List<SearchResult> additionalResults = urls.parallelStream()
+                .flatMap(url -> getSearchResults(url, null).stream())
+                .toList();         // 收集最终结果
 
-        return results;
+        // 合并，不去重（去重用 union）
+        return CollUtil.unionAll(firstPageResults, additionalResults);
     }
 
     @SneakyThrows
