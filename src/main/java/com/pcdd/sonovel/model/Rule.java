@@ -51,6 +51,8 @@ public class Rule {
         private String title;
         private String content;
         private String contentType;
+        private String filterTxt;
+        private String filterTag;
     }
 
 }
