@@ -1,54 +1,69 @@
 package com.pcdd.sonovel.core;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 
 /**
  * @author pcdd
- * 规则仅适用于书源 1
  */
 public class ChapterFilter extends Source {
-
-    /**
-     * 使用正则表达式构建匹配模式
-     */
-    private final String adsPattern = "一秒记住【文学巴士&nbsp;】，精彩无弹窗免费阅读！|(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！";
 
     public ChapterFilter(int sourceId) {
         super(sourceId);
     }
 
-    /*
-      匹配现代汉字                     [\u4e00-\u9fa5]
-      匹配更广泛的汉字                  [\u4e00-\u9fff]
-      匹配中文标点                     ·【】「」、；’，。！￥…（）—：“”《》？
-      匹配 ASCII 字符（字母、数字、符号） [\x00-\x7F]
-      匹配 ASCII 控制字符              [\x00-\x1F\x7F]
-      匹配乱码字符。即除了汉字、中文符号、字母、英文符号、数字之外的，但包括 ASCII 控制字符
-      会误伤特殊符号，比如颜文字，不便排除，暂时弃用
-     */
-    // private final String charPattern = "[^\\u4e00-\\u9fff·【】「」、；’，。！￥…（）—：“”《》？\\x00-\\x7F]|[\\x00-\\x1F\\x7F]";
-
     /**
-     * 正文内容过滤
+     * 使用建造者进行过滤
      */
     public String filter(String content) {
-        return filterAds(filterCharacters(content));
+        return new FilterBuilder(content)
+                .filterCharacters(true)
+                .filterAds(true)
+                .build();
     }
 
     /**
-     * 过滤字符
+     * 建造者类，用于动态组合过滤步骤
      */
-    private String filterCharacters(String content) {
-        // 替换非法的 &..;（HTML字符实体引用），可能会导致ibooks章节报错
-        return content.replaceAll("&.+?;", "");
-    }
+    public class FilterBuilder {
+        private String content;
+        private boolean applyCharacterFilter;
+        private boolean applyAdFilter;
 
-    /**
-     * 过滤广告
-     */
-    private String filterAds(String content) {
-        String filteredContent = content.replaceAll(adsPattern, "");
-        return HtmlUtil.removeHtmlTag(filteredContent, "div", "p", "script");
+        public FilterBuilder(String content) {
+            this.content = content;
+        }
+
+        /**
+         * 是否应用字符过滤
+         */
+        public FilterBuilder filterCharacters(boolean apply) {
+            this.applyCharacterFilter = apply;
+            return this;
+        }
+
+        /**
+         * 是否应用广告过滤
+         */
+        public FilterBuilder filterAds(boolean apply) {
+            this.applyAdFilter = apply;
+            return this;
+        }
+
+        /**
+         * 构建最终过滤内容
+         */
+        public String build() {
+            if (applyCharacterFilter) {
+                // 替换非法的 &..;（HTML字符实体引用），可能会导致ibooks章节报错
+                this.content = this.content.replaceAll("&[^;]+;", "");
+            }
+            if (applyAdFilter) {
+                String filteredContent = this.content.replaceAll(rule.getChapter().getFilterTxt(), "");
+                this.content = HtmlUtil.removeHtmlTag(filteredContent, StrUtil.splitToArray(rule.getChapter().getFilterTag(), " "));
+            }
+            return this.content;
+        }
     }
 
 }
