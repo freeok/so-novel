@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.util.Settings;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
