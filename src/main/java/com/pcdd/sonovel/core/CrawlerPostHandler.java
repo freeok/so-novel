@@ -51,8 +51,10 @@ public class CrawlerPostHandler {
 
     @SneakyThrows
     private void convert2Epub(File dir, Book b) {
+        // 等待文件系统更新索引
+        Thread.sleep(500);
         if (FileUtil.isDirEmpty(dir)) {
-            Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 epub|@"), b.getBookName(), b.getAuthor());
+            Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 EPUB|@"), b.getBookName(), b.getAuthor());
             return;
         }
 
