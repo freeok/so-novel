@@ -8,13 +8,13 @@
     "method": "post",
     "body": "{'kw': 'searchkey', 'searchtype': 'all'}",
     "cookies": "{'waf_sc': '', 'HMACCOUNT': ''}",
+    "pagination": true,
+    "pageLink": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "result": "#sitembox > dl",
     "bookName": "dd > h3 > a",
     "author": "dd:nth-child(3) > span:nth-child(1)",
     "latestChapter": "dd:nth-child(5) > a",
-    "update": "dd:nth-child(5) > span",
-    "pagination": true,
-    "pageLink": "#pagelink > a:not(.pgroup):not(.ngroup)"
+    "update": "dd:nth-child(5) > span"
   },
   "book": {
     "url": "https://www.shuhaige.net/%s/",
