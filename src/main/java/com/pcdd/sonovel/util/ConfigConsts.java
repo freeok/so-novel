@@ -7,8 +7,8 @@ public class ConfigConsts {
     public static final ConfigManager cm = ConfigManager.getInstance();
 
     public static final String VERSION = cm.getSys().getStr("version");
-    public static final int SOURCE_ID = cm.getSys().getInt("source_id");
 
+    public static final int SOURCE_ID = cm.getUsr().getInt("source_id");
     public static final String SAVE_PATH = cm.getUsr().getStr("savePath");
     public static final String EXT_NAME = cm.getUsr().getStr("extName");
     public static final int MIN_INTERVAL = cm.getUsr().getInt("min");
