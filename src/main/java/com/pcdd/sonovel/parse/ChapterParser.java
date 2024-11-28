@@ -2,12 +2,12 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.core.ChapterConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.RandomUA;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -74,7 +74,10 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
 
         do {
-            Document document = Jsoup.parse(URLUtil.url(nextUrl), TIMEOUT_MILLS);
+            Document document = Jsoup.connect(nextUrl)
+                    .timeout(TIMEOUT_MILLS)
+                    .header("User-Agent", RandomUA.generate())
+                    .get();
             String contentType = this.rule.getChapter().getContentType();
             Elements elContent = document.select(this.rule.getChapter().getContent());
             String content = null;
