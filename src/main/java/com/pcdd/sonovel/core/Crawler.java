@@ -26,7 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.pcdd.sonovel.util.ConfigConsts.*;
+import static com.pcdd.sonovel.util.ConfigConst.*;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**

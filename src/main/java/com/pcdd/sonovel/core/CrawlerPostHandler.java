@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.pcdd.sonovel.util.ConfigConsts.SAVE_PATH;
+import static com.pcdd.sonovel.util.ConfigConst.SAVE_PATH;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**

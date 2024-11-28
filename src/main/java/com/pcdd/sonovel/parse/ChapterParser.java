@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.CountDownLatch;
 
-import static com.pcdd.sonovel.util.ConfigConsts.*;
+import static com.pcdd.sonovel.util.ConfigConst.*;
 
 /**
  * @author pcdd
