@@ -29,7 +29,7 @@ public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
-        List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.结束程序");
+        List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
                 .system(true)
                 .build();
@@ -56,6 +56,9 @@ public class Main {
                 Console.log(cm.getUsr());
             }
             if (options.get(3).equals(cmd)) {
+                printHint();
+            }
+            if (options.get(4).equals(cmd)) {
                 Console.log("<== Bye :)");
                 System.exit(0);
                 break;
