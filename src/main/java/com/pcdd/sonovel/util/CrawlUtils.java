@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author pcdd
+ */
 @UtilityClass
 public class CrawlUtils {
 
