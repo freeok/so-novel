@@ -14,6 +14,9 @@ import java.util.List;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
+/**
+ * @author pcdd
+ */
 public class DownloadAction implements Action {
 
     @SneakyThrows
@@ -21,7 +24,7 @@ public class DownloadAction implements Action {
     public void execute(Terminal terminal) {
         LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
         // 1. 查询
-        String keyword = reader.readLine(render("==> @|blue 请输入书名或作者: |@")).trim();
+        String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).trim();
         if (keyword.isEmpty()) return;
         List<SearchResult> results = Crawler.search(keyword);
         if (results.isEmpty()) return;
@@ -33,10 +36,10 @@ public class DownloadAction implements Action {
         int downloadPolicy = 2;
         // 3. 选择下载章节
         do {
-            String s = reader.readLine("==> 请输入下载序号（首列的数字）");
+            String input = reader.readLine("==> 请输入下载序号（首列的数字）").trim();
             // 健壮性判断：必须为数字
             try {
-                num = Integer.parseInt(s);
+                num = Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 continue;
             }
