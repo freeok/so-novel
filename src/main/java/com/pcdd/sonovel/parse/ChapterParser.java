@@ -7,16 +7,16 @@ import com.pcdd.sonovel.core.ChapterConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.CrawlUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 import static com.pcdd.sonovel.util.ConfigConsts.*;
 
@@ -31,21 +31,10 @@ public class ChapterParser extends Source {
         super(sourceId);
     }
 
-    public Chapter parse(Chapter chapter, SearchResult sr, CountDownLatch latch) {
+    public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         try {
-            // 设置时间间隔
-            long timeInterval = ThreadLocalRandom.current().nextLong(MIN_INTERVAL, MAX_INTERVAL);
-            TimeUnit.MILLISECONDS.sleep(timeInterval);
-            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), timeInterval);
-            Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
-            String contentType = this.rule.getChapter().getContentType();
-            if ("html".equals(contentType)) {
-                // 小说正文 html 格式
-                chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
-            } else if ("text".equals(contentType)) {
-                // 小说正文 text 格式
-                chapter.setContent(document.select(this.rule.getChapter().getContent()).text());
-            }
+            Console.log("<== 正在下载: 【{}】", chapter.getTitle());
+            chapter.setContent(crawl(chapter.getUrl(), false));
             latch.countDown();
             return ChapterConverter.convert(chapter, EXT_NAME);
 
@@ -58,13 +47,7 @@ public class ChapterParser extends Source {
         for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
             try {
                 Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, MAX_RETRY_ATTEMPTS);
-
-                // 随机时间间隔以避免被反爬机制识别
-                TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextLong(RETRY_MIN_INTERVAL, RETRY_MAX_INTERVAL));
-
-                // 再次尝试下载
-                Document document = Jsoup.parse(URLUtil.url(chapter.getUrl()), TIMEOUT_MILLS);
-                chapter.setContent(document.select(this.rule.getChapter().getContent()).html());
+                chapter.setContent(crawl(chapter.getUrl(), true));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
                 return ChapterConverter.convert(chapter, EXT_NAME);
@@ -80,6 +63,40 @@ public class ChapterParser extends Source {
         }
 
         return null;
+    }
+
+    /**
+     * 爬取正文内容
+     */
+    private String crawl(String url, boolean isRetry) throws InterruptedException, IOException {
+        boolean isPaging = this.rule.getChapter().getPagination();
+        String nextUrl = url;
+        StringBuilder sb = new StringBuilder();
+
+        do {
+            Document document = Jsoup.parse(URLUtil.url(nextUrl), TIMEOUT_MILLS);
+            String contentType = this.rule.getChapter().getContentType();
+            Elements elContent = document.select(this.rule.getChapter().getContent());
+            String content = null;
+
+            if ("html".equals(contentType)) content = elContent.html();
+            if ("text".equals(contentType)) content = elContent.text();
+            sb.append(content);
+
+            // 章节不分页，只请求一次
+            if (!isPaging) break;
+
+            Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
+            // 章节最后一页 TODO 此处容易出错，先标记
+            if (elNextPage.text().contains("下一章")) break;
+
+            String href = elNextPage.attr("href");
+            nextUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
+            // 随机爬取间隔，建议重试间隔稍微长一点
+            CrawlUtils.randomSleep(isRetry ? RETRY_MIN_INTERVAL : MIN_INTERVAL, isRetry ? RETRY_MAX_INTERVAL : MAX_INTERVAL);
+        } while (true);
+
+        return sb.toString();
     }
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
