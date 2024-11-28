@@ -93,7 +93,6 @@ public class CrawlerPostHandler {
                 System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
-        appender.append("文件名\t章节名");
 
         for (File item : sortFilesByName(dir)) {
             String s = FileUtil.readString(item, StandardCharsets.UTF_8);
