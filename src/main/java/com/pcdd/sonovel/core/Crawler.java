@@ -110,7 +110,7 @@ public class Crawler {
         ChapterParser chapterParser = new ChapterParser(SOURCE_ID);
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
-            createChapterFile(chapterParser.parse(item, r, latch));
+            createChapterFile(chapterParser.parse(item, latch, r));
             Console.log("<== 待下载章节数：{}", latch.getCount());
         }));
 
@@ -127,9 +127,8 @@ public class Crawler {
      * 保存章节
      */
     private static void createChapterFile(Chapter chapter) {
-        if (chapter == null) {
-            return;
-        }
+        if (chapter == null) return;
+
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(generatePath(chapter)))) {
             fos.write(chapter.getContent().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {

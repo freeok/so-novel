@@ -50,6 +50,9 @@ public class Rule {
     @Data
     public static class Chapter {
         private String url;
+        // 章节是否有分页
+        private Boolean pagination;
+        private String nextPage;
         private Integer chapterNo;
         private String title;
         private String content;
