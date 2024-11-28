@@ -1,12 +1,10 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -14,7 +12,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -35,11 +36,11 @@ public class SearchResultParser extends Source {
 
         // 模拟搜索请求
         Connection.Response resp = Jsoup.connect(search.getUrl())
-                .method(buildMethod())
+                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
                 .timeout(TIMEOUT_MILLS)
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5410.0 Safari/537.36")
-                .data(buildParams(keyword))
-                .cookies(buildCookies())
+                .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
+                .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
                 .execute();
         Document document = resp.parse();
 
@@ -48,7 +49,7 @@ public class SearchResultParser extends Source {
 
         Set<String> urls = new LinkedHashSet<>();
         for (Element e : document.select(search.getNextPage()))
-            urls.add(buildUrl(e.attr("href")));
+            urls.add(CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl()));
 
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
@@ -81,7 +82,7 @@ public class SearchResultParser extends Source {
             if (Stream.of(href, bookName, latestChapter, author, update).anyMatch(String::isEmpty)) continue;
 
             SearchResult build = SearchResult.builder()
-                    .url(buildUrl(href))
+                    .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                     .bookName(bookName)
                     .latestChapter(latestChapter)
                     .author(author)
@@ -92,48 +93,6 @@ public class SearchResultParser extends Source {
         }
 
         return list;
-    }
-
-    // 有的 href 是相对路径，需要拼接为完整路径
-    private String buildUrl(String href) {
-        return Validator.isUrl(href) ? href : URLUtil.normalize(this.rule.getUrl() + href);
-    }
-
-    private Map<String, String> buildParams(String keyword) {
-        Map<String, String> params = new HashMap<>();
-
-        JSONUtil.parseObj(this.rule.getSearch().getBody())
-                .forEach((key, value) -> {
-                    if (key.equals("kw")) params.put(value.toString(), keyword);
-                    else params.put(key, value.toString());
-                });
-
-        return params;
-    }
-
-    private Map<String, String> buildCookies() {
-        Map<String, String> cookies = new HashMap<>();
-
-        JSONUtil.parseObj(this.rule.getSearch().getCookies())
-                .forEach((key, value) -> cookies.put(key, value.toString()));
-
-        return cookies;
-    }
-
-    private Connection.Method buildMethod() {
-        String method = this.rule.getSearch().getMethod().toLowerCase();
-
-        return switch (method) {
-            case "get" -> Connection.Method.GET;
-            case "post" -> Connection.Method.POST;
-            case "put" -> Connection.Method.PUT;
-            case "delete" -> Connection.Method.DELETE;
-            case "patch" -> Connection.Method.PATCH;
-            case "head" -> Connection.Method.HEAD;
-            case "options" -> Connection.Method.OPTIONS;
-            case "trace" -> Connection.Method.TRACE;
-            default -> Connection.Method.POST;
-        };
     }
 
 }
