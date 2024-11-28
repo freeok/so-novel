@@ -15,7 +15,7 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.util.List;
 
-import static com.pcdd.sonovel.util.ConfigConsts.*;
+import static com.pcdd.sonovel.util.ConfigConst.*;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
