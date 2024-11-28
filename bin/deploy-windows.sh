@@ -9,7 +9,8 @@ jre_dirname="jdk-17.0.11+9-jre"
 # 压缩包文件名
 artifacts="sonovel-windows.tar.gz"
 # 定义 Maven 命令并保存到变量中
-maven_command="mvn clean package -DskipTests -DjrePath=runtime"
+# -DskipTests：不执行测试用例。-Dmaven.test.skip=true：不执行测试用例，也不编译测试用例类
+maven_command="mvn clean package -Dmaven.test.skip=true -DjrePath=runtime"
 
 # 项目根目录，根据当前文件所在路径获取相对路径
 project_path=$(
