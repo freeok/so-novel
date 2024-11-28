@@ -2,6 +2,9 @@ package com.pcdd.sonovel.util;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * @author pcdd
+ */
 @UtilityClass
 public class ExceptionUtils {
 
