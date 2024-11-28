@@ -23,7 +23,7 @@ public class Rule {
         private String cookies;
         // 搜索结果是否有分页
         private Boolean pagination;
-        private String pageLink;
+        private String nextPage;
         // 以下字段不同书源可能不同
         private String result;
         private String bookName;
