@@ -47,13 +47,13 @@ public class SearchResultParser extends Source {
         if (!isPaging) return firstPageResults;
 
         Set<String> urls = new LinkedHashSet<>();
-        for (Element e : document.select(search.getPageLink()))
+        for (Element e : document.select(search.getNextPage()))
             urls.add(buildUrl(e.attr("href")));
 
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
                 .flatMap(url -> getSearchResults(url, null).stream())
-                .toList();         // 收集最终结果
+                .toList();
 
         // 合并，不去重（去重用 union）
         return CollUtil.unionAll(firstPageResults, additionalResults);
