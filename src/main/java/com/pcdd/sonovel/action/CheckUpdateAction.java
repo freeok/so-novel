@@ -4,6 +4,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import cn.hutool.json.JSONArray;
@@ -12,11 +14,14 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
+import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.Settings;
 import me.tongfei.progressbar.ProgressBar;
 import org.jline.terminal.Terminal;
 
 import java.io.File;
+
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -24,25 +29,34 @@ import java.io.File;
 public class CheckUpdateAction implements Action {
 
     public static final String GHP = "https://ghp.ci/";
+    public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
 
     @Override
     public void execute(Terminal terminal) {
         Console.log("<== 检查更新中...");
 
-        Props sys = Settings.sys();
-        String url = "https://api.github.com/repos/freeok/so-novel/releases";
-        JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url, 10_000));
-        JSONObject latest = JSONUtil.parseObj(arr.get(0));
-        String currentVersion = "v" + sys.getStr("version");
-        String latestVersion = latest.get("tag_name", String.class);
-        String latestUrl = latest.get("html_url", String.class);
+        try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
+                .timeout(10_000)
+                .header(Header.USER_AGENT, RandomUA.generate())
+                .execute()) {
 
-        if (latestVersion.compareTo(currentVersion) > 0) {
-            Console.log("<== 发现新版本: {} ({})", latestVersion, latestUrl);
-            download(getDownloadUrl(latestVersion));
-        } else {
-            Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
+            Props sys = Settings.sys();
+            String jsonStr = resp.body();
+            JSONArray arr = JSONUtil.parseArray(jsonStr);
+            JSONObject latest = JSONUtil.parseObj(arr.get(0));
+            String currentVersion = "v" + sys.getStr("version");
+            String latestVersion = latest.get("tag_name", String.class);
+            String latestUrl = latest.get("html_url", String.class);
+
+            if (latestVersion.compareTo(currentVersion) > 0) {
+                Console.log("<== 发现新版本: {} ({})", latestVersion, latestUrl);
+                download(getDownloadUrl(latestVersion));
+            } else {
+                Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
+            }
+        } catch (Exception e) {
+            Console.log(render("@|red <== 更新失败，当前网络环境暂时无法访问 GitHub，请稍后再试 ({})|@"), e.getMessage());
         }
     }
 
