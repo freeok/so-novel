@@ -5,6 +5,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -38,7 +39,7 @@ public class SearchResultParser extends Source {
         Connection.Response resp = Jsoup.connect(search.getUrl())
                 .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
                 .timeout(TIMEOUT_MILLS)
-                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5410.0 Safari/537.36")
+                .header("User-Agent", RandomUA.generate())
                 .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
                 .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
                 .execute();
