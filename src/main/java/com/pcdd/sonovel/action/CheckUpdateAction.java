@@ -13,25 +13,26 @@ import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.Settings;
-import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 import org.jline.terminal.Terminal;
 
 import java.io.File;
 
+/**
+ * @author pcdd
+ */
 public class CheckUpdateAction implements Action {
 
     public static final String GHP = "https://ghp.ci/";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
 
-    @SneakyThrows
     @Override
     public void execute(Terminal terminal) {
         Console.log("<== 检查更新中...");
 
         Props sys = Settings.sys();
         String url = "https://api.github.com/repos/freeok/so-novel/releases";
-        JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url));
+        JSONArray arr = JSONUtil.parseArray(HttpUtil.get(url, 10_000));
         JSONObject latest = JSONUtil.parseObj(arr.get(0));
         String currentVersion = "v" + sys.getStr("version");
         String latestVersion = latest.get("tag_name", String.class);

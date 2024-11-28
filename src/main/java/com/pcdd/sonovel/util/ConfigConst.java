@@ -2,6 +2,9 @@ package com.pcdd.sonovel.util;
 
 import com.pcdd.sonovel.core.ConfigManager;
 
+/**
+ * @author pcdd
+ */
 public class ConfigConst {
 
     public static final ConfigManager cm = ConfigManager.getInstance();
