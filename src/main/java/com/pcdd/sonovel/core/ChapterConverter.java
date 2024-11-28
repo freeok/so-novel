@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.pcdd.sonovel.util.ConfigConsts.SOURCE_ID;
+import static com.pcdd.sonovel.util.ConfigConst.SOURCE_ID;
 
 /**
  * @author pcdd
