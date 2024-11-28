@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.6.4</version>
+    <version>1.7.0</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -173,7 +173,7 @@
                                 <txtFileVersion>${project.version}.0</txtFileVersion>
                                 <!-- 中文会乱码，待解决 -->
                                 <fileDescription>Open source online novel download tool</fileDescription>
-                                <copyright>Copyright (C) 2024 pcdd. All rights reserved.</copyright>
+                                <copyright>Copyright (C) 2021 pcdd. All rights reserved.</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}.0</txtProductVersion>
                                 <!-- 中文会乱码，待解决 -->
