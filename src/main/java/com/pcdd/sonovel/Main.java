@@ -19,6 +19,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
@@ -38,7 +39,13 @@ public class Main {
     public static void main(String[] args) {
         ConsoleLog.setLevel(Level.ALL);
         watchConfig();
+        if (Boolean.TRUE.equals(config.getAutoUpdate())) {
+            new CheckUpdateAction().execute();
+        }
+        run();
+    }
 
+    private static void run() throws IOException {
         List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
                 .system(true)
@@ -49,9 +56,6 @@ public class Main {
                 .build();
 
         printHint();
-        if (Boolean.TRUE.equals(config.getAutoUpdate())) {
-            new CheckUpdateAction().execute();
-        }
 
         while (true) {
             String cmd = reader.readLine("按 Tab 键选择功能: ").trim();
@@ -103,8 +107,9 @@ public class Main {
         Setting setting = new Setting(path);
         // 监听配置文件
         setting.autoLoad(true, aBoolean -> {
-            Console.log("监听到配置文件修改！");
             config = ConfigUtils.config();
+            Console.log("<== 配置文件修改成功！");
+            printHint();
         });
     }
 
