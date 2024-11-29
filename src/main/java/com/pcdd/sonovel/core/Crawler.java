@@ -8,6 +8,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
@@ -26,7 +27,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.pcdd.sonovel.util.ConfigConst.*;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -35,9 +35,11 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Crawler {
 
-    private static String bookDir;
+    private final ConfigBean config;
+    private String bookDir;
 
-    private Crawler() {
+    public Crawler(ConfigBean config) {
+        this.config = config;
     }
 
     /**
@@ -47,12 +49,12 @@ public class Crawler {
      * @return 匹配的小说列表
      */
     @SneakyThrows
-    public static List<SearchResult> search(String keyword) {
+    public List<SearchResult> search(String keyword) {
         Console.log("<== 正在搜索...");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        SearchResultParser searchResultParser = new SearchResultParser(SOURCE_ID);
+        SearchResultParser searchResultParser = new SearchResultParser(config.getSourceId());
         List<SearchResult> searchResults = searchResultParser.parse(keyword);
 
         stopWatch.stop();
@@ -70,18 +72,18 @@ public class Crawler {
      * @param end   下载到第几章
      */
     @SneakyThrows
-    public static double crawl(List<SearchResult> list, int num, int start, int end) {
+    public double crawl(List<SearchResult> list, int num, int start, int end) {
         SearchResult r = list.get(num);
         // 小说详情页url
         String url = r.getUrl();
         String bookName = r.getBookName();
         String author = r.getAuthor();
-        Book book = new BookParser(SOURCE_ID).parse(url);
+        Book book = new BookParser(config.getSourceId()).parse(url);
 
         // 小说目录名格式：书名(作者)
         bookDir = String.format("%s (%s)", bookName, author);
         // 必须 new File()，否则无法使用 . 和 ..
-        File dir = FileUtil.mkdir(new File(SAVE_PATH + File.separator + bookDir));
+        File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
             // C:\Program Files 下创建需要管理员权限
             Console.log(render("@|red 创建下载目录失败\n1. 检查下载路径是否合法\n2. 尝试以管理员身份运行（C 盘部分目录需要管理员权限）|@"));
@@ -90,7 +92,7 @@ public class Crawler {
 
         Console.log("<== 正在获取章节目录", bookName);
         // 获取小说目录
-        CatalogParser catalogParser = new CatalogParser(SOURCE_ID);
+        CatalogParser catalogParser = new CatalogParser(config.getSourceId());
         List<Chapter> catalog = catalogParser.parse(url, start, end);
         // 防止 start、end 超出范围
         if (CollUtil.isEmpty(catalog)) {
@@ -100,14 +102,14 @@ public class Crawler {
 
         int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
         // 创建线程池
-        ExecutorService executor = Executors.newFixedThreadPool(THREADS == -1 ? autoThreads : THREADS);
+        ExecutorService executor = Executors.newFixedThreadPool(config.getThreads() == -1 ? autoThreads : config.getThreads());
         // 阻塞主线程，用于计时
         CountDownLatch latch = new CountDownLatch(catalog.size());
 
         Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalog.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        ChapterParser chapterParser = new ChapterParser(SOURCE_ID);
+        ChapterParser chapterParser = new ChapterParser(config);
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, r));
@@ -117,7 +119,7 @@ public class Crawler {
         // 阻塞主线程，等待章节全部下载完毕
         latch.await();
         executor.shutdown();
-        CrawlerPostHandler.handle(EXT_NAME, book, dir);
+        new CrawlerPostHandler(config).handle(book, dir);
         stopWatch.stop();
 
         return stopWatch.getTotalTimeSeconds();
@@ -126,7 +128,7 @@ public class Crawler {
     /**
      * 保存章节
      */
-    private static void createChapterFile(Chapter chapter) {
+    private void createChapterFile(Chapter chapter) {
         if (chapter == null) return;
 
         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(generatePath(chapter)))) {
@@ -136,16 +138,16 @@ public class Crawler {
         }
     }
 
-    private static String generatePath(Chapter chapter) {
+    private String generatePath(Chapter chapter) {
         // epub 格式转换前的格式为 html
-        String extName = Objects.equals("epub", EXT_NAME) ? "html" : EXT_NAME;
-        String parentPath = SAVE_PATH + File.separator + bookDir + File.separator;
-        return switch (EXT_NAME) {
+        String extName = Objects.equals("epub", config.getExtName()) ? "html" : config.getExtName();
+        String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
+        return switch (config.getExtName()) {
             case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
             case "epub", "txt" -> parentPath + chapter.getChapterNo()
                     // Windows 文件名非法字符替换
                     + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
-            default -> throw new IllegalStateException("暂不支持的下载格式: " + EXT_NAME);
+            default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
         };
     }
 
