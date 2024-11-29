@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.ChapterConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.RandomUA;
@@ -18,17 +19,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.CountDownLatch;
 
-import static com.pcdd.sonovel.util.ConfigConst.*;
-
 /**
  * @author pcdd
  */
 public class ChapterParser extends Source {
 
+    private final ConfigBean config;
+    private final ChapterConverter chapterConverter;
     private static final int TIMEOUT_MILLS = 15_000;
 
-    public ChapterParser(int sourceId) {
-        super(sourceId);
+    public ChapterParser(ConfigBean config) {
+        super(config.getSourceId());
+        this.config = config;
+        this.chapterConverter = new ChapterConverter(config);
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
@@ -36,7 +39,7 @@ public class ChapterParser extends Source {
             Console.log("<== 正在下载: 【{}】", chapter.getTitle());
             chapter.setContent(crawl(chapter.getUrl(), false));
             latch.countDown();
-            return ChapterConverter.convert(chapter, EXT_NAME);
+            return chapterConverter.convert(chapter, config.getExtName());
 
         } catch (Exception e) {
             return retry(chapter, latch, sr);
@@ -44,17 +47,17 @@ public class ChapterParser extends Source {
     }
 
     private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
-        for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+        for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
-                Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, MAX_RETRY_ATTEMPTS);
+                Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, config.getMaxRetryAttempts());
                 chapter.setContent(crawl(chapter.getUrl(), true));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
-                return ChapterConverter.convert(chapter, EXT_NAME);
+                return chapterConverter.convert(chapter, config.getExtName());
 
             } catch (Exception e) {
                 Console.error("==> 重试失败: 【{}】，原因: {}", chapter.getTitle(), e.getMessage());
-                if (attempt == MAX_RETRY_ATTEMPTS) {
+                if (attempt == config.getMaxRetryAttempts()) {
                     latch.countDown();
                     // 最终失败时记录日志
                     saveErrorLog(chapter, sr, e.getMessage());
@@ -96,7 +99,7 @@ public class ChapterParser extends Source {
             String href = elNextPage.attr("href");
             nextUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
             // 随机爬取间隔，建议重试间隔稍微长一点
-            CrawlUtils.randomSleep(isRetry ? RETRY_MIN_INTERVAL : MIN_INTERVAL, isRetry ? RETRY_MAX_INTERVAL : MAX_INTERVAL);
+            CrawlUtils.randomSleep(isRetry ? config.getRetryMinInterval() : config.getMinInterval(), isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());
         } while (true);
 
         return sb.toString();
@@ -104,7 +107,7 @@ public class ChapterParser extends Source {
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
         String line = StrUtil.format("下载失败章节：【{}】({})，原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
-        String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", SAVE_PATH, File.separator, sr.getBookName(), sr.getAuthor());
+        String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", config.getDownloadPath(), File.separator, sr.getBookName(), sr.getAuthor());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, true))) {
             // 自带换行符
