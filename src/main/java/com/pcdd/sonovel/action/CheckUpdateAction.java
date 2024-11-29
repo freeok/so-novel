@@ -30,12 +30,13 @@ public class CheckUpdateAction {
     public static final String GHP = "https://ghp.ci/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
+    private static final int TIMEOUT_MILLS = 10_000;
 
     public void execute() {
         Console.log("<== 检查更新中...");
 
         try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
-                .timeout(10_000)
+                .timeout(TIMEOUT_MILLS)
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
