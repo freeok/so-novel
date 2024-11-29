@@ -7,23 +7,24 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.Chapter;
-import lombok.experimental.UtilityClass;
+import com.pcdd.sonovel.model.ConfigBean;
+import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.pcdd.sonovel.util.ConfigConst.SOURCE_ID;
 
 /**
  * @author pcdd
  */
-@UtilityClass
+@AllArgsConstructor
 public class ChapterConverter {
 
+    private final ConfigBean config;
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        String content = new ChapterFilter(SOURCE_ID).filter(chapter.getContent());
+        String content = new ChapterFilter(config.getSourceId()).filter(chapter.getContent());
         chapter.setContent(content);
 
         if ("txt".equals(extName)) {
@@ -41,7 +42,7 @@ public class ChapterConverter {
     /**
      * 根据扩展名渲染对应模板
      */
-    private static String templateRender(Chapter chapter, String extName) {
+    private String templateRender(Chapter chapter, String extName) {
         String content = chapter.getContent();
         // 符合 epub 标准的模板
         Template template = engine.getTemplate(StrUtil.format("chapter_{}.flt", extName));
