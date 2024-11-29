@@ -9,11 +9,12 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.ConfigBean;
 import io.documentnode.epub4j.domain.Author;
 import io.documentnode.epub4j.domain.Resource;
 import io.documentnode.epub4j.epub.EpubWriter;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,17 +23,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.pcdd.sonovel.util.ConfigConst.SAVE_PATH;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
  */
-@UtilityClass
+@AllArgsConstructor
 public class CrawlerPostHandler {
 
-    public void handle(String extName, Book book, File saveDir) {
+    private final ConfigBean config;
+
+    public void handle(Book book, File saveDir) {
+        String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
+
         if ("txt".equals(extName) || "epub".equals(extName)) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
@@ -90,7 +94,7 @@ public class CrawlerPostHandler {
 
     private void mergeTxt(File dir, String... args) {
         String path = StrUtil.format("{}{}{}（{}）.txt",
-                System.getProperty("user.dir") + File.separator, SAVE_PATH + File.separator, args[0], args[1]);
+                System.getProperty("user.dir") + File.separator, config.getDownloadPath() + File.separator, args[0], args[1]);
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
 
@@ -101,7 +105,7 @@ public class CrawlerPostHandler {
         appender.flush();
     }
 
-    private static void generateCatalog(File saveDir) {
+    private void generateCatalog(File saveDir) {
         List<String> strings = new ArrayList<>();
         List<File> files = sortFilesByName(saveDir);
         String regex = "<title>(.*?)</title>";
@@ -121,7 +125,7 @@ public class CrawlerPostHandler {
     }
 
     // 文件排序，按文件名升序
-    public List<File> sortFilesByName(File dir) {
+    private List<File> sortFilesByName(File dir) {
         return Arrays.stream(dir.listFiles())
                 .sorted((o1, o2) -> {
                     String s1 = o1.getName();
