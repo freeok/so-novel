@@ -26,7 +26,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
- * Created at 2021/6/10 16:18
+ * Created at 2021/6/10
  * <p>
  * IDEA 的终端无法开发 jline 程序，因此在 wt 中运行
  * 启动命令：mvn clean compile exec:java

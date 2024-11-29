@@ -16,6 +16,7 @@ import java.util.Map;
 
 /**
  * @author pcdd
+ * Created at 2024/3/17
  */
 @AllArgsConstructor
 public class ChapterConverter {
@@ -48,7 +49,7 @@ public class ChapterConverter {
         Template template = engine.getTemplate(StrUtil.format("chapter_{}.flt", extName));
         Map<String, String> map = new HashMap<>();
         map.put("title", chapter.getTitle());
-        // 构建符合 epub 标准的正文格式，仅适用于书源 1
+        // 构建符合 epub 标准的正文格式，TODO 仅适用于书源 1，需重构
         content = "<br>".concat(content.replaceAll("&nbsp;|\\s+", ""))
                 .replaceAll("<br>(.*?)<br>", "<p>$1</p>")
                 .replaceAll("<p></p>|<br>", "");
