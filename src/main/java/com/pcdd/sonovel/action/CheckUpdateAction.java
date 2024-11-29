@@ -14,10 +14,9 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
-import com.pcdd.sonovel.util.Settings;
 import me.tongfei.progressbar.ProgressBar;
-import org.jline.terminal.Terminal;
 
 import java.io.File;
 
@@ -26,14 +25,13 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 /**
  * @author pcdd
  */
-public class CheckUpdateAction implements Action {
+public class CheckUpdateAction {
 
     public static final String GHP = "https://ghp.ci/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
 
-    @Override
-    public void execute(Terminal terminal) {
+    public void execute() {
         Console.log("<== 检查更新中...");
 
         try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
@@ -41,7 +39,7 @@ public class CheckUpdateAction implements Action {
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
-            Props sys = Settings.sys();
+            Props sys = ConfigUtils.sys();
             String jsonStr = resp.body();
             JSONArray arr = JSONUtil.parseArray(jsonStr);
             JSONObject latest = JSONUtil.parseObj(arr.get(0));
