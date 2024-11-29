@@ -24,7 +24,8 @@ APP (仅限安卓)。其实这两个方案足够多数人用了，但总会有�
 结合以下电子书阅读器使用更佳
 
 - 电脑：[koodo-reader](https://www.koodoreader.com/zh)
-- 手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、~~微信读书~~（2024.4 更新后非付费会员每月最多导入三本书，先培养用户习惯，后开始收割）
+- 手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
+  微信读书</del>（2024.4 更新后非付费会员每月最多导入三本书，先培养用户习惯，后开始收割）
 
 > [!WARNING]
 >
@@ -65,13 +66,29 @@ scoop install so-novel
 
 ## 常见问题
 
+报错：Xxx time out (https://github.com/freeok/so-novel/issues/37)
+
+- 浏览器是否可以打开书源网站
+- 关闭代理
+- 更换网络
+- 多次尝试，或稍后再试
+
+报错：UnknownHostException (https://github.com/freeok/so-novel/issues/25)
+
+- 检查 DNS 解析 (nslookup 命令)
+- 更换 DNS
+
+WPS 不支持打开该类型文件或文件已损坏
+
+- 使用专业阅读器
+
 macOS & Linux 运行 .sh 失败，尝试以下命令
 
-```bash
-dos2unix macos-run.sh
-或
-dos2unix linux-run.sh
-```
+ ```bash
+ dos2unix macos-run.sh
+ 或
+ dos2unix linux-run.sh
+ ```
 
 ## Star History
 
