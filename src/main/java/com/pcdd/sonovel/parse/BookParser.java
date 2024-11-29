@@ -2,6 +2,7 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.pcdd.sonovel.core.Source;
@@ -33,7 +34,7 @@ public class BookParser extends Source {
         Rule.Book r = this.rule.getBook();
         Document document = Jsoup.connect(url)
                 .timeout(TIMEOUT_MILLS)
-                .header("User-Agent", RandomUA.generate())
+                .header(Header.USER_AGENT.getValue(), RandomUA.generate())
                 .get();
         String bookName = document.select(r.getBookName()).attr("content");
         String author = document.select(r.getAuthor()).attr("content");
@@ -56,8 +57,8 @@ public class BookParser extends Source {
      */
     public static String replaceCover(Book book) {
         Map<String, String> headers = new LinkedHashMap<>();
-        headers.put("User-Agent", RandomUA.generate());
-        headers.put("Cookie", "_yep_uuid=872f3c12-0048-d32c-9b9d-bfaadbd8e915; e2=%7B%22l6%22%3A%22%22%2C%22l1%22%3A3%2C%22pid%22%3A%22qd_P_Searchresult%22%2C%22eid%22%3A%22qd_S81%22%7D; e1=%7B%22l6%22%3A%22%22%2C%22l1%22%3A2%2C%22pid%22%3A%22qd_P_Searchresult%22%2C%22eid%22%3A%22%22%7D; _csrfToken=vON8Zm4iijH9gttLBBlj6ufd7bbOzndd6yCa9aVd; newstatisticUUID=1711462173_1460841294; fu=1288871991; Hm_lvt_f00f67093ce2f38f215010b699629083=1711462175; Hm_lpvt_f00f67093ce2f38f215010b699629083=1711462175; _gid=GA1.2.1155471355.1711462175; _ga=GA1.1.1993706799.1711462175; _ga_PFYW0QLV3P=GS1.1.1711460901.10.1.1711462174.0.0.0; traffic_utm_referer=; w_tsfp=<REDACTED>; _ga_FZMMH98S83=GS1.1.1711460901.10.1.1711462266.0.0.0");
+        headers.put(Header.USER_AGENT.getValue(), RandomUA.generate());
+        headers.put(Header.COOKIE.getValue(), "_yep_uuid=872f3c12-0048-d32c-9b9d-bfaadbd8e915; e2=%7B%22l6%22%3A%22%22%2C%22l1%22%3A3%2C%22pid%22%3A%22qd_P_Searchresult%22%2C%22eid%22%3A%22qd_S81%22%7D; e1=%7B%22l6%22%3A%22%22%2C%22l1%22%3A2%2C%22pid%22%3A%22qd_P_Searchresult%22%2C%22eid%22%3A%22%22%7D; _csrfToken=vON8Zm4iijH9gttLBBlj6ufd7bbOzndd6yCa9aVd; newstatisticUUID=1711462173_1460841294; fu=1288871991; Hm_lvt_f00f67093ce2f38f215010b699629083=1711462175; Hm_lpvt_f00f67093ce2f38f215010b699629083=1711462175; _gid=GA1.2.1155471355.1711462175; _ga=GA1.1.1993706799.1711462175; _ga_PFYW0QLV3P=GS1.1.1711460901.10.1.1711462174.0.0.0; traffic_utm_referer=; w_tsfp=<REDACTED>; _ga_FZMMH98S83=GS1.1.1711460901.10.1.1711462266.0.0.0");
 
         HttpResponse resp = HttpRequest.get(StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName()))
                 .headerMap(headers, true)

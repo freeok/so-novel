@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
@@ -13,10 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -30,20 +28,25 @@ public class SearchResultParser extends Source {
         super(sourceId);
     }
 
-    @SneakyThrows
     public List<SearchResult> parse(String keyword) {
         Rule.Search search = this.rule.getSearch();
         boolean isPaging = search.getPagination();
 
         // 模拟搜索请求
-        Connection.Response resp = Jsoup.connect(search.getUrl())
-                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                .timeout(TIMEOUT_MILLS)
-                .header("User-Agent", RandomUA.generate())
-                .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
-                .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
-                .execute();
-        Document document = resp.parse();
+        Document document;
+        try {
+            Connection.Response resp = Jsoup.connect(search.getUrl())
+                    .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
+                    .timeout(TIMEOUT_MILLS)
+                    .header("User-Agent", RandomUA.generate())
+                    .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
+                    .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
+                    .execute();
+            document = resp.parse();
+        } catch (Exception e) {
+            Console.error(e.getMessage());
+            return Collections.emptyList();
+        }
 
         List<SearchResult> firstPageResults = getSearchResults(null, document);
         if (!isPaging) return firstPageResults;

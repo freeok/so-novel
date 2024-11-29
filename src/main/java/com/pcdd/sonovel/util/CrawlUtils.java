@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class CrawlUtils {
 
     // 有的 href 是相对路径，需要拼接为完整路径
-    public String normalizeUrl(String href, String indexUrl) {
-        return Validator.isUrl(href) ? href : URLUtil.normalize(indexUrl + href);
+    public String normalizeUrl(String s, String host) {
+        return URLUtil.normalize(Validator.isUrl(s) ? s : host + s, true, true);
     }
 
     public Map<String, String> buildParams(String body, String keyword) {
