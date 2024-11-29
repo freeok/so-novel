@@ -32,13 +32,12 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Main {
 
-    private static volatile ConfigBean config = ConfigUtils.config();
+    private static ConfigBean config = ConfigUtils.config();
 
     @SneakyThrows
     public static void main(String[] args) {
         ConsoleLog.setLevel(Level.ALL);
-
-        init();
+        watchConfig();
 
         List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
@@ -50,6 +49,9 @@ public class Main {
                 .build();
 
         printHint();
+        if (Boolean.TRUE.equals(config.getAutoUpdate())) {
+            new CheckUpdateAction().execute();
+        }
 
         while (true) {
             String cmd = reader.readLine("按 Tab 键选择功能: ").trim();
@@ -96,7 +98,7 @@ public class Main {
         );
     }
 
-    private static void init() {
+    private static void watchConfig() {
         String path = System.getProperty("user.dir") + File.separator + "config.ini";
         Setting setting = new Setting(path);
         // 监听配置文件
