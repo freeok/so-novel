@@ -48,7 +48,6 @@ public class Crawler {
      * @param keyword 关键字
      * @return 匹配的小说列表
      */
-    @SneakyThrows
     public List<SearchResult> search(String keyword) {
         Console.log("<== 正在搜索...");
         StopWatch stopWatch = new StopWatch();
