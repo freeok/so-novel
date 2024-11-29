@@ -2,9 +2,13 @@ package com.pcdd.sonovel;
 
 import com.pcdd.sonovel.core.ChapterConverter;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.util.ConfigUtils;
 import org.junit.jupiter.api.Test;
 
 class ChapterConverterTest {
+
+    private final ConfigBean config = ConfigUtils.config();
 
     @Test
     void test01() {
@@ -204,7 +208,7 @@ class ChapterConverterTest {
                 <br><br><br><p><a href="http://koubei.baidu.com/s/xbiqugu.net" target="_blank">亲,点击进去,给个好评呗,分数越高更新越快,据说给香书小说打满分的最后都找到了漂亮的老婆哦!</a><br>手机站全新改版升级地址：https://wap.xbiqugu.net，数据和书签与电脑站同步，无广告清新阅读！</p>
                 """).build();
 
-        System.out.println(ChapterConverter.convert(chapter, "epub"));
+        System.out.println(new ChapterConverter(config).convert(chapter, "epub"));
     }
 
 }
