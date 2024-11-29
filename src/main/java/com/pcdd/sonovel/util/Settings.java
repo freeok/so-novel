@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import lombok.experimental.UtilityClass;
 
@@ -16,16 +17,16 @@ import java.nio.file.Paths;
 public class Settings {
 
     /**
-     * 从 application.properties 加载系统属性
+     * 加载系统属性
      */
     public Props sys() {
         return Props.getProp("application.properties", StandardCharsets.UTF_8);
     }
 
     /**
-     * 从 config.ini 加载用户属性
+     * 加载用户属性
      */
-    public Props usr() {
+    public Setting usr() {
         // 从虚拟机选项 -Dconfig.file 获取用户配置文件路径
         String configFilePath = System.getProperty("config.file");
 
@@ -33,13 +34,18 @@ public class Settings {
         if (!FileUtil.exist(configFilePath)) {
             // 用户配置文件默认路径
             String defaultPath = System.getProperty("user.dir") + File.separator + "config.ini";
+            Setting setting = new Setting(defaultPath);
+            // 在配置文件变更时自动加载
+            setting.autoLoad(true);
             // 若默认路径也不存在，则抛出 FileNotFoundException
-            return Props.getProp(defaultPath, StandardCharsets.UTF_8);
+            return setting;
         }
 
         Path absolutePath = Paths.get(configFilePath).toAbsolutePath();
+        Setting setting = new Setting(absolutePath.toString());
+        setting.autoLoad(true);
 
-        return Props.getProp(absolutePath.toString(), StandardCharsets.UTF_8);
+        return setting;
     }
 
 }
