@@ -2,6 +2,10 @@ package com.pcdd.sonovel.model;
 
 import lombok.Data;
 
+/**
+ * @author pcdd
+ * Created at 2024/11/30
+ */
 @Data
 public class ConfigBean {
 
