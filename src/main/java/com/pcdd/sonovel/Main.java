@@ -3,6 +3,8 @@ package com.pcdd.sonovel;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.dialect.console.ConsoleLog;
+import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.parse.BookParser;
@@ -29,6 +31,8 @@ public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
+        ConsoleLog.setLevel(Level.OFF);
+
         List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
                 .system(true)
@@ -53,7 +57,7 @@ public class Main {
                 new CheckUpdateAction().execute(terminal);
             }
             if (options.get(2).equals(cmd)) {
-                Console.log(cm.getUsr());
+                Console.log(usr);
             }
             if (options.get(3).equals(cmd)) {
                 printHint();
