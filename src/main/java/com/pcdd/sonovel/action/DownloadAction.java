@@ -36,8 +36,9 @@ public class DownloadAction {
         // 2. 打印搜索结果
         printSearchResult(results);
 
-        int num = 0;
+        int num;
         int downloadPolicy = 2;
+        SearchResult sr = null;
         // 3. 选择下载章节
         do {
             String input = reader.readLine("==> 请输入下载序号（首列的数字）").trim();
@@ -49,7 +50,7 @@ public class DownloadAction {
             }
             // 健壮性判断：必须为首列的数字
             if (num < 0 || num >= results.size()) continue;
-            SearchResult sr = results.get(num);
+            sr = results.get(num);
             Console.log("<== 你选择了《{}》({})", sr.getBookName(), sr.getAuthor());
             Console.log("==> 0: 下载全本");
             Console.log("==> 1: 下载指定章节");
@@ -64,7 +65,7 @@ public class DownloadAction {
             start = Integer.parseInt(split[0]);
             end = Integer.parseInt(split[1]);
         }
-        double res = new Crawler(config).crawl(results, num, start, end);
+        double res = new Crawler(config).crawl(sr, start, end);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
     }
 
