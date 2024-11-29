@@ -7,9 +7,12 @@ import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.util.RandomUA;
 import io.documentnode.epub4j.domain.Author;
 import io.documentnode.epub4j.domain.Resource;
 import io.documentnode.epub4j.epub.EpubWriter;
@@ -32,6 +35,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class CrawlerPostHandler {
 
     private final ConfigBean config;
+    public static final int TIMEOUT_MILLS = 10_000;
 
     public void handle(Book book, File saveDir) {
         String extName = config.getExtName();
@@ -66,10 +70,19 @@ public class CrawlerPostHandler {
         book.getMetadata().addTitle(b.getBookName());
         book.getMetadata().addAuthor(new Author(b.getAuthor()));
         book.getMetadata().addDescription(b.getIntro());
-        // 不设置会导致 apple books 无法使用苹方字体
+        // 不设置会导致 Apple Books 无法使用苹方字体
         book.getMetadata().setLanguage("zh");
-        byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
-        book.setCoverImage(new Resource(bytes, ".jpg"));
+
+        // 下载封面失败会导致生成 epub 中断
+        try (HttpResponse resp = HttpUtil.createGet(b.getCoverUrl())
+                .timeout(TIMEOUT_MILLS)
+                .header(Header.USER_AGENT, RandomUA.generate())
+                .execute()) {
+            byte[] bytes = resp.bodyBytes();
+            book.setCoverImage(new Resource(bytes, ".jpg"));
+        } catch (Exception e) {
+            Console.error("封面下载失败：{}", e.getMessage());
+        }
 
         // Guide guide = book.getGuide();
 
