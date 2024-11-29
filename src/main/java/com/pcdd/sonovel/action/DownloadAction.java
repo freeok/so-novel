@@ -4,7 +4,9 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
+import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -17,16 +19,18 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 /**
  * @author pcdd
  */
-public class DownloadAction implements Action {
+@AllArgsConstructor
+public class DownloadAction {
+
+    private final ConfigBean config;
 
     @SneakyThrows
-    @Override
     public void execute(Terminal terminal) {
         LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
         // 1. 查询
         String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).trim();
         if (keyword.isEmpty()) return;
-        List<SearchResult> results = Crawler.search(keyword);
+        List<SearchResult> results = new Crawler(config).search(keyword);
         if (results.isEmpty()) return;
 
         // 2. 打印搜索结果
@@ -60,7 +64,7 @@ public class DownloadAction implements Action {
             start = Integer.parseInt(split[0]);
             end = Integer.parseInt(split[1]);
         }
-        double res = Crawler.crawl(results, num, start, end);
+        double res = new Crawler(config).crawl(results, num, start, end);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
     }
 
