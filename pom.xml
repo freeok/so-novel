@@ -172,7 +172,7 @@
                                 <fileVersion>${project.version}.0</fileVersion>
                                 <txtFileVersion>${project.version}.0</txtFileVersion>
                                 <!-- 中文会乱码，待解决 -->
-                                <fileDescription>Open source online novel download tool</fileDescription>
+                                <fileDescription>Interactive online novel downloader</fileDescription>
                                 <copyright>Copyright (C) 2021 pcdd. All rights reserved.</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}.0</txtProductVersion>
