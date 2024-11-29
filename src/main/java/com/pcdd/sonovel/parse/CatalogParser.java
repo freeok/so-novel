@@ -4,6 +4,7 @@ import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,7 +52,7 @@ public class CatalogParser extends Source {
         for (int i = start - 1; i < end && i < elements.size(); i++) {
             Chapter build = Chapter.builder()
                     .title(elements.get(i).text())
-                    .url(this.rule.getUrl() + elements.get(i).attr("href"))
+                    .url(CrawlUtils.normalizeUrl(elements.get(i).attr("href"), this.rule.getUrl()))
                     .chapterNo(i + 1)
                     .build();
             catalog.add(build);
