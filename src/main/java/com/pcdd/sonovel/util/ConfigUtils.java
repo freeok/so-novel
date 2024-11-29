@@ -32,8 +32,6 @@ public class ConfigUtils {
      * 加载用户属性
      */
     public Setting usr() {
-        System.out.println("use 执行！========================");
-
         // 从虚拟机选项 -Dconfig.file 获取用户配置文件路径
         String configFilePath = System.getProperty("config.file");
 
@@ -59,6 +57,7 @@ public class ConfigUtils {
         configBean.setSourceId(usr.getInt("source-id", SELECTION_1, 1));
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
+        configBean.setAutoUpdate(usr.getBool("auto-update ", SELECTION_1, true));
 
         configBean.setThreads(usr.getInt("threads", SELECTION_2, -1));
         configBean.setMinInterval(usr.getInt("min", SELECTION_2, 50));

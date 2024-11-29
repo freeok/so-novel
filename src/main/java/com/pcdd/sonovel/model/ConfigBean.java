@@ -11,6 +11,7 @@ public class ConfigBean {
     private int sourceId;
     private String downloadPath;
     private String extName;
+    private Boolean autoUpdate;
 
     // crawl
     private int threads;
