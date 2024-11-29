@@ -66,18 +66,16 @@ public class Crawler {
     /**
      * 爬取小说
      *
-     * @param list  搜索到的小说列表
-     * @param num   下载序号
+     * @param sr    待下载小说
      * @param start 从第几章下载
      * @param end   下载到第几章
      */
     @SneakyThrows
-    public double crawl(List<SearchResult> list, int num, int start, int end) {
-        SearchResult r = list.get(num);
+    public double crawl(SearchResult sr, int start, int end) {
         // 小说详情页url
-        String url = r.getUrl();
-        String bookName = r.getBookName();
-        String author = r.getAuthor();
+        String url = sr.getUrl();
+        String bookName = sr.getBookName();
+        String author = sr.getAuthor();
         Book book = new BookParser(config.getSourceId()).parse(url);
 
         // 小说目录名格式：书名(作者)
@@ -112,7 +110,7 @@ public class Crawler {
         ChapterParser chapterParser = new ChapterParser(config);
         // 爬取章节并下载
         catalog.forEach(item -> executor.execute(() -> {
-            createChapterFile(chapterParser.parse(item, latch, r));
+            createChapterFile(chapterParser.parse(item, latch, sr));
             Console.log("<== 待下载章节数：{}", latch.getCount());
         }));
 
