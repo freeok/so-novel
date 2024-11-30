@@ -14,7 +14,7 @@ body:
       value: |
         - 无 Cloudflare 五秒盾
         - 支持搜索
-        - 每日更新
+        - 每日同步更新
         - 国内网络可直接访问（优质书源可忽略）
 
   - type: checkboxes
@@ -42,19 +42,20 @@ body:
       options:
         - 网络小说
         - 轻小说
+        - 文学小说
         - 其它（需在推荐理由填写具体类型）
     validations:
       required: true
 
   - type: checkboxes
     attributes:
-      label: 勾选满足的条件（满足 3 个及以上为优质书源）
+      label: 勾选满足的条件（满足 4 个及以上为优质书源）
       options:
-        - label: 无限流
-        - label: 书库全
         - label: 起点人气榜单的书能搜到（https://www.qidian.com/rank）
-        - label: 新书热书能同步更新
         - label: 正文错别字少
+        - label: 正文排版正常
+        - label: 书库全
+        - label: 无限流
 
   - type: textarea
     attributes:
