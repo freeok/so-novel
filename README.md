@@ -1,13 +1,15 @@
 # so-novel
 
-![logo.ico](assets/logo.ico)
+<div align="center">
+  <img src="assets/logo.ico" alt="logo">
+</div>
 
 ## 前言
 
-适合用户：既想免费看新书，又想获得最佳的阅读体验
+适合用户：既想免费看正版付费新书，又想获得最佳的阅读体验（主要针对网络小说）
 
-适用场景：国内网上 98% 的 txt 、epub 等格式的小说都是完本。如果想看新书，要么去正版平台付费，要么笔趣阁等一类网站，要么用”阅读“等一类
-APP (仅限安卓)。其实这两个方案足够多数人用了，但总会有众口难调的情况：嫌弃 UI
+适用场景：国内网上 98% 的 txt 、epub 等格式的小说都是完本。如果想看新书，要么去正版平台付费，要么笔趣阁等一类网站，要么用”阅读“（仅限安卓）等一类
+APP。其实这两个方案足够多数人用了，但总会有众口难调的情况：嫌弃 UI
 难看的、吐槽功能的、受限于平台的。这时阅读器的优势就体现出来了：DIY。这个工具最大的意义就是能把连载的新书下载为 epub
 等电子书格式，这样就能导入自己喜爱的阅读器
 
@@ -58,15 +60,15 @@ scoop install so-novel
 >
 > 部分书源会屏蔽国外 IP，建议关闭代理后使用
 >
-> 由于书源 URL 经常变动，旧版基本无法使用，请使用最新版
+> 由于书源 URL 会变动，旧版可能无法使用，请使用最新版
 >
-> 若最新版也无法使用，请 New issue，将尽快修复
+> 若最新版的书源无法使用，请 New issue，将尽快修复
 >
-> 欢迎在 issue 推荐高质量书源（最好能搜到[起点人气榜单](https://www.qidian.com/rank/)的书、错别字少、同步更新快）
+> 欢迎在 issue 推荐高质量书源（无盾、能搜到[起点人气榜单](https://www.qidian.com/rank/)的书、错别字少、排版不错乱、直连可访问）
 
 ## 常见问题
 
-报错：Xxx time out (https://github.com/freeok/so-novel/issues/37)
+报错：SocketTimeoutException (https://github.com/freeok/so-novel/issues/37)
 
 - 浏览器是否可以打开书源网站
 - 关闭代理
@@ -78,9 +80,10 @@ scoop install so-novel
 - 检查 DNS 解析 (nslookup 命令)
 - 更换 DNS
 
-WPS 不支持打开该类型文件或文件已损坏
+WPS 打不开 epub，提示：不支持打开该类型文件或文件已损坏
 
 - 使用专业阅读器
+- 下载格式改为 txt
 
 macOS & Linux 运行 .sh 失败，尝试以下命令
 
