@@ -56,6 +56,13 @@ scoop bucket add spc https://ghp.ci/https://github.com/lzwme/scoop-proxy-cn
 scoop install so-novel
 ```
 
+### Homebrew 安装
+
+```bash
+brew tap ownia/homebrew-ownia
+brew install so-novel
+```
+
 > [!TIP]
 >
 > 部分书源会屏蔽国外 IP，建议关闭代理后使用
