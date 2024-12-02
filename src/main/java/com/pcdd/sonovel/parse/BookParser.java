@@ -78,7 +78,7 @@ public class BookParser extends Source {
 
             if (book.getBookName().equals(name) && book.getAuthor().equals(author)) {
                 String coverUrl = e.select(".book-img-box > a > img").attr("src");
-                return URLUtil.normalize(coverUrl).replaceAll("/.d+(\\.webp)?", "");
+                return URLUtil.normalize(coverUrl).replaceAll("/150(\\.webp)?", "");
             }
         }
 
