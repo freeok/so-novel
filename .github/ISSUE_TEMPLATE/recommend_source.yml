@@ -15,7 +15,7 @@ body:
         - 无 Cloudflare 五秒盾
         - 支持搜索
         - 每日同步更新
-        - 国内网络可直接访问（优质书源可忽略）
+        - 国内网络可直连访问（优质书源可忽略）
 
   - type: checkboxes
     attributes:
