@@ -28,16 +28,24 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
+    private final int timeoutMills;
     public static final String GHP = "https://ghp.ci/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
-    private static final int TIMEOUT_MILLS = 10_000;
+
+    public CheckUpdateAction() {
+        this.timeoutMills = 10_000;
+    }
+
+    public CheckUpdateAction(int timeout) {
+        this.timeoutMills = timeout;
+    }
 
     public void execute() {
         Console.log("<== 检查更新中...");
 
         try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
-                .timeout(TIMEOUT_MILLS)
+                .timeout(timeoutMills)
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
@@ -45,11 +53,13 @@ public class CheckUpdateAction {
             String jsonStr = resp.body();
             JSONArray arr = JSONUtil.parseArray(jsonStr);
             JSONObject latest = JSONUtil.parseObj(arr.get(0));
-            String currentVersion = "v" + sys.getStr("version");
+            // v1.7.0-beta.2
+            String currentVersion = ("v" + sys.getStr("version"));
+            // v1.7.0
             String latestVersion = latest.get("tag_name", String.class);
             String latestUrl = latest.get("html_url", String.class);
 
-            if (latestVersion.compareTo(currentVersion) > 0) {
+            if (VersionComparator.isSmaller(currentVersion, latestVersion)) {
                 Console.log("<== 发现新版本: {} ({})", latestVersion, latestUrl);
                 download(getDownloadUrl(latestVersion));
             } else {
