@@ -48,12 +48,19 @@ APP。其实这两个方案足够多数人用了，但总会有众口难调的�
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](input%2Freadme.txt) 使用
 
-### Scoop 安装 🍨
+### 🍨 Scoop 安装
 
 ```bash
 # 若搜不到 so-novel，请先执行下面这一行命令
 scoop bucket add spc https://ghp.ci/https://github.com/lzwme/scoop-proxy-cn
 scoop install so-novel
+```
+
+### 🍺 Homebrew 安装
+
+```bash
+brew tap ownia/homebrew-ownia
+brew install so-novel
 ```
 
 > [!TIP]
