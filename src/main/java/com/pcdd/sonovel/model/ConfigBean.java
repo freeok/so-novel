@@ -12,19 +12,19 @@ public class ConfigBean {
     private String version;
 
     // base
-    private int sourceId;
+    private Integer sourceId;
     private String downloadPath;
     private String extName;
-    private Boolean autoUpdate;
+    private Integer autoUpdate;
 
     // crawl
-    private int threads;
-    private int minInterval;
-    private int maxInterval;
+    private Integer threads;
+    private Integer minInterval;
+    private Integer maxInterval;
 
     // retry
-    private int maxRetryAttempts;
-    private int retryMinInterval;
-    private int retryMaxInterval;
+    private Integer maxRetryAttempts;
+    private Integer retryMinInterval;
+    private Integer retryMaxInterval;
 
 }
