@@ -40,7 +40,7 @@ public class Main {
         // release 前改为 Level.OFF
         ConsoleLog.setLevel(Level.OFF);
         watchConfig();
-        if (Boolean.TRUE.equals(config.getAutoUpdate())) {
+        if (config.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
         run();
