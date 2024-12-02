@@ -52,13 +52,14 @@ public class ConfigUtils {
     public ConfigBean config() {
         Props sys = sys();
         Setting usr = usr();
+
         ConfigBean configBean = new ConfigBean();
         configBean.setVersion(sys.getStr("version"));
 
         configBean.setSourceId(usr.getInt("source-id", SELECTION_1, 1));
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
-        configBean.setAutoUpdate(usr.getBool("auto-update ", SELECTION_1, true));
+        configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
 
         configBean.setThreads(usr.getInt("threads", SELECTION_2, -1));
         configBean.setMinInterval(usr.getInt("min", SELECTION_2, 50));
