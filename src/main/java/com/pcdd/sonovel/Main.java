@@ -37,7 +37,8 @@ public class Main {
 
     @SneakyThrows
     public static void main(String[] args) {
-        ConsoleLog.setLevel(Level.ALL);
+        // release 前改为 Level.OFF
+        ConsoleLog.setLevel(Level.OFF);
         watchConfig();
         if (Boolean.TRUE.equals(config.getAutoUpdate())) {
             new CheckUpdateAction(5000).execute();
