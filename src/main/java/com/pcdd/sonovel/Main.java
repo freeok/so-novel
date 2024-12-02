@@ -40,7 +40,7 @@ public class Main {
         ConsoleLog.setLevel(Level.ALL);
         watchConfig();
         if (Boolean.TRUE.equals(config.getAutoUpdate())) {
-            new CheckUpdateAction().execute();
+            new CheckUpdateAction(5000).execute();
         }
         run();
     }
@@ -95,7 +95,7 @@ public class Main {
                 .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
                 .addBody("使用须知")
                 .addBody("1. 请按要求操作，然后按 Enter 键执行")
-                .addBody("2. 下载受书源、网络环境等因素影响。若出现 xx timed out，建议检查网络环境或稍后再试")
+                .addBody("2. 下载受书源、网络环境等因素影响。若报错 SocketTimeoutException，建议检查网络环境或稍后再试")
                 .addBody("3. 若章节下载失败，可尝试增大爬取间隔，直至合适为止")
                 .addBody("4. 若认为下载速度较慢，可适当减小爬取间隔，直至合适为止")
                 .addBody("5. 爬取间隔过小会导致当前 IP 被有反爬机制的书源限流，可能短时间内将无法使用该书源")
