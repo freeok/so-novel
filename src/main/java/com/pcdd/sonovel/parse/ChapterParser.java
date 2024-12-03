@@ -82,14 +82,8 @@ public class ChapterParser extends Source {
                     .timeout(TIMEOUT_MILLS)
                     .header("User-Agent", RandomUA.generate())
                     .get();
-            String contentType = this.rule.getChapter().getContentType();
             Elements elContent = document.select(this.rule.getChapter().getContent());
-            String content = null;
-
-            if ("html".equals(contentType)) content = elContent.html();
-            if ("text".equals(contentType)) content = elContent.text();
-            sb.append(content);
-
+            sb.append(elContent.html());
             // 章节不分页，只请求一次
             if (!isPaging) break;
 
