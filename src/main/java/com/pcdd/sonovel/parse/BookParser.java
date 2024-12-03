@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.parse;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
@@ -8,6 +9,7 @@ import cn.hutool.http.HttpResponse;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -17,6 +19,8 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.jline.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -47,7 +51,7 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(coverUrl);
+        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
         book.setCoverUrl(replaceCover(book));
 
         return book;
@@ -68,18 +72,23 @@ public class BookParser extends Source {
         resp.close();
         Elements elements = document.select(".res-book-item");
 
-        for (Element e : elements) {
-            String name = e.select(".book-mid-info > .book-info-title > a").text();
-            // 起点作者
-            String author1 = e.select(".book-mid-info > .author > .name").text();
-            // 非起点作者
-            String author2 = e.select(".book-mid-info > .author > i").text();
-            String author = author1.isEmpty() ? author2 : author1;
+        try {
+            for (Element e : elements) {
+                String name = e.select(".book-mid-info > .book-info-title > a").text();
+                // 起点作者
+                String author1 = e.select(".book-mid-info > .author > .name").text();
+                // 非起点作者
+                String author2 = e.select(".book-mid-info > .author > i").text();
+                String author = author1.isEmpty() ? author2 : author1;
 
-            if (book.getBookName().equals(name) && book.getAuthor().equals(author)) {
-                String coverUrl = e.select(".book-img-box > a > img").attr("src");
-                return URLUtil.normalize(coverUrl).replaceAll("/150(\\.webp)?", "");
+                if (book.getBookName().equals(name) && book.getAuthor().equals(author)) {
+                    String coverUrl = e.select(".book-img-box > a > img").attr("src");
+                    return URLUtil.normalize(coverUrl).replaceAll("/150(\\.webp)?", "");
+                }
             }
+        } catch (Exception e) {
+            Console.error(render("最新封面获取失败：{}", e.getMessage()));
+            return book.getCoverUrl();
         }
 
         return book.getCoverUrl();
