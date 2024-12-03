@@ -93,7 +93,7 @@ public class CrawlerPostHandler {
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
             book.setCoverImage(new Resource(bytes, ".jpg"));
         } catch (Exception e) {
-            Console.error("封面下载失败：{}", e.getMessage());
+            Console.error(render("@|red 封面下载失败：{}|@"), e.getMessage());
         }
 
         EpubWriter epubWriter = new EpubWriter();
