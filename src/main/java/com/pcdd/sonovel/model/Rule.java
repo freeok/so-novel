@@ -11,6 +11,10 @@ public class Rule {
 
     private int id;
     private String url;
+    private String name;
+    private String comment;
+    private String type;
+
     private Search search;
     private Book book;
     private Chapter chapter;

@@ -8,8 +8,9 @@ import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.ConfigBean;
-import com.pcdd.sonovel.parse.BookParser;
+import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -87,12 +88,13 @@ public class Main {
     }
 
     private static void printHint() {
+        Rule rule = new Source(config.getSourceId()).rule;
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", config.getVersion())) + "（本项目开源且免费）")
                 .addHeader("官方地址：https://github.com/freeok/so-novel")
-                .addHeader(StrUtil.format("当前书源：{} (ID: {})", new BookParser(config.getSourceId()).rule.getUrl(), config.getSourceId()))
+                .addHeader(StrUtil.format("当前书源：{} ({} ID: {})", rule.getUrl(), rule.getName(), rule.getId()))
                 .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
                 .addBody("使用须知")
                 .addBody("1. 请按要求操作，然后按 Enter 键执行")
