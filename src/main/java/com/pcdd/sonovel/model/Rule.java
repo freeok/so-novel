@@ -62,6 +62,8 @@ public class Rule {
         private String title;
         private String content;
         private String contentType;
+        private Boolean paragraphTagClosed;
+        private String paragraphTag;
         private String filterTxt;
         private String filterTag;
     }
