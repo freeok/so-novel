@@ -61,7 +61,6 @@ public class Rule {
         private Integer chapterNo;
         private String title;
         private String content;
-        private String contentType;
         private Boolean paragraphTagClosed;
         private String paragraphTag;
         private String filterTxt;
