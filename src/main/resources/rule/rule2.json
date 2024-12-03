@@ -37,7 +37,6 @@
     "chapterNo": 0,
     "title": ".bookname > h1",
     "content": "#content",
-    "contentType": "html",
     "paragraphTagClosed": true,
     "paragraphTag": "p",
     "filterTxt": "本小章还未完，请点击下一页继续阅读后面精彩内容！|小主，这个章节后面还有哦，请点击下一页继续阅读，后面更精彩！|这章没有结束，请点击下一页继续阅读！|喜欢.*?请大家收藏：(.*?).*?书海阁小说网更新速度全网最快。",
