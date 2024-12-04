@@ -3,6 +3,7 @@ package com.pcdd.sonovel.handle;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.util.FileUtils;
@@ -27,6 +28,10 @@ public class TxtMergeHandler implements PostProcessingHandler {
                 b.getBookName(), b.getAuthor());
         File file = FileUtil.touch(path);
         FileAppender appender = new FileAppender(file, 16, true);
+
+        // 添加书名和作者信息
+        appender.append(StrUtil.format("书名：{}\n作者：{}\n简介：\n{}\n",
+                b.getBookName(), b.getAuthor(), "\u3000".repeat(2) + HtmlUtil.cleanHtmlTag(b.getIntro())));
 
         for (File item : FileUtils.sortFilesByName(saveDir)) {
             String content = FileUtil.readString(item, StandardCharsets.UTF_8);
