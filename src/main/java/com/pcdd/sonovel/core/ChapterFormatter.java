@@ -13,6 +13,9 @@ public class ChapterFormatter {
 
     private final ConfigBean config;
 
+    /**
+     * 格式化正文排版
+     */
     public String format(String content) {
         Rule.Chapter rule = new Source(config.getSourceId()).rule.getChapter();
 
