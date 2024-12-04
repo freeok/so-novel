@@ -7,7 +7,6 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
-import com.pcdd.sonovel.model.Rule;
 import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
@@ -27,7 +26,8 @@ public class ChapterConverter {
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        String content = formatContent(new ChapterFilter(config.getSourceId()).filter(chapter.getContent()));
+        String filter = new ChapterFilter(config.getSourceId()).filter(chapter.getContent());
+        String content = new ChapterFormatter(config).format(filter);
 
         if ("txt".equals(extName)) {
             // 全角空格，用于首行缩进
@@ -61,29 +61,6 @@ public class ChapterConverter {
         map.put("content", chapter.getContent());
 
         return template.render(map);
-    }
-
-    private String formatContent(String content) {
-        Rule.Chapter rule = new Source(config.getSourceId()).rule.getChapter();
-
-        // 标签闭合
-        if (Boolean.TRUE.equals(rule.getParagraphTagClosed())) {
-            // <p>段落</p>
-            if ("p".equals(rule.getParagraphTag())) {
-                return content;
-            } else { // 非<p>的闭合标签，替换为<p>标签
-                return content.replaceAll("<(?!p\\b)([^>]+)>(.*?)</\\1>", "<p>$2</p>");
-            }
-        }
-        // 标签不闭合，用某个标签分隔，例如：段落1<br><br>段落2
-        String tag = rule.getParagraphTag();
-        StringBuilder sb = new StringBuilder();
-
-        for (String s : content.replaceAll("\\s+", "").split(tag)) {
-            if (!s.isBlank()) sb.append("<p>").append(s).append("</p>");
-        }
-
-        return sb.toString();
     }
 
 }
