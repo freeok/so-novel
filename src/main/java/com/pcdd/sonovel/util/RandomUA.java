@@ -1,14 +1,17 @@
 package com.pcdd.sonovel.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Random;
 
 /**
  * @author pcdd
  * Created at 2024/11/28
  */
+@UtilityClass
 public class RandomUA {
 
-    private static final String[] OPERATING_SYSTEMS = {
+    private final String[] OPERATING_SYSTEMS = {
             "Windows NT 10.0; Win64; x64",
             "Windows NT 11.0; Win64; x64",
             "Macintosh; Intel Mac OS X 12_6",
@@ -17,14 +20,14 @@ public class RandomUA {
             "X11; Ubuntu; Linux x86_64"
     };
 
-    private static final String[] BROWSERS = {"Chrome", "Firefox", "Safari", "Edge"};
+    private final String[] BROWSERS = {"Chrome", "Firefox", "Safari", "Edge"};
 
-    private static final int MIN_VERSION = 100; // Minimum browser version
-    private static final int MAX_VERSION = 131; // Maximum browser version
+    private final int MIN_VERSION = 100; // Minimum browser version
+    private final int MAX_VERSION = 131; // Maximum browser version
 
-    private static final Random RANDOM = new Random();
+    private final Random RANDOM = new Random();
 
-    public static String generate() {
+    public String generate() {
         String operatingSystem = OPERATING_SYSTEMS[RANDOM.nextInt(OPERATING_SYSTEMS.length)];
         String browser = BROWSERS[RANDOM.nextInt(BROWSERS.length)];
         int majorVersion = RANDOM.nextInt(MAX_VERSION - MIN_VERSION + 1) + MIN_VERSION;
@@ -45,9 +48,6 @@ public class RandomUA {
                             operatingSystem, browser, majorVersion, minorVersion);
             default -> "Unknown User-Agent";
         };
-    }
-
-    private RandomUA() {
     }
 
 }
