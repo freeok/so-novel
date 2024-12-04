@@ -57,7 +57,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
 
         // 下载封面失败会导致生成 epub 中断
         try {
-            Console.log("<== 开始下载封面：{}", b.getCoverUrl());
+            Console.log("<== 正在下载封面：{}", b.getCoverUrl());
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
             book.setCoverImage(new Resource(bytes, ".jpg"));
         } catch (Exception e) {
