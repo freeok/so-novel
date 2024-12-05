@@ -73,7 +73,7 @@ public class BookSourceQualityTest {
                 name,
                 lists.get(0).size(),
                 DateTime.now().toString(DatePattern.NORM_DATE_PATTERN)));
-        result.append(StrUtil.format("| 序号 | 书名 | 作者 {} 起点链接 |\n", s1));
+        result.append(StrUtil.format("| 排名 | 书名 | 作者 {} 起点链接 |\n", s1));
         result.append(StrUtil.format("| ---- | ---- | ---- {} ---- |\n", s2));
 
         List<SourceQuality> list = lists.get(0);
@@ -87,14 +87,12 @@ public class BookSourceQualityTest {
                 foundBuilder.append(StrUtil.format("{} |", sq.getFound() ? "✅" : "❌"));
             }
 
-            String s = StrUtil.format("| {} | {} | {} | {} {} |\n",
+            result.append(StrUtil.format("| {} | {} | {} | {} {} |\n",
                     i + 1,
                     o.getBookName(),
                     o.getAuthor(),
                     foundBuilder,
-                    o.getQiDianUrl());
-
-            result.append(s);
+                    o.getQiDianUrl()));
         }
 
         Writer writer = new FileWriter(fileName);
