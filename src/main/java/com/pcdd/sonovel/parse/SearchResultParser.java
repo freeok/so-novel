@@ -15,7 +15,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * @author pcdd
@@ -67,24 +66,23 @@ public class SearchResultParser extends Source {
 
     @SneakyThrows
     private List<SearchResult> getSearchResults(String url, Document document) {
-        Rule.Search search = this.rule.getSearch();
+        Rule.Search rule = this.rule.getSearch();
         // 搜索结果页 DOM
         if (document == null)
             document = Jsoup.connect(url).timeout(TIMEOUT_MILLS).get();
 
-        Elements elements = document.select(search.getResult());
-
+        Elements elements = document.select(rule.getResult());
         List<SearchResult> list = new ArrayList<>();
         for (Element element : elements) {
             // jsoup 不支持一次性获取属性的值
-            String href = element.select(search.getBookName()).attr("href");
-            String bookName = element.select(search.getBookName()).text();
-            String latestChapter = element.select(search.getLatestChapter()).text();
-            String author = element.select(search.getAuthor()).text();
-            String update = element.select(search.getUpdate()).text();
+            String href = element.select(rule.getBookName()).attr("href");
+            String bookName = element.select(rule.getBookName()).text();
+            String latestChapter = element.select(rule.getLatestChapter()).text();
+            String author = element.select(rule.getAuthor()).text();
+            String update = element.select(rule.getUpdate()).text();
 
-            // 如果存在任何一个字符串为空字符串（针对书源 1：排除第一个 tr 表头）
-            if (Stream.of(href, bookName, latestChapter, author, update).anyMatch(String::isEmpty)) continue;
+            // 针对书源 1：排除第一个 tr 表头
+            if (bookName.isEmpty()) continue;
 
             SearchResult build = SearchResult.builder()
                     .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
