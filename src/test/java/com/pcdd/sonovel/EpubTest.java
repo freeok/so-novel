@@ -1,11 +1,12 @@
 package com.pcdd.sonovel;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
-import io.documentnode.epub4j.domain.Author;
-import io.documentnode.epub4j.domain.Book;
-import io.documentnode.epub4j.domain.Resource;
+import io.documentnode.epub4j.domain.*;
+import io.documentnode.epub4j.epub.EpubReader;
 import io.documentnode.epub4j.epub.EpubWriter;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
@@ -32,6 +33,37 @@ class EpubTest {
 
         EpubWriter epubWriter = new EpubWriter();
         epubWriter.write(book, new FileOutputStream("test.epub"));
+    }
+
+    @Test
+    @DisplayName("读取 EPUB")
+    @SneakyThrows
+    void readEpub() {
+        EpubReader epubReader = new EpubReader();
+        Book book = epubReader.readEpub(FileUtil.getInputStream("test.epub"));
+        Metadata metadata = book.getMetadata();
+
+        // 书名
+        System.out.println(metadata.getTitles().get(0));
+        // 作者
+        System.out.println(metadata.getAuthors().get(0));
+        // 简介
+        System.out.println(metadata.getDescriptions().get(0));
+        // 章节数
+        System.out.println(book.getContents().size());
+        Resource resource1 = book.getContents().get(0);
+        // 正文
+        // System.out.println(new String(resource1.getData()));
+
+        int i = 0;
+        // 遍历目录
+        for (TOCReference tocReference : book.getTableOfContents().getTocReferences()) {
+            if (i++ == 10) break;
+            // 章节名
+            System.out.println(tocReference.getTitle());
+            // 正文
+            // System.out.println(new String(tocReference.getResource().getData()));
+        }
     }
 
 }
