@@ -18,11 +18,12 @@ Linux 用户
 
 温馨提示
 1. 将终端窗口最大化，使用体验更佳
-2. config.ini 是配置文件，书源、下载格式在此修改，修改后无需重启
-3. 按 Tab 键选择功能（可连按），然后按 Enter 键确认执行
-4. 请按照要求输入内容，若不按要求输入则无法正常工作
-5. 若使用时遇到其它问题，例如书源失效、发现 BUG；或希望增加某个功能、有改进建议，请在此反馈：https://github.com/freeok/so-novel/issues
+2. 按 Tab 键选择功能（可连按），然后按 Enter 键确认执行
+3. 请按照要求输入内容，若不按要求输入则无法正常工作
+4. config.ini 是配置文件，书源、下载格式在此修改，修改后无需重启（不保证非 Windows 适用）
+5. 若使用时遇到其它问题，例如书源失效、发现 BUG；或希望增加某个功能、有改进建议，请先在此查找：https://github.com/freeok/so-novel/issues?q=is%3Aissue+is%3Aclosed，若都没有请在此反馈：https://github.com/freeok/so-novel/issues
 6. 如果希望添加某个书源，请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
+7. 如何选择适合自己的书源：https://github.com/freeok/so-novel/issues/50
 
 
 项目主页：https://github.com/freeok/so-novel
