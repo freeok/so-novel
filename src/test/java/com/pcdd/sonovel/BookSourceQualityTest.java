@@ -42,9 +42,9 @@ public class BookSourceQualityTest {
         map.put("起点公众作者新书榜", "https://www.qidian.com/rank/pubnewbook/");
         map.put("起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/");
 
-        String  divider="-".repeat(50);
+        String divider = "-".repeat(50);
         for (Map.Entry<String, String> kv : map.entrySet()) {
-            Console.log("{} {} {}",divider,kv.getKey(),divider);
+            Console.log("{} {} {}", divider, kv.getKey(), divider);
             List<List<SourceQuality>> lists = new ArrayList<>();
 
             for (int i = 1; i <= count; i++) {
@@ -57,7 +57,7 @@ public class BookSourceQualityTest {
 
     @SneakyThrows
     static void generateMarkdown(String name, List<List<SourceQuality>> lists, String fileName) {
-        Console.log("<== 开始生成 {}",fileName);
+        Console.log("<== 开始生成 {}", fileName);
         // 表头
         StringBuilder s1 = new StringBuilder("|");
         // 分隔线
