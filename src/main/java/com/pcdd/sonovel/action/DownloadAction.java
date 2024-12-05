@@ -76,9 +76,13 @@ public class DownloadAction {
         int start = 1;
         int end = Integer.MAX_VALUE;
         if (action == 2) {
-            String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
-            start = Integer.parseInt(split[0]);
-            end = Integer.parseInt(split[1]);
+            try {
+                String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
+                start = Integer.parseInt(split[0]);
+                end = Integer.parseInt(split[1]);
+            } catch (Exception e) {
+                return;
+            }
         }
         double res = new Crawler(config).crawl(sr, start, end);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
