@@ -26,7 +26,12 @@ public class EpubMergeHandler implements PostProcessingHandler {
     @Override
     public void handle(Book b, File saveDir) {
         // 等待文件系统更新索引
-        Thread.sleep(500);
+        int attempts = 10;
+        while (FileUtil.isDirEmpty(saveDir) && attempts > 0) {
+            Thread.sleep(100);
+            attempts--;
+        }
+
         if (FileUtil.isDirEmpty(saveDir)) {
             Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 EPUB|@"), b.getBookName(), b.getAuthor());
             return;
@@ -38,8 +43,6 @@ public class EpubMergeHandler implements PostProcessingHandler {
         book.getMetadata().addDescription(b.getIntro());
         // 不设置会导致 Apple Books 无法使用苹方字体
         book.getMetadata().setLanguage("zh");
-
-        // Guide guide = book.getGuide();
 
         int i = 1;
         // 遍历下载后的目录，添加章节
@@ -55,11 +58,13 @@ public class EpubMergeHandler implements PostProcessingHandler {
             i++;
         }
 
+        // Guide guide = book.getGuide();
+
         // 下载封面失败会导致生成 epub 中断
         try {
             Console.log("<== 正在下载封面：{}", b.getCoverUrl());
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
-            book.setCoverImage(new Resource(bytes, ".jpg"));
+            book.setCoverImage(new Resource(bytes, "cover.jpg"));
         } catch (Exception e) {
             Console.error(render("@|red 封面下载失败：{}|@"), e.getMessage());
         }
@@ -67,6 +72,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
         EpubWriter epubWriter = new EpubWriter();
         String savePath = StrUtil.format("{}/{}.epub", saveDir.getParent(), b.getBookName());
         epubWriter.write(book, new FileOutputStream(savePath));
+        FileUtil.del(saveDir);
     }
 
 }
