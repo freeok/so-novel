@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.action;
 
+import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
@@ -59,7 +60,7 @@ public class CheckUpdateAction {
             String latestVersion = latest.get("tag_name", String.class);
             String latestUrl = latest.get("html_url", String.class);
 
-            if (VersionComparator.isSmaller(currentVersion, latestVersion)) {
+            if (VersionComparator.INSTANCE.compare(currentVersion, latestVersion) < 0) {
                 Console.log("<== 发现新版本: {} ({})", latestVersion, latestUrl);
                 download(getDownloadUrl(latestVersion));
             } else {
