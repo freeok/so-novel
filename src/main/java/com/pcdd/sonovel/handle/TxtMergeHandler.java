@@ -10,7 +10,7 @@ import com.pcdd.sonovel.util.FileUtils;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @author pcdd
@@ -23,21 +23,26 @@ public class TxtMergeHandler implements PostProcessingHandler {
 
     @Override
     public void handle(Book b, File saveDir) {
-        String path = StrUtil.format("{}{}{}（{}）.txt",
+        String outputPath = StrUtil.format("{}{}{}（{}）.txt",
                 System.getProperty("user.dir") + File.separator, config.getDownloadPath() + File.separator,
                 b.getBookName(), b.getAuthor());
-        File file = FileUtil.touch(path);
-        FileAppender appender = new FileAppender(file, 16, true);
+        File outputFile = FileUtil.touch(outputPath);
+        FileAppender appender = new FileAppender(outputFile, 16, true);
 
-        // 添加书名和作者信息
-        appender.append(StrUtil.format("书名：{}\n作者：{}\n简介：\n{}\n",
-                b.getBookName(), b.getAuthor(), "\u3000".repeat(2) + HtmlUtil.cleanHtmlTag(b.getIntro())));
+        List<String> format = List.of(
+                StrUtil.format("书名：{}", b.getBookName()),
+                StrUtil.format("作者：{}", b.getAuthor()),
+                StrUtil.format("简介：{}", StrUtil.isEmpty(b.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(b.getIntro())),
+                StrUtil.format("{}", "\u3000".repeat(2))
+        );
+        // 首页添加书籍信息
+        format.forEach(appender::append);
 
-        for (File item : FileUtils.sortFilesByName(saveDir)) {
-            String content = FileUtil.readString(item, StandardCharsets.UTF_8);
-            appender.append(content);
+        for (File f : FileUtils.sortFilesByName(saveDir)) {
+            appender.append(FileUtil.readUtf8String(f));
         }
 
         appender.flush();
     }
+
 }
