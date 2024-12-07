@@ -57,7 +57,7 @@ public class ChapterParser extends Source {
                 return chapterConverter.convert(chapter, config.getExtName());
 
             } catch (Exception e) {
-                Console.error("==> 重试失败: 【{}】，原因: {}", chapter.getTitle(), e.getMessage());
+                Console.error("==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle(), e.getMessage());
                 if (attempt == config.getMaxRetryAttempts()) {
                     latch.countDown();
                     // 最终失败时记录日志
