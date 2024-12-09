@@ -28,7 +28,7 @@ import static org.jline.jansi.AnsiRenderer.render;
  */
 public class BookParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 30_000;
+    private static final int TIMEOUT_MILLS = 15_000;
 
     public BookParser(int sourceId) {
         super(sourceId);
@@ -44,6 +44,7 @@ public class BookParser extends Source {
         String bookName = document.select(r.getBookName()).attr("content");
         String author = document.select(r.getAuthor()).attr("content");
         String intro = document.select(r.getIntro()).attr("content");
+        intro = StrUtil.cleanBlank(intro);
         String coverUrl = document.select(r.getCoverUrl()).attr("src");
 
         Book book = new Book();
