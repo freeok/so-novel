@@ -29,8 +29,15 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  * @author pcdd
  * Created at 2021/6/10
  * <p>
- * IDEA 的终端无法开发 jline 程序，因此在 wt 中运行
- * 启动命令：mvnd clean compile; mvn exec:java
+ * CMD & Bash
+ * <pre><code>
+ * mvnd clean compile && mvn exec:java
+ * </code></pre>
+ * <p>
+ * PS
+ * <pre><code>
+ * mvnd clean compile; mvn exec:java
+ * </code></pre>
  */
 public class Main {
 
