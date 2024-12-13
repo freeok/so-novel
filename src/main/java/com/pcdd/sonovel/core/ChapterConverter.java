@@ -26,8 +26,8 @@ public class ChapterConverter {
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        String filter = new ChapterFilter(config.getSourceId()).filter(chapter.getContent());
-        String content = new ChapterFormatter(config).format(filter);
+        String filteredContent = new ChapterFilter(config.getSourceId()).filter(chapter);
+        String content = new ChapterFormatter(config).format(filteredContent);
 
         if ("txt".equals(extName)) {
             // 全角空格，用于首行缩进
@@ -36,7 +36,9 @@ public class ChapterConverter {
             StringBuilder result = new StringBuilder();
 
             while (matcher.find()) {
-                result.append(ident).append(matcher.group(1)).append("\n");
+                result.append(ident)
+                        .append(matcher.group(1))
+                        .append("\n");
             }
 
             content = chapter.getTitle() + "\n".repeat(2) + result;
