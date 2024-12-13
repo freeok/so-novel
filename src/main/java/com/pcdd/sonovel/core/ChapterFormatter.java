@@ -24,7 +24,7 @@ public class ChapterFormatter {
             // <p>段落</p>
             if ("p".equals(rule.getParagraphTag())) {
                 return content;
-            } else { // 非<p>的闭合标签，替换为<p>标签
+            } else { // 非 <p> 闭合标签，替换为 <p>
                 return content.replaceAll("<(?!p\\b)([^>]+)>(.*?)</\\1>", "<p>$2</p>");
             }
         }
@@ -32,7 +32,7 @@ public class ChapterFormatter {
         String tag = rule.getParagraphTag();
         StringBuilder sb = new StringBuilder();
 
-        for (String s : content.replaceAll("\\s+", "").split(tag)) {
+        for (String s : content.split(tag)) {
             if (!s.isBlank()) {
                 sb.append("<p>").append(s).append("</p>");
             }
