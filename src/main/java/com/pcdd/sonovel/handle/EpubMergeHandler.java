@@ -1,18 +1,20 @@
 package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.util.FileUtils;
-import io.documentnode.epub4j.domain.Author;
-import io.documentnode.epub4j.domain.Resource;
+import io.documentnode.epub4j.domain.*;
 import io.documentnode.epub4j.epub.EpubWriter;
 import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
+import java.util.List;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -38,27 +40,31 @@ public class EpubMergeHandler implements PostProcessingHandler {
         }
 
         io.documentnode.epub4j.domain.Book book = new io.documentnode.epub4j.domain.Book();
-        book.getMetadata().addTitle(b.getBookName());
-        book.getMetadata().addAuthor(new Author(b.getAuthor()));
-        book.getMetadata().addDescription(b.getIntro());
+        // content.opf > metadata
+        Metadata meta = book.getMetadata();
+        meta.addTitle(b.getBookName());
+        meta.setAuthors(List.of(new Author(b.getAuthor())));
+        meta.addDescription(b.getIntro());
         // 不设置会导致 Apple Books 无法使用苹方字体
-        book.getMetadata().setLanguage("zh");
+        meta.setLanguage("zh");
+        meta.setDates(List.of(new io.documentnode.epub4j.domain.Date(new Date())));
+        meta.addPublisher("so-novel");
+        meta.setRights(List.of("本电子书由 so-novel(https://github.com/freeok/so-novel) 制作生成。仅供交流使用，不得用于商业用途。"));
 
-        int i = 1;
-        // 遍历下载后的目录，添加章节
-        for (File file : FileUtils.sortFilesByName(saveDir)) {
+        // 添加封面页
+        book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"),
+                "cover.html"));
+
+        List<File> files = FileUtils.sortFilesByName(saveDir);
+        int len = String.valueOf(files.size()).length();
+        // content.opf > manifest
+        for (int i = 0; i < files.size(); i++) {
+            File file = files.get(i);
             // 截取第一个 _ 后的字符串，即章节名
             String title = StrUtil.subAfter(FileUtil.mainName(file), "_", false);
-
-            Resource resource = new Resource(FileUtil.readBytes(file), i + ".html");
-            resource.setId(String.valueOf(i));
-            resource.setTitle(title);
-            book.addSection(title, resource);
-
-            i++;
+            String id = StrUtil.padPre(String.valueOf(i + 1), len, '0');
+            book.addSection(title, new Resource(id, FileUtil.readBytes(file), id + ".html", MediaTypes.XHTML));
         }
-
-        // Guide guide = book.getGuide();
 
         // 下载封面失败会导致生成 epub 中断
         try {
@@ -68,6 +74,10 @@ public class EpubMergeHandler implements PostProcessingHandler {
         } catch (Exception e) {
             Console.error(render("@|red 封面下载失败：{}|@"), e.getMessage());
         }
+
+        // 设置 guide，用于指定封面
+        book.getGuide().addReference(new GuideReference(new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"),
+                "cover.html"), "封面", "cover.html"));
 
         EpubWriter epubWriter = new EpubWriter();
         String savePath = StrUtil.format("{}/{}.epub", saveDir.getParent(), b.getBookName());
