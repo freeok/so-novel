@@ -75,7 +75,7 @@ brew install so-novel
 
 ## 常见问题
 
-报错：SocketTimeoutException (https://github.com/freeok/so-novel/issues/37)
+报错：SocketTimeoutException
 
 - 浏览器是否可以打开书源网站
 - 关闭代理
@@ -87,10 +87,10 @@ brew install so-novel
 - 检查 DNS 解析 (nslookup 命令)
 - 更换 DNS
 
-WPS 打不开 epub，提示：不支持打开该类型文件或文件已损坏
+WPS 打不开 epub，提示：不支持打开该类型文件或文件已损坏 (https://github.com/freeok/so-novel/issues/54)
 
-- 使用专业阅读器
-- 下载格式改为 txt
+- 使用专业的电子书阅读器打开 EPUB 文件
+- 不用 epub 格式，config.ini 中修改
 
 macOS & Linux 运行 .sh 失败，尝试以下命令
 
