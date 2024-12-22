@@ -1,6 +1,6 @@
 name: 推荐书源
-description: 我希望 so-novel 增加这个书源
-title: 推荐书源 <此处填写书源 URL>
+description: 我希望 so-novel 增加某个书源
+title: 推荐书源 <此处填写书源网址>
 labels:
   - "new source"
 body:
@@ -12,14 +12,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        - 无 Cloudflare 五秒盾
-        - 支持搜索
         - 无付费
+        - 支持搜索
+        - 无需输入验证码、无需点击“确认您是真人”
         - 国内网络可直连访问（优质书源可忽略）
 
   - type: checkboxes
     attributes:
-      label: 确定推荐的书源满足上述条件？
+      label: 确定推荐的书源均满足以上条件？
       options:
         - label: "Yes"
           required: true
@@ -31,7 +31,7 @@ body:
 
   - type: input
     attributes:
-      label: 书源 URL
+      label: 书源网址
       placeholder: https://example.com/
     validations:
       required: true
@@ -42,7 +42,6 @@ body:
       options:
         - 网络小说
         - 轻小说
-        - 文学小说
         - 综合
         - 其它（需在推荐理由填写具体类型）
     validations:
@@ -54,15 +53,13 @@ body:
       options:
         - label: 起点月票榜的书能搜到：https://www.qidian.com/rank/yuepiao/
         - label: 起点收藏榜的书能搜到：https://www.qidian.com/rank/collect/
-        - label: 能搜到知名小说（无论平台、是否连载）
+        - label: 能搜到知名小说
         - label: 正文内容纯净（没有与文章无关的内容）
         - label: 正文错别字少
         - label: 正文排版正常
-        - label: 无反爬机制
 
   - type: textarea
     attributes:
       label: 推荐理由
-      description: 请填写推荐理由
     validations:
       required: true
