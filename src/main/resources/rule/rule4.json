@@ -1,0 +1,42 @@
+{
+  "id": 4,
+  "url": "http://www.99xs.info/",
+  "name": "鸟书网",
+  "comment": "书很全，有15w+；无反爬",
+  "type": "html",
+  "search": {
+    "url": "http://www.99xs.info/read/search/",
+    "method": "post",
+    "body": "{'kw': 'searchkey'}",
+    "cookies": "{}",
+    "pagination": false,
+    "result": "div.wrap > div > div > div",
+    "bookName": "div.bookinfo > h4 > a",
+    "author": "div.bookinfo > div.author",
+    "latestChapter": "div.bookinfo > div.update > a"
+  },
+  "book": {
+    "url": "http://www.99xs.info/tag/%s/",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "div.cover > img",
+    "latestChapter": "",
+    "latestUpdate": "",
+    "isEnd": "",
+    "catalog": "div.listmain > dl > dd > a",
+    "catalogOffset": 12
+  },
+  "chapter": {
+    "url": "http://www.99xs.info/tag/%s/%s.html",
+    "pagination": false,
+    "chapterNo": 0,
+    "title": "",
+    "content": "#content",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br><br>",
+    "filterTxt": "请记住本书首发域名：.+。鸟书网手机版阅读网址：.+",
+    "filterTag": ""
+  }
+}
