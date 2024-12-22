@@ -2,6 +2,7 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
@@ -77,9 +78,13 @@ public class SearchResultParser extends Source {
             // jsoup 不支持一次性获取属性的值
             String href = element.select(rule.getBookName()).attr("href");
             String bookName = element.select(rule.getBookName()).text();
-            String latestChapter = element.select(rule.getLatestChapter()).text();
             String author = element.select(rule.getAuthor()).text();
-            String update = element.select(rule.getUpdate()).text();
+            String latestChapter = StrUtil.isNotEmpty(rule.getLatestChapter())
+                    ? element.select(rule.getLatestChapter()).text()
+                    : null;
+            String update = StrUtil.isNotEmpty(rule.getUpdate())
+                    ? element.select(rule.getUpdate()).text()
+                    : null;
 
             // 针对书源 1：排除第一个 tr 表头
             if (bookName.isEmpty()) continue;
