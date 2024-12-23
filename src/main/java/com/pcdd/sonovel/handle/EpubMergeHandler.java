@@ -24,6 +24,8 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class EpubMergeHandler implements PostProcessingHandler {
 
+    public static final String COVER_NAME = "cover.html";
+
     @SneakyThrows
     @Override
     public void handle(Book b, File saveDir) {
@@ -52,8 +54,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
         meta.setRights(List.of("本电子书由 so-novel(https://github.com/freeok/so-novel) 制作生成。仅供交流使用，不得用于商业用途。"));
 
         // 添加封面页
-        book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"),
-                "cover.html"));
+        book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME));
 
         List<File> files = FileUtils.sortFilesByName(saveDir);
         int len = String.valueOf(files.size()).length();
@@ -77,7 +78,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
 
         // 设置 guide，用于指定封面
         book.getGuide().addReference(new GuideReference(new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"),
-                "cover.html"), "封面", "cover.html"));
+                COVER_NAME), "封面", COVER_NAME));
 
         EpubWriter epubWriter = new EpubWriter();
         String savePath = StrUtil.format("{}/{}.epub", saveDir.getParent(), b.getBookName());

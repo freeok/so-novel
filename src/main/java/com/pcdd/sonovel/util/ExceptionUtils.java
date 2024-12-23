@@ -11,7 +11,9 @@ public class ExceptionUtils {
 
     // 随机抛异常，测试用
     public void randomThrow() {
-        int i = System.currentTimeMillis() % 2 == 0 ? 0 : 1 / 0;
+        if (System.currentTimeMillis() % 2 == 0) {
+            throw new NullPointerException("随机抛 NPE");
+        }
     }
 
 }
