@@ -8,6 +8,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.ExceptionUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,6 +39,7 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         try {
             Console.log("<== 正在下载: 【{}】", chapter.getTitle());
+            ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), false));
             latch.countDown();
             return chapterConverter.convert(chapter, config.getExtName());
@@ -50,7 +52,7 @@ public class ChapterParser extends Source {
     private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
-                Console.log("==> 正在重试下载失败章节: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, config.getMaxRetryAttempts());
+                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, config.getMaxRetryAttempts());
                 chapter.setContent(crawl(chapter.getUrl(), true));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
@@ -107,8 +109,9 @@ public class ChapterParser extends Source {
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, true))) {
             // 自带换行符
             pw.println(line);
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Console.error(e);
         }
     }
 
