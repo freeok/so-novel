@@ -29,7 +29,7 @@ public class ChapterFilter extends Source {
      * 建造者类，用于动态组合过滤步骤
      */
     public class FilterBuilder {
-        private String title;
+        private final String title;
         private String content;
         private boolean applyEscapeFilter;
         private boolean applyAdsFilter;
