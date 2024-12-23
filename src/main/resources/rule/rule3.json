@@ -10,7 +10,6 @@
     "body": "{'kw': 'name'}",
     "cookies": "{}",
     "pagination": false,
-    "nextPage": "",
     "result": ".novelslist2 > ul > li",
     "bookName": "span.s2.wid > a",
     "author": "span.s4.wid > a",
