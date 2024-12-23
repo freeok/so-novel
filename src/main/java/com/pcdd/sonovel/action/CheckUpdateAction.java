@@ -91,13 +91,14 @@ public class CheckUpdateAction {
 
     private void download(String url) {
         // HEAD 请求不会下载文件内容，只会返回文件的元数据（例如文件大小）
-        long fileSize = HttpUtil.createRequest(Method.HEAD, url)
+        HttpResponse resp = HttpUtil.createRequest(Method.HEAD, url)
                 .timeout(10_000)
-                .execute()
-                .contentLength();
+                .execute();
+        long fileSize = resp.contentLength();
+        resp.close();
+
         // 设置进度条
         ProgressBar pb = new ProgressBar("下载最新版", fileSize);
-
         //  下载到上一级路径
         File file = new File(System.getProperty("user.dir")).getParentFile();
 
@@ -117,10 +118,11 @@ public class CheckUpdateAction {
             @Override
             public void finish() {
                 pb.setExtraMessage("下载完成");
-                pb.close();
                 Console.log("<== 下载位置: {}", file + File.separator + FileUtil.getName(url));
             }
         });
+
+        pb.close();
     }
 
 }
