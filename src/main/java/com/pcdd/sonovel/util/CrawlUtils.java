@@ -54,7 +54,7 @@ public class CrawlUtils {
             case "head" -> Connection.Method.HEAD;
             case "options" -> Connection.Method.OPTIONS;
             case "trace" -> Connection.Method.TRACE;
-            default -> Connection.Method.POST;
+            default -> throw new IllegalArgumentException("Unsupported request method: " + method);
         };
     }
 
