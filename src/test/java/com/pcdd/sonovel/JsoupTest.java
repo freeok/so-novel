@@ -4,13 +4,11 @@ import cn.hutool.core.lang.Console;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 public class JsoupTest {
 
     /**
-     * jsoup-1.18.1增加了Response进度事件接口
-     * https://github.com/jhy/jsoup/pull/2164
+     * <a href="https://github.com/jhy/jsoup/pull/2164">jsoup-1.18.1增加了Response进度事件接口</a>
      */
     @SneakyThrows
     public static void main(String[] args) {
@@ -21,7 +19,7 @@ public class JsoupTest {
                     Console.log(percent + "%");
                 });
 
-        Document document = con.get();
+        System.out.println(con.response());
     }
 
 }
