@@ -28,35 +28,11 @@ import static org.jline.jansi.AnsiRenderer.render;
  */
 public class BookParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 15_000;
     public static final String CONTENT = "content";
+    private static final int TIMEOUT_MILLS = 15_000;
 
     public BookParser(int sourceId) {
         super(sourceId);
-    }
-
-    @SneakyThrows
-    public Book parse(String url) {
-        Rule.Book r = this.rule.getBook();
-        Document document = Jsoup.connect(url)
-                .timeout(TIMEOUT_MILLS)
-                .header(Header.USER_AGENT.getValue(), RandomUA.generate())
-                .get();
-        String bookName = document.select(r.getBookName()).attr(CONTENT);
-        String author = document.select(r.getAuthor()).attr(CONTENT);
-        String intro = document.select(r.getIntro()).attr(CONTENT);
-        intro = StrUtil.cleanBlank(intro);
-        String coverUrl = document.select(r.getCoverUrl()).attr("src");
-
-        Book book = new Book();
-        book.setUrl(url);
-        book.setBookName(bookName);
-        book.setAuthor(author);
-        book.setIntro(intro);
-        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
-        book.setCoverUrl(replaceCover(book));
-
-        return book;
     }
 
     /**
@@ -94,6 +70,30 @@ public class BookParser extends Source {
         }
 
         return book.getCoverUrl();
+    }
+
+    @SneakyThrows
+    public Book parse(String url) {
+        Rule.Book r = this.rule.getBook();
+        Document document = Jsoup.connect(url)
+                .timeout(TIMEOUT_MILLS)
+                .header(Header.USER_AGENT.getValue(), RandomUA.generate())
+                .get();
+        String bookName = document.select(r.getBookName()).attr(CONTENT);
+        String author = document.select(r.getAuthor()).attr(CONTENT);
+        String intro = document.select(r.getIntro()).attr(CONTENT);
+        intro = StrUtil.cleanBlank(intro);
+        String coverUrl = document.select(r.getCoverUrl()).attr("src");
+
+        Book book = new Book();
+        book.setUrl(url);
+        book.setBookName(bookName);
+        book.setAuthor(author);
+        book.setIntro(intro);
+        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
+        book.setCoverUrl(replaceCover(book));
+
+        return book;
     }
 
 }
