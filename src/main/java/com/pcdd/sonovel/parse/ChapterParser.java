@@ -8,7 +8,6 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.ExceptionUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,7 +38,7 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         try {
             Console.log("<== 正在下载: 【{}】", chapter.getTitle());
-            ExceptionUtils.randomThrow();
+            // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), false));
             latch.countDown();
             return chapterConverter.convert(chapter, config.getExtName());
