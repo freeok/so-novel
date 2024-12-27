@@ -31,7 +31,7 @@ public class BookSourceQualityTest {
 
     public static void main(String[] args) {
         // 测试前几个书源
-        int count = 3;
+        int count = 4;
         Map<String, String> map = new LinkedHashMap<>();
         map.put("起点月票榜", "https://www.qidian.com/rank/yuepiao/");
         map.put("起点畅销榜", "https://www.qidian.com/rank/hotsales/");
@@ -39,7 +39,6 @@ public class BookSourceQualityTest {
         map.put("起点推荐榜月榜", "https://www.qidian.com/rank/recom/datetype2/");
         map.put("起点收藏榜", "https://www.qidian.com/rank/collect/");
         map.put("起点签约作者新书榜", "https://www.qidian.com/rank/signnewbook/");
-        map.put("起点公众作者新书榜", "https://www.qidian.com/rank/pubnewbook/");
         map.put("起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/");
 
         String divider = "-".repeat(50);
@@ -132,7 +131,7 @@ public class BookSourceQualityTest {
         List<SourceQuality> list = new ArrayList<>();
         Rule rule = new Source(sourceId).rule;
 
-        Console.log("<== 开始测试书源质量：书源{} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
+        Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
 
         for (Book b : getQiDianRanks(rankUrl)) {
             SourceQuality sq = new SourceQuality();
@@ -142,6 +141,10 @@ public class BookSourceQualityTest {
             sq.setQiDianUrl(b.getUrl());
 
             List<SearchResult> results = new SearchResultParser(sourceId).parse(b.getBookName());
+            // 针对书源 4 author 会包含“作者：”的情况
+            for (SearchResult sr : results) {
+                sr.setAuthor(sr.getAuthor().replace("作者：", ""));
+            }
             boolean found = false;
 
             for (SearchResult r : results) {
