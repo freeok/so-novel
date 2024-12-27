@@ -22,12 +22,11 @@ Linux 用户
 3. 如何选择适合自己的书源：https://github.com/freeok/so-novel/issues/50
 
 问题反馈
-1. 常见问题：https://github.com/freeok/so-novel?tab=readme-ov-file#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98
-2. 若使用时遇到其它问题，例如书源失效、发现 BUG；希望增加新功能；有改进建议
-请先在此查找：https://github.com/freeok/so-novel/issues?q=is%3Aissue+is%3Aclosed
-若都没有请在此反馈：https://github.com/freeok/so-novel/issues
-3. 如果希望增加某个书源，请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
+1. 若使用时遇到问题，例如书源失效、发现 BUG
+2. 若希望增加某个书源
+3. 若希望增加某个新功能、有改进建议
+请均在此反馈：https://github.com/freeok/so-novel/issues/new/choose
 
 
 项目主页：https://github.com/freeok/so-novel
-下载地址：https://github.com/freeok/so-novel/releases
+下载页面：https://github.com/freeok/so-novel/releases
