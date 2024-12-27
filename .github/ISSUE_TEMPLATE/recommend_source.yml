@@ -1,6 +1,6 @@
 name: 推荐书源
-description: 我希望 so-novel 增加某个书源
-title: 推荐书源 <此处填写书源网址>
+description: 我希望增加某个书源
+title: '【推荐书源】此处填写书源网址'
 labels:
   - "new source"
 body:
