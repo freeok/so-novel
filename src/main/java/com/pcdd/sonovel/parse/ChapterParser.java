@@ -25,12 +25,10 @@ import java.util.concurrent.CountDownLatch;
 public class ChapterParser extends Source {
 
     private static final int TIMEOUT_MILLS = 15_000;
-    private final ConfigBean config;
     private final ChapterConverter chapterConverter;
 
     public ChapterParser(ConfigBean config) {
-        super(config.getSourceId());
-        this.config = config;
+        super(config);
         this.chapterConverter = new ChapterConverter(config);
     }
 

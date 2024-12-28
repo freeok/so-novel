@@ -24,7 +24,7 @@ public class CatalogParser extends Source {
     private static final int TIMEOUT_MILLS = 30_000;
 
     public CatalogParser(ConfigBean config) {
-        super(config.getSourceId());
+        super(config);
     }
 
     /**

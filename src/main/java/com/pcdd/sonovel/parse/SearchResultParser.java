@@ -26,7 +26,11 @@ public class SearchResultParser extends Source {
     private static final int TIMEOUT_MILLS = 15_000;
 
     public SearchResultParser(ConfigBean config) {
-        super(config.getSourceId());
+        super(config);
+    }
+
+    public SearchResultParser(int sourceId) {
+        super(sourceId, null);
     }
 
     public List<SearchResult> parse(String keyword) {
@@ -51,7 +55,7 @@ public class SearchResultParser extends Source {
         Set<String> urls = new LinkedHashSet<>();
         for (Element e : document.select(search.getNextPage())) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
-            // TODO 中文解码，针对69书吧
+            // 中文解码，针对69书吧
             urls.add(URLUtil.decode(href));
         }
 
