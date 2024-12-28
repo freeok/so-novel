@@ -20,7 +20,7 @@ public class ChapterFormatter {
         Rule.Chapter rule = new Source(config.getSourceId()).rule.getChapter();
 
         // 标签闭合
-        if (Boolean.TRUE.equals(rule.getParagraphTagClosed())) {
+        if (rule.isParagraphTagClosed()) {
             // <p>段落</p>
             if ("p".equals(rule.getParagraphTag())) {
                 return content;

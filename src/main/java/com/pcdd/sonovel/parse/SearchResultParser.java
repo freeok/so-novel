@@ -54,7 +54,7 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, document);
-        if (!search.getPagination()) return firstPageResults;
+        if (!search.isPagination()) return firstPageResults;
 
         Set<String> urls = new LinkedHashSet<>();
         for (Element e : document.select(search.getNextPage())) {
