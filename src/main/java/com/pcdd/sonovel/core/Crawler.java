@@ -53,7 +53,7 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        SearchResultParser searchResultParser = new SearchResultParser(config.getSourceId());
+        SearchResultParser searchResultParser = new SearchResultParser(config);
         List<SearchResult> searchResults = searchResultParser.parse(keyword);
 
         stopWatch.stop();
