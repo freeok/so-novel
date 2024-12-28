@@ -28,7 +28,7 @@ public class Rule {
         private String body;
         private String cookies;
         // 搜索结果是否有分页
-        private Boolean pagination;
+        private boolean pagination;
         private String nextPage;
         // 以下字段不同书源可能不同
         private String result;
@@ -57,12 +57,12 @@ public class Rule {
     public static class Chapter {
         private String url;
         // 章节是否有分页
-        private Boolean pagination;
+        private boolean pagination;
         private String nextPage;
         private Integer chapterNo;
         private String title;
         private String content;
-        private Boolean paragraphTagClosed;
+        private boolean paragraphTagClosed;
         private String paragraphTag;
         private String filterTxt;
         private String filterTag;
