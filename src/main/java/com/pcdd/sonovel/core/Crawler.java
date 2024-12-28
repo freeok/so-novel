@@ -75,7 +75,7 @@ public class Crawler {
         String url = sr.getUrl();
         String bookName = sr.getBookName();
         String author = sr.getAuthor();
-        Book book = new BookParser(config.getSourceId()).parse(url);
+        Book book = new BookParser(config).parse(url);
 
         // 小说目录名格式：书名(作者)
         bookDir = String.format("%s (%s)", bookName, author);
