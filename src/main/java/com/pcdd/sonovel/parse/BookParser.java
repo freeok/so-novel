@@ -33,7 +33,7 @@ public class BookParser extends Source {
     private static final int TIMEOUT_MILLS = 15_000;
 
     public BookParser(ConfigBean config) {
-        super(config.getSourceId());
+        super(config);
     }
 
     /**
