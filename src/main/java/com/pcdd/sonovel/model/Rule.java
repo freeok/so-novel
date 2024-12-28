@@ -14,6 +14,7 @@ public class Rule {
     private String name;
     private String comment;
     private String type;
+    private boolean useProxy;
 
     private Search search;
     private Book book;
