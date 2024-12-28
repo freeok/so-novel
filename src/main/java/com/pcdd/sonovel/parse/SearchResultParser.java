@@ -9,10 +9,8 @@ import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -26,15 +24,9 @@ import java.util.*;
 public class SearchResultParser extends Source {
 
     private static final int TIMEOUT_MILLS = 15_000;
-    private ConfigBean config;
-
-    public SearchResultParser(int sourceId) {
-        super(sourceId);
-    }
 
     public SearchResultParser(ConfigBean config) {
         super(config.getSourceId());
-        this.config = config;
     }
 
     public List<SearchResult> parse(String keyword) {
@@ -43,7 +35,7 @@ public class SearchResultParser extends Source {
         // 模拟搜索请求
         Document document;
         try {
-            Connection.Response resp = getConn(search.getUrl())
+            Connection.Response resp = getConn(search.getUrl(), TIMEOUT_MILLS)
                     .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
                     .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
                     .execute();
@@ -77,7 +69,7 @@ public class SearchResultParser extends Source {
         Rule.Search rule = this.rule.getSearch();
         // 搜索结果页 DOM
         if (document == null)
-            document = getConn(url).get();
+            document = getConn(url, TIMEOUT_MILLS).get();
 
         Elements elements = document.select(rule.getResult());
         List<SearchResult> list = new ArrayList<>();
@@ -108,22 +100,6 @@ public class SearchResultParser extends Source {
         }
 
         return list;
-    }
-
-    private Connection getConn(String url) {
-        Connection conn = Jsoup.connect(url)
-                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                .header("User-Agent", RandomUA.generate())
-                .timeout(TIMEOUT_MILLS);
-
-        // 启用配置文件的代理地址
-        if (this.rule.isUseProxy()) {
-            String proxyServer = config.getProxyServer();
-            String[] split = proxyServer.split(":");
-            conn.proxy(split[0], Integer.parseInt(split[1]));
-        }
-
-        return conn;
     }
 
 }

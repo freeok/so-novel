@@ -13,7 +13,6 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,11 +31,9 @@ public class BookParser extends Source {
 
     public static final String CONTENT = "content";
     private static final int TIMEOUT_MILLS = 15_000;
-    private final ConfigBean config;
 
     public BookParser(ConfigBean config) {
         super(config.getSourceId());
-        this.config = config;
     }
 
     /**
@@ -79,7 +76,7 @@ public class BookParser extends Source {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
-        Document document = getConn(url).get();
+        Document document = getConn(url, TIMEOUT_MILLS).get();
         String bookName = document.select(r.getBookName()).attr(CONTENT);
         String author = document.select(r.getAuthor()).attr(CONTENT);
         String intro = document.select(r.getIntro()).attr(CONTENT);
@@ -95,22 +92,6 @@ public class BookParser extends Source {
         book.setCoverUrl(replaceCover(book));
 
         return book;
-    }
-
-    private Connection getConn(String url) {
-        Connection conn = Jsoup.connect(url)
-                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                .header("User-Agent", RandomUA.generate())
-                .timeout(TIMEOUT_MILLS);
-
-        // 启用配置文件的代理地址
-        if (this.rule.isUseProxy()) {
-            String proxyServer = config.getProxyServer();
-            String[] split = proxyServer.split(":");
-            conn.proxy(split[0], Integer.parseInt(split[1]));
-        }
-
-        return conn;
     }
 
 }
