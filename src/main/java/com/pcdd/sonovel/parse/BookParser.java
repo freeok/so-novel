@@ -36,6 +36,36 @@ public class BookParser extends Source {
         super(config);
     }
 
+    @SneakyThrows
+    public Book parse(String url) {
+        Rule.Book r = this.rule.getBook();
+        Document document = getConn(url, TIMEOUT_MILLS).get();
+        String bookName = document.select(r.getBookName()).attr(CONTENT);
+        String author = document.select(r.getAuthor()).attr(CONTENT);
+        String intro = document.select(r.getIntro()).attr(CONTENT);
+        intro = StrUtil.cleanBlank(intro);
+        String coverUrl = document.select(r.getCoverUrl()).attr("src");
+        // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
+        String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
+                ? document.select(r.getLatestChapter()).attr(CONTENT)
+                : null;
+        String latestUpdate = StrUtil.isNotEmpty(r.getLatestUpdate())
+                ? document.select(r.getLatestUpdate()).attr(CONTENT)
+                : null;
+
+        Book book = new Book();
+        book.setUrl(url);
+        book.setBookName(bookName);
+        book.setAuthor(author);
+        book.setIntro(intro);
+        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
+        book.setCoverUrl(replaceCover(book));
+        book.setLatestChapter(latestChapter);
+        book.setLatestUpdate(latestUpdate);
+
+        return book;
+    }
+
     /**
      * 封面替换为起点最新封面
      */
@@ -71,27 +101,6 @@ public class BookParser extends Source {
         }
 
         return book.getCoverUrl();
-    }
-
-    @SneakyThrows
-    public Book parse(String url) {
-        Rule.Book r = this.rule.getBook();
-        Document document = getConn(url, TIMEOUT_MILLS).get();
-        String bookName = document.select(r.getBookName()).attr(CONTENT);
-        String author = document.select(r.getAuthor()).attr(CONTENT);
-        String intro = document.select(r.getIntro()).attr(CONTENT);
-        intro = StrUtil.cleanBlank(intro);
-        String coverUrl = document.select(r.getCoverUrl()).attr("src");
-
-        Book book = new Book();
-        book.setUrl(url);
-        book.setBookName(bookName);
-        book.setAuthor(author);
-        book.setIntro(intro);
-        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
-        book.setCoverUrl(replaceCover(book));
-
-        return book;
     }
 
 }
