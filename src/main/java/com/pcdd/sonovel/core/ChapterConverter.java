@@ -26,7 +26,7 @@ public class ChapterConverter {
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter convert(Chapter chapter, String extName) {
-        String filteredContent = new ChapterFilter(config.getSourceId()).filter(chapter);
+        String filteredContent = new ChapterFilter(config).filter(chapter);
         String content = new ChapterFormatter(config).format(filteredContent);
 
         if ("txt".equals(extName)) {
