@@ -2,7 +2,7 @@
   "id": "5",
   "url": "https://69shux.co/",
   "name": "69书吧",
-  "comment": "无五秒盾，需要梯子，美国节点🆗",
+  "comment": "无五秒盾，需要梯子，美国节点🆗，数量5w+",
   "type": "html",
   "useProxy": true,
   "search": {
@@ -17,5 +17,16 @@
     "author": "div.labelbox > label:nth-child(1)",
     "latestChapter": "div.zxzj > p > a",
     "update": "div.labelbox > label:nth-child(3)"
+  },
+  "book": {
+    "url": "meta[property=\"og:url\"]",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": ".bookimg2 > img",
+    "latestChapter": "",
+    "latestUpdate": "",
+    "isEnd": ""
   }
 }
