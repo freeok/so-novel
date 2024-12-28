@@ -18,6 +18,7 @@ public class Rule {
 
     private Search search;
     private Book book;
+    private Catalog catalog;
     private Chapter chapter;
 
     @Data
@@ -49,8 +50,13 @@ public class Rule {
         private String latestChapter;
         private String latestUpdate;
         private String isEnd;
-        private String catalog;
-        private Integer catalogOffset;
+    }
+
+    @Data
+    public static class Catalog{
+        private String url;
+        private String result;
+        private Integer offset;
     }
 
     @Data
