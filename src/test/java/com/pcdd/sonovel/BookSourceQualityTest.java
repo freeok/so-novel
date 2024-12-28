@@ -8,9 +8,11 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -130,6 +132,7 @@ public class BookSourceQualityTest {
         int notFoundCount = 0;
         List<SourceQuality> list = new ArrayList<>();
         Rule rule = new Source(sourceId).rule;
+        ConfigBean config = ConfigUtils.config();
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
 
@@ -140,7 +143,7 @@ public class BookSourceQualityTest {
             sq.setAuthor(b.getAuthor());
             sq.setQiDianUrl(b.getUrl());
 
-            List<SearchResult> results = new SearchResultParser(sourceId).parse(b.getBookName());
+            List<SearchResult> results = new SearchResultParser(config).parse(b.getBookName());
             // 针对书源 4 author 会包含“作者：”的情况
             for (SearchResult sr : results) {
                 sr.setAuthor(sr.getAuthor().replace("作者：", ""));
