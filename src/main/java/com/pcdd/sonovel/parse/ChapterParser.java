@@ -74,7 +74,7 @@ public class ChapterParser extends Source {
      * 爬取正文内容
      */
     private String crawl(String url, boolean isRetry) throws InterruptedException, IOException {
-        boolean isPaging = this.rule.getChapter().getPagination();
+        boolean isPaging = this.rule.getChapter().isPagination();
         String nextUrl = url;
         StringBuilder sb = new StringBuilder();
 
