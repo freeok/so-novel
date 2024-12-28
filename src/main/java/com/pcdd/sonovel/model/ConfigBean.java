@@ -16,6 +16,7 @@ public class ConfigBean {
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
+    private String proxyServer;
 
     // crawl
     private Integer threads;
