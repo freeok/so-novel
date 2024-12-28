@@ -19,7 +19,7 @@
     "update": "div.labelbox > label:nth-child(3)"
   },
   "book": {
-    "url": "meta[property=\"og:url\"]",
+    "url": "https://69shux.co/book/(.*?).html",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -28,5 +28,10 @@
     "latestChapter": "",
     "latestUpdate": "",
     "isEnd": ""
+  },
+  "catalog": {
+    "url": "https://69shux.co/ajax_novels/chapterlist/%s.html",
+    "result": "ul > li > a",
+    "offset": 0
   }
 }

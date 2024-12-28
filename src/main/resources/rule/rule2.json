@@ -18,7 +18,7 @@
     "update": "dd:nth-child(5) > span"
   },
   "book": {
-    "url": "https://www.shuhaige.net/%s/",
+    "url": "https://www.shuhaige.net/(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -26,9 +26,11 @@
     "coverUrl": "#fmimg > img",
     "latestChapter": "",
     "latestUpdate": "",
-    "isEnd": "",
-    "catalog": "#list > dl > dd > a",
-    "catalogOffset": 12
+    "isEnd": ""
+  },
+  "catalog": {
+    "result": "#list > dl > dd > a",
+    "offset": 12
   },
   "chapter": {
     "url": "https://www.shuhaige.net/%s/%s.html",
