@@ -131,8 +131,8 @@ public class BookSourceQualityTest {
         int foundCount = 0;
         int notFoundCount = 0;
         List<SourceQuality> list = new ArrayList<>();
-        Rule rule = new Source(sourceId).rule;
         ConfigBean config = ConfigUtils.config();
+        Rule rule = new Source(config).rule;
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
 
@@ -143,7 +143,7 @@ public class BookSourceQualityTest {
             sq.setAuthor(b.getAuthor());
             sq.setQiDianUrl(b.getUrl());
 
-            List<SearchResult> results = new SearchResultParser(config).parse(b.getBookName());
+            List<SearchResult> results = new SearchResultParser(sourceId).parse(b.getBookName());
             // 针对书源 4 author 会包含“作者：”的情况
             for (SearchResult sr : results) {
                 sr.setAuthor(sr.getAuthor().replace("作者：", ""));

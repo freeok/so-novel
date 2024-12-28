@@ -89,7 +89,7 @@ public class Main {
     }
 
     private static void printHint() {
-        Rule rule = new Source(config.getSourceId()).rule;
+        Rule rule = new Source(config).rule;
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
