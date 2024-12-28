@@ -89,7 +89,7 @@ public class Crawler {
 
         Console.log("<== 正在获取章节目录", bookName);
         // 获取小说目录
-        CatalogParser catalogParser = new CatalogParser(config.getSourceId());
+        CatalogParser catalogParser = new CatalogParser(config);
         List<Chapter> catalog = catalogParser.parse(url, start, end);
         // 防止 start、end 超出范围
         if (CollUtil.isEmpty(catalog)) {
