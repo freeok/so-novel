@@ -33,5 +33,17 @@
     "url": "https://69shux.co/ajax_novels/chapterlist/%s.html",
     "result": "ul > li > a",
     "offset": 0
+  },
+  "chapter": {
+    "url": "https://69shux.co/txt/%s/%s.html",
+    "pagination": false,
+    "nextPage": "",
+    "chapterNo": 0,
+    "title": "",
+    "content": "#txtcontent",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br><br>",
+    "filterTxt": "",
+    "filterTag": ""
   }
 }
