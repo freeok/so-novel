@@ -60,7 +60,8 @@ public class ConfigUtils {
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
-        configBean.setProxyServer(usr.getStr("proxy-server", SELECTION_1, ""));
+        configBean.setProxyHost(usr.getStr("proxy-host", SELECTION_1, "127.0.0.1"));
+        configBean.setProxyPort(usr.getInt("proxy-port", SELECTION_1, 7890));
 
         configBean.setThreads(usr.getInt("threads", SELECTION_2, -1));
         configBean.setMinInterval(usr.getInt("min", SELECTION_2, 50));

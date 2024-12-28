@@ -8,10 +8,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -87,7 +84,7 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
 
         do {
-            Document document = getConn(nextUrl).get();
+            Document document = getConn(nextUrl, TIMEOUT_MILLS).get();
             Elements elContent = document.select(this.rule.getChapter().getContent());
             sb.append(elContent.html());
             // 章节不分页，只请求一次
@@ -117,22 +114,6 @@ public class ChapterParser extends Source {
         } catch (IOException e) {
             Console.error(e);
         }
-    }
-
-    private Connection getConn(String url) {
-        Connection conn = Jsoup.connect(url)
-                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                .header("User-Agent", RandomUA.generate())
-                .timeout(TIMEOUT_MILLS);
-
-        // 启用配置文件的代理地址
-        if (this.rule.isUseProxy()) {
-            String proxyServer = config.getProxyServer();
-            String[] split = proxyServer.split(":");
-            conn.proxy(split[0], Integer.parseInt(split[1]));
-        }
-
-        return conn;
     }
 
 }
