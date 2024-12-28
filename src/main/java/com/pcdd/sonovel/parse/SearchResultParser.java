@@ -3,7 +3,9 @@ package com.pcdd.sonovel.parse;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.core.Source;
+import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
@@ -24,22 +26,24 @@ import java.util.*;
 public class SearchResultParser extends Source {
 
     private static final int TIMEOUT_MILLS = 15_000;
+    private ConfigBean config;
 
     public SearchResultParser(int sourceId) {
         super(sourceId);
     }
 
+    public SearchResultParser(ConfigBean config) {
+        super(config.getSourceId());
+        this.config = config;
+    }
+
     public List<SearchResult> parse(String keyword) {
         Rule.Search search = this.rule.getSearch();
-        boolean isPaging = search.getPagination();
 
         // 模拟搜索请求
         Document document;
         try {
-            Connection.Response resp = Jsoup.connect(search.getUrl())
-                    .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                    .timeout(TIMEOUT_MILLS)
-                    .header("User-Agent", RandomUA.generate())
+            Connection.Response resp = getConn(search.getUrl())
                     .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
                     .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
                     .execute();
@@ -50,11 +54,14 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, document);
-        if (!isPaging) return firstPageResults;
+        if (!search.getPagination()) return firstPageResults;
 
         Set<String> urls = new LinkedHashSet<>();
-        for (Element e : document.select(search.getNextPage()))
-            urls.add(CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl()));
+        for (Element e : document.select(search.getNextPage())) {
+            String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
+            // TODO 中文解码，针对69书吧
+            urls.add(URLUtil.decode(href));
+        }
 
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
@@ -70,7 +77,7 @@ public class SearchResultParser extends Source {
         Rule.Search rule = this.rule.getSearch();
         // 搜索结果页 DOM
         if (document == null)
-            document = Jsoup.connect(url).timeout(TIMEOUT_MILLS).get();
+            document = getConn(url).get();
 
         Elements elements = document.select(rule.getResult());
         List<SearchResult> list = new ArrayList<>();
@@ -101,6 +108,22 @@ public class SearchResultParser extends Source {
         }
 
         return list;
+    }
+
+    private Connection getConn(String url) {
+        Connection conn = Jsoup.connect(url)
+                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
+                .header("User-Agent", RandomUA.generate())
+                .timeout(TIMEOUT_MILLS);
+
+        // 启用配置文件的代理地址
+        if (this.rule.isUseProxy()) {
+            String proxyServer = config.getProxyServer();
+            String[] split = proxyServer.split(":");
+            conn.proxy(split[0], Integer.parseInt(split[1]));
+        }
+
+        return conn;
     }
 
 }
