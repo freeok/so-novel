@@ -11,19 +11,20 @@ public class ConfigBean {
 
     private String version;
 
-    // base
+    // [base]
     private Integer sourceId;
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
-    private String proxyServer;
+    private String proxyHost;
+    private Integer proxyPort;
 
-    // crawl
+    // [crawl]
     private Integer threads;
     private Integer minInterval;
     private Integer maxInterval;
 
-    // retry
+    // [retry]
     private Integer maxRetryAttempts;
     private Integer retryMinInterval;
     private Integer retryMaxInterval;

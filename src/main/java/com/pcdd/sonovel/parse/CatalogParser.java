@@ -7,10 +7,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.RandomUA;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -25,11 +22,9 @@ import java.util.Optional;
 public class CatalogParser extends Source {
 
     private static final int TIMEOUT_MILLS = 30_000;
-    private final ConfigBean config;
 
     public CatalogParser(ConfigBean config) {
         super(config.getSourceId());
-        this.config = config;
     }
 
     /**
@@ -55,7 +50,7 @@ public class CatalogParser extends Source {
         // 正数表示忽略前 offset 章，负数表示忽略后 offset 章
         int offset = Optional.ofNullable(catalogRule.getOffset()).orElse(0);
 
-        Document document = getConn(url).get();
+        Document document = getConn(url, TIMEOUT_MILLS).get();
         List<Element> elements = document.select(catalogRule.getResult());
         if (offset != 0) {
             if (offset > 0) elements = elements.subList(offset, elements.size());
@@ -73,22 +68,6 @@ public class CatalogParser extends Source {
         }
 
         return catalog;
-    }
-
-    private Connection getConn(String url) {
-        Connection conn = Jsoup.connect(url)
-                .method(CrawlUtils.buildMethod(this.rule.getSearch().getMethod()))
-                .header("User-Agent", RandomUA.generate())
-                .timeout(TIMEOUT_MILLS);
-
-        // 启用配置文件的代理地址
-        if (this.rule.isUseProxy()) {
-            String proxyServer = config.getProxyServer();
-            String[] split = proxyServer.split(":");
-            conn.proxy(split[0], Integer.parseInt(split[1]));
-        }
-
-        return conn;
     }
 
 }
