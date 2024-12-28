@@ -17,7 +17,7 @@ public class ChapterFormatter {
      * 格式化正文排版
      */
     public String format(String content) {
-        Rule.Chapter rule = new Source(config.getSourceId()).rule.getChapter();
+        Rule.Chapter rule = new Source(config).rule.getChapter();
 
         // 标签闭合
         if (rule.isParagraphTagClosed()) {

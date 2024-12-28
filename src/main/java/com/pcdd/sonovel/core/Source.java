@@ -2,6 +2,7 @@ package com.pcdd.sonovel.core;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.ConfigBean;
 import com.pcdd.sonovel.model.Rule;
@@ -22,7 +23,13 @@ public class Source {
     public final Rule rule;
     public final ConfigBean config;
 
-    public Source(int id) {
+    // 配置文件读取书源 id
+    public Source(ConfigBean config) {
+        this(config.getSourceId(), config);
+    }
+
+    // 自定义书源 id，用于测试
+    public Source(int id, ConfigBean config) {
         String jsonStr = null;
 
         try {
@@ -36,7 +43,7 @@ public class Source {
 
         // json 封装进 Rule
         this.rule = JSONUtil.toBean(jsonStr, Rule.class);
-        this.config = ConfigUtils.config();
+        this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
     }
 
     public Connection getConn(String url, int timeout) {
