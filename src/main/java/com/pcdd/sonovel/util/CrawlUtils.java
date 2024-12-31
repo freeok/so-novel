@@ -3,13 +3,13 @@ package com.pcdd.sonovel.util;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
+import com.pcdd.sonovel.model.ConfigBean;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Connection;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author pcdd
@@ -58,8 +58,10 @@ public class CrawlUtils {
         };
     }
 
-    public void randomSleep(long min, long max) throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(ThreadLocalRandom.current().nextLong(min, max));
+    public long randomInterval(ConfigBean config, boolean isRetry) {
+        return ThreadLocalRandom.current().nextLong(
+                isRetry ? config.getRetryMinInterval() : config.getMinInterval(),
+                isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());
     }
 
 }

@@ -14,6 +14,7 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
@@ -97,9 +98,9 @@ public class Crawler {
             return 0;
         }
 
-        int autoThreads = Runtime.getRuntime().availableProcessors() * 2;
+        int autoThreads = config.getThreads() == -1 ? Runtime.getRuntime().availableProcessors() * 2 : config.getThreads();
         // 创建线程池
-        ExecutorService executor = Executors.newFixedThreadPool(config.getThreads() == -1 ? autoThreads : config.getThreads());
+        ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
         // 阻塞主线程，用于计时
         CountDownLatch latch = new CountDownLatch(catalog.size());
 
@@ -107,7 +108,7 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
-        // 爬取章节并下载
+        // 下载章节
         catalog.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, sr));
             Console.log("<== 待下载章节数：{}", latch.getCount());
