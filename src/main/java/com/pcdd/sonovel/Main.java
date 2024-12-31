@@ -97,7 +97,7 @@ public class Main {
                 .addHeader("官方地址：https://github.com/freeok/so-novel")
                 .addHeader(StrUtil.format("当前书源：{} ({} ID: {})", rule.getUrl(), rule.getName(), rule.getId()))
                 .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
-                .addBody(render("@|yellow 请务必阅读 readme.txt|@"))
+                .addBody(render("@|yellow 使用前请务必阅读 readme.txt|@"))
         );
     }
 

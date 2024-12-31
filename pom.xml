@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.7.2</version>
+    <version>1.7.3</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -158,7 +158,7 @@
                             <headerType>console</headerType>
                             <outfile>target/SoNovel/SoNovel.exe</outfile>
                             <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
-                            <icon>assets/logo.ico</icon>
+                            <icon>assets/logo-1.ico</icon>
                             <errTitle>SoNovel</errTitle>
                             <!-- 崩溃时重新启动 -->
                             <restartOnCrash>true</restartOnCrash>
