@@ -6,6 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
@@ -14,7 +15,6 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
-import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
