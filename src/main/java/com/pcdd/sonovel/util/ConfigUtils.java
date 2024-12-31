@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.ConfigBean;
@@ -56,7 +57,8 @@ public class ConfigUtils {
         ConfigBean configBean = new ConfigBean();
         configBean.setVersion(sys.getStr("version"));
 
-        configBean.setSourceId(usr.getInt("source-id", SELECTION_1, 1));
+        // 1 ~ 4
+        configBean.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, 5)));
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
