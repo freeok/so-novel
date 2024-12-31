@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.core;
+package com.pcdd.sonovel.convert;
 
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.Book;

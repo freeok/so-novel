@@ -2,8 +2,8 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.core.ChapterConverter;
-import com.pcdd.sonovel.core.ChineseConverter;
+import com.pcdd.sonovel.convert.ChapterConverter;
+import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
