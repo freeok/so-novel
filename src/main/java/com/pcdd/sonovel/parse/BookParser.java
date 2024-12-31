@@ -6,6 +6,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.pcdd.sonovel.core.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ConfigBean;
@@ -62,6 +63,10 @@ public class BookParser extends Source {
         book.setCoverUrl(replaceCover(book));
         book.setLatestChapter(latestChapter);
         book.setLatestUpdate(latestUpdate);
+
+        if ("zh-TW".equals(this.rule.getLanguage())) {
+            return ChineseConverter.t2s(book);
+        }
 
         return book;
     }
