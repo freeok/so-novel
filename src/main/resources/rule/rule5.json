@@ -5,7 +5,7 @@
   "comment": "无五秒盾、爬取章节有限流、需要梯子，美国节点🆗、数量5w+",
   "type": "html",
   "useProxy": true,
-  "language": "zh-TW",
+  "language": "zh-Hant",
   "search": {
     "url": "https://69shux.co/search",
     "method": "post",

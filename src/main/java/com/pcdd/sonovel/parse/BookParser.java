@@ -64,7 +64,7 @@ public class BookParser extends Source {
         book.setLatestChapter(latestChapter);
         book.setLatestUpdate(latestUpdate);
 
-        if ("zh-TW".equals(this.rule.getLanguage())) {
+        if ("zh-Hant".equals(this.rule.getLanguage())) {
             return ChineseConverter.t2s(book);
         }
 

@@ -47,14 +47,14 @@ public class ChapterParser extends Source {
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
-            if ("zh-TW".equals(this.rule.getLanguage())) {
+            if ("zh-Hant".equals(this.rule.getLanguage())) {
                 chapter = ChineseConverter.t2s(chapter);
             }
             return chapterConverter.convert(chapter, config.getExtName());
 
         } catch (Exception e) {
             Chapter retry = retry(chapter, latch, sr);
-            if (retry != null && "zh-TW".equals(this.rule.getLanguage())) {
+            if (retry != null && "zh-Hant".equals(this.rule.getLanguage())) {
                 retry = ChineseConverter.t2s(retry);
             }
             return retry;
