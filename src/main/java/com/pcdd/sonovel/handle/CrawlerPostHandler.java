@@ -1,8 +1,7 @@
-package com.pcdd.sonovel.core;
+package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.handle.PostHandlerFactory;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ConfigBean;
 import lombok.AllArgsConstructor;
