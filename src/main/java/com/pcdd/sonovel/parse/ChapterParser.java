@@ -32,17 +32,19 @@ public class ChapterParser extends Source {
         this.chapterConverter = new ChapterConverter(config);
     }
 
-    @SneakyThrows
+    // 用于测试
     public Chapter parse(Chapter chapter) {
-        chapter.setContent(crawl(chapter.getUrl(), false));
+        String content = crawl(chapter.getUrl(), 0);
+        chapter.setContent(content);
         return chapter;
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         try {
-            Console.log("<== 正在下载: 【{}】", chapter.getTitle());
+            long interval = CrawlUtils.randomInterval(config, false);
+            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
             // ExceptionUtils.randomThrow();
-            chapter.setContent(crawl(chapter.getUrl(), false));
+            chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
             return chapterConverter.convert(chapter, config.getExtName());
 
@@ -51,11 +53,47 @@ public class ChapterParser extends Source {
         }
     }
 
+    /**
+     * 爬取正文内容
+     */
+    @SneakyThrows
+    private String crawl(String url, long interval) {
+        Thread.sleep(interval);
+        boolean isPaging = this.rule.getChapter().isPagination();
+        Document document;
+
+        // 章节不分页，只请求一次
+        if (!isPaging) {
+            document = getConn(url, TIMEOUT_MILLS).get();
+            Elements elContent = document.select(this.rule.getChapter().getContent());
+            return elContent.html();
+        }
+
+        String nextUrl = url;
+        StringBuilder sb = new StringBuilder();
+        // 章节分页
+        while (true) {
+            document = getConn(nextUrl, TIMEOUT_MILLS).get();
+            Elements elContent = document.select(this.rule.getChapter().getContent());
+            sb.append(elContent.html());
+            Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
+            // 章节最后一页 TODO 针对书源2，此处容易出错
+            if (elNextPage.text().contains("下一章")) break;
+            String href = elNextPage.attr("href");
+            nextUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
+            Thread.sleep(interval);
+        }
+
+        return sb.toString();
+    }
+
     private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
-                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}", chapter.getTitle(), attempt, config.getMaxRetryAttempts());
-                chapter.setContent(crawl(chapter.getUrl(), true));
+                long interval = CrawlUtils.randomInterval(config, true);
+                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}，重试间隔：{} ms",
+                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
+                chapter.setContent(crawl(chapter.getUrl(), interval));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
                 return chapterConverter.convert(chapter, config.getExtName());
@@ -71,34 +109,6 @@ public class ChapterParser extends Source {
         }
 
         return null;
-    }
-
-    /**
-     * 爬取正文内容
-     */
-    private String crawl(String url, boolean isRetry) throws InterruptedException, IOException {
-        boolean isPaging = this.rule.getChapter().isPagination();
-        String nextUrl = url;
-        StringBuilder sb = new StringBuilder();
-
-        do {
-            Document document = getConn(nextUrl, TIMEOUT_MILLS).get();
-            Elements elContent = document.select(this.rule.getChapter().getContent());
-            sb.append(elContent.html());
-            // 章节不分页，只请求一次
-            if (!isPaging) break;
-
-            Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
-            // 章节最后一页 TODO 此处容易出错，先标记
-            if (elNextPage.text().contains("下一章")) break;
-
-            String href = elNextPage.attr("href");
-            nextUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
-            // 随机爬取间隔，建议重试间隔稍微长一点
-            CrawlUtils.randomSleep(isRetry ? config.getRetryMinInterval() : config.getMinInterval(), isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());
-        } while (true);
-
-        return sb.toString();
     }
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
