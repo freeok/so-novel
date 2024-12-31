@@ -12,8 +12,7 @@
     "pagination": false,
     "nextPage": "",
     "result": "",
-    "offset": 0,
-    "bookName": "",
+    "bookName": 0,
     "author": "",
     "latestChapter": "",
     "update": ""
@@ -27,9 +26,12 @@
     "coverUrl": "",
     "latestChapter": "",
     "latestUpdate": "",
-    "isEnd": "",
-    "catalog": "",
-    "catalogOffset": 0
+    "isEnd": false
+  },
+  "catalog": {
+    "url": "",
+    "result": "",
+    "offset": 0
   },
   "chapter": {
     "url": "",
