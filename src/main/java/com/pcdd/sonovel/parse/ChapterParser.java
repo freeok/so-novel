@@ -3,6 +3,7 @@ package com.pcdd.sonovel.parse;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.ChapterConverter;
+import com.pcdd.sonovel.core.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
@@ -46,10 +47,17 @@ public class ChapterParser extends Source {
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
+            if ("zh-TW".equals(this.rule.getLanguage())) {
+                chapter = ChineseConverter.t2s(chapter);
+            }
             return chapterConverter.convert(chapter, config.getExtName());
 
         } catch (Exception e) {
-            return retry(chapter, latch, sr);
+            Chapter retry = retry(chapter, latch, sr);
+            if (retry != null && "zh-TW".equals(this.rule.getLanguage())) {
+                retry = ChineseConverter.t2s(retry);
+            }
+            return retry;
         }
     }
 

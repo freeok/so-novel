@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.pcdd.sonovel.core.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ConfigBean;
@@ -114,10 +115,14 @@ public class SearchResultParser extends Source {
             SearchResult build = SearchResult.builder()
                     .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                     .bookName(bookName)
-                    .latestChapter(latestChapter)
                     .author(author)
+                    .latestChapter(latestChapter)
                     .latestUpdate(update)
                     .build();
+
+            if ("zh-TW".equals(this.rule.getLanguage())) {
+                build = ChineseConverter.t2s(build);
+            }
 
             list.add(build);
         }
