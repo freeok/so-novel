@@ -23,7 +23,7 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 使用场
+      label: 使用场景
       description: 请描述你的功能请求的使用场景
     validations:
       required: true
