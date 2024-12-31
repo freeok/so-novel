@@ -27,15 +27,21 @@ body:
 
   - type: input
     attributes:
-      label: 操作系统版本
+      label: 操作系统版本（Windows 通过 systeminfo 命令查看）
+      placeholder: Windows 11 专业版 26120.2705
     validations:
       required: true
 
   - type: input
     attributes:
       label: so-novel 版本
+      placeholder: v1.7.2
     validations:
       required: true
+
+  - type: input
+    attributes:
+      label: 书源 ID
 
   - type: textarea
     attributes:
