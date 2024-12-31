@@ -1,10 +1,12 @@
-package com.pcdd.sonovel.core;
+package com.pcdd.sonovel.convert;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
+import com.pcdd.sonovel.core.ChapterFilter;
+import com.pcdd.sonovel.core.ChapterFormatter;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ConfigBean;
 import lombok.AllArgsConstructor;
