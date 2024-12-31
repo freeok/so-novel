@@ -120,7 +120,7 @@ public class SearchResultParser extends Source {
                     .latestUpdate(update)
                     .build();
 
-            if ("zh-TW".equals(this.rule.getLanguage())) {
+            if ("zh-Hant".equals(this.rule.getLanguage())) {
                 build = ChineseConverter.t2s(build);
             }
 
