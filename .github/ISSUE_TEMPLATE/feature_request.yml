@@ -1,6 +1,6 @@
 name: 功能请求
 description: 我希望新增/改进某个功能
-title: '【Feature】此处填写简洁明了的标题'
+title: '[功能请求] 此处填写简洁明了的标题'
 labels:
   - "enhancement"
 
