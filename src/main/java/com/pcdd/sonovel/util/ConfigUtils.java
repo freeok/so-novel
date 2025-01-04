@@ -63,6 +63,7 @@ public class ConfigUtils {
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
+        configBean.setInteractiveMode(usr.getInt("interactive-mode", SELECTION_1, 1));
 
         configBean.setThreads(usr.getInt("threads", SELECTION_2, -1));
         configBean.setMinInterval(usr.getInt("min", SELECTION_2, 50));
