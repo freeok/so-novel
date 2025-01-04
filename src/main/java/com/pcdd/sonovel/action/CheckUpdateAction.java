@@ -8,7 +8,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -16,8 +15,10 @@ import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 import java.io.File;
 
@@ -90,15 +91,16 @@ public class CheckUpdateAction {
     }
 
     private void download(String url) {
-        // HEAD 请求不会下载文件内容，只会返回文件的元数据（例如文件大小）
-        HttpResponse resp = HttpUtil.createRequest(Method.HEAD, url)
-                .timeout(10_000)
-                .execute();
-        long fileSize = resp.contentLength();
-        resp.close();
-
+        // 预获取文件大小
+        long fileSize = FileUtils.fileSize(url);
         // 设置进度条
-        ProgressBar pb = new ProgressBar("下载最新版", fileSize);
+        ProgressBar bar = ProgressBar.builder()
+                .setTaskName("下载最新版")
+                .setInitialMax(fileSize)
+                .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK)
+                .setMaxRenderedLength(100)
+                .setUpdateIntervalMillis(1000)
+                .build();
         //  下载到上一级路径
         File file = new File(System.getProperty("user.dir")).getParentFile();
 
@@ -106,23 +108,23 @@ public class CheckUpdateAction {
         HttpUtil.downloadFile(url, file, new StreamProgress() {
             @Override
             public void start() {
-                pb.setExtraMessage("下载中...");
+                bar.setExtraMessage("下载中...");
             }
 
             @Override
-            public void progress(long total, long step) {
+            public void progress(long total, long read) {
                 // 更新进度条
-                pb.stepTo(step);
+                bar.stepTo(read);
             }
 
             @Override
             public void finish() {
-                pb.setExtraMessage("下载完成");
+                bar.setExtraMessage("下载完成");
                 Console.log("<== 下载位置: {}", file + File.separator + FileUtil.getName(url));
             }
         });
 
-        pb.close();
+        bar.close();
     }
 
 }
