@@ -2,9 +2,8 @@
   "id": "5",
   "url": "https://69shux.co/",
   "name": "69书吧",
-  "comment": "无五秒盾、爬取章节有限流、需要梯子，美国节点🆗、数量5w+",
+  "comment": "需要梯子、无五秒盾、章节有限流、数量5w+",
   "type": "html",
-  "useProxy": true,
   "language": "zh-Hant",
   "search": {
     "url": "https://69shux.co/search",
@@ -46,5 +45,13 @@
     "paragraphTag": "<br><br>",
     "filterTxt": "",
     "filterTag": "div"
+  },
+  "crawl": {
+    "threads": 1,
+    "min": 500,
+    "max": 1000,
+    "maxAttempts": 5,
+    "retryMin": 2000,
+    "retryMax": 5000
   }
 }
