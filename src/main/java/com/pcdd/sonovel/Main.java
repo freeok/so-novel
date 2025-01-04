@@ -20,8 +20,8 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -37,7 +37,6 @@ public class Main {
 
     private static ConfigBean config = ConfigUtils.config();
 
-    @SneakyThrows
     public static void main(String[] args) {
         // release 前改为 Level.OFF
         ConsoleLog.setLevel(Level.OFF);
@@ -45,10 +44,48 @@ public class Main {
         if (config.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
-        run();
+        if (config.getInteractiveMode() == 1) {
+            inputMode();
+        } else if (config.getInteractiveMode() == 2) {
+            selectMode();
+        } else {
+            inputMode();
+        }
     }
 
-    private static void run() throws IOException {
+    @SneakyThrows
+    private static void inputMode() {
+        Terminal terminal = TerminalBuilder.builder()
+                .system(true)
+                .build();
+        Scanner sc = Console.scanner();
+        printHint();
+
+        while (true) {
+            Console.log("1.下载小说 2.检查更新 3.查看配置文件 4.使用须知 5.结束程序");
+            System.out.print("==> 请输入功能序号: ");
+            String cmd = sc.nextLine();
+
+            if ("1".equals(cmd)) {
+                new DownloadAction(config).execute(terminal);
+            } else if ("2".equals(cmd)) {
+                new CheckUpdateAction().execute();
+            } else if ("3".equals(cmd)) {
+                Console.log(config);
+            } else if ("4".equals(cmd)) {
+                printHint();
+            } else if ("5".equals(cmd)) {
+                Console.log("<== Bye :)");
+                System.exit(0);
+                break;
+            } else {
+                Console.error("无效的选项，请重新输入");
+            }
+        }
+    }
+
+    @SneakyThrows
+    private static void selectMode() {
         List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
                 .system(true)
