@@ -62,6 +62,7 @@ public class ConfigUtils {
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
+        configBean.setProxyEnabled(usr.getInt("proxy-enabled", SELECTION_1, 0));
         configBean.setProxyHost(usr.getStr("proxy-host", SELECTION_1, "127.0.0.1"));
         configBean.setProxyPort(usr.getInt("proxy-port", SELECTION_1, 7890));
 
