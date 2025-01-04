@@ -30,7 +30,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
-    public static final String GHP = "https://ghp.ci/";
+    public static final String GHP = "https://ghgo.xyz/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
     private final int timeoutMills;
