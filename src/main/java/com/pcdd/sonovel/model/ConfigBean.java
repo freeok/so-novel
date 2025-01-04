@@ -16,9 +16,6 @@ public class ConfigBean {
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
-    private Integer proxyEnabled;
-    private String proxyHost;
-    private Integer proxyPort;
 
     // [crawl]
     private Integer threads;
@@ -29,5 +26,10 @@ public class ConfigBean {
     private Integer maxRetryAttempts;
     private Integer retryMinInterval;
     private Integer retryMaxInterval;
+
+    // [proxy]
+    private Integer proxyEnabled;
+    private String proxyHost;
+    private Integer proxyPort;
 
 }

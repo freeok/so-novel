@@ -22,6 +22,7 @@ public class ConfigUtils {
     public final String SELECTION_1 = "base";
     public final String SELECTION_2 = "crawl";
     public final String SELECTION_3 = "retry";
+    public final String SELECTION_4 = "proxy";
 
     /**
      * 加载系统属性
@@ -62,9 +63,6 @@ public class ConfigUtils {
         configBean.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         configBean.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         configBean.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 1));
-        configBean.setProxyEnabled(usr.getInt("proxy-enabled", SELECTION_1, 0));
-        configBean.setProxyHost(usr.getStr("proxy-host", SELECTION_1, "127.0.0.1"));
-        configBean.setProxyPort(usr.getInt("proxy-port", SELECTION_1, 7890));
 
         configBean.setThreads(usr.getInt("threads", SELECTION_2, -1));
         configBean.setMinInterval(usr.getInt("min", SELECTION_2, 50));
@@ -73,6 +71,10 @@ public class ConfigUtils {
         configBean.setMaxRetryAttempts(usr.getInt("max-attempts", SELECTION_3, 3));
         configBean.setRetryMinInterval(usr.getInt("min", SELECTION_3, 500));
         configBean.setRetryMaxInterval(usr.getInt("max", SELECTION_3, 2000));
+
+        configBean.setProxyEnabled(usr.getInt("enabled", SELECTION_4, 0));
+        configBean.setProxyHost(usr.getStr("host", SELECTION_4, "127.0.0.1"));
+        configBean.setProxyPort(usr.getInt("port", SELECTION_4, 7890));
 
         return configBean;
     }
