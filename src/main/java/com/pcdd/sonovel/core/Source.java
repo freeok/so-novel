@@ -53,7 +53,7 @@ public class Source {
                 .timeout(timeout);
 
         // 启用配置文件的代理地址
-        if (rule.isUseProxy())
+        if (config.getProxyEnabled() == 1)
             conn.proxy(config.getProxyHost(), config.getProxyPort());
 
         return conn;
