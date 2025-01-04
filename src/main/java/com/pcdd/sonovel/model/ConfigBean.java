@@ -16,6 +16,7 @@ public class ConfigBean {
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
+    private Integer interactiveMode;
 
     // [crawl]
     private Integer threads;
