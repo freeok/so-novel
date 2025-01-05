@@ -9,7 +9,7 @@ import cn.hutool.setting.Setting;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Main {
 
-    private static ConfigBean config = ConfigUtils.config();
+    private static AppConfig config = ConfigUtils.config();
 
     public static void main(String[] args) {
         // release 前改为 Level.OFF

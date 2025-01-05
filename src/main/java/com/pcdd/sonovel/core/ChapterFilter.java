@@ -3,7 +3,7 @@ package com.pcdd.sonovel.core;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 
 /**
  * @author pcdd
@@ -11,7 +11,7 @@ import com.pcdd.sonovel.model.ConfigBean;
  */
 public class ChapterFilter extends Source {
 
-    public ChapterFilter(ConfigBean config) {
+    public ChapterFilter(AppConfig config) {
         super(config);
     }
 
