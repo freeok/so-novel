@@ -34,10 +34,8 @@
     "offset": 0
   },
   "chapter": {
-    "url": "",
     "pagination": false,
     "nextPage": "",
-    "chapterNo": 0,
     "title": "",
     "content": "",
     "paragraphTagClosed": false,
