@@ -18,7 +18,6 @@
     "update": "dd:nth-child(5) > span"
   },
   "book": {
-    "url": "https://www.shuhaige.net/(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -33,10 +32,8 @@
     "offset": 12
   },
   "chapter": {
-    "url": "https://www.shuhaige.net/%s/%s.html",
     "pagination": true,
     "nextPage": "#pager_next",
-    "chapterNo": 0,
     "title": ".bookname > h1",
     "content": "#content",
     "paragraphTagClosed": true,

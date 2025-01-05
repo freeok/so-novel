@@ -16,7 +16,6 @@
     "latestChapter": "div.bookinfo > div.update > a"
   },
   "book": {
-    "url": "http://www.99xs.info/tag/(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -31,9 +30,7 @@
     "offset": 12
   },
   "chapter": {
-    "url": "http://www.99xs.info/tag/%s/%s.html",
     "pagination": false,
-    "chapterNo": 0,
     "title": "",
     "content": "#content",
     "paragraphTagClosed": false,
