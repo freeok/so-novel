@@ -7,7 +7,7 @@ import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
@@ -28,7 +28,7 @@ public class SearchResultParser extends Source {
 
     private static final int TIMEOUT_MILLS = 15_000;
 
-    public SearchResultParser(ConfigBean config) {
+    public SearchResultParser(AppConfig config) {
         super(config);
     }
 
