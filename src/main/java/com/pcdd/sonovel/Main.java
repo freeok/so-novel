@@ -3,6 +3,7 @@ package com.pcdd.sonovel;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
@@ -71,7 +72,7 @@ public class Main {
             } else if ("2".equals(cmd)) {
                 new CheckUpdateAction().execute();
             } else if ("3".equals(cmd)) {
-                Console.log(config);
+                Console.log(JSONUtil.toJsonPrettyStr(config));
             } else if ("4".equals(cmd)) {
                 printHint();
             } else if ("5".equals(cmd)) {
@@ -110,7 +111,7 @@ public class Main {
                 new CheckUpdateAction().execute();
             }
             if (options.get(2).equals(cmd)) {
-                Console.log(config);
+                Console.log(JSONUtil.toJsonPrettyStr(config));
             }
             if (options.get(3).equals(cmd)) {
                 printHint();
