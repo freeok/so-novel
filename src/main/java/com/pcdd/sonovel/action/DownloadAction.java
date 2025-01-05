@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +23,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @AllArgsConstructor
 public class DownloadAction {
 
-    private final ConfigBean config;
+    private final AppConfig config;
 
     private static void printSearchResult(List<SearchResult> results) {
         ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
