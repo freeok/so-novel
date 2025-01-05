@@ -4,7 +4,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.json.JSONUtil;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.CrawlUtils;
@@ -21,15 +21,15 @@ import static org.jline.jansi.AnsiRenderer.render;
 public class Source {
 
     public final Rule rule;
-    public final ConfigBean config;
+    public final AppConfig config;
 
     // 配置文件读取书源 id
-    public Source(ConfigBean config) {
+    public Source(AppConfig config) {
         this(config.getSourceId(), config);
     }
 
     // 自定义书源 id，用于测试
-    public Source(int id, ConfigBean config) {
+    public Source(int id, AppConfig config) {
         String jsonStr = null;
 
         try {
