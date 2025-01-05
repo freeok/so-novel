@@ -3,7 +3,7 @@ package com.pcdd.sonovel.util;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Connection;
 
@@ -58,7 +58,7 @@ public class CrawlUtils {
         };
     }
 
-    public long randomInterval(ConfigBean config, boolean isRetry) {
+    public long randomInterval(AppConfig config, boolean isRetry) {
         return ThreadLocalRandom.current().nextLong(
                 isRetry ? config.getRetryMinInterval() : config.getMinInterval(),
                 isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());

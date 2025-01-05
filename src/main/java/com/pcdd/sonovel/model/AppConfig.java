@@ -7,7 +7,7 @@ import lombok.Data;
  * Created at 2024/11/30
  */
 @Data
-public class ConfigBean {
+public class AppConfig {
 
     private String version;
 

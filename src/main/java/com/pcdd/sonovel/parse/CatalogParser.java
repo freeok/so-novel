@@ -4,7 +4,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
@@ -23,7 +23,7 @@ public class CatalogParser extends Source {
 
     private static final int TIMEOUT_MILLS = 30_000;
 
-    public CatalogParser(ConfigBean config) {
+    public CatalogParser(AppConfig config) {
         super(config);
     }
 

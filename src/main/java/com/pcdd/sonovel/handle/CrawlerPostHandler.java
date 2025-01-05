@@ -3,7 +3,7 @@ package com.pcdd.sonovel.handle;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.io.File;
 @AllArgsConstructor
 public class CrawlerPostHandler {
 
-    private final ConfigBean config;
+    private final AppConfig config;
 
     public void handle(Book book, File saveDir) {
         String extName = config.getExtName();
