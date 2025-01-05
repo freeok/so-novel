@@ -1,6 +1,6 @@
 package com.pcdd.sonovel.handle;
 
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class PostHandlerFactory {
 
-    public PostProcessingHandler getHandler(String extName, ConfigBean config) {
+    public PostProcessingHandler getHandler(String extName, AppConfig config) {
         return switch (extName) {
             case "txt" -> new TxtMergeHandler(config);
             case "epub" -> new EpubMergeHandler();

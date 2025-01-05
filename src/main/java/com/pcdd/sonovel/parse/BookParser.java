@@ -9,7 +9,7 @@ import cn.hutool.http.HttpResponse;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.RandomUA;
@@ -33,7 +33,7 @@ public class BookParser extends Source {
     public static final String CONTENT = "content";
     private static final int TIMEOUT_MILLS = 15_000;
 
-    public BookParser(ConfigBean config) {
+    public BookParser(AppConfig config) {
         super(config);
     }
 

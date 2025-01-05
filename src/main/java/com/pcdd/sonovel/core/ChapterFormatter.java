@@ -1,6 +1,6 @@
 package com.pcdd.sonovel.core;
 
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import lombok.AllArgsConstructor;
 
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ChapterFormatter {
 
-    private final ConfigBean config;
+    private final AppConfig config;
 
     /**
      * 格式化正文排版
