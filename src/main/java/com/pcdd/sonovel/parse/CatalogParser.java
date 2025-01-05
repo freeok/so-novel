@@ -42,7 +42,7 @@ public class CatalogParser extends Source {
     public List<Chapter> parse(String url, int start, int end) {
         Rule.Catalog catalogRule = this.rule.getCatalog();
         Rule.Book bookRule = this.rule.getBook();
-        // 目录和详情不一定在同一页面
+        // 目录和详情不在同一页面
         if (StrUtil.isNotEmpty(catalogRule.getUrl())) {
             // 提取 url 中的变量
             String id = ReUtil.getGroup1(bookRule.getUrl(), url);
@@ -53,7 +53,6 @@ public class CatalogParser extends Source {
         Document document = getConn(url, TIMEOUT_MILLS).get();
         List<String> urls = new ArrayList<>();
 
-        // 优化后的代码
         if (catalogRule.isPagination()) {
             while (true) {
                 String href = document.select(catalogRule.getNextPage()).attr("href");
