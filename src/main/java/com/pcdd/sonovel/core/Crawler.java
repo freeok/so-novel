@@ -141,8 +141,8 @@ public class Crawler {
         String extName = Objects.equals("epub", config.getExtName()) ? "html" : config.getExtName();
         String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
         return switch (config.getExtName()) {
-            case "html" -> parentPath + chapter.getChapterNo() + "_." + extName;
-            case "epub", "txt" -> parentPath + chapter.getChapterNo()
+            case "html" -> parentPath + chapter.getOrder() + "_." + extName;
+            case "epub", "txt" -> parentPath + chapter.getOrder()
                     // Windows 文件名非法字符替换
                     + "_" + chapter.getTitle().replaceAll("[\\\\/:*?<>]", "") + "." + extName;
             default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
