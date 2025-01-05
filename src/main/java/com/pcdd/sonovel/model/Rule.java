@@ -28,7 +28,7 @@ public class Rule {
         private String param;
         private String body;
         private String cookies;
-        // 搜索结果是否有分页
+        // 搜索结果是否分页
         private boolean pagination;
         private String nextPage;
         // 以下字段不同书源可能不同
@@ -53,16 +53,19 @@ public class Rule {
     }
 
     @Data
-    public static class Catalog{
+    public static class Catalog {
         private String url;
         private String result;
+        // 目录是否分页
+        private boolean pagination;
+        private String nextPage;
         private Integer offset;
     }
 
     @Data
     public static class Chapter {
         private String url;
-        // 章节是否有分页
+        // 章节是否分页
         private boolean pagination;
         private String nextPage;
         private Integer chapterNo;
