@@ -17,7 +17,6 @@
     "update": "span.s6.wid6"
   },
   "book": {
-    "url": "http://www.mcmssc.la/(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -32,9 +31,7 @@
     "offset": 12
   },
   "chapter": {
-    "url": "http://www.mcmssc.la/%s/%s.html",
     "pagination": false,
-    "chapterNo": 0,
     "title": "",
     "content": "#content",
     "paragraphTagClosed": false,
