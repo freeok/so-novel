@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
@@ -36,10 +36,10 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Crawler {
 
-    private final ConfigBean config;
+    private final AppConfig config;
     private String bookDir;
 
-    public Crawler(ConfigBean config) {
+    public Crawler(AppConfig config) {
         this.config = config;
     }
 

@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.AllArgsConstructor;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TxtMergeHandler implements PostProcessingHandler {
 
-    private final ConfigBean config;
+    private final AppConfig config;
 
     @Override
     public void handle(Book book, File saveDir) {
