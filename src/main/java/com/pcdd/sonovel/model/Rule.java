@@ -28,15 +28,14 @@ public class Rule {
         private String param;
         private String body;
         private String cookies;
-        // 搜索结果是否分页
-        private boolean pagination;
-        private String nextPage;
-        // 以下字段不同书源可能不同
         private String result;
         private String bookName;
         private String latestChapter;
         private String author;
         private String update;
+        // 搜索结果是否分页
+        private boolean pagination;
+        private String nextPage;
     }
 
     @Data
@@ -64,17 +63,15 @@ public class Rule {
 
     @Data
     public static class Chapter {
-        private String url;
-        // 章节是否分页
-        private boolean pagination;
-        private String nextPage;
-        private Integer chapterNo;
         private String title;
         private String content;
         private boolean paragraphTagClosed;
         private String paragraphTag;
         private String filterTxt;
         private String filterTag;
+        // 章节是否分页
+        private boolean pagination;
+        private String nextPage;
     }
 
 }

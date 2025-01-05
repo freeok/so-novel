@@ -35,10 +35,8 @@
     "offset": 0
   },
   "chapter": {
-    "url": "https://69shux.co/txt/%s/%s.html",
     "pagination": false,
     "nextPage": "",
-    "chapterNo": 0,
     "title": "",
     "content": "#txtcontent",
     "paragraphTagClosed": false,
