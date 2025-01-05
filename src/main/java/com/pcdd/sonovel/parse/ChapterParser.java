@@ -6,7 +6,7 @@ import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
@@ -29,7 +29,7 @@ public class ChapterParser extends Source {
     private static final int TIMEOUT_MILLS = 15_000;
     private final ChapterConverter chapterConverter;
 
-    public ChapterParser(ConfigBean config) {
+    public ChapterParser(AppConfig config) {
         super(config);
         this.chapterConverter = new ChapterConverter(config);
     }
