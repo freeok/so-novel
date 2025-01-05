@@ -17,7 +17,6 @@
     "update": "td:nth-of-type(4)"
   },
   "book": {
-    "url": "http://www.xbiqugu.net/%s/%s/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -32,9 +31,7 @@
     "offset": 0
   },
   "chapter": {
-    "url": "http://www.xbiqugu.net/0/%s/%s.html",
     "pagination": false,
-    "chapterNo": 0,
     "title": "",
     "content": "#content",
     "paragraphTagClosed": false,
