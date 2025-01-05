@@ -12,8 +12,8 @@ import lombok.Data;
 public class Chapter {
 
     private String url;
-    private Integer chapterNo;
     private String title;
     private String content;
+    private Integer order;
 
 }

@@ -81,7 +81,7 @@ public class CatalogParser extends Source {
                 Chapter build = Chapter.builder()
                         .title(elements.get(i).text())
                         .url(CrawlUtils.normalizeUrl(elements.get(i).attr("href"), this.rule.getUrl()))
-                        .chapterNo(orderNumber++)
+                        .order(orderNumber++)
                         .build();
                 catalog.add(build);
             }
