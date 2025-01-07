@@ -100,8 +100,10 @@ public class SearchResultParser extends Source {
             // jsoup 不支持一次性获取属性的值
             String href = element.select(rule.getBookName()).attr("href");
             String bookName = element.select(rule.getBookName()).text();
-            String author = element.select(rule.getAuthor()).text();
             // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
+            String author = StrUtil.isNotEmpty(rule.getAuthor())
+                    ? element.select(rule.getAuthor()).text()
+                    : null;
             String latestChapter = StrUtil.isNotEmpty(rule.getLatestChapter())
                     ? element.select(rule.getLatestChapter()).text()
                     : null;
