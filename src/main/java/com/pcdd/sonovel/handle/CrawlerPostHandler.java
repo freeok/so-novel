@@ -2,8 +2,8 @@ package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
@@ -21,7 +21,7 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
-        if ("txt".equals(extName) || "epub".equals(extName)) {
+        if (extName.matches("txt|epub")) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
         if ("html".equals(extName)) {
