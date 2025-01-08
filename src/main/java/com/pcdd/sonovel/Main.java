@@ -9,6 +9,7 @@ import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.action.DownloadAction;
+import com.pcdd.sonovel.action.ShowSourcesAction;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
@@ -35,6 +36,15 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  * {@code mvnd clean compile; mvn exec:java}
  */
 public class Main {
+
+    public static final List<String> options = List.of(
+            "0.结束程序",
+            "1.下载小说",
+            "2.检查更新",
+            "3.书源一览",
+            "4.使用须知",
+            "5.查看配置文件"
+    );
 
     static {
         // release 前改为 Level.OFF
@@ -66,22 +76,24 @@ public class Main {
         printHint();
 
         while (true) {
-            Console.log("1.下载小说 2.检查更新 3.查看配置文件 4.使用须知 5.结束程序");
+            Console.log(StrUtil.join(" ", options));
             System.out.print("==> 请输入功能序号: ");
             String cmd = sc.nextLine();
 
-            if ("1".equals(cmd)) {
+            if ("0".equals(cmd)) {
+                Console.log("<== Bye :)");
+                System.exit(0);
+                break;
+            } else if ("1".equals(cmd)) {
                 new DownloadAction(config).execute(terminal);
             } else if ("2".equals(cmd)) {
                 new CheckUpdateAction().execute();
             } else if ("3".equals(cmd)) {
-                Console.log(JSONUtil.toJsonPrettyStr(config));
+                new ShowSourcesAction().execute();
             } else if ("4".equals(cmd)) {
                 printHint();
             } else if ("5".equals(cmd)) {
-                Console.log("<== Bye :)");
-                System.exit(0);
-                break;
+                Console.log(JSONUtil.toJsonPrettyStr(config));
             } else {
                 Console.error("无效的选项，请重新输入");
             }
@@ -90,7 +102,6 @@ public class Main {
 
     @SneakyThrows
     private static void selectMode() {
-        List<String> options = List.of("1.下载小说", "2.检查更新", "3.查看配置文件", "4.使用须知", "5.结束程序");
         Terminal terminal = TerminalBuilder.builder()
                 .system(true)
                 .build();
@@ -108,21 +119,24 @@ public class Main {
                 Console.error("无效的选项，请重新选择");
             }
             if (options.get(0).equals(cmd)) {
-                new DownloadAction(config).execute(terminal);
-            }
-            if (options.get(1).equals(cmd)) {
-                new CheckUpdateAction().execute();
-            }
-            if (options.get(2).equals(cmd)) {
-                Console.log(JSONUtil.toJsonPrettyStr(config));
-            }
-            if (options.get(3).equals(cmd)) {
-                printHint();
-            }
-            if (options.get(4).equals(cmd)) {
                 Console.log("<== Bye :)");
                 System.exit(0);
                 break;
+            }
+            if (options.get(1).equals(cmd)) {
+                new DownloadAction(config).execute(terminal);
+            }
+            if (options.get(2).equals(cmd)) {
+                new CheckUpdateAction().execute();
+            }
+            if (options.get(3).equals(cmd)) {
+                new ShowSourcesAction().execute();
+            }
+            if (options.get(4).equals(cmd)) {
+                printHint();
+            }
+            if (options.get(5).equals(cmd)) {
+                Console.log(JSONUtil.toJsonPrettyStr(config));
             }
         }
 
