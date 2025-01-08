@@ -41,12 +41,14 @@ public class ShowSourcesAction {
 
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
-                .addHeader("ID", "书源", "延迟", "状态码");
+                .addHeader("ID", "书源", "延迟", "状态码", "URL");
         testWebsiteDelays(list).forEach(e -> asciiTables.addBody(
                 e.getId() + "",
                 e.getName(),
                 e.getDelay() + " ms",
-                e.getCode() + ""));
+                e.getCode() + "",
+                e.getUrl())
+        );
         Console.table(asciiTables);
     }
 
@@ -55,19 +57,21 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executorService);
+        int timeout = 5000;
 
         for (Rule r : rules) {
             completionService.submit(() -> {
                 SourceInfo source = new SourceInfo();
                 source.setId(r.getId());
                 source.setName(r.getName());
+                source.setUrl(r.getUrl());
                 long startTime = System.currentTimeMillis();
                 try {
                     URL url = new URL(r.getUrl());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(3_000);
-                    conn.setReadTimeout(3_000);
+                    conn.setConnectTimeout(timeout);
+                    conn.setReadTimeout(timeout);
                     conn.connect();
                     source.setDelay((int) (System.currentTimeMillis() - startTime));
                     source.setCode(conn.getResponseCode());
