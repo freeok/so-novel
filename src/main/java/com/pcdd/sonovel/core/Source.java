@@ -28,6 +28,10 @@ public class Source {
         this(config.getSourceId(), config);
     }
 
+    public Source(int id) {
+        this(id, null);
+    }
+
     // 自定义书源 id，用于测试
     public Source(int id, AppConfig config) {
         String jsonStr = null;
