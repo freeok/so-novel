@@ -36,11 +36,14 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Main {
 
+    static {
+        // release 前改为 Level.OFF
+        ConsoleLog.setLevel(Level.OFF);
+    }
+
     private static AppConfig config = ConfigUtils.config();
 
     public static void main(String[] args) {
-        // release 前改为 Level.OFF
-        ConsoleLog.setLevel(Level.OFF);
         watchConfig();
         if (config.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
