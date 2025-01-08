@@ -57,7 +57,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executorService);
-        int timeout = 5000;
+        int timeout = 3000;
 
         for (Rule r : rules) {
             completionService.submit(() -> {
@@ -82,7 +82,6 @@ public class ShowSourcesAction {
             });
         }
 
-        // 获取任务结果并按延迟排序
         for (int i = 0; i < rules.size(); i++) {
             // 获取最先完成的任务的结果
             res.add(completionService.take().get());
