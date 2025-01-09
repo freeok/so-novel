@@ -8,13 +8,18 @@ import io.documentnode.epub4j.epub.EpubWriter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.FileOutputStream;
 
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EpubTest {
 
     @Test
+    @Order(1)
     @SneakyThrows
     void createEpub() {
         Book book = new Book();
@@ -32,10 +37,11 @@ class EpubTest {
         }
 
         EpubWriter epubWriter = new EpubWriter();
-        epubWriter.write(book, new FileOutputStream("test.epub"));
+        epubWriter.write(book, FileUtil.getOutputStream("test.epub"));
     }
 
     @Test
+    @Order(2)
     @DisplayName("读取 EPUB")
     @SneakyThrows
     void readEpub() {
