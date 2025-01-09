@@ -2,8 +2,8 @@ package com.pcdd.sonovel.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
 
 /**
  * @author pcdd
@@ -90,8 +90,8 @@ public class ChapterFilter extends Source {
                 }
             }
 
-            // 过滤空白字符，包括换行符
-            return this.content;
+            // 删除全部空标签，例如：<p></p>
+            return this.content.replaceAll("<(\\w+)([^>]*)>\\s*</\\1>", "");
         }
     }
 
