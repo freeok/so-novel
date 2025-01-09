@@ -8,7 +8,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
@@ -131,7 +131,7 @@ public class BookSourceQualityTest {
         int foundCount = 0;
         int notFoundCount = 0;
         List<SourceQuality> list = new ArrayList<>();
-        ConfigBean config = ConfigUtils.config();
+        AppConfig config = ConfigUtils.config();
         Rule rule = new Source(config).rule;
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
