@@ -1,6 +1,6 @@
 # jpackage 支持 Windows、MacOS
 
-mvn clean package "-DskipTests"
+mvn clean package "-Dmaven.test.skip=true"
 
 mkdir -p nobug/jpackage
 mv nobug/app-jar-with-dependencies.jar nobug/jpackage
