@@ -2,7 +2,7 @@ package com.pcdd.sonovel;
 
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ConfigBean;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 class NewSourceTest {
 
-    public static final ConfigBean config = ConfigUtils.config();
+    public static final AppConfig config = ConfigUtils.config();
 
     static {
         config.setSourceId(5);
