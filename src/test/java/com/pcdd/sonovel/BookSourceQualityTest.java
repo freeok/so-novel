@@ -8,11 +8,9 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -20,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileWriter;
 import java.io.Writer;
@@ -29,11 +28,12 @@ import java.util.*;
  * @author pcdd
  * Created at 2024/12/5
  */
-public class BookSourceQualityTest {
+class BookSourceQualityTest {
 
-    public static void main(String[] args) {
+    @Test
+    void test() {
         // 测试前几个书源
-        int count = 4;
+        int count = 5;
         Map<String, String> map = new LinkedHashMap<>();
         map.put("起点月票榜", "https://www.qidian.com/rank/yuepiao/");
         map.put("起点畅销榜", "https://www.qidian.com/rank/hotsales/");
@@ -131,10 +131,10 @@ public class BookSourceQualityTest {
         int foundCount = 0;
         int notFoundCount = 0;
         List<SourceQuality> list = new ArrayList<>();
-        AppConfig config = ConfigUtils.config();
-        Rule rule = new Source(config).rule;
+        Rule rule = new Source(sourceId).rule;
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
+        SearchResultParser searchResultParser = new SearchResultParser(sourceId);
 
         for (Book b : getQiDianRanks(rankUrl)) {
             SourceQuality sq = new SourceQuality();
@@ -143,7 +143,7 @@ public class BookSourceQualityTest {
             sq.setAuthor(b.getAuthor());
             sq.setQiDianUrl(b.getUrl());
 
-            List<SearchResult> results = new SearchResultParser(sourceId).parse(b.getBookName());
+            List<SearchResult> results = searchResultParser.parse(b.getBookName());
             // 针对书源 4 author 会包含“作者：”的情况
             for (SearchResult sr : results) {
                 sr.setAuthor(sr.getAuthor().replace("作者：", ""));
