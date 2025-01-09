@@ -2,7 +2,7 @@
 
 rm -rf dist
 
-mvnd clean package "-DskipTests"
+mvnd clean package "-Dmaven.test.skip=true"
 
 mkdir target/jpackage
 mv target/app-jar-with-dependencies.jar target/jpackage
