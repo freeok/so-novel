@@ -43,7 +43,7 @@ public class SearchResultParser extends Source {
         Document document;
         Connection.Response resp;
         try {
-            resp = getConn(search.getUrl(), TIMEOUT_MILLS)
+            resp = jsoupConn(search.getUrl(), TIMEOUT_MILLS)
                     .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
                     .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
                     .execute();
@@ -77,7 +77,7 @@ public class SearchResultParser extends Source {
         Rule.Search rule = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
         // 搜索结果页 DOM
-        Document document = resp == null ? getConn(url, TIMEOUT_MILLS).get() : Jsoup.parse(resp.body());
+        Document document = resp == null ? jsoupConn(url, TIMEOUT_MILLS).get() : Jsoup.parse(resp.body());
 
         // 部分书源完全匹配会直接进入详情页，因此需要构造搜索结果
         if (document.select(rule.getResult()).isEmpty()) {

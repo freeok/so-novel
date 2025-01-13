@@ -50,7 +50,7 @@ public class Source {
         this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
     }
 
-    public Connection getConn(String url, int timeout) {
+    public Connection jsoupConn(String url, int timeout) {
         Connection conn = Jsoup.connect(url)
                 .method(CrawlUtils.buildMethod(rule.getSearch().getMethod()))
                 .header("User-Agent", RandomUA.generate())
