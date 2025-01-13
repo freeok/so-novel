@@ -50,7 +50,7 @@ public class CatalogParser extends Source {
         }
         // 正数表示忽略前 offset 章，负数表示忽略后 offset 章
         int offset = Optional.ofNullable(catalogRule.getOffset()).orElse(0);
-        Document document = getConn(url, TIMEOUT_MILLS).get();
+        Document document = jsoupConn(url, TIMEOUT_MILLS).get();
         List<String> urls = new ArrayList<>();
 
         if (catalogRule.isPagination()) {
@@ -70,7 +70,7 @@ public class CatalogParser extends Source {
         int orderNumber = 1;
 
         for (String s : urls) {
-            Document catalogPage = getConn(s, TIMEOUT_MILLS).get();
+            Document catalogPage = jsoupConn(s, TIMEOUT_MILLS).get();
             List<Element> elements = catalogPage.select(catalogRule.getResult());
             if (offset != 0) {
                 if (offset > 0) elements = elements.subList(offset, elements.size());
