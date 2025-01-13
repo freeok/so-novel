@@ -73,7 +73,7 @@ public class ChapterParser extends Source {
 
         // 章节不分页，只请求一次
         if (!isPaging) {
-            document = getConn(url, TIMEOUT_MILLS).get();
+            document = jsoupConn(url, TIMEOUT_MILLS).get();
             Elements elContent = document.select(this.rule.getChapter().getContent());
             return elContent.html();
         }
@@ -82,7 +82,7 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
-            document = getConn(nextUrl, TIMEOUT_MILLS).get();
+            document = jsoupConn(nextUrl, TIMEOUT_MILLS).get();
             Elements elContent = document.select(this.rule.getChapter().getContent());
             sb.append(elContent.html());
             Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
