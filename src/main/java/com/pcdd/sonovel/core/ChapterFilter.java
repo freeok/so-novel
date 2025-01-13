@@ -58,7 +58,7 @@ public class ChapterFilter extends Source {
         }
 
         /**
-         * 是否启用广告过滤
+         * 是否启用重复标题过滤
          */
         public FilterBuilder filterDuplicateTitle(boolean apply) {
             this.applyDuplicateTitleFilter = apply;
@@ -90,7 +90,7 @@ public class ChapterFilter extends Source {
                 }
             }
 
-            // 删除全部空标签，例如：<p></p>
+            // 删除全部空标签，例如 <p></p>
             return this.content.replaceAll("<(\\w+)([^>]*)>\\s*</\\1>", "");
         }
     }
