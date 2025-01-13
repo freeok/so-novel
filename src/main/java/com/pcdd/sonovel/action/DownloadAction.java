@@ -5,7 +5,9 @@ import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.parse.CatalogParser;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -54,6 +56,7 @@ public class DownloadAction {
         int num;
         int action;
         SearchResult sr;
+        List<Chapter> catalogs;
         // 3. 选择下载章节
         while (true) {
             String input = reader.readLine("==> 请输入下载序号（首列的数字，或输入 0 返回）：").trim();
@@ -70,7 +73,11 @@ public class DownloadAction {
             if (num < 0 || num > results.size()) continue;
 
             sr = results.get(num - 1);
-            Console.log("<== 你选择了《{}》({})", sr.getBookName(), sr.getAuthor());
+            Console.log("<== 正在获取章节目录 ...");
+            CatalogParser catalogParser = new CatalogParser(config);
+            catalogs = catalogParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+
+            Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
             Console.log("==> 0: 重新选择功能");
             Console.log("==> 1: 下载全本");
             Console.log("==> 2: 下载指定章节");
@@ -85,19 +92,18 @@ public class DownloadAction {
             if (action != 3) break;
         }
         if (action == 0) return;
-
-        int start = 1;
-        int end = Integer.MAX_VALUE;
         if (action == 2) {
             try {
                 String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
-                start = Integer.parseInt(split[0]);
-                end = Integer.parseInt(split[1]);
+                int start = Math.max(Integer.parseInt(split[0]) - 1, 0);
+                int end = Integer.parseInt(split[1]);
+                catalogs = catalogs.subList(start, end);
             } catch (Exception e) {
                 return;
             }
         }
-        double res = new Crawler(config).crawl(sr, start, end);
+
+        double res = new Crawler(config).crawl(sr, catalogs);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
     }
 
