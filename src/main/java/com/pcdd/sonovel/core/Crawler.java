@@ -7,12 +7,11 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
 import lombok.SneakyThrows;
@@ -66,12 +65,11 @@ public class Crawler {
     /**
      * 爬取小说
      *
-     * @param sr    待下载小说
-     * @param start 从第几章下载
-     * @param end   下载到第几章
+     * @param sr       小说详情
+     * @param catalogs 小说目录
      */
     @SneakyThrows
-    public double crawl(SearchResult sr, int start, int end) {
+    public double crawl(SearchResult sr, List<Chapter> catalogs) {
         // 小说详情页url
         String url = sr.getUrl();
         String bookName = sr.getBookName();
@@ -88,13 +86,9 @@ public class Crawler {
             return 0;
         }
 
-        Console.log("<== 正在获取章节目录", bookName);
-        // 获取小说目录
-        CatalogParser catalogParser = new CatalogParser(config);
-        List<Chapter> catalog = catalogParser.parse(url, start, end);
         // 防止 start、end 超出范围
-        if (CollUtil.isEmpty(catalog)) {
-            Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", catalogParser.parse(url).size())));
+        if (CollUtil.isEmpty(catalogs)) {
+            Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", catalogs.size())));
             return 0;
         }
 
@@ -102,14 +96,14 @@ public class Crawler {
         // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
         // 阻塞主线程，用于计时
-        CountDownLatch latch = new CountDownLatch(catalog.size());
+        CountDownLatch latch = new CountDownLatch(catalogs.size());
 
-        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalog.size(), autoThreads);
+        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalogs.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
         // 下载章节
-        catalog.forEach(item -> executor.execute(() -> {
+        catalogs.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, sr));
             Console.log("<== 待下载章节数：{}", latch.getCount());
         }));
