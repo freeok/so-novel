@@ -70,7 +70,7 @@ public class ChapterFilter extends Source {
          */
         public String build() {
             if (applyEscapeFilter) {
-                // 替换非法的 &..;（HTML 字符实体引用），主要是 &nbsp;，可能会导致 ibooks 章节报错
+                // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
                 this.content = this.content.replaceAll("&[^;]+;", "");
             }
 
@@ -83,11 +83,12 @@ public class ChapterFilter extends Source {
             this.content = StrUtil.cleanBlank(this.content);
 
             if (applyDuplicateTitleFilter) {
-                String title2 = StrUtil.cleanBlank(this.title);
-                // 过滤正文开头的章节标题
-                if (this.content.startsWith(this.title) || this.content.startsWith(title2)) {
-                    this.content = content.replaceFirst(this.title + "|" + title2, "");
-                }
+                String noBlankTitle = StrUtil.cleanBlank(this.title);
+                // 正文开头的重复标题
+                String regexTemplate = "^(?:<.*?>%s</.*?>|%s)";
+                this.content = content.replaceFirst(StrUtil.format("{}|{}",
+                        regexTemplate.formatted(title, title),
+                        regexTemplate.formatted(noBlankTitle, noBlankTitle)), "");
             }
 
             // 删除全部空标签，例如 <p></p>
