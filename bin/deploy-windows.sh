@@ -8,7 +8,6 @@ jre_dirname="jdk-17.0.11+9-jre"
 
 # 压缩包文件名
 artifacts="sonovel-windows.tar.gz"
-# 定义 Maven 命令并保存到变量中
 # -DskipTests：不执行测试用例。-Dmaven.test.skip=true：不执行测试用例，也不编译测试用例类
 maven_command="mvn clean package -Dmaven.test.skip=true -DjrePath=runtime"
 
@@ -36,4 +35,3 @@ tar czf $artifacts SoNovel
 mv $artifacts $project_path/out
 
 echo done!
-

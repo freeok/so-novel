@@ -19,7 +19,7 @@ project_path=$(
 )
 cd "$project_path" || exit
 
-mvn clean package -Dmaven.test.skip=true
+mvn clean package -Dmaven.test.skip=true -DjrePath=runtime
 mkdir -p out
 mkdir "target/$dist_dirname_arm64"
 mkdir "target/$dist_dirname_x64"
