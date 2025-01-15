@@ -7,8 +7,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
@@ -54,7 +55,7 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
-        if (!search.isPagination()) return firstPageResults;
+        if (!search.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
         Set<String> urls = new LinkedHashSet<>();
         for (Element e : document.select(search.getNextPage())) {
@@ -67,9 +68,10 @@ public class SearchResultParser extends Source {
         List<SearchResult> additionalResults = urls.parallelStream()
                 .flatMap(url -> getSearchResults(url, null).stream())
                 .toList();
-
         // 合并，不去重（去重用 union）
-        return CollUtil.unionAll(firstPageResults, additionalResults);
+        List<SearchResult> unionAll = CollUtil.unionAll(firstPageResults, additionalResults);
+
+        return SearchResultsHandler.handle(unionAll);
     }
 
     @SneakyThrows
