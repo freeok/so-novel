@@ -76,7 +76,7 @@ public class Main {
         printHint();
 
         while (true) {
-            Console.log(StrUtil.join(" ", options));
+            Console.log("\n" + StrUtil.join(" ", options));
             System.out.print("==> 请输入功能序号: ");
             String cmd = sc.nextLine();
 
