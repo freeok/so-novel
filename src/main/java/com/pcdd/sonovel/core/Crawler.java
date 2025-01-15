@@ -57,7 +57,7 @@ public class Crawler {
         List<SearchResult> searchResults = searchResultParser.parse(keyword);
 
         stopWatch.stop();
-        Console.log("<== 搜索到 {} 条记录，耗时 {} s\n", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
+        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
 
         return searchResults;
     }
