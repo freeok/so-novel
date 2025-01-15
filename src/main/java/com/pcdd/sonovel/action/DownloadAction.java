@@ -1,13 +1,13 @@
 package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.CatalogParser;
+import com.pcdd.sonovel.parse.SearchResultParser;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -27,18 +27,6 @@ public class DownloadAction {
 
     private final AppConfig config;
 
-    private static void printSearchResult(List<SearchResult> results) {
-        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
-        for (int i = 1; i <= results.size(); i++) {
-            SearchResult r = results.get(i - 1);
-            consoleTable.addBody(String.valueOf(i),
-                    r.getBookName(),
-                    r.getAuthor(),
-                    r.getLatestChapter(),
-                    r.getLatestUpdate());
-        }
-        Console.table(consoleTable);
-    }
 
     @SneakyThrows
     public void execute(Terminal terminal) {
@@ -51,7 +39,7 @@ public class DownloadAction {
         if (results.isEmpty()) return;
 
         // 2. 打印搜索结果
-        printSearchResult(results);
+        SearchResultParser.printSearchResult(results);
 
         int num;
         int action;
