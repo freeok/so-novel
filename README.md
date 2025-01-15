@@ -39,7 +39,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 保留部分下载日志
 
-![sample.jpg](assets%2Fsample.jpg)
+![sample.jpg](assets/sample.jpg)
 
 ## 使用
 
