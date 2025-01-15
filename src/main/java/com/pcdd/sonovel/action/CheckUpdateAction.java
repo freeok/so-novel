@@ -30,13 +30,13 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
-    public static final String GHP = "https://ghgo.xyz/";
+    public static final String GHP = "https://ghproxy.net/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
     private final int timeoutMills;
 
     public CheckUpdateAction() {
-        this.timeoutMills = 10_000;
+        this.timeoutMills = 5_000;
     }
 
     public CheckUpdateAction(int timeout) {
@@ -68,7 +68,7 @@ public class CheckUpdateAction {
                 Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
             }
         } catch (Exception e) {
-            Console.log(render("@|red <== 更新失败，当前网络环境暂时无法访问 GitHub，请稍后再试 ({})|@"), e.getMessage());
+            Console.log(render("\n@|red <== 更新失败，当前网络环境无法访问 GitHub，请稍后再试 ({})|@"), e.getMessage());
         }
     }
 
@@ -95,11 +95,11 @@ public class CheckUpdateAction {
         long fileSize = FileUtils.fileSize(url);
         // 设置进度条
         ProgressBar bar = ProgressBar.builder()
-                .setTaskName("下载最新版")
+                .setTaskName("Downloading new version")
                 .setInitialMax(fileSize)
-                .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK)
+                .setStyle(ProgressBarStyle.ASCII)
                 .setMaxRenderedLength(100)
-                .setUpdateIntervalMillis(1000)
+                .setUpdateIntervalMillis(10)
                 .build();
         //  下载到上一级路径
         File file = new File(System.getProperty("user.dir")).getParentFile();
@@ -108,7 +108,7 @@ public class CheckUpdateAction {
         HttpUtil.downloadFile(url, file, new StreamProgress() {
             @Override
             public void start() {
-                bar.setExtraMessage("下载中...");
+                bar.setExtraMessage("Downloading ...");
             }
 
             @Override
@@ -119,12 +119,12 @@ public class CheckUpdateAction {
 
             @Override
             public void finish() {
-                bar.setExtraMessage("下载完成");
-                Console.log("<== 下载位置: {}", file + File.separator + FileUtil.getName(url));
+                bar.setExtraMessage("Done!");
             }
         });
 
         bar.close();
+        Console.log("<== 下载位置: {}", file + File.separator + FileUtil.getName(url));
     }
 
 }
