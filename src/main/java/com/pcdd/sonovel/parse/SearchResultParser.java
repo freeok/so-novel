@@ -2,6 +2,7 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -26,7 +27,7 @@ import java.util.*;
  */
 public class SearchResultParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 15_000;
+    private static final int TIMEOUT_MILLS = 10_000;
 
     public SearchResultParser(AppConfig config) {
         super(config);
@@ -37,11 +38,10 @@ public class SearchResultParser extends Source {
     }
 
     public List<SearchResult> parse(String keyword) {
-        Rule.Search search = this.rule.getSearch();
-
         // 模拟搜索请求
         Document document;
         Connection.Response resp;
+        Rule.Search search = this.rule.getSearch();
         try {
             resp = jsoupConn(search.getUrl(), TIMEOUT_MILLS)
                     .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
@@ -84,6 +84,9 @@ public class SearchResultParser extends Source {
             String bookUrl = resp.url().toString();
             BookParser bookParser = new BookParser(config);
             Book book = bookParser.parse(bookUrl);
+            if (StrUtil.isBlank(book.getBookName())) {
+                return Collections.emptyList();
+            }
             SearchResult build = SearchResult.builder()
                     .url(bookUrl)
                     .bookName(book.getBookName())
@@ -130,6 +133,19 @@ public class SearchResultParser extends Source {
         }
 
         return list;
+    }
+
+    public static void printSearchResult(List<SearchResult> results) {
+        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
+        for (int i = 1; i <= results.size(); i++) {
+            SearchResult r = results.get(i - 1);
+            consoleTable.addBody(String.valueOf(i),
+                    r.getBookName(),
+                    r.getAuthor(),
+                    r.getLatestChapter(),
+                    r.getLatestUpdate());
+        }
+        Console.table(consoleTable);
     }
 
 }
