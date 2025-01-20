@@ -21,7 +21,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 可根据书名、作者搜索并下载小说
 
-支持导出格式：epub、txt、html（支持翻页）
+支持导出格式：EPUB、TXT、HTML（支持翻页）
 
 结合以下电子书阅读器使用更佳
 
@@ -87,10 +87,10 @@ brew install so-novel
 - 检查 DNS 解析 (nslookup 命令)
 - 更换 DNS
 
-WPS 打不开 epub，提示：不支持打开该类型文件或文件已损坏 (https://github.com/freeok/so-novel/issues/54)
+WPS 打不开 EPUB，提示：不支持打开该类型文件或文件已损坏 (https://github.com/freeok/so-novel/issues/54)
 
 - 使用专业的电子书阅读器打开 EPUB 文件
-- 不用 epub 格式，config.ini 中修改
+- 不用 EPUB 格式，config.ini 中修改
 
 macOS & Linux 运行 .sh 失败，尝试以下命令
 
