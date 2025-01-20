@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.action;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
@@ -68,24 +69,33 @@ public class DownloadAction {
             Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
             Console.log("==> 0: 重新选择功能");
             Console.log("==> 1: 下载全本");
-            Console.log("==> 2: 下载指定章节");
-            Console.log("==> 3: 重新输入序号");
+            Console.log("==> 2: 下载指定范围章节");
+            Console.log("==> 3: 下载最新章节");
+            Console.log("==> 4: 重新输入序号");
 
             try {
-                action = Integer.parseInt(reader.readLine("==> 请输入数字："));
+                action = Integer.parseInt(reader.readLine("==> 请输入序号："));
             } catch (NumberFormatException e) {
                 continue;
             }
 
-            if (action != 3) break;
+            if (action != 4) break;
         }
         if (action == 0) return;
         if (action == 2) {
             try {
                 String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
-                int start = Math.max(Integer.parseInt(split[0]) - 1, 0);
+                int start = Integer.parseInt(split[0]);
                 int end = Integer.parseInt(split[1]);
-                catalogs = catalogs.subList(start, end);
+                catalogs = CollUtil.sub(catalogs, start, end);
+            } catch (Exception e) {
+                return;
+            }
+        }
+        if (action == 3) {
+            try {
+                int i = Integer.parseInt(reader.readLine("==> 请输入要下载最新章节的数量："));
+                catalogs = CollUtil.sub(catalogs, catalogs.size() - i, catalogs.size());
             } catch (Exception e) {
                 return;
             }
