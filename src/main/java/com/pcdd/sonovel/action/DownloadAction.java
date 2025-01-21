@@ -34,7 +34,7 @@ public class DownloadAction {
         LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
 
         // 1. 查询
-        String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).trim();
+        String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).strip();
         if (keyword.isEmpty()) return;
         List<SearchResult> results = new Crawler(config).search(keyword);
         if (results.isEmpty()) return;
@@ -48,7 +48,7 @@ public class DownloadAction {
         List<Chapter> catalogs;
         // 3. 选择下载章节
         while (true) {
-            String input = reader.readLine("==> 请输入下载序号（首列的数字，或输入 0 返回）：").trim();
+            String input = reader.readLine("==> 请输入下载序号（首列的数字，或输入 0 返回）：").strip();
             // 健壮性判断：必须为数字
             try {
                 num = Integer.parseInt(input);
@@ -84,7 +84,7 @@ public class DownloadAction {
         if (action == 0) return;
         if (action == 2) {
             try {
-                String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").trim().split("\\s+");
+                String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").strip().split("\\s+");
                 int start = Integer.parseInt(split[0]);
                 int end = Integer.parseInt(split[1]);
                 catalogs = CollUtil.sub(catalogs, start, end);
