@@ -113,7 +113,7 @@ public class Main {
         printHint();
 
         while (true) {
-            String cmd = reader.readLine("按 Tab 键选择功能: ").trim();
+            String cmd = reader.readLine("按 Tab 键选择功能: ").strip();
 
             if (!options.contains(cmd)) {
                 Console.error("无效的选项，请重新选择");
