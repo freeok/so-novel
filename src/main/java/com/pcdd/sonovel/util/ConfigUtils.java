@@ -58,8 +58,8 @@ public class ConfigUtils {
         AppConfig config = new AppConfig();
         config.setVersion(sys.getStr("version"));
 
-        // 1 ~ 4
-        config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, 5)));
+        config.setLanguage(usr.getStr("language", SELECTION_1, "zh_CN"));
+        config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, 5))); // 1 ~ 4
         config.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         config.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
