@@ -4,6 +4,7 @@
   "name": "梦书中文",
   "comment": "无限流",
   "type": "html",
+  "language": "zh-CN",
   "search": {
     "url": "http://www.mcmssc.la/search.html",
     "method": "post",
