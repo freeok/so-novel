@@ -119,7 +119,7 @@ public class SearchResultParser extends Source {
             // 针对书源 1：排除第一个 tr 表头
             if (bookName.isEmpty()) continue;
 
-            SearchResult build = SearchResult.builder()
+            SearchResult sr = SearchResult.builder()
                     .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                     .bookName(bookName)
                     .author(author)
@@ -127,11 +127,7 @@ public class SearchResultParser extends Source {
                     .latestUpdate(update)
                     .build();
 
-            if ("zh-Hant".equals(this.rule.getLanguage())) {
-                build = ChineseConverter.t2s(build);
-            }
-
-            list.add(build);
+            list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
         }
 
         return list;

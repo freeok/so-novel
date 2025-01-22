@@ -12,6 +12,7 @@ public class AppConfig {
     private String version;
 
     // [base]
+    private String language;
     private Integer sourceId;
     private String downloadPath;
     private String extName;
