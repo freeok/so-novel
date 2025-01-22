@@ -48,13 +48,16 @@ public class ChapterParser extends Source {
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
-            chapter = ChineseConverter.convert(chapter, this.rule.getLanguage(), config.getLanguage());
-            return chapterConverter.convert(chapter, config.getExtName());
+            // 确保简繁互转最后调用
+            return ChineseConverter.convert(chapterConverter.convert(chapter, config.getExtName()),
+                    this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
-            return retry(chapter, latch, sr) != null
-                    ? ChineseConverter.convert(chapter, this.rule.getLanguage(), config.getLanguage())
-                    : null;
+            Chapter retryChapter = retry(chapter, latch, sr);
+            if (retryChapter == null) {
+                return null;
+            }
+            return ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
         }
     }
 
