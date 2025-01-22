@@ -4,6 +4,7 @@
   "name": "鸟书网",
   "comment": "书很全，有15w+；无反爬",
   "type": "html",
+  "language": "zh-CN",
   "search": {
     "url": "http://www.99xs.info/read/search/",
     "method": "post",
