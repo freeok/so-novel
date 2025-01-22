@@ -4,7 +4,7 @@
   "name": "69書吧",
   "comment": "需要梯子、无CF盾、章节有限流、数量5w+",
   "type": "html",
-  "language": "zh-Hant",
+  "language": "zh_Hant",
   "search": {
     "url": "https://69shux.co/search",
     "method": "post",
