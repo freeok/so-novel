@@ -60,7 +60,7 @@ public class SearchResultParser extends Source {
         Set<String> urls = new LinkedHashSet<>();
         for (Element e : document.select(search.getNextPage())) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
-            // 中文解码，针对69书吧
+            // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
         }
 
