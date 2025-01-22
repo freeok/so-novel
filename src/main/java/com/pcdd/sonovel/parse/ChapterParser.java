@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
@@ -48,17 +48,13 @@ public class ChapterParser extends Source {
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
-            if ("zh-Hant".equals(this.rule.getLanguage())) {
-                chapter = ChineseConverter.t2s(chapter);
-            }
+            chapter = ChineseConverter.convert(chapter, this.rule.getLanguage(), config.getLanguage());
             return chapterConverter.convert(chapter, config.getExtName());
 
         } catch (Exception e) {
-            Chapter retry = retry(chapter, latch, sr);
-            if (retry != null && "zh-Hant".equals(this.rule.getLanguage())) {
-                retry = ChineseConverter.t2s(retry);
-            }
-            return retry;
+            return retry(chapter, latch, sr) != null
+                    ? ChineseConverter.convert(chapter, this.rule.getLanguage(), config.getLanguage())
+                    : null;
         }
     }
 
