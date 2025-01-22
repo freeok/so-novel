@@ -58,8 +58,14 @@ public class ChineseConverter {
         return value != null ? convertFunc.apply(value) : null;
     }
 
+    /* ================================================== Book ================================================== */
+
     public Book t2s(Book book) {
         return convert(book, HanLP::t2s);
+    }
+
+    public Book t2tw(Book book) {
+        return convert(book, HanLP::t2tw);
     }
 
     public Book s2t(Book book) {
@@ -74,8 +80,14 @@ public class ChineseConverter {
         return convert(book, HanLP::s2hk);
     }
 
+    /* ================================================== Chapter ================================================== */
+
     public Chapter t2s(Chapter chapter) {
         return convert(chapter, HanLP::t2s);
+    }
+
+    public Chapter t2tw(Chapter chapter) {
+        return convert(chapter, HanLP::t2tw);
     }
 
     public Chapter s2t(Chapter chapter) {
@@ -90,8 +102,14 @@ public class ChineseConverter {
         return convert(chapter, HanLP::s2hk);
     }
 
+    /* ================================================== SearchResult ================================================== */
+
     public SearchResult t2s(SearchResult sr) {
         return convert(sr, HanLP::t2s);
+    }
+
+    public SearchResult t2tw(SearchResult sr) {
+        return convert(sr, HanLP::t2tw);
     }
 
     public SearchResult s2t(SearchResult sr) {
