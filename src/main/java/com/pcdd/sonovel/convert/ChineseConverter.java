@@ -4,6 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.Language;
 import lombok.experimental.UtilityClass;
 
 import java.util.function.Function;
@@ -15,13 +16,30 @@ import java.util.function.Function;
 @UtilityClass
 public class ChineseConverter {
 
-    // 通用转换方法，接受转换函数作为参数
-    private <T> T convert(T obj, Function<String, String> convertFunc) {
-        if (obj == null) {
-            return null;
+    public <T> T convert(T obj, String sourceLang, String targetLang) {
+        if (obj == null || sourceLang.equals(targetLang)) {
+            return obj;
         }
 
-        // 如果是 Book 类型
+        Function<String, String> convertFunc = getConversionFunction(sourceLang, targetLang);
+        if (convertFunc == null) {
+            return obj;
+        }
+
+        return applyConversion(obj, convertFunc);
+    }
+
+    private Function<String, String> getConversionFunction(String sourceLang, String targetLang) {
+        return switch (sourceLang + ">" + targetLang) {
+            case Language.ZH_HANT + ">" + Language.ZH_CN -> HanLP::t2s;
+            case Language.ZH_CN + ">" + Language.ZH_HANT -> HanLP::s2t;
+            case Language.ZH_CN + ">" + Language.ZH_TW -> HanLP::s2tw;
+            case Language.ZH_HANT + ">" + Language.ZH_TW -> HanLP::t2tw;
+            default -> null;
+        };
+    }
+
+    private <T> T applyConversion(T obj, Function<String, String> convertFunc) {
         if (obj instanceof Book book) {
             book.setBookName(convertIfNotNull(book.getBookName(), convertFunc));
             book.setAuthor(convertIfNotNull(book.getAuthor(), convertFunc));
@@ -33,14 +51,12 @@ public class ChineseConverter {
             return (T) book;
         }
 
-        // 如果是 Chapter 类型
         if (obj instanceof Chapter chapter) {
             chapter.setTitle(convertIfNotNull(chapter.getTitle(), convertFunc));
             chapter.setContent(convertIfNotNull(chapter.getContent(), convertFunc));
             return (T) chapter;
         }
 
-        // 如果是 SearchResult 类型
         if (obj instanceof SearchResult sr) {
             sr.setBookName(convertIfNotNull(sr.getBookName(), convertFunc));
             sr.setAuthor(convertIfNotNull(sr.getAuthor(), convertFunc));
@@ -50,78 +66,11 @@ public class ChineseConverter {
             return (T) sr;
         }
 
-        return obj;  // 如果是其他类型，直接返回
+        return obj;
     }
 
-    // 用于判断是否为 null 并进行转换
     private String convertIfNotNull(String value, Function<String, String> convertFunc) {
         return value != null ? convertFunc.apply(value) : null;
-    }
-
-    /* ================================================== Book ================================================== */
-
-    public Book t2s(Book book) {
-        return convert(book, HanLP::t2s);
-    }
-
-    public Book t2tw(Book book) {
-        return convert(book, HanLP::t2tw);
-    }
-
-    public Book s2t(Book book) {
-        return convert(book, HanLP::s2t);
-    }
-
-    public Book s2tw(Book book) {
-        return convert(book, HanLP::s2tw);
-    }
-
-    public Book s2hk(Book book) {
-        return convert(book, HanLP::s2hk);
-    }
-
-    /* ================================================== Chapter ================================================== */
-
-    public Chapter t2s(Chapter chapter) {
-        return convert(chapter, HanLP::t2s);
-    }
-
-    public Chapter t2tw(Chapter chapter) {
-        return convert(chapter, HanLP::t2tw);
-    }
-
-    public Chapter s2t(Chapter chapter) {
-        return convert(chapter, HanLP::s2t);
-    }
-
-    public Chapter s2tw(Chapter chapter) {
-        return convert(chapter, HanLP::s2tw);
-    }
-
-    public Chapter s2hk(Chapter chapter) {
-        return convert(chapter, HanLP::s2hk);
-    }
-
-    /* ================================================== SearchResult ================================================== */
-
-    public SearchResult t2s(SearchResult sr) {
-        return convert(sr, HanLP::t2s);
-    }
-
-    public SearchResult t2tw(SearchResult sr) {
-        return convert(sr, HanLP::t2tw);
-    }
-
-    public SearchResult s2t(SearchResult sr) {
-        return convert(sr, HanLP::s2t);
-    }
-
-    public SearchResult s2tw(SearchResult sr) {
-        return convert(sr, HanLP::s2tw);
-    }
-
-    public SearchResult s2hk(SearchResult sr) {
-        return convert(sr, HanLP::s2hk);
     }
 
 }
