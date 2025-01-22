@@ -85,7 +85,7 @@ public class DownloadAction {
         if (action == 2) {
             try {
                 String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").strip().split("\\s+");
-                int start = Integer.parseInt(split[0]);
+                int start = Integer.parseInt(split[0]) - 1;
                 int end = Integer.parseInt(split[1]);
                 catalogs = CollUtil.sub(catalogs, start, end);
             } catch (Exception e) {
