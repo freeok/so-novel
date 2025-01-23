@@ -28,7 +28,7 @@ public class CrawlUtils {
 
         JSONUtil.parseObj(body)
                 .forEach((key, value) -> {
-                    if (key.equals("kw")) params.put(value.toString(), keyword);
+                    if ("kw".equals(key)) params.put(value.toString(), keyword);
                     else params.put(key, value.toString());
                 });
 
