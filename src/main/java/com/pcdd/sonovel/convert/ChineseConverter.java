@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class ChineseConverter {
 
     public <T> T convert(T obj, String sourceLang, String targetLang) {
-        if (obj == null || sourceLang.equals(targetLang)) {
+        if (obj == null || targetLang.equals(sourceLang)) {
             return obj;
         }
 
