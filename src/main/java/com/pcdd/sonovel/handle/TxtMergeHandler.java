@@ -2,11 +2,12 @@ package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpUtil;
-import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.AllArgsConstructor;
 
@@ -44,7 +45,7 @@ public class TxtMergeHandler implements PostProcessingHandler {
         }
         appender.flush();
 
-        // 下载封面
+        Console.log("<== 正在下载封面：{}", book.getCoverUrl());
         File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), System.getProperty("user.dir") + File.separator + saveDir);
         FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
     }
