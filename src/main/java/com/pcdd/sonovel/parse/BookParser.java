@@ -6,6 +6,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
@@ -84,15 +85,19 @@ public class BookParser extends Source {
 
         try {
             for (Element e : elements) {
-                String name = e.select(".book-mid-info > .book-info-title > a").text();
-                // 起点作者
-                String author1 = e.select(".book-mid-info > .author > .name").text();
-                // 非起点作者
-                String author2 = e.select(".book-mid-info > .author > i").text();
-                String author = author1.isEmpty() ? author2 : author1;
+                String qdName = e.select(".book-mid-info > .book-info-title > a").text();
+                // 起点作家
+                String qdAuthor1 = e.select(".book-mid-info > .author > .name").text();
+                // 非起点作家
+                String qdAuthor2 = e.select(".book-mid-info > .author > i").text();
+                String qdAuthor = StrUtil.isEmpty(qdAuthor1) ? qdAuthor2 : qdAuthor1;
 
-                if (book.getBookName().equals(name) && book.getAuthor().equals(author)) {
+                String name = HanLP.convertToSimplifiedChinese(book.getBookName());
+                String author = HanLP.convertToSimplifiedChinese(book.getAuthor());
+
+                if (name.equals(qdName) && author.equals(qdAuthor)) {
                     String coverUrl = e.select(".book-img-box > a > img").attr("src");
+                    // 替换为高清原图
                     return URLUtil.normalize(coverUrl).replaceAll("/150(\\.webp)?", "");
                 }
             }
