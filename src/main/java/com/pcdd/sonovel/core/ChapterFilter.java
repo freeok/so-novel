@@ -5,6 +5,8 @@ import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 
+import java.util.regex.Pattern;
+
 /**
  * @author pcdd
  * Created at 2024/3/17
@@ -83,12 +85,7 @@ public class ChapterFilter extends Source {
             this.content = StrUtil.cleanBlank(this.content);
 
             if (applyDuplicateTitleFilter) {
-                String noBlankTitle = StrUtil.cleanBlank(this.title);
-                // 正文开头的重复标题
-                String regexTemplate = "^(?:<.*?>%s</.*?>|%s)";
-                this.content = content.replaceFirst(StrUtil.format("{}|{}",
-                        regexTemplate.formatted(title, title),
-                        regexTemplate.formatted(noBlankTitle, noBlankTitle)), "");
+                this.content = content.replaceFirst(Pattern.quote(this.title) + "|" + Pattern.quote(StrUtil.cleanBlank(this.title)), "");
             }
 
             // 删除全部空标签，例如 <p></p>
