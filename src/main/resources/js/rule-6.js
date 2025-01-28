@@ -19,9 +19,5 @@ function base64(_str) {
 
 // 计算加密参数 b 的值
 function getParamB(keywords) {
-  console.log(`t: ${Date.now()}`)
-  console.log(`b: ${encodeURI(base64(encodeURI(keywords)))}`)
+  return encodeURI(base64(encodeURI(keywords)));
 }
-
-// keywords 的中文必须为繁体
-getParamB('鬥羅大陸')
