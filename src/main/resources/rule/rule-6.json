@@ -1,0 +1,55 @@
+{
+  "id": 6,
+  "url": "https://quanben5.com/",
+  "name": "全本小說網",
+  "comment": "",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "https://quanben5.com/",
+    "method": "get",
+    "body": "{a: search.json, b: %s, c: book, callback: search, keywords: %s}",
+    "cookies": "{}",
+    "pagination": false,
+    "nextPage": "",
+    "result": "#detail",
+    "bookName": "h3 > a > span",
+    "author": "p.info > span",
+    "latestChapter": "",
+    "update": ""
+  },
+  "book": {
+    "url": "",
+    "bookName": "",
+    "author": "",
+    "intro": "",
+    "category": "",
+    "coverUrl": "",
+    "latestChapter": "",
+    "latestUpdate": "",
+    "isEnd": false
+  },
+  "catalog": {
+    "url": "",
+    "result": "",
+    "offset": 0
+  },
+  "chapter": {
+    "pagination": false,
+    "nextPage": "",
+    "title": "",
+    "content": "",
+    "paragraphTagClosed": false,
+    "paragraphTag": "",
+    "filterTxt": "",
+    "filterTag": ""
+  },
+  "crawl": {
+    "threads": 0,
+    "min": 0,
+    "max": 0,
+    "maxAttempts": 0,
+    "retryMin": 0,
+    "retryMax": 0
+  }
+}
