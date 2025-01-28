@@ -10,6 +10,7 @@ import org.jsoup.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author pcdd
@@ -26,11 +27,14 @@ public class CrawlUtils {
     // POST 构建 Body，GET 构建 Query Parameters
     public Map<String, String> buildData(String jsonStr, String... args) {
         Map<String, String> params = new HashMap<>();
+        AtomicInteger i = new AtomicInteger(0);
 
         JSONUtil.parseObj(jsonStr)
                 .forEach((key, value) -> {
                     if ("%s".equals(value)) {
-                        params.put(key, args[0]);
+                        if (i.get() < args.length) {
+                            params.put(key, args[i.getAndIncrement()]);
+                        }
                     } else {
                         params.put(key, value.toString());
                     }
