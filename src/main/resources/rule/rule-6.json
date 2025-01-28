@@ -1,12 +1,12 @@
 {
   "id": 6,
   "url": "https://quanben5.com/",
-  "name": "全本小說網",
-  "comment": "",
+  "name": "全本小说网",
+  "comment": "正文内容纯净",
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "url": "https://quanben5.com/",
+    "url": "https://quanben5.com/search.html/",
     "method": "get",
     "data": "{keywords: %s, a: search.json, b: %s, c: book, callback: search}",
     "cookies": "{}",
@@ -19,37 +19,29 @@
     "update": ""
   },
   "book": {
-    "url": "",
-    "bookName": "",
-    "author": "",
-    "intro": "",
-    "category": "",
-    "coverUrl": "",
+    "url": "https://quanben5.com/n/(.*?)/",
+    "bookName": "h3 > span",
+    "author": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(3) > span",
+    "intro": "body > div.row > div > div:nth-child(1) > div.description",
+    "category": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(4) > span",
+    "coverUrl": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > div > img",
     "latestChapter": "",
     "latestUpdate": "",
-    "isEnd": false
+    "isEnd": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
   },
   "catalog": {
-    "url": "",
-    "result": "",
+    "url": "https://quanben5.com/n/%s/xiaoshuo.html",
+    "result": "ul > li > a",
     "offset": 0
   },
   "chapter": {
     "pagination": false,
     "nextPage": "",
     "title": "",
-    "content": "",
-    "paragraphTagClosed": false,
-    "paragraphTag": "",
+    "content": "#content",
+    "paragraphTagClosed": true,
+    "paragraphTag": "p",
     "filterTxt": "",
     "filterTag": ""
-  },
-  "crawl": {
-    "threads": 0,
-    "min": 0,
-    "max": 0,
-    "maxAttempts": 0,
-    "retryMin": 0,
-    "retryMax": 0
   }
 }

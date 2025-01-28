@@ -7,7 +7,6 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -50,10 +49,13 @@ public class SearchResultParser6 extends Source {
         }, true);
 
         HttpRequest req = HttpRequest
-                .get(ruleSearch.getUrl())
+                .get(this.rule.getUrl())
                 .timeout(TIMEOUT_MILLS)
-                .header("Referer", ruleSearch.getUrl() + "search.html")
+                .header("Referer", ruleSearch.getUrl())
                 .formStr(map);
+        if (config.getProxyEnabled() == 1)
+            req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
+
         String body = req.execute().body();
         String s = UnicodeUtil.toString(body);
         String s2 = HtmlUtil.unescape(s)
@@ -62,11 +64,12 @@ public class SearchResultParser6 extends Source {
                 .replace("\\t", "")
                 .replace("\\/", "/")
                 .replace("\\\"", "'");
-        String s4 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
-        JSONObject jsonObject = JSONUtil.parseObj(s4);
-        String html = jsonObject.getStr("content");
+        String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
 
-        List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(html));
+        String beginIndex = "\"content\":";
+        String ans = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
+        List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(ans));
+
         return SearchResultsHandler.handle(firstPageResults);
     }
 
