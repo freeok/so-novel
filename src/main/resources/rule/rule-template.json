@@ -8,7 +8,7 @@
   "search": {
     "url": "",
     "method": "",
-    "body": "{}",
+    "data": "{}",
     "cookies": "{}",
     "pagination": false,
     "nextPage": "",

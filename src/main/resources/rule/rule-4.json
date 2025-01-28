@@ -8,7 +8,7 @@
   "search": {
     "url": "http://www.99xs.info/read/search/",
     "method": "post",
-    "body": "{'kw': 'searchkey'}",
+    "data": "{searchkey: %s}",
     "cookies": "{}",
     "pagination": false,
     "result": "div.wrap > div > div > div",

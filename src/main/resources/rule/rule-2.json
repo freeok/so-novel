@@ -8,7 +8,7 @@
   "search": {
     "url": "https://www.shuhaige.net/search.html",
     "method": "post",
-    "body": "{'kw': 'searchkey', 'searchtype': 'all'}",
+    "data": "{searchkey: %s, searchtype: all}",
     "cookies": "{'waf_sc': '', 'HMACCOUNT': ''}",
     "pagination": true,
     "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
