@@ -5,14 +5,11 @@ import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.script.ScriptUtil;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.core.Source;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.ChapterParser;
@@ -22,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pcdd
@@ -37,24 +35,32 @@ class NewSourceTest {
 
     @Test
     void crackSearch() {
-        String kw = "辰东";
+        String kw = "我吃西红柿";
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
         Object key = ScriptUtil.invoke(js, "getParamB", kw);
 
-        HttpResponse resp = HttpRequest
-                .get("https://big5.quanben5.com/?c=book&a=search.json&callback=search&keywords=%s&b=%s".formatted(kw, key))
-                .header("Referer", "https://big5.quanben5.com/search.html")
-                .execute();
-        String body = resp.body();
+        Source source = new Source(6);
+        Rule.Search ruleSearch = source.rule.getSearch();
+        String param = ruleSearch.getBody().formatted(key, kw);
+        /* JSONObject obj = JSONUtil.parseObj(param);
+        System.out.println(JSONUtil.toJsonPrettyStr(obj)); */
+
+        Map<String, String> map = JSONUtil.toBean(param, Map.class);
+        HttpRequest req = HttpRequest
+                .get(ruleSearch.getUrl())
+                .header("Referer", ruleSearch.getUrl() + "search.html")
+                .formStr(map);
+
+        System.out.println(req.form());
+        String body = req.execute().body();
         String s = UnicodeUtil.toString(body);
-        String s2 = HtmlUtil.unescape(s);
-        String s3 = s2
+        String s2 = HtmlUtil.unescape(s)
                 .replace("\\r", "")
                 .replace("\\n", "")
                 .replace("\\t", "")
                 .replace("\\/", "/")
                 .replace("\\\"", "'");
-        String s4 = ReUtil.getGroup0("\\{(.*?)\\}", s3);
+        String s4 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
         JSONObject jsonObject = JSONUtil.parseObj(s4);
         String html = jsonObject.getStr("content");
         System.out.println(Jsoup.parse(html));
