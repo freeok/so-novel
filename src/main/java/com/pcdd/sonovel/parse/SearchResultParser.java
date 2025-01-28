@@ -42,11 +42,12 @@ public class SearchResultParser extends Source {
         // 模拟搜索请求
         Document document;
         Connection.Response resp;
-        Rule.Search search = this.rule.getSearch();
+        Rule.Search ruleSearch = this.rule.getSearch();
+
         try {
-            resp = jsoupConn(search.getUrl(), TIMEOUT_MILLS)
-                    .data(CrawlUtils.buildParams(this.rule.getSearch().getBody(), keyword))
-                    .cookies(CrawlUtils.buildCookies(this.rule.getSearch().getCookies()))
+            resp = jsoupConn(ruleSearch.getUrl(), TIMEOUT_MILLS)
+                    .data(CrawlUtils.buildData(ruleSearch.getData(), keyword))
+                    .cookies(CrawlUtils.buildCookies(ruleSearch.getCookies()))
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
@@ -55,10 +56,10 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
-        if (!search.isPagination()) return SearchResultsHandler.handle(firstPageResults);
+        if (!ruleSearch.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
         Set<String> urls = new LinkedHashSet<>();
-        for (Element e : document.select(search.getNextPage())) {
+        for (Element e : document.select(ruleSearch.getNextPage())) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));

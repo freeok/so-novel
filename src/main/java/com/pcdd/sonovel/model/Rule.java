@@ -25,8 +25,7 @@ public class Rule {
     public static class Search {
         private String url;
         private String method;
-        private String param;
-        private String body;
+        private String data;
         private String cookies;
         private String result;
         private String bookName;
