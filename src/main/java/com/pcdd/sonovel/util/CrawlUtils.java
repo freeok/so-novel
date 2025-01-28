@@ -23,13 +23,17 @@ public class CrawlUtils {
         return URLUtil.normalize(Validator.isUrl(s) ? s : host + s, true, true);
     }
 
-    public Map<String, String> buildParams(String body, String keyword) {
+    // POST 构建 Body，GET 构建 Query Parameters
+    public Map<String, String> buildData(String jsonStr, String... args) {
         Map<String, String> params = new HashMap<>();
 
-        JSONUtil.parseObj(body)
+        JSONUtil.parseObj(jsonStr)
                 .forEach((key, value) -> {
-                    if ("kw".equals(key)) params.put(value.toString(), keyword);
-                    else params.put(key, value.toString());
+                    if ("%s".equals(value)) {
+                        params.put(key, args[0]);
+                    } else {
+                        params.put(key, value.toString());
+                    }
                 });
 
         return params;

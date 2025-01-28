@@ -41,7 +41,7 @@ class NewSourceTest {
 
         Source source = new Source(6);
         Rule.Search ruleSearch = source.rule.getSearch();
-        String param = ruleSearch.getBody().formatted(key, kw);
+        String param = ruleSearch.getData().formatted(key, kw);
         /* JSONObject obj = JSONUtil.parseObj(param);
         System.out.println(JSONUtil.toJsonPrettyStr(obj)); */
 
@@ -69,7 +69,7 @@ class NewSourceTest {
     @Test
     void searchParse() {
         SearchResultParser sr = new SearchResultParser(config);
-        List<SearchResult> parse = sr.parse("吞噬星空");
+        List<SearchResult> parse = sr.parse("斗罗大陆");
         parse.forEach(System.out::println);
     }
 

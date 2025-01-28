@@ -8,7 +8,7 @@
   "search": {
     "url": "https://quanben5.com/",
     "method": "get",
-    "body": "{a: search.json, b: %s, c: book, callback: search, keywords: %s}",
+    "data": "{keywords: %s, a: search.json, b: %s, c: book, callback: search}",
     "cookies": "{}",
     "pagination": false,
     "nextPage": "",
