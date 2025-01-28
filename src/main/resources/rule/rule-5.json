@@ -8,7 +8,7 @@
   "search": {
     "url": "https://69shux.co/search",
     "method": "post",
-    "body": "{'kw': 'searchkey', 'submit': 'Search'}",
+    "data": "{searchkey: %s, submit: Search}",
     "cookies": "{'zh_choose': 't'}",
     "pagination": true,
     "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",

@@ -8,7 +8,7 @@
   "search": {
     "url": "http://www.mcmssc.la/search.html",
     "method": "post",
-    "body": "{'kw': 'name'}",
+    "data": "{name: %s}",
     "cookies": "{}",
     "pagination": false,
     "result": ".novelslist2 > ul > li",
