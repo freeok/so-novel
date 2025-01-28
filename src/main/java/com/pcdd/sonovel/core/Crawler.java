@@ -14,6 +14,7 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.SearchResultParser6;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
@@ -53,8 +54,13 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        SearchResultParser searchResultParser = new SearchResultParser(config);
-        List<SearchResult> searchResults = searchResultParser.parse(keyword);
+        List<SearchResult> searchResults;
+
+        if (config.getSourceId() == 6) {
+            searchResults = new SearchResultParser6(config).parse(keyword);
+        } else {
+            searchResults = new SearchResultParser(config).parse(keyword);
+        }
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
