@@ -12,8 +12,8 @@
     "cookies": "{}",
     "pagination": false,
     "nextPage": "",
-    "result": "#detail",
-    "bookName": "h3 > a > span",
+    "result": ".pic_txt_list",
+    "bookName": "h3 > a",
     "author": "p.info > span",
     "latestChapter": "",
     "update": ""
