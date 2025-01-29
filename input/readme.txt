@@ -8,7 +8,7 @@ Linux 用户
 运行 linux-run.sh
 
 
-使用方法
+交互模式 2 (interactive-mode = 2) 使用方法
 1. 先按 Tab 键显示选项
 2. 再按 Tab 键切换选项
 3. 然后按 Enter 键选中
@@ -30,7 +30,7 @@ Linux 用户
 - 希望增加某个书源
 - 希望增加某个新功能
 上述情况请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
-非上述情况在此反馈：https://github.com/freeok/so-novel/issues/new
+非上述情况在此反馈：https://github.com/freeok/so-novel/discussions/new/choose
 
 
 项目主页：https://github.com/freeok/so-novel
