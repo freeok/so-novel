@@ -18,7 +18,7 @@ jpackage \
 --input "nobug/jpackage" \
 --dest dist \
 --icon assets/logo-1.ico \
---app-version 1.7.5 \
+--app-version 1.7.6 \
 --copyright "Copyright (C) 2025 SoNovel. All rights reserved." \
 --description "开源搜书神器" \
 --vendor "FreeOK" \
