@@ -32,3 +32,4 @@ jobs:
           # 表示要上传到 Release 的产出文件。这可能是单个路径或以逗号分隔的路径列表（或 globs）
           artifacts: "out/*"
           token: ${{ secrets.GITHUB_TOKEN  }}
+          bodyFile: "CHANGELOG.md"
