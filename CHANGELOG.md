@@ -3,8 +3,7 @@
 ### ✨ 新特性
 
 - 支持繁体中文(台湾)  、简体中文互转
-
-- 新增书源6：[全本小说网](https://github.com/freeok/so-novel/issues/82)
+- 新增书源 6：[全本小说网](https://quanben5.com/) (https://github.com/freeok/so-novel/issues/82)
 
 ### 🐛 Bug 修复
 
