@@ -1,12 +1,14 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -23,6 +25,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,21 +59,26 @@ public class SearchResultParser6 extends Source {
         if (config.getProxyEnabled() == 1)
             req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
 
-        String body = req.execute().body();
-        String s = UnicodeUtil.toString(body);
-        String s2 = HtmlUtil.unescape(s)
-                .replace("\\r", "")
-                .replace("\\n", "")
-                .replace("\\t", "")
-                .replace("\\/", "/")
-                .replace("\\\"", "'");
-        String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
+        try (HttpResponse resp = req.execute()) {
+            String body = resp.body();
+            String s = UnicodeUtil.toString(body);
+            String s2 = HtmlUtil.unescape(s)
+                    .replace("\\r", "")
+                    .replace("\\n", "")
+                    .replace("\\t", "")
+                    .replace("\\/", "/")
+                    .replace("\\\"", "'");
+            String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
 
-        String beginIndex = "\"content\":";
-        String ans = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
-        List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(ans));
+            String beginIndex = "\"content\":";
+            String ans = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
+            List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(ans));
+            return SearchResultsHandler.handle(firstPageResults);
 
-        return SearchResultsHandler.handle(firstPageResults);
+        } catch (Exception e) {
+            Console.error(e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
     @SneakyThrows
