@@ -7,6 +7,7 @@ import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 
 import java.net.HttpURLConnection;
@@ -34,7 +35,7 @@ public class ShowSourcesAction {
         Console.log("<== Please wait ...");
 
         List<Rule> list = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= SourceUtils.getSourceCount(); i++) {
             Source source = new Source(i);
             list.add(source.rule);
         }
