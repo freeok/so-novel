@@ -51,8 +51,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 ### 🍨 Scoop 安装
 
 ```bash
-# 若搜不到 so-novel，请先执行下面这一行命令
-scoop bucket add spc https://ghp.ci/https://github.com/lzwme/scoop-proxy-cn
+scoop bucket add spc https://gh.idayer.com/github.com/lzwme/scoop-proxy-cn
 scoop install so-novel
 ```
 
