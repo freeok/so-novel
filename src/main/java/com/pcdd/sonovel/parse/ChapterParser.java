@@ -25,7 +25,7 @@ import java.util.concurrent.CountDownLatch;
  * Created at 2024/3/27
  */
 public class ChapterParser extends Source {
-    
+
     private static final int TIMEOUT_MILLS = 15_000;
     private final ChapterConverter chapterConverter;
 
@@ -36,7 +36,7 @@ public class ChapterParser extends Source {
 
     // 用于测试
     public Chapter parse(Chapter chapter) {
-        return crawl(chapter.getUrl(), 0);
+        return crawl(chapter, 0);
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
@@ -44,7 +44,7 @@ public class ChapterParser extends Source {
             long interval = CrawlUtils.randomInterval(config, false);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
             // ExceptionUtils.randomThrow();
-            chapter = crawl(chapter.getUrl(), interval);
+            chapter = crawl(chapter, interval);
             latch.countDown();
             // 确保简繁互转最后调用
             return ChineseConverter.convert(chapterConverter.convert(chapter),
@@ -65,7 +65,7 @@ public class ChapterParser extends Source {
                 long interval = CrawlUtils.randomInterval(config, true);
                 Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}，重试间隔：{} ms",
                         chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
-                chapter = crawl(chapter.getUrl(), interval);
+                chapter = crawl(chapter, interval);
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
                 return chapterConverter.convert(chapter);
@@ -86,24 +86,26 @@ public class ChapterParser extends Source {
     /**
      * 爬取正文内容
      *
+     * @param chapter  无内容的 Chapter
      * @param interval 爬取间隔
      */
     @SneakyThrows
-    private Chapter crawl(String url, long interval) {
+    private Chapter crawl(Chapter chapter, long interval) {
         Thread.sleep(interval);
         boolean isPaging = this.rule.getChapter().isPagination();
         Document document;
         // 章节不分页，只请求一次
         if (!isPaging) {
-            document = jsoupConn(url, TIMEOUT_MILLS).get();
+            document = jsoupConn(chapter.getUrl(), TIMEOUT_MILLS).get();
 
             return Chapter.builder()
                     .title(document.select(this.rule.getChapter().getTitle()).text())
                     .content(document.select(this.rule.getChapter().getContent()).html())
+                    .order(chapter.getOrder())
                     .build();
         }
 
-        String nextUrl = url;
+        String nextUrl = chapter.getUrl();
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
@@ -121,6 +123,7 @@ public class ChapterParser extends Source {
         return Chapter.builder()
                 .title(document.select(this.rule.getChapter().getTitle()).text())
                 .content(sb.toString())
+                .order(chapter.getOrder())
                 .build();
     }
 

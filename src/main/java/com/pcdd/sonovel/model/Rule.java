@@ -54,10 +54,11 @@ public class Rule {
     public static class Catalog {
         private String url;
         private String result;
+        private Integer offset;
+        private boolean isAsc;
         // 目录是否分页
         private boolean pagination;
         private String nextPage;
-        private Integer offset;
     }
 
     @Data
