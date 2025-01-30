@@ -7,8 +7,8 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.pcdd.sonovel.core.ChapterFilter;
 import com.pcdd.sonovel.core.ChapterFormatter;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
 import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
@@ -27,7 +27,8 @@ public class ChapterConverter {
     private final AppConfig config;
     private final TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
-    public Chapter convert(Chapter chapter, String extName) {
+    public Chapter convert(Chapter chapter) {
+        String extName = config.getExtName();
         String filteredContent = new ChapterFilter(config).filter(chapter);
         String content = new ChapterFormatter(config).format(filteredContent);
 
