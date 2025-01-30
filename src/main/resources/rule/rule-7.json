@@ -1,0 +1,43 @@
+{
+  "id": 0,
+  "url": "https://69shuba.cx",
+  "name": "69书吧",
+  "comment": "正文内容纯净、搜索有CF、章节限流、需要梯子",
+  "type": "html",
+  "language": "zh_CN",
+  "book": {
+    "url": "https://69shuba.cx/book/(.*?).htm",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": ".bookimg2 > img",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "isEnd": "meta[property=\"og:novel:status\"]"
+  },
+  "catalog": {
+    "url": "https://69shuba.cx/book/%s",
+    "result": "#catalog > ul > li > a",
+    "offset": 0,
+    "isAsc": false
+  },
+  "chapter": {
+    "title": ".txtnav > h1",
+    "content": ".txtnav",
+    "paragraphTagClosed": true,
+    "paragraphTag": "p",
+    "filterTxt": "",
+    "filterTag": "h1 div br",
+    "pagination": false,
+    "nextPage": ""
+  },
+  "crawl": {
+    "threads": 0,
+    "min": 0,
+    "max": 0,
+    "maxAttempts": 0,
+    "retryMin": 0,
+    "retryMax": 0
+  }
+}
