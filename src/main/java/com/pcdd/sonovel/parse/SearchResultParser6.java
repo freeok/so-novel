@@ -18,7 +18,6 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
-import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -81,7 +80,6 @@ public class SearchResultParser6 extends Source {
         }
     }
 
-    @SneakyThrows
     private List<SearchResult> getSearchResults(Document document) {
         Rule.Search rule = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
