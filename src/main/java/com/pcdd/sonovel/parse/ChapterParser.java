@@ -49,7 +49,7 @@ public class ChapterParser extends Source {
             chapter.setContent(crawl(chapter.getUrl(), interval));
             latch.countDown();
             // 确保简繁互转最后调用
-            return ChineseConverter.convert(chapterConverter.convert(chapter, config.getExtName()),
+            return ChineseConverter.convert(chapterConverter.convert(chapter),
                     this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class ChapterParser extends Source {
                 chapter.setContent(crawl(chapter.getUrl(), interval));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
                 latch.countDown();
-                return chapterConverter.convert(chapter, config.getExtName());
+                return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
                 Console.error(e, "==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle());
