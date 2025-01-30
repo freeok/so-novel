@@ -37,6 +37,8 @@ public class CatalogParser extends Source {
 
     /**
      * 解析指定范围章节
+     *
+     * @param url 详情页
      */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
@@ -66,8 +68,10 @@ public class CatalogParser extends Source {
             urls.add(url);
         }
 
-        List<Chapter> catalog = new ArrayList<>();
+        // 目录默认是否升序
+        boolean isAsc = this.rule.getCatalog().isAsc();
         int orderNumber = 1;
+        List<Chapter> catalog = new ArrayList<>();
 
         for (String s : urls) {
             Document catalogPage = jsoupConn(s, TIMEOUT_MILLS).get();
@@ -77,17 +81,27 @@ public class CatalogParser extends Source {
                 if (offset < 0) elements = elements.subList(0, elements.size() + offset);
             }
 
-            for (int i = start - 1; i < end && i < elements.size(); i++) {
-                Chapter build = Chapter.builder()
-                        .title(elements.get(i).text())
-                        .url(CrawlUtils.normalizeUrl(elements.get(i).attr("href"), this.rule.getUrl()))
-                        .order(orderNumber++)
-                        .build();
-                catalog.add(build);
+            int minIndex = Math.min(end, elements.size());
+            if (isAsc) {
+                for (int i = start - 1; i < minIndex; i++) {
+                    addChapter(elements.get(i), catalog, orderNumber++);
+                }
+            } else {
+                for (int i = minIndex; --i >= start - 1; ) {
+                    addChapter(elements.get(i), catalog, orderNumber++);
+                }
             }
         }
 
         return catalog;
+    }
+
+    private void addChapter(Element element, List<Chapter> catalog, int order) {
+        catalog.add(Chapter.builder()
+                .title(element.text())
+                .url(CrawlUtils.normalizeUrl(element.attr("href"), this.rule.getUrl()))
+                .order(order)
+                .build());
     }
 
 }
