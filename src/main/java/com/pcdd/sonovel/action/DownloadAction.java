@@ -4,9 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.CatalogParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
 import lombok.AllArgsConstructor;
@@ -28,11 +31,23 @@ public class DownloadAction {
 
     private final AppConfig config;
 
+    public void downloadFromUrl(LineReader reader) {
+        String bookUrl = reader.readLine(render("==> @|blue 请输入详情页 URL: |@")).strip();
+        Book book = new BookParser(config).parse(bookUrl);
+        SearchResult sr = SearchResult.builder()
+                .url(book.getUrl())
+                .bookName(book.getBookName())
+                .author(book.getAuthor())
+                .latestChapter(book.getLatestChapter())
+                .latestUpdate(book.getLatestUpdate())
+                .build();
+        List<Chapter> catalogs = new CatalogParser(config).parse(sr.getUrl());
+        Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
+        double res = new Crawler(config).crawl(sr, catalogs);
+        Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
+    }
 
-    @SneakyThrows
-    public void execute(Terminal terminal) {
-        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
-
+    public void downloadByKeyword(LineReader reader) {
         // 1. 查询
         String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).strip();
         if (keyword.isEmpty()) return;
@@ -63,8 +78,7 @@ public class DownloadAction {
 
             sr = results.get(num - 1);
             Console.log("<== 正在获取章节目录 ...");
-            CatalogParser catalogParser = new CatalogParser(config);
-            catalogs = catalogParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+            catalogs = new CatalogParser(config).parse(sr.getUrl(), 1, Integer.MAX_VALUE);
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
             Console.log("==> 0: 重新选择功能");
@@ -103,6 +117,19 @@ public class DownloadAction {
 
         double res = new Crawler(config).crawl(sr, catalogs);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
+    }
+
+    @SneakyThrows
+    public void execute(Terminal terminal) {
+        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
+        Source source = new Source(config.getSourceId());
+
+        // URL 下载的小说，rule.json 删除 search
+        if (source.rule.getSearch() == null) {
+            downloadFromUrl(reader);
+        } else {
+            downloadByKeyword(reader);
+        }
     }
 
 }
