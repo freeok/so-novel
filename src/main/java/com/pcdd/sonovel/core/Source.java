@@ -51,8 +51,10 @@ public class Source {
     }
 
     public Connection jsoupConn(String url, int timeout) {
+        String method = rule.getSearch() != null ? rule.getSearch().getMethod() : "GET";
+
         Connection conn = Jsoup.connect(url)
-                .method(CrawlUtils.buildMethod(rule.getSearch().getMethod()))
+                .method(CrawlUtils.buildMethod(method))
                 .header("User-Agent", RandomUA.generate())
                 .timeout(timeout);
 
