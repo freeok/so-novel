@@ -68,8 +68,8 @@ public class CatalogParser extends Source {
             urls.add(url);
         }
 
-        // 目录默认是否升序
-        boolean isAsc = this.rule.getCatalog().isAsc();
+        // 目录默认是否降序
+        boolean isDesc = this.rule.getCatalog().isDesc();
         int orderNumber = 1;
         List<Chapter> catalog = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class CatalogParser extends Source {
             }
 
             int minIndex = Math.min(end, elements.size());
-            if (isAsc) {
+            if (!isDesc) {
                 for (int i = start - 1; i < minIndex; i++) {
                     addChapter(elements.get(i), catalog, orderNumber++);
                 }

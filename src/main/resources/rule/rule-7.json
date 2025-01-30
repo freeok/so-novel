@@ -1,5 +1,5 @@
 {
-  "id": 0,
+  "id": 7,
   "url": "https://69shuba.cx",
   "name": "69书吧",
   "comment": "正文内容纯净、搜索有CF、章节限流、需要梯子",
@@ -20,7 +20,7 @@
     "url": "https://69shuba.cx/book/%s",
     "result": "#catalog > ul > li > a",
     "offset": 0,
-    "isAsc": false
+    "isDesc": true
   },
   "chapter": {
     "title": ".txtnav > h1",
@@ -31,13 +31,5 @@
     "filterTag": "h1 div br",
     "pagination": false,
     "nextPage": ""
-  },
-  "crawl": {
-    "threads": 0,
-    "min": 0,
-    "max": 0,
-    "maxAttempts": 0,
-    "retryMin": 0,
-    "retryMax": 0
   }
 }
