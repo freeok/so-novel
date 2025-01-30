@@ -7,10 +7,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import com.pcdd.sonovel.core.Source;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -23,6 +25,9 @@ import org.junit.jupiter.api.Test;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pcdd
@@ -30,10 +35,15 @@ import java.util.*;
  */
 class BookSourceQualityTest {
 
+    public static final AppConfig config = ConfigUtils.config();
+
+    static {
+        config.setLanguage("zh_CN");
+    }
+
     @Test
     void test() {
-        // 测试前几个书源
-        int count = 5;
+        int count = 7;
         Map<String, String> map = new LinkedHashMap<>();
         map.put("起点月票榜", "https://www.qidian.com/rank/yuepiao/");
         map.put("起点畅销榜", "https://www.qidian.com/rank/hotsales/");
@@ -44,17 +54,40 @@ class BookSourceQualityTest {
         map.put("起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/");
 
         String divider = "-".repeat(50);
-        for (Map.Entry<String, String> kv : map.entrySet()) {
-            Console.log("{} {} {}", divider, kv.getKey(), divider);
-            List<List<SourceQuality>> lists = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(count);
 
-            for (int i = 1; i <= count; i++) {
-                lists.add(getSourceQualityList(i, kv.getValue()));
+        try {
+            // 遍历榜单
+            for (Map.Entry<String, String> kv : map.entrySet()) {
+                executorService.execute(() -> {
+                    Console.log("{} {} {}", divider, kv.getKey(), divider);
+                    List<List<SourceQuality>> lists = new ArrayList<>();
+
+                    // 遍历书源
+                    for (int id = 1; id <= count; id++) {
+                        if (new Source(id).rule.getSearch() != null) {
+                            lists.add(getSourceQualityList(id, kv.getValue()));
+                        }
+                    }
+
+                    generateMarkdown("# " + kv.getKey(), lists, kv.getKey() + ".md");
+                });
             }
-
-            generateMarkdown("# " + kv.getKey(), lists, kv.getKey() + ".md");
+        } catch (Exception e) {
+            Console.log(e.getMessage());
+        } finally {
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
         }
     }
+
 
     @SneakyThrows
     static void generateMarkdown(String name, List<List<SourceQuality>> lists, String fileName) {
@@ -134,7 +167,8 @@ class BookSourceQualityTest {
         Rule rule = new Source(sourceId).rule;
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
-        SearchResultParser searchResultParser = new SearchResultParser(sourceId);
+        config.setSourceId(sourceId);
+        SearchResultParser searchResultParser = new SearchResultParser(config);
 
         for (Book b : getQiDianRanks(rankUrl)) {
             SourceQuality sq = new SourceQuality();
