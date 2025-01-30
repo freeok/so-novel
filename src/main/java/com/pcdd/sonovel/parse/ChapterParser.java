@@ -25,7 +25,7 @@ import java.util.concurrent.CountDownLatch;
  * Created at 2024/3/27
  */
 public class ChapterParser extends Source {
-
+    
     private static final int TIMEOUT_MILLS = 15_000;
     private final ChapterConverter chapterConverter;
 
@@ -36,9 +36,7 @@ public class ChapterParser extends Source {
 
     // 用于测试
     public Chapter parse(Chapter chapter) {
-        String content = crawl(chapter.getUrl(), 0);
-        chapter.setContent(content);
-        return chapter;
+        return crawl(chapter.getUrl(), 0);
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
@@ -46,7 +44,7 @@ public class ChapterParser extends Source {
             long interval = CrawlUtils.randomInterval(config, false);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
             // ExceptionUtils.randomThrow();
-            chapter.setContent(crawl(chapter.getUrl(), interval));
+            chapter = crawl(chapter.getUrl(), interval);
             latch.countDown();
             // 确保简繁互转最后调用
             return ChineseConverter.convert(chapterConverter.convert(chapter),
@@ -61,20 +59,48 @@ public class ChapterParser extends Source {
         }
     }
 
+    private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
+        for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
+            try {
+                long interval = CrawlUtils.randomInterval(config, true);
+                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}，重试间隔：{} ms",
+                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
+                chapter = crawl(chapter.getUrl(), interval);
+                Console.log("<== 重试成功: 【{}】", chapter.getTitle());
+                latch.countDown();
+                return chapterConverter.convert(chapter);
+
+            } catch (Exception e) {
+                Console.error(e, "==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle());
+                if (attempt == config.getMaxRetryAttempts()) {
+                    latch.countDown();
+                    // 最终失败时记录日志
+                    saveErrorLog(chapter, sr, e.getMessage());
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * 爬取正文内容
+     *
+     * @param interval 爬取间隔
      */
     @SneakyThrows
-    private String crawl(String url, long interval) {
+    private Chapter crawl(String url, long interval) {
         Thread.sleep(interval);
         boolean isPaging = this.rule.getChapter().isPagination();
         Document document;
-
         // 章节不分页，只请求一次
         if (!isPaging) {
             document = jsoupConn(url, TIMEOUT_MILLS).get();
-            Elements elContent = document.select(this.rule.getChapter().getContent());
-            return elContent.html();
+
+            return Chapter.builder()
+                    .title(document.select(this.rule.getChapter().getTitle()).text())
+                    .content(document.select(this.rule.getChapter().getContent()).html())
+                    .build();
         }
 
         String nextUrl = url;
@@ -92,31 +118,10 @@ public class ChapterParser extends Source {
             Thread.sleep(interval);
         }
 
-        return sb.toString();
-    }
-
-    private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
-        for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
-            try {
-                long interval = CrawlUtils.randomInterval(config, true);
-                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}，重试间隔：{} ms",
-                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
-                chapter.setContent(crawl(chapter.getUrl(), interval));
-                Console.log("<== 重试成功: 【{}】", chapter.getTitle());
-                latch.countDown();
-                return chapterConverter.convert(chapter);
-
-            } catch (Exception e) {
-                Console.error(e, "==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle());
-                if (attempt == config.getMaxRetryAttempts()) {
-                    latch.countDown();
-                    // 最终失败时记录日志
-                    saveErrorLog(chapter, sr, e.getMessage());
-                }
-            }
-        }
-
-        return null;
+        return Chapter.builder()
+                .title(document.select(this.rule.getChapter().getTitle()).text())
+                .content(sb.toString())
+                .build();
     }
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
