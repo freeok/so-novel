@@ -54,7 +54,7 @@ class BookSourceQualityTest {
         map.put("起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/");
 
         String divider = "-".repeat(50);
-        ExecutorService executorService = Executors.newFixedThreadPool(count);
+        ExecutorService executorService = Executors.newFixedThreadPool(map.size() / 2);
 
         try {
             // 遍历榜单
@@ -168,6 +168,11 @@ class BookSourceQualityTest {
 
         Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
         config.setSourceId(sourceId);
+        if (sourceId == 5 || sourceId == 6) {
+            config.setProxyEnabled(1);
+        } else {
+            config.setProxyEnabled(0);
+        }
         SearchResultParser searchResultParser = new SearchResultParser(config);
 
         for (Book b : getQiDianRanks(rankUrl)) {
@@ -186,7 +191,7 @@ class BookSourceQualityTest {
 
             for (SearchResult r : results) {
                 if (Objects.equals(r.getBookName(), b.getBookName()) && Objects.equals(r.getAuthor(), b.getAuthor())) {
-                    Console.log("已找到 《{}》（{}）\t{}\t{}", r.getBookName(), r.getAuthor(), r.getUrl(), b.getUrl());
+                    Console.log("书源 {} 已找到《{}》（{}）\t{}\t{}", sourceId, r.getBookName(), r.getAuthor(), r.getUrl(), b.getUrl());
                     sq.setUrl(r.getUrl());
                     found = true;
                     foundCount++;
@@ -194,7 +199,7 @@ class BookSourceQualityTest {
                 }
             }
             if (!found) {
-                Console.log("未找到 《{}》（{}）\t{}", b.getBookName(), b.getAuthor(), b.getUrl());
+                Console.log("书源 {} 未找到《{}》（{}）\t{}", sourceId, b.getBookName(), b.getAuthor(), b.getUrl());
                 notFoundCount++;
             }
             sq.setFound(found);
