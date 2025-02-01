@@ -6,11 +6,11 @@
   "type": "html",
   "language": "zh_CN",
   "search": {
+    "pagination": true,
     "url": "https://www.shuhaige.net/search.html",
     "method": "post",
     "data": "{searchkey: %s, searchtype: all}",
     "cookies": "{'waf_sc': '', 'HMACCOUNT': ''}",
-    "pagination": true,
     "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "result": "#sitembox > dl",
     "bookName": "dd > h3 > a",
