@@ -22,8 +22,6 @@ import java.util.Optional;
  */
 public class CatalogParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 30_000;
-
     public CatalogParser(AppConfig config) {
         super(config);
     }
@@ -42,8 +40,8 @@ public class CatalogParser extends Source {
      */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
-        Rule.Catalog catalogRule = this.rule.getCatalog();
         Rule.Book bookRule = this.rule.getBook();
+        Rule.Catalog catalogRule = this.rule.getCatalog();
         // 目录和详情不在同一页面
         if (StrUtil.isNotEmpty(catalogRule.getUrl())) {
             // 提取 url 中的变量
@@ -52,7 +50,7 @@ public class CatalogParser extends Source {
         }
         // 正数表示忽略前 offset 章，负数表示忽略后 offset 章
         int offset = Optional.ofNullable(catalogRule.getOffset()).orElse(0);
-        Document document = jsoupConn(url, TIMEOUT_MILLS).get();
+        Document document = jsoupConn(url, catalogRule.getTimeout()).get();
         List<String> urls = new ArrayList<>();
 
         if (catalogRule.isPagination()) {
@@ -74,7 +72,7 @@ public class CatalogParser extends Source {
         List<Chapter> catalog = new ArrayList<>();
 
         for (String s : urls) {
-            Document catalogPage = jsoupConn(s, TIMEOUT_MILLS).get();
+            Document catalogPage = jsoupConn(s, catalogRule.getTimeout()).get();
             List<Element> elements = catalogPage.select(catalogRule.getResult());
             if (offset != 0) {
                 if (offset > 0) elements = elements.subList(offset, elements.size());

@@ -28,8 +28,6 @@ import java.util.*;
  */
 public class SearchResultParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 10_000;
-
     public SearchResultParser(AppConfig config) {
         super(config);
     }
@@ -42,16 +40,16 @@ public class SearchResultParser extends Source {
         // 模拟搜索请求
         Document document;
         Connection.Response resp;
-        Rule.Search ruleSearch = this.rule.getSearch();
-        if (ruleSearch == null) {
+        Rule.Search rule = this.rule.getSearch();
+        if (rule == null) {
             Console.log("书源 {} 不支持搜索", config.getSourceId());
             return Collections.emptyList();
         }
 
         try {
-            resp = jsoupConn(ruleSearch.getUrl(), TIMEOUT_MILLS)
-                    .data(CrawlUtils.buildData(ruleSearch.getData(), keyword))
-                    .cookies(CrawlUtils.buildCookies(ruleSearch.getCookies()))
+            resp = jsoupConn(rule.getUrl(), rule.getTimeout())
+                    .data(CrawlUtils.buildData(rule.getData(), keyword))
+                    .cookies(CrawlUtils.buildCookies(rule.getCookies()))
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
@@ -60,10 +58,10 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
-        if (!ruleSearch.isPagination()) return SearchResultsHandler.handle(firstPageResults);
+        if (!rule.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
         Set<String> urls = new LinkedHashSet<>();
-        for (Element e : document.select(ruleSearch.getNextPage())) {
+        for (Element e : document.select(rule.getNextPage())) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
@@ -84,7 +82,7 @@ public class SearchResultParser extends Source {
         Rule.Search rule = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
         // 搜索结果页 DOM
-        Document document = resp == null ? jsoupConn(url, TIMEOUT_MILLS).get() : Jsoup.parse(resp.body());
+        Document document = resp == null ? jsoupConn(url, rule.getTimeout()).get() : Jsoup.parse(resp.body());
 
         // 部分书源完全匹配会直接进入详情页，因此需要构造搜索结果
         if (document.select(rule.getResult()).isEmpty()) {

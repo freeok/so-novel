@@ -23,6 +23,7 @@ public class Rule {
 
     @Data
     public static class Search {
+        private Integer timeout;
         private String url;
         private String method;
         private String data;
@@ -39,6 +40,7 @@ public class Rule {
 
     @Data
     public static class Book {
+        private Integer timeout;
         private String url;
         private String bookName;
         private String author;
@@ -52,6 +54,7 @@ public class Rule {
 
     @Data
     public static class Catalog {
+        private Integer timeout;
         private String url;
         private String result;
         private Integer offset;
@@ -63,6 +66,7 @@ public class Rule {
 
     @Data
     public static class Chapter {
+        private Integer timeout;
         // 用于测试
         private String title;
         private String content;

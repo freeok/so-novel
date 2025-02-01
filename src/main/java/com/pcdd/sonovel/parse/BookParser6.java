@@ -31,8 +31,6 @@ import static org.jline.jansi.AnsiRenderer.render;
  */
 public class BookParser6 extends Source {
 
-    private static final int TIMEOUT_MILLS = 15_000;
-
     public BookParser6(AppConfig config) {
         super(config);
     }
@@ -40,7 +38,7 @@ public class BookParser6 extends Source {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
-        Document document = jsoupConn(url, TIMEOUT_MILLS).get();
+        Document document = jsoupConn(url, r.getTimeout()).get();
         String bookName = document.select(r.getBookName()).text();
         String author = document.select(r.getAuthor()).text();
         String intro = document.select(r.getIntro()).text();
