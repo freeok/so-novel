@@ -63,6 +63,7 @@ public class Rule {
 
     @Data
     public static class Chapter {
+        // 用于测试
         private String title;
         private String content;
         private boolean paragraphTagClosed;
