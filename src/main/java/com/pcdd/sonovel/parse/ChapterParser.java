@@ -35,9 +35,12 @@ public class ChapterParser extends Source {
     }
 
     // 用于测试
+    @SneakyThrows
     public Chapter parse(Chapter chapter) {
         String content = crawl(chapter.getUrl(), 0);
         chapter.setContent(content);
+        Document document = jsoupConn(chapter.getUrl(), TIMEOUT_MILLS).get();
+        chapter.setTitle(document.select(this.rule.getChapter().getTitle()).text());
         return chapter;
     }
 
