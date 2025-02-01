@@ -6,6 +6,7 @@
   "type": "html",
   "language": "zh_CN",
   "search": {
+    "timeout": 60000,
     "url": "https://quanben5.com/search.html/",
     "method": "get",
     "data": "{keywords: %s, a: search.json, b: %s, c: book, callback: search}",
@@ -17,6 +18,7 @@
     "update": ""
   },
   "book": {
+    "timeout": 60000,
     "url": "https://quanben5.com/n/(.*?)/",
     "bookName": "h3 > span",
     "author": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(3) > span",
@@ -28,11 +30,13 @@
     "isEnd": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
   },
   "catalog": {
+    "timeout": 60000,
     "url": "https://quanben5.com/n/%s/xiaoshuo.html",
     "result": "ul > li > a",
     "offset": 0
   },
   "chapter": {
+    "timeout": 60000,
     "nextPage": "",
     "title": ".content > h1",
     "content": "#content",
