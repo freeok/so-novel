@@ -45,9 +45,32 @@ public class Source {
             System.exit(1);
         }
 
-        // json 封装进 Rule
-        this.rule = JSONUtil.toBean(jsonStr, Rule.class);
+        // 将 JSON 转换为 Rule 对象，并应用默认值
+        this.rule = applyDefaultTimeouts(JSONUtil.toBean(jsonStr, Rule.class));
+        // 使用配置文件中的配置，若为空则使用默认配置
         this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
+    }
+
+    public Rule applyDefaultTimeouts(Rule rule) {
+        Rule.Search ruleSearch = rule.getSearch();
+        Rule.Book ruleBook = rule.getBook();
+        Rule.Catalog ruleCatalog = rule.getCatalog();
+        Rule.Chapter ruleChapter = rule.getChapter();
+
+        if (ruleSearch != null && ruleSearch.getTimeout() == null) {
+            ruleSearch.setTimeout(15_000);
+        }
+        if (ruleBook != null && ruleBook.getTimeout() == null) {
+            ruleBook.setTimeout(10_000);
+        }
+        if (ruleCatalog != null && ruleCatalog.getTimeout() == null) {
+            ruleCatalog.setTimeout(30_000);
+        }
+        if (ruleChapter != null && ruleChapter.getTimeout() == null) {
+            ruleChapter.setTimeout(15_000);
+        }
+
+        return rule;
     }
 
     public Connection jsoupConn(String url, int timeout) {
