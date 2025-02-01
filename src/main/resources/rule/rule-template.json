@@ -6,11 +6,11 @@
   "type": "",
   "language": "",
   "search": {
+    "pagination": false,
     "url": "",
     "method": "",
     "data": "{}",
     "cookies": "{}",
-    "pagination": false,
     "nextPage": "",
     "result": "",
     "bookName": "",
@@ -32,7 +32,8 @@
   "catalog": {
     "url": "",
     "result": "",
-    "offset": 0
+    "offset": 0,
+    "isDesc": false
   },
   "chapter": {
     "pagination": false,
