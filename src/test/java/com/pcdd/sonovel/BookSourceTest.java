@@ -27,7 +27,7 @@ import java.util.List;
  */
 // 保证测试类实例在多个测试方法间共享
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class NovelSourceTest {
+class BookSourceTest {
 
     private static final AppConfig config = ConfigUtils.config();
     public static final String DIVIDER = "=".repeat(50);
@@ -56,7 +56,7 @@ class NovelSourceTest {
 
         config.setSourceId(sourceId);
 
-        searchParse("辰东");
+        searchParse("唐家三少");
         bookParse();
         chapterParse();
         catalogParse();
