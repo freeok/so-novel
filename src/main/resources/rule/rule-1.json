@@ -9,8 +9,6 @@
     "url": "http://www.xbiqugu.net/modules/article/waps.php",
     "method": "post",
     "data": "{searchkey: %s}",
-    "cookies": "{}",
-    "pagination": false,
     "result": "#checkform > table > tbody > tr",
     "bookName": "td.even > a",
     "author": "td:nth-of-type(3)",
@@ -32,7 +30,6 @@
     "offset": 0
   },
   "chapter": {
-    "pagination": false,
     "title": ".bookname > h1",
     "content": "#content",
     "paragraphTag": "<br><br>",

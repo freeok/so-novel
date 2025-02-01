@@ -9,8 +9,6 @@
     "url": "http://www.99xs.info/read/search/",
     "method": "post",
     "data": "{searchkey: %s}",
-    "cookies": "{}",
-    "pagination": false,
     "result": "div.wrap > div > div > div",
     "bookName": "div.bookinfo > h4 > a",
     "author": "div.bookinfo > div.author",
@@ -31,7 +29,6 @@
     "offset": 12
   },
   "chapter": {
-    "pagination": false,
     "title": ".content > h1",
     "content": "#content",
     "paragraphTagClosed": false,
