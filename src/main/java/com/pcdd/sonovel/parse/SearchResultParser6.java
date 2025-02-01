@@ -36,24 +36,22 @@ import java.util.Map;
  */
 public class SearchResultParser6 extends Source {
 
-    private static final int TIMEOUT_MILLS = 10_000;
-
     public SearchResultParser6(AppConfig config) {
         super(config);
     }
 
     public List<SearchResult> parse(String keyword) {
-        Rule.Search ruleSearch = this.rule.getSearch();
+        Rule.Search rule = this.rule.getSearch();
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
         Object key = ScriptUtil.invoke(js, "getParamB", keyword);
-        String param = ruleSearch.getData().formatted(keyword, key.toString());
+        String param = rule.getData().formatted(keyword, key.toString());
         Map<String, String> map = JSONUtil.toBean(param, new TypeReference<>() {
         }, true);
 
         HttpRequest req = HttpRequest
                 .get(this.rule.getUrl())
-                .timeout(TIMEOUT_MILLS)
-                .header("Referer", ruleSearch.getUrl())
+                .timeout(rule.getTimeout())
+                .header("Referer", rule.getUrl())
                 .formStr(map);
         if (config.getProxyEnabled() == 1)
             req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
