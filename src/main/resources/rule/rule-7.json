@@ -28,8 +28,6 @@
     "paragraphTagClosed": true,
     "paragraphTag": "p",
     "filterTxt": "",
-    "filterTag": "h1 div br",
-    "pagination": false,
-    "nextPage": ""
+    "filterTag": "h1 div br"
   }
 }

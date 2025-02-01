@@ -35,8 +35,6 @@
     "offset": 0
   },
   "chapter": {
-    "pagination": false,
-    "nextPage": "",
     "title": ".txtnav > h1",
     "content": "#txtcontent",
     "paragraphTagClosed": false,
