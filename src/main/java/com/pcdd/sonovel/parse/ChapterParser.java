@@ -26,7 +26,6 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ChapterParser extends Source {
 
-    private static final int TIMEOUT_MILLS = 15_000;
     private final ChapterConverter chapterConverter;
 
     public ChapterParser(AppConfig config) {
@@ -39,7 +38,7 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter) {
         String content = crawl(chapter.getUrl(), 0);
         chapter.setContent(content);
-        Document document = jsoupConn(chapter.getUrl(), TIMEOUT_MILLS).get();
+        Document document = jsoupConn(chapter.getUrl(), this.rule.getChapter().getTimeout()).get();
         chapter.setTitle(document.select(this.rule.getChapter().getTitle()).text());
         return chapter;
     }
@@ -100,7 +99,7 @@ public class ChapterParser extends Source {
         Document document;
         // 章节不分页，只请求一次
         if (!isPaging) {
-            document = jsoupConn(url, TIMEOUT_MILLS).get();
+            document = jsoupConn(url, this.rule.getChapter().getTimeout()).get();
             return document.select(this.rule.getChapter().getContent()).html();
         }
 
@@ -108,7 +107,7 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
-            document = jsoupConn(nextUrl, TIMEOUT_MILLS).get();
+            document = jsoupConn(nextUrl, this.rule.getChapter().getTimeout()).get();
             Elements elContent = document.select(this.rule.getChapter().getContent());
             sb.append(elContent.html());
             Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
