@@ -9,8 +9,6 @@
     "url": "http://www.mcmssc.la/search.html",
     "method": "post",
     "data": "{name: %s}",
-    "cookies": "{}",
-    "pagination": false,
     "result": ".novelslist2 > ul > li",
     "bookName": "span.s2.wid > a",
     "author": "span.s4.wid > a",
@@ -32,7 +30,6 @@
     "offset": 12
   },
   "chapter": {
-    "pagination": false,
     "title": ".bookname > h1",
     "content": "#content",
     "paragraphTagClosed": false,
