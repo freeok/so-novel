@@ -32,7 +32,7 @@
   },
   "chapter": {
     "pagination": false,
-    "title": "",
+    "title": ".content > h1",
     "content": "#content",
     "paragraphTagClosed": false,
     "paragraphTag": "<br><br>",

@@ -33,7 +33,7 @@
   },
   "chapter": {
     "pagination": false,
-    "title": "",
+    "title": ".bookname > h1",
     "content": "#content",
     "paragraphTagClosed": false,
     "paragraphTag": "<br><br>",
