@@ -33,10 +33,10 @@
   },
   "chapter": {
     "pagination": false,
-    "title": "",
+    "title": ".bookname > h1",
     "content": "#content",
-    "paragraphTagClosed": false,
     "paragraphTag": "<br><br>",
+    "paragraphTagClosed": false,
     "filterTxt": "一秒记住【文学巴士&nbsp;】，精彩无弹窗免费阅读！|(www.xbiquge.la 新笔趣阁)，高速全文字在线阅读！|天才一秒记住本站地址：.。手机版阅读网址：m.",
     "filterTag": "div p script"
   }

@@ -37,7 +37,7 @@
   "chapter": {
     "pagination": false,
     "nextPage": "",
-    "title": "",
+    "title": ".txtnav > h1",
     "content": "#txtcontent",
     "paragraphTagClosed": false,
     "paragraphTag": "<br><br>",
