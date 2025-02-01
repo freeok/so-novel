@@ -43,6 +43,10 @@ public class SearchResultParser extends Source {
         Document document;
         Connection.Response resp;
         Rule.Search ruleSearch = this.rule.getSearch();
+        if (ruleSearch == null) {
+            Console.log("书源 {} 不支持搜索", config.getSourceId());
+            return Collections.emptyList();
+        }
 
         try {
             resp = jsoupConn(ruleSearch.getUrl(), TIMEOUT_MILLS)
