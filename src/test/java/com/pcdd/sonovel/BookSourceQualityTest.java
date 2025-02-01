@@ -70,7 +70,7 @@ class BookSourceQualityTest {
                         }
                     }
 
-                    generateMarkdown("# " + kv.getKey(), lists, kv.getKey() + ".md");
+                    generateMarkdown("# " + kv.getKey(), lists, "qidian_rank" + kv.getKey() + ".md");
                 });
             }
         } catch (Exception e) {
