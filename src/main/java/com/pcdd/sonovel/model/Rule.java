@@ -36,6 +36,7 @@ public class Rule {
         // 搜索结果是否分页
         private boolean pagination;
         private String nextPage;
+        private Integer limitPage;
     }
 
     @Data
