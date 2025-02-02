@@ -1,0 +1,57 @@
+{
+  "id": 8,
+  "url": "https://www.dxmwx.org/",
+  "name": "大熊猫文学",
+  "comment": "",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "pagination": true,
+    "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]",
+    "limitPage": 5,
+    "url": "https://www.dxmwx.org/list/topall_%s.html",
+    "method": "get",
+    "data": "{}",
+    "cookies": "{}",
+    "result": "#ListContents > div",
+    "bookName": ".margin0h5 > a.fonttext",
+    "author": ".margin0h5 > a:nth-child(2)",
+    "latestChapter": ".right_wid > div:nth-child(4) > a",
+    "update": ".right_wid > div:nth-child(4) > span"
+  },
+  "book": {
+    "url": "",
+    "bookName": "",
+    "author": "",
+    "intro": "",
+    "category": "",
+    "coverUrl": "",
+    "latestChapter": "",
+    "latestUpdate": "",
+    "isEnd": false
+  },
+  "catalog": {
+    "url": "",
+    "result": "",
+    "offset": 0,
+    "isDesc": false
+  },
+  "chapter": {
+    "pagination": false,
+    "nextPage": "",
+    "title": "",
+    "content": "",
+    "paragraphTagClosed": false,
+    "paragraphTag": "",
+    "filterTxt": "",
+    "filterTag": ""
+  },
+  "crawl": {
+    "threads": 0,
+    "min": 0,
+    "max": 0,
+    "maxAttempts": 0,
+    "retryMin": 0,
+    "retryMax": 0
+  }
+}
