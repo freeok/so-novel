@@ -2,7 +2,7 @@
   "id": 7,
   "url": "https://69shuba.cx",
   "name": "69书吧",
-  "comment": "正文内容纯净、搜索有CF、章节限流、需要梯子",
+  "comment": "需要梯子、正文内容纯净、搜索有CF、章节限流",
   "type": "html",
   "language": "zh_CN",
   "book": {
@@ -27,7 +27,7 @@
     "content": ".txtnav",
     "paragraphTagClosed": true,
     "paragraphTag": "p",
-    "filterTxt": "",
+    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|(本章完)",
     "filterTag": "h1 div br"
   }
 }
