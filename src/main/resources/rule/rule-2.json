@@ -7,11 +7,11 @@
   "language": "zh_CN",
   "search": {
     "pagination": true,
+    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "url": "https://www.shuhaige.net/search.html",
     "method": "post",
     "data": "{searchkey: %s, searchtype: all}",
     "cookies": "{'waf_sc': '', 'HMACCOUNT': ''}",
-    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "result": "#sitembox > dl",
     "bookName": "dd > h3 > a",
     "author": "dd:nth-child(3) > span:nth-child(1)",
