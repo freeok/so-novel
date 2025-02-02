@@ -32,7 +32,7 @@ public class DownloadAction {
     private final AppConfig config;
 
     public void downloadFromUrl(LineReader reader) {
-        String bookUrl = reader.readLine(render("==> @|blue 请输入详情页 URL: |@")).strip();
+        String bookUrl = reader.readLine(render("==> @|blue 请输入书籍详情页网址: |@")).strip();
         Book book = new BookParser(config).parse(bookUrl);
         SearchResult sr = SearchResult.builder()
                 .url(book.getUrl())
