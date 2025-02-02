@@ -47,7 +47,7 @@ public class SearchResultParser extends Source {
         }
 
         try {
-            resp = jsoupConn(rule.getUrl(), rule.getTimeout())
+            resp = jsoupConn(rule.getUrl().formatted(keyword), rule.getTimeout())
                     .data(CrawlUtils.buildData(rule.getData(), keyword))
                     .cookies(CrawlUtils.buildCookies(rule.getCookies()))
                     .execute();
@@ -60,8 +60,10 @@ public class SearchResultParser extends Source {
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
         if (!rule.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
+        // 搜索结果的分页 URL
         Set<String> urls = new LinkedHashSet<>();
-        for (Element e : document.select(rule.getNextPage())) {
+        Elements searchPages = CrawlUtils.select(document, rule.getNextPage());
+        for (Element e : CollUtil.sub(searchPages, 0, rule.getLimitPage() - 1)) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
@@ -89,9 +91,11 @@ public class SearchResultParser extends Source {
             String bookUrl = resp.url().toString();
             BookParser bookParser = new BookParser(config);
             Book book = bookParser.parse(bookUrl);
+
             if (StrUtil.isBlank(book.getBookName())) {
                 return Collections.emptyList();
             }
+
             SearchResult build = SearchResult.builder()
                     .url(bookUrl)
                     .bookName(book.getBookName())
@@ -100,6 +104,8 @@ public class SearchResultParser extends Source {
                     .latestUpdate(book.getLatestUpdate())
                     .build();
             list.add(build);
+            Thread.sleep(CrawlUtils.randomInterval(config, false));
+
             return list;
         }
 
@@ -119,7 +125,6 @@ public class SearchResultParser extends Source {
                     ? element.select(rule.getUpdate()).text()
                     : null;
 
-            // 针对书源 1：排除第一个 tr 表头
             if (bookName.isEmpty()) continue;
 
             SearchResult sr = SearchResult.builder()
