@@ -6,6 +6,8 @@ import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Connection;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @UtilityClass
 public class CrawlUtils {
+
+    public Elements select(Element el, String s) {
+        if (s.startsWith("/")) {
+            return el.selectXpath(s);
+        }
+        return el.select(s);
+    }
 
     // 有的 href 是相对路径，需要拼接为完整路径
     public String normalizeUrl(String s, String host) {
