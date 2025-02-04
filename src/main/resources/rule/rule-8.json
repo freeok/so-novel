@@ -11,8 +11,6 @@
     "limitPage": 5,
     "url": "https://www.dxmwx.org/list/topall_%s.html",
     "method": "get",
-    "data": "{}",
-    "cookies": "{}",
     "result": "#ListContents > div",
     "bookName": ".margin0h5 > a.fonttext",
     "author": ".margin0h5 > a:nth-child(2)",
@@ -20,38 +18,26 @@
     "update": ".right_wid > div:nth-child(4) > span"
   },
   "book": {
-    "url": "",
-    "bookName": "",
-    "author": "",
-    "intro": "",
-    "category": "",
-    "coverUrl": "",
-    "latestChapter": "",
-    "latestUpdate": "",
-    "isEnd": false
+    "url": "https://www.dxmwx.org/book/(.*?).html",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": ".imgmargin > img",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "isEnd": "meta[property=\"og:novel:status\"]"
   },
   "catalog": {
-    "url": "",
-    "result": "",
-    "offset": 0,
-    "isDesc": false
+    "url": "https://www.dxmwx.org/chapter/%s.html",
+    "result": "div:nth-child(2n+5) > span > a"
   },
   "chapter": {
-    "pagination": false,
-    "nextPage": "",
-    "title": "",
-    "content": "",
-    "paragraphTagClosed": false,
-    "paragraphTag": "",
+    "title": "#ChapterTitle",
+    "content": "#Lab_Contents",
+    "paragraphTagClosed": true,
+    "paragraphTag": "p",
     "filterTxt": "",
     "filterTag": ""
-  },
-  "crawl": {
-    "threads": 0,
-    "min": 0,
-    "max": 0,
-    "maxAttempts": 0,
-    "retryMin": 0,
-    "retryMax": 0
   }
 }
