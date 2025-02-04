@@ -23,7 +23,7 @@
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
-    "coverUrl": "#fmimg > img",
+    "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "",
     "latestUpdate": "",
     "isEnd": ""
