@@ -7,10 +7,12 @@ import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -36,10 +38,9 @@ public class ChapterParser extends Source {
     // 用于测试
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
-        String content = crawl(chapter.getUrl(), 0);
-        chapter.setContent(content);
         Document document = jsoupConn(chapter.getUrl(), this.rule.getChapter().getTimeout()).get();
         chapter.setTitle(document.select(this.rule.getChapter().getTitle()).text());
+        chapter.setContent(crawl(chapter.getUrl(), 0));
         return chapter;
     }
 
@@ -94,13 +95,20 @@ public class ChapterParser extends Source {
      */
     @SneakyThrows
     private String crawl(String url, long interval) {
-        Thread.sleep(interval);
-        boolean isPaging = this.rule.getChapter().isPagination();
+        Rule.Chapter ruleChapter = this.rule.getChapter();
         Document document;
+        Thread.sleep(interval);
         // 章节不分页，只请求一次
-        if (!isPaging) {
-            document = jsoupConn(url, this.rule.getChapter().getTimeout()).get();
-            return document.select(this.rule.getChapter().getContent()).html();
+        if (!ruleChapter.isPagination()) {
+            document = jsoupConn(url, ruleChapter.getTimeout()).get();
+            Elements contentEl = document.select(ruleChapter.getContent());
+
+            // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
+            for (Element el : contentEl.select("*")) {
+                el.clearAttributes();
+            }
+
+            return contentEl.html();
         }
 
         String nextUrl = url;
