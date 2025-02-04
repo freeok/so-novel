@@ -66,7 +66,6 @@ public class SearchResultParser6 extends Source {
                     .replace("\\/", "/")
                     .replace("\\\"", "'");
             String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
-
             String beginIndex = "\"content\":";
             String ans = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
             List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(ans));

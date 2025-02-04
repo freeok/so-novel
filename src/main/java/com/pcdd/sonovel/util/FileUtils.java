@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.util;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
@@ -21,10 +22,8 @@ public class FileUtils {
     public List<File> sortFilesByName(File dir) {
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
                 .sorted((o1, o2) -> {
-                    String s1 = o1.getName();
-                    String s2 = o2.getName();
-                    int no1 = Integer.parseInt(s1.substring(0, s1.indexOf("_")));
-                    int no2 = Integer.parseInt(s2.substring(0, s2.indexOf("_")));
+                    int no1 = Integer.parseInt(StrUtil.subBefore(o1.getName(), "_", false));
+                    int no2 = Integer.parseInt(StrUtil.subBefore(o2.getName(), "_", false));
                     return no1 - no2;
                 }).toList();
     }
