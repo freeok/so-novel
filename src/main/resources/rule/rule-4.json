@@ -20,9 +20,9 @@
     "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
-    "latestChapter": "",
-    "latestUpdate": "",
-    "isEnd": ""
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "isEnd": "meta[property=\"og:novel:status\"]"
   },
   "catalog": {
     "result": "div.listmain > dl > dd > a",
