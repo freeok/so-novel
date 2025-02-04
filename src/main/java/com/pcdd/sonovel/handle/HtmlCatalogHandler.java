@@ -27,8 +27,9 @@ public class HtmlCatalogHandler implements PostProcessingHandler {
         String regex = "<title>(.*?)</title>";
 
         strings.add("文件名\t\t章节名");
-        int i = 1;
-        for (File file : FileUtils.sortFilesByName(saveDir)) {
+        List<File> files = FileUtils.sortFilesByName(saveDir);
+        int i = Integer.parseInt(StrUtil.subBefore(files.get(0).getName(), "_", false));
+        for (File file : files) {
             FileReader fr = FileReader.create(file, StandardCharsets.UTF_8);
             // 获取 <title> 内容
             String title = ReUtil.getGroup1(regex, fr.readString());
