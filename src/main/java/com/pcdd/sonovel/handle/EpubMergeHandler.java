@@ -29,12 +29,6 @@ public class EpubMergeHandler implements PostProcessingHandler {
     @SneakyThrows
     @Override
     public void handle(Book b, File saveDir) {
-        // 等待文件系统更新索引
-        int attempts = 10;
-        while (FileUtil.isDirEmpty(saveDir) && attempts > 0) {
-            Thread.sleep(100);
-            attempts--;
-        }
         if (FileUtil.isDirEmpty(saveDir)) {
             Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 EPUB|@"), b.getBookName(), b.getAuthor());
             return;
