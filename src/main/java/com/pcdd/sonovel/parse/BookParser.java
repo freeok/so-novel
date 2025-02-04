@@ -41,11 +41,17 @@ public class BookParser extends Source {
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
         Document document = jsoupConn(url, r.getTimeout()).get();
+        // 从 head > meta 获取
         String bookName = document.select(r.getBookName()).attr(CONTENT);
         String author = document.select(r.getAuthor()).attr(CONTENT);
         String intro = document.select(r.getIntro()).attr(CONTENT);
         intro = StrUtil.cleanBlank(intro);
-        String coverUrl = document.select(r.getCoverUrl()).attr("src");
+        String coverUrl;
+        if (r.getCoverUrl().startsWith("meta[property=")) {
+            coverUrl = document.select(r.getCoverUrl()).attr(CONTENT);
+        } else {
+            coverUrl = document.select(r.getCoverUrl()).attr("src");
+        }
         // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
         String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
                 ? document.select(r.getLatestChapter()).attr(CONTENT)
