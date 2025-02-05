@@ -38,23 +38,25 @@ public class CatalogParser extends Source {
      */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
-        Rule.Book bookRule = this.rule.getBook();
-        Rule.Catalog r = this.rule.getCatalog();
+        Rule.Book ruleBook = this.rule.getBook();
+        Rule.Catalog ruleCatalog = this.rule.getCatalog();
 
         // 目录和详情不在同一页面
-        if (StrUtil.isNotEmpty(r.getUrl())) {
-            String id = ReUtil.getGroup1(bookRule.getUrl(), url);
-            url = r.getUrl().formatted(id);
+        if (StrUtil.isNotEmpty(ruleCatalog.getUrl())) {
+            String id = ReUtil.getGroup1(ruleBook.getUrl(), url);
+            url = ruleCatalog.getUrl().formatted(id);
         }
 
         List<String> urls = CollUtil.toList(url);
-        Document document = jsoupConn(url, r.getTimeout()).get();
+        Document document = jsoup(url)
+                .timeout(ruleCatalog.getTimeout())
+                .get();
 
-        if (r.isPagination()) {
-            extractPaginationUrls(urls, document, r);
+        if (ruleCatalog.isPagination()) {
+            extractPaginationUrls(urls, document, ruleCatalog);
         }
 
-        return parseCatalog(urls, start, end, r);
+        return parseCatalog(urls, start, end, ruleCatalog);
     }
 
     // TODO 优化，一次性获取分页 URL，而不是递归获取
@@ -64,7 +66,9 @@ public class CatalogParser extends Source {
             if (!(Validator.isUrl(href) || StrUtil.startWith(href, "/"))) break;
             String catalogUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
             urls.add(catalogUrl);
-            document = jsoupConn(catalogUrl, r.getTimeout()).get();
+            document = jsoup(catalogUrl)
+                    .timeout(r.getTimeout())
+                    .get();
         }
     }
 
@@ -76,7 +80,9 @@ public class CatalogParser extends Source {
         int offset = r.getOffset() != null ? r.getOffset() : 0;
 
         for (String s : urls) {
-            Document catalogPage = jsoupConn(s, r.getTimeout()).get();
+            Document catalogPage = jsoup(s)
+                    .timeout(r.getTimeout())
+                    .get();
             List<Element> elements = CrawlUtils.select(catalogPage, r.getResult());
 
             if (offset != 0) {

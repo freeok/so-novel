@@ -37,16 +37,17 @@ public class SearchResultParser extends Source {
         // 模拟搜索请求
         Document document;
         Connection.Response resp;
-        Rule.Search rule = this.rule.getSearch();
-        if (rule == null) {
+        Rule.Search r = this.rule.getSearch();
+        if (r == null) {
             Console.log("书源 {} 不支持搜索", config.getSourceId());
             return Collections.emptyList();
         }
 
         try {
-            resp = jsoupConn(rule.getUrl().formatted(keyword), rule.getTimeout())
-                    .data(CrawlUtils.buildData(rule.getData(), keyword))
-                    .cookies(CrawlUtils.buildCookies(rule.getCookies()))
+            resp = jsoup(r.getUrl().formatted(keyword))
+                    .timeout(r.getTimeout())
+                    .data(CrawlUtils.buildData(r.getData(), keyword))
+                    .cookies(CrawlUtils.buildCookies(r.getCookies()))
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
@@ -55,12 +56,12 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
-        if (!rule.isPagination()) return SearchResultsHandler.handle(firstPageResults);
+        if (!r.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
         // 搜索结果的分页 URL
         Set<String> urls = new LinkedHashSet<>();
-        Elements searchPages = CrawlUtils.select(document, rule.getNextPage());
-        for (Element e : CollUtil.sub(searchPages, 0, rule.getLimitPage() - 1)) {
+        Elements searchPages = CrawlUtils.select(document, r.getNextPage());
+        for (Element e : CollUtil.sub(searchPages, 0, r.getLimitPage() - 1)) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
@@ -78,13 +79,15 @@ public class SearchResultParser extends Source {
 
     @SneakyThrows
     private List<SearchResult> getSearchResults(String url, Connection.Response resp) {
-        Rule.Search rule = this.rule.getSearch();
+        Rule.Search r = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
         // 搜索结果页 DOM
-        Document document = resp == null ? jsoupConn(url, rule.getTimeout()).get() : Jsoup.parse(resp.body());
+        Document document = resp == null
+                ? jsoup(url).timeout(r.getTimeout()).get()
+                : Jsoup.parse(resp.body());
 
         // 部分书源完全匹配会直接进入详情页，因此需要构造搜索结果
-        if (document.select(rule.getResult()).isEmpty()) {
+        if (document.select(r.getResult()).isEmpty()) {
             String bookUrl = resp.url().toString();
             BookParser bookParser = new BookParser(config);
             Book book = bookParser.parse(bookUrl);
@@ -106,22 +109,22 @@ public class SearchResultParser extends Source {
             return list;
         }
 
-        Elements elements = document.select(rule.getResult());
+        Elements elements = document.select(r.getResult());
         for (Element element : elements) {
             // jsoup 不支持一次性获取属性的值
-            String href = element.select(rule.getBookName()).attr("href");
-            String bookName = element.select(rule.getBookName()).text();
+            String href = element.select(r.getBookName()).attr("href");
+            String bookName = element.select(r.getBookName()).text();
 
             // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
-            String author = StrUtil.isNotEmpty(rule.getAuthor())
-                    ? CrawlUtils.selectAndInvokeJs(element, rule.getAuthor(), ContentType.TEXT)
+            String author = StrUtil.isNotEmpty(r.getAuthor())
+                    ? CrawlUtils.selectAndInvokeJs(element, r.getAuthor(), ContentType.TEXT)
                     : null;
 
-            String latestChapter = StrUtil.isNotEmpty(rule.getLatestChapter())
-                    ? element.select(rule.getLatestChapter()).text()
+            String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
+                    ? element.select(r.getLatestChapter()).text()
                     : null;
-            String update = StrUtil.isNotEmpty(rule.getUpdate())
-                    ? element.select(rule.getUpdate()).text()
+            String update = StrUtil.isNotEmpty(r.getUpdate())
+                    ? element.select(r.getUpdate()).text()
                     : null;
 
             if (bookName.isEmpty()) continue;

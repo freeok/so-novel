@@ -73,17 +73,18 @@ public class Source {
         return rule;
     }
 
-    public Connection jsoupConn(String url, int timeout) {
+    public Connection jsoup(String url) {
+        // 除了搜索请求，其他请求基本均为 GET
         String method = rule.getSearch() != null ? rule.getSearch().getMethod() : "GET";
 
         Connection conn = Jsoup.connect(url)
                 .method(CrawlUtils.buildMethod(method))
-                .header("User-Agent", RandomUA.generate())
-                .timeout(timeout);
+                .header("User-Agent", RandomUA.generate());
 
         // 启用配置文件的代理地址
-        if (config.getProxyEnabled() == 1)
+        if (config.getProxyEnabled() == 1) {
             conn.proxy(config.getProxyHost(), config.getProxyPort());
+        }
 
         return conn;
     }

@@ -38,7 +38,9 @@ public class ChapterParser extends Source {
     // 用于测试
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
-        Document document = jsoupConn(chapter.getUrl(), this.rule.getChapter().getTimeout()).get();
+        Document document = jsoup(chapter.getUrl())
+                .timeout(this.rule.getChapter().getTimeout())
+                .get();
         chapter.setTitle(document.select(this.rule.getChapter().getTitle()).text());
         chapter.setContent(crawl(chapter.getUrl(), 0));
         return chapter;
@@ -100,7 +102,9 @@ public class ChapterParser extends Source {
         Thread.sleep(interval);
         // 章节不分页，只请求一次
         if (!ruleChapter.isPagination()) {
-            document = jsoupConn(url, ruleChapter.getTimeout()).get();
+            document = jsoup(url)
+                    .timeout(ruleChapter.getTimeout())
+                    .get();
             Elements contentEl = document.select(ruleChapter.getContent());
 
             // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
@@ -115,7 +119,9 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
-            document = jsoupConn(CrawlUtils.invokeJs(ruleChapter.getNextPage(), nextUrl), ruleChapter.getTimeout()).get();
+            document = jsoup(CrawlUtils.invokeJs(ruleChapter.getNextPage(), nextUrl))
+                    .timeout(ruleChapter.getTimeout())
+                    .get();
             sb.append(document.select(ruleChapter.getContent()).html());
 
             Elements elNextPage = CrawlUtils.select(document, ruleChapter.getNextPage());
