@@ -35,7 +35,6 @@
     "title": "ol > li.active",
     "content": "#chaptercontent",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": ".*转载请注明来源：369小说网\\(www.369book.cc\\)|本章未完，请点击下一页继续阅读！",
     "filterTag": "div",
     "pagination": true,

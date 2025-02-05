@@ -144,13 +144,13 @@ public class Main {
     }
 
     private static void printHint() {
-        Rule rule = new Source(config).rule;
+        Rule r = new Source(config).rule;
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", config.getVersion())) + "（本项目开源且免费）")
                 .addHeader("官方地址：https://github.com/freeok/so-novel")
-                .addHeader(StrUtil.format("当前书源：{} ({} ID: {})", rule.getUrl(), rule.getName(), rule.getId()))
+                .addHeader(StrUtil.format("当前书源：{} ({} ID: {})", r.getUrl(), r.getName(), r.getId()))
                 .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
                 .addBody(render("@|yellow 使用前请务必阅读 readme.txt|@"))
         );
