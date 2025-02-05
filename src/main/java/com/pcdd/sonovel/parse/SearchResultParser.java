@@ -10,6 +10,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -60,7 +61,7 @@ public class SearchResultParser extends Source {
 
         // 搜索结果的分页 URL
         Set<String> urls = new LinkedHashSet<>();
-        Elements searchPages = CrawlUtils.select(document, r.getNextPage());
+        Elements searchPages = JsoupUtils.select(document, r.getNextPage());
         for (Element e : CollUtil.sub(searchPages, 0, r.getLimitPage() - 1)) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
@@ -117,7 +118,7 @@ public class SearchResultParser extends Source {
 
             // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
             String author = StrUtil.isNotEmpty(r.getAuthor())
-                    ? CrawlUtils.selectAndInvokeJs(element, r.getAuthor(), ContentType.TEXT)
+                    ? JsoupUtils.selectAndInvokeJs(element, r.getAuthor(), ContentType.TEXT)
                     : null;
 
             String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
