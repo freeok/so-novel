@@ -1,8 +1,10 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Connection;
@@ -21,11 +23,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 @UtilityClass
 public class CrawlUtils {
 
-    public Elements select(Element el, String s) {
-        if (s.startsWith("/")) {
-            return el.selectXpath(s);
+    public Elements select(Element el, String query) {
+        String[] split = query.split("##");
+        if (split.length == 2) {
+            query = split[0];
         }
-        return el.select(s);
+        if (query.startsWith("/")) {
+            return el.selectXpath(query);
+        }
+        return el.select(query);
+    }
+
+    /**
+     * 若 query 包含 js，则执行 js，否则返回输入
+     */
+    public String invokeJs(String query, String input) {
+        if (StrUtil.isEmpty(query)) {
+            return input;
+        }
+        String[] split = query.split("##");
+        if (split.length != 2) {
+            return input;
+        }
+        return (String) ScriptUtil.invoke(split[1], "func", input);
     }
 
     // 有的 href 是相对路径，需要拼接为完整路径
