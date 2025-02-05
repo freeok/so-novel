@@ -8,7 +8,7 @@
   "search": {
     "pagination": true,
     "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]",
-    "limitPage": 5,
+    "limitPage": 3,
     "url": "https://www.dxmwx.org/list/topall_%s.html",
     "method": "get",
     "result": "#ListContents > div",

@@ -33,17 +33,19 @@
     "url": "",
     "result": "",
     "offset": 0,
-    "isDesc": false
+    "isDesc": false,
+    "pagination": false,
+    "nextPage": ""
   },
   "chapter": {
-    "pagination": false,
-    "nextPage": "",
     "title": "",
     "content": "",
     "paragraphTagClosed": false,
     "paragraphTag": "",
     "filterTxt": "",
-    "filterTag": ""
+    "filterTag": "",
+    "pagination": false,
+    "nextPage": ""
   },
   "crawl": {
     "threads": 0,
