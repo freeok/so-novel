@@ -51,7 +51,7 @@ public class Source {
         this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
     }
 
-    public Rule applyDefaultTimeouts(Rule rule) {
+    private Rule applyDefaultTimeouts(Rule rule) {
         Rule.Search ruleSearch = rule.getSearch();
         Rule.Book ruleBook = rule.getBook();
         Rule.Catalog ruleCatalog = rule.getCatalog();
