@@ -17,19 +17,15 @@ public class ChapterFormatter {
      * 格式化正文排版
      */
     public String format(String content) {
-        Rule.Chapter rule = new Source(config).rule.getChapter();
+        Rule.Chapter r = new Source(config).rule.getChapter();
 
         // 标签闭合
-        if (rule.isParagraphTagClosed()) {
-            // <p>段落</p>
-            if ("p".equals(rule.getParagraphTag())) {
-                return content;
-            } else { // 非 <p> 闭合标签，替换为 <p>
-                return content.replaceAll("<(?!p\\b)([^>]+)>(.*?)</\\1>", "<p>$2</p>");
-            }
+        if (r.isParagraphTagClosed()) {
+            // 非 <p> 闭合标签，替换为 <p>
+            return content.replaceAll("<(?!p\\b)([^>]+)>(.*?)</\\1>", "<p>$2</p>");
         }
         // 标签不闭合，用某个标签分隔，例如：段落1<br><br>段落2
-        String tag = rule.getParagraphTag();
+        String tag = r.getParagraphTag();
         StringBuilder sb = new StringBuilder();
 
         for (String s : content.split(tag)) {
