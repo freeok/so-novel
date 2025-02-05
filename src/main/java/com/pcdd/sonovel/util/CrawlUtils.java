@@ -6,6 +6,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.ContentType;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Element;
@@ -16,6 +17,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.pcdd.sonovel.model.ContentType.*;
+
+
 /**
  * @author pcdd
  * Created at 2024/11/28
@@ -23,19 +27,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 @UtilityClass
 public class CrawlUtils {
 
-    public Elements select(Element el, String query) {
+    public Elements select(Element e, String query) {
         String[] split = query.split("##");
         if (split.length == 2) {
             query = split[0];
         }
         if (query.startsWith("/")) {
-            return el.selectXpath(query);
+            return e.selectXpath(query);
         }
-        return el.select(query);
+        return e.select(query);
     }
 
     /**
-     * 若 query 包含 js，则执行 js，否则返回输入
+     * 调用某个 query 的 js
      */
     public String invokeJs(String query, String input) {
         if (StrUtil.isEmpty(query)) {
@@ -46,6 +50,56 @@ public class CrawlUtils {
             return input;
         }
         return (String) ScriptUtil.invoke(split[1], "func", input);
+    }
+
+    public String selectAndInvokeJs(Element e, String query, ContentType contentType) {
+        if (StrUtil.isEmpty(query)) {
+            return getStr(e, contentType);
+        }
+
+        // 分割查询条件
+        String[] split = query.split("##");
+        String actualQuery = split[0]; // 实际的选择器或 XPath
+
+        // 根据查询条件选择元素
+        Elements elements;
+        if (actualQuery.startsWith("/")) {
+            elements = e.selectXpath(actualQuery);
+        } else {
+            elements = e.select(actualQuery);
+        }
+
+        // 如果没有找到任何元素，返回空字符串
+        if (elements.isEmpty()) {
+            return "";
+        }
+
+        // 根据 contentType 获取相应内容
+        String result = switch (contentType) {
+            case TEXT -> elements.text();
+            case HTML -> elements.html();
+            case ATTR_SRC -> elements.attr(ATTR_SRC.getValue());
+            case ATTR_HREF -> elements.attr(ATTR_HREF.getValue());
+            case ATTR_CONTENT -> elements.attr(ATTR_CONTENT.getValue());
+        };
+
+        // 如果查询条件包含 JS 执行部分，调用它
+        if (split.length == 2) {
+            return (String) ScriptUtil.invoke(split[1], "func", result);
+        }
+
+        return result;
+    }
+
+
+    public String getStr(Element el, ContentType contentType) {
+        return switch (contentType) {
+            case TEXT -> el.text();
+            case HTML -> el.html();
+            case ATTR_SRC -> el.attr(ATTR_SRC.getValue());
+            case ATTR_HREF -> el.attr(ATTR_HREF.getValue());
+            case ATTR_CONTENT -> el.attr(ATTR_CONTENT.getValue());
+        };
     }
 
     // 有的 href 是相对路径，需要拼接为完整路径
