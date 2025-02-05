@@ -26,7 +26,6 @@
     "title": ".txtnav > h1",
     "content": ".txtnav",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|(本章完)",
     "filterTag": "h1 div br"
   }

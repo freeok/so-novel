@@ -39,7 +39,6 @@
     "title": ".content > h1",
     "content": "#content",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "",
     "filterTag": ""
   }
