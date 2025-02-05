@@ -1,11 +1,16 @@
 package com.pcdd.sonovel.core;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
+import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.util.RandomUA;
@@ -13,10 +18,12 @@ import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static org.jline.jansi.AnsiRenderer.render;
 
@@ -28,22 +35,36 @@ import static org.jline.jansi.AnsiRenderer.render;
 public class CoverUpdater {
 
     /**
-     * 封面替换为起点最新封面
+     * 依次尝试不同来源获取封面
+     */
+    public String fetchCover(Book book, String coverUrl) {
+        book.setCoverUrl(coverUrl);
+        return Stream.<Supplier<String>>of(
+                        () -> fetchQidian(book),
+                        () -> fetchZongheng(book),
+                        () -> fetchChuangshi(book)
+                ).map(Supplier::get)
+                .filter(CoverUpdater::isValidCover)
+                .findFirst()
+                .orElse(book.getCoverUrl());
+    }
+
+    /**
+     * 起点中文网
      */
     public String fetchQidian(Book book) {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put(Header.USER_AGENT.getValue(), RandomUA.generate());
         headers.put(Header.COOKIE.getValue(), "w_tsfp=ltvgWVEE2utBvS0Q6KvtkkmvETw7Z2R7xFw0D+M9Os09AacnUJyD145+vdfldCyCt5Mxutrd9MVxYnGAUtAnfxcSTciYb5tH1VPHx8NlntdKRQJtA5qJW1Qbd7J2umNBLW5YI0blj2ovIoFAybBoiVtZuyJ137ZlCa8hbMFbixsAqOPFm/97DxvSliPXAHGHM3wLc+6C6rgv8LlSgXyD8FmNOVlxdr9X0kCb1T0dC3FW9BO+AexINxmkKtutXZxDuDH2tz/iaJWl0QMh5FlBpRw4d9Lh2zC7JmNGJXkaewD23+I2Z7z6ZLh6+2xIAL5FW1kVqQ8ZteI5+URPDSi9YHWPBfp6tQAARvJZ/82seSvFxIb+c1AMu4Zt0AYlsYAN6DEjYTimKd8JSWTLNnUGfotRbsq+NHlkAkBbX2RE5Qdb;");
-        HttpResponse resp = HttpRequest.get(StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName()))
-                .headerMap(headers, true)
-                .execute();
-
-        Document document = Jsoup.parse(resp.body());
-        resp.close();
-        Elements elements = document.select(".res-book-item");
 
         try {
-            for (Element e : elements) {
+            HttpResponse resp = HttpRequest.get(StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName()))
+                    .headerMap(headers, true)
+                    .execute();
+            Document document = Jsoup.parse(resp.body());
+            resp.close();
+
+            for (Element e : document.select(".res-book-item")) {
                 String qdName = e.select(".book-mid-info > .book-info-title > a").text();
                 // 起点作家
                 String qdAuthor1 = e.select(".book-mid-info > .author > .name").text();
@@ -51,21 +72,65 @@ public class CoverUpdater {
                 String qdAuthor2 = e.select(".book-mid-info > .author > i").text();
                 String qdAuthor = StrUtil.isEmpty(qdAuthor1) ? qdAuthor2 : qdAuthor1;
 
-                String name = HanLP.convertToSimplifiedChinese(book.getBookName());
-                String author = HanLP.convertToSimplifiedChinese(book.getAuthor());
-
-                if (name.equals(qdName) && author.equals(qdAuthor)) {
-                    String coverUrl = e.select(".book-img-box > a > img").attr("src");
-                    // 替换为高清原图
-                    return URLUtil.normalize(coverUrl).replaceAll("/150(\\.webp)?", "");
+                if (matchBook(book, qdName, qdAuthor)) {
+                    return URLUtil.normalize(e.select(".book-img-box > a > img").attr("src"))
+                            .replaceAll("/150(\\.webp)?", "");
                 }
             }
         } catch (Exception e) {
-            Console.error(render("最新封面获取失败：{}", e.getMessage()));
-            return book.getCoverUrl();
+            Console.error(render("获取起点封面失败：{}", e.getMessage()));
+        }
+        return null;
+    }
+
+    /**
+     * 纵横中文网
+     */
+    public String fetchZongheng(Book book) {
+        String url = "https://search.zongheng.com/search/book";
+        // 自动拼接查询字符串
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", book.getBookName());
+        params.put("pageNo", 1);
+        params.put("pageNum", 20);
+        params.put("isFromHuayu", 0);
+
+        HttpRequest req = HttpRequest.get(url)
+                .form(params)
+                .header(Header.USER_AGENT, RandomUA.generate());
+        HttpResponse resp = req.execute();
+        String body = resp.body();
+        JSONObject obj = JSONUtil.parseObj(body);
+        JSONArray list = obj
+                .getJSONObject("data")
+                .getJSONObject("datas")
+                .getJSONArray("list");
+
+        for (Object o : list) {
+            JSONObject bookObj = (JSONObject) o;
+            if (matchBook(book, bookObj.getStr("name"), bookObj.getStr("authorName"))) {
+                return "https://static.zongheng.com/upload" + bookObj.getStr("coverUrl");
+            }
         }
 
-        return book.getCoverUrl();
+        resp.close();
+        return null;
+    }
+
+    /**
+     * 创世中文网
+     */
+    public String fetchChuangshi(Book book) {
+        return null;
+    }
+
+    private boolean matchBook(Book book, String name, String author) {
+        return HanLP.convertToSimplifiedChinese(book.getBookName()).equals(HtmlUtil.cleanHtmlTag(name)) &&
+                HanLP.convertToSimplifiedChinese(book.getAuthor()).equals(HtmlUtil.cleanHtmlTag(author));
+    }
+
+    private boolean isValidCover(String coverUrl) {
+        return StrUtil.isNotBlank(coverUrl) && Validator.isUrl(coverUrl);
     }
 
 }
