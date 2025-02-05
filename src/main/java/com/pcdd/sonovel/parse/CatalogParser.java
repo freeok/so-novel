@@ -84,11 +84,9 @@ public class CatalogParser extends Source {
                     .timeout(r.getTimeout())
                     .get();
             List<Element> elements = CrawlUtils.select(catalogPage, r.getResult());
-
             if (offset != 0) {
                 elements = adjustElementsByOffset(elements, offset);
             }
-
             int minIndex = Math.min(end, elements.size());
             if (isDesc) {
                 for (int i = minIndex - 1; i >= start - 1; i--) {
@@ -110,10 +108,10 @@ public class CatalogParser extends Source {
         return elements;
     }
 
-    private void addChapter(Element element, List<Chapter> catalog, int order, Rule.Catalog r) {
-        String url = CrawlUtils.selectAndInvokeJs(element, r.getNextPage(), ATTR_HREF);
+    private void addChapter(Element el, List<Chapter> catalog, int order, Rule.Catalog r) {
+        String url = CrawlUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF);
         catalog.add(Chapter.builder()
-                .title(element.text())
+                .title(el.text())
                 .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
                 .order(order)
                 .build());
