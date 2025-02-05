@@ -49,7 +49,7 @@ class BookSourceTest {
             "3, http://www.mcmssc.la/145_145199/, http://www.mcmssc.la/145_145199/57831284.html",
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
             "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
-            "9, https://www.369book.cc/book/341494/, https://www.369book.cc/read/341494/66302021.html"
+            "9, https://www.369book.cc/book/344580/, https://www.369book.cc/read/344580/66984376.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;
@@ -57,7 +57,7 @@ class BookSourceTest {
 
         config.setSourceId(sourceId);
 
-        searchParse("捞尸人");
+        searchParse("从县委书记到权力巅峰");
         bookParse();
         chapterParse();
         catalogParse();
@@ -75,11 +75,11 @@ class BookSourceTest {
         this.chapterUrl = chapterUrl;
 
         config.setSourceId(sourceId);
-        config.setProxyEnabled(1);
+        config.setProxyEnabled(0);
         config.setProxyHost("127.0.0.1");
         config.setProxyPort(7890);
 
-        searchParse("辰东");
+        searchParse("夜无疆");
         bookParse();
         chapterParse();
         catalogParse();
@@ -99,8 +99,13 @@ class BookSourceTest {
 
     public void bookParse() {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
-        Book parse = new BookParser(config).parse(bookUrl);
-        Console.log(JSONUtil.toJsonPrettyStr(parse));
+        Book book;
+        if (config.getSourceId() == 6) {
+            book = new BookParser6(config).parse(bookUrl);
+        } else {
+            book = new BookParser(config).parse(bookUrl);
+        }
+        Console.log(JSONUtil.toJsonPrettyStr(book));
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
 
