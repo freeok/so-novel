@@ -10,6 +10,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -119,12 +120,12 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
-            document = jsoup(CrawlUtils.invokeJs(ruleChapter.getNextPage(), nextUrl))
+            document = jsoup(JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl))
                     .timeout(ruleChapter.getTimeout())
                     .get();
             sb.append(document.select(ruleChapter.getContent()).html());
 
-            Elements elNextPage = CrawlUtils.select(document, ruleChapter.getNextPage());
+            Elements elNextPage = JsoupUtils.select(document, ruleChapter.getNextPage());
             // 章节最后一页 TODO 针对书源 2，此处容易出错
             if (elNextPage.text().contains("下一章")) break;
             nextUrl = CrawlUtils.normalizeUrl(elNextPage.attr("href"), this.rule.getUrl());
