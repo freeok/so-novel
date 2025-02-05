@@ -38,8 +38,7 @@ public class BookParser6 extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
-        book.setCoverUrl(CoverUpdater.fetchQidian(book));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
     }
