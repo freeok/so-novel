@@ -5,14 +5,13 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.convert.ChapterConverter;
+import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.CatalogParser;
-import com.pcdd.sonovel.parse.ChapterParser;
-import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -49,6 +48,8 @@ class BookSourceTest {
             "2, https://www.shuhaige.net/266625/, https://www.shuhaige.net/266625/102443757.html",
             "3, http://www.mcmssc.la/145_145199/, http://www.mcmssc.la/145_145199/57831284.html",
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
+            "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
+            "9, https://www.369book.cc/book/341494/, https://www.369book.cc/read/341494/66302021.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;
@@ -56,7 +57,7 @@ class BookSourceTest {
 
         config.setSourceId(sourceId);
 
-        searchParse("唐家三少");
+        searchParse("捞尸人");
         bookParse();
         chapterParse();
         catalogParse();
@@ -80,27 +81,34 @@ class BookSourceTest {
 
         searchParse("辰东");
         bookParse();
-        catalogParse();
         chapterParse();
+        catalogParse();
     }
 
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
-        List<SearchResult> parse = new SearchResultParser(config).parse(keyword);
-        parse.forEach(System.out::println);
+        List<SearchResult> list;
+        if (config.getSourceId() == 6) {
+            list = new SearchResultParser6(config).parse(keyword);
+        } else {
+            list = new SearchResultParser(config).parse(keyword);
+        }
+        list.forEach(System.out::println);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
     public void bookParse() {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
         Book parse = new BookParser(config).parse(bookUrl);
-        System.out.println(JSONUtil.toJsonPrettyStr(parse));
+        Console.log(JSONUtil.toJsonPrettyStr(parse));
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
 
     public void catalogParse() {
         Console.log("\n{} START catalogParse {}", DIVIDER, DIVIDER);
-        List<Chapter> parse = new CatalogParser(config).parse(bookUrl);
+        CatalogParser catalogParser = new CatalogParser(config);
+        List<Chapter> parse = catalogParser.parse(bookUrl);
+        // catalogParser.shutdown();
         parse.forEach(System.out::println);
         Console.log("{} END catalogParse {}\n", DIVIDER, DIVIDER);
     }
@@ -110,7 +118,9 @@ class BookSourceTest {
         Chapter chapter = Chapter.builder().url(chapterUrl).build();
         Chapter beforeFiltration = new ChapterParser(config).parse(chapter);
         Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
-        System.out.println(afterFiltration.getContent());
+        Source source = new Source(config.getSourceId());
+        ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
+        Console.log(afterFiltration.getContent());
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
     }
 
