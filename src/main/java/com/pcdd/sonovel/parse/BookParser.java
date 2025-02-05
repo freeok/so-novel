@@ -53,8 +53,7 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl()));
-        book.setCoverUrl(CoverUpdater.fetchQidian(book));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
         book.setLatestChapter(latestChapter);
         book.setLatestUpdate(latestUpdate);
 
