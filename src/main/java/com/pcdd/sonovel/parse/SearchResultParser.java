@@ -8,10 +8,7 @@ import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.Connection;
@@ -117,7 +114,7 @@ public class SearchResultParser extends Source {
 
             // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
             String author = StrUtil.isNotEmpty(rule.getAuthor())
-                    ? element.select(rule.getAuthor()).text()
+                    ? CrawlUtils.selectAndInvokeJs(element, rule.getAuthor(), ContentType.TEXT)
                     : null;
 
             String latestChapter = StrUtil.isNotEmpty(rule.getLatestChapter())

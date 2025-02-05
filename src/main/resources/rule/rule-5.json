@@ -6,11 +6,12 @@
   "type": "html",
   "language": "zh_Hant",
   "search": {
+    "pagination": true,
+    "limitPage": 3,
     "url": "https://69shux.co/search",
     "method": "post",
     "data": "{searchkey: %s, submit: Search}",
     "cookies": "{'zh_choose': 't'}",
-    "pagination": true,
     "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",
     "result": "#article_list_content > li > div.newnav",
     "bookName": "h3 > a:last-child",

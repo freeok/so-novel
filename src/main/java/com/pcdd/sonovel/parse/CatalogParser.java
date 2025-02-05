@@ -12,10 +12,11 @@ import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 
 public class CatalogParser extends Source {
 
@@ -59,8 +60,7 @@ public class CatalogParser extends Source {
     // TODO 优化，一次性获取分页 URL，而不是递归获取
     private void extractPaginationUrls(List<String> urls, Document document, Rule.Catalog r) throws Exception {
         while (true) {
-            Elements elements = CrawlUtils.select(document, r.getNextPage());
-            String href = elements.attr("href");
+            String href = CrawlUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF);
             if (!(Validator.isUrl(href) || StrUtil.startWith(href, "/"))) break;
             String catalogUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
             urls.add(catalogUrl);
@@ -105,7 +105,7 @@ public class CatalogParser extends Source {
     }
 
     private void addChapter(Element element, List<Chapter> catalog, int order, Rule.Catalog r) {
-        String url = CrawlUtils.invokeJs(r.getNextPage(), element.attr("href"));
+        String url = CrawlUtils.selectAndInvokeJs(element, r.getNextPage(), ATTR_HREF);
         catalog.add(Chapter.builder()
                 .title(element.text())
                 .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
