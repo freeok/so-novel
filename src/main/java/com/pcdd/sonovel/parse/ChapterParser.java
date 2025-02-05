@@ -115,14 +115,14 @@ public class ChapterParser extends Source {
         StringBuilder sb = new StringBuilder();
         // 章节分页
         while (true) {
-            document = jsoupConn(nextUrl, this.rule.getChapter().getTimeout()).get();
-            Elements elContent = document.select(this.rule.getChapter().getContent());
-            sb.append(elContent.html());
-            Elements elNextPage = document.select(this.rule.getChapter().getNextPage());
-            // 章节最后一页 TODO 针对书源2，此处容易出错
+            document = jsoupConn(CrawlUtils.invokeJs(ruleChapter.getNextPage(), nextUrl), ruleChapter.getTimeout()).get();
+            sb.append(document.select(ruleChapter.getContent()).html());
+
+            Elements elNextPage = CrawlUtils.select(document, ruleChapter.getNextPage());
+            // 章节最后一页 TODO 针对书源 2，此处容易出错
             if (elNextPage.text().contains("下一章")) break;
-            String href = elNextPage.attr("href");
-            nextUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
+            nextUrl = CrawlUtils.normalizeUrl(elNextPage.attr("href"), this.rule.getUrl());
+
             Thread.sleep(interval);
         }
 
