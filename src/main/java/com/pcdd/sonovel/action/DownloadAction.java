@@ -41,7 +41,9 @@ public class DownloadAction {
                 .latestChapter(book.getLatestChapter())
                 .latestUpdate(book.getLatestUpdate())
                 .build();
-        List<Chapter> catalogs = new CatalogParser(config).parse(sr.getUrl());
+        CatalogParser catalogParser = new CatalogParser(config);
+        List<Chapter> catalogs = catalogParser.parse(sr.getUrl());
+        // catalogParser.shutdown();
         Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
         double res = new Crawler(config).crawl(sr, catalogs);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
@@ -78,7 +80,9 @@ public class DownloadAction {
 
             sr = results.get(num - 1);
             Console.log("<== 正在获取章节目录 ...");
-            catalogs = new CatalogParser(config).parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+            CatalogParser catalogParser = new CatalogParser(config);
+            catalogs = catalogParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+            // catalogParser.shutdown();
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), catalogs.size());
             Console.log("==> 0: 重新选择功能");
