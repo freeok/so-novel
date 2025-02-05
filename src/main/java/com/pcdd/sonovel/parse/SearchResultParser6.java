@@ -41,17 +41,17 @@ public class SearchResultParser6 extends Source {
     }
 
     public List<SearchResult> parse(String keyword) {
-        Rule.Search rule = this.rule.getSearch();
+        Rule.Search r = this.rule.getSearch();
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
         Object key = ScriptUtil.invoke(js, "getParamB", keyword);
-        String param = rule.getData().formatted(keyword, key.toString());
+        String param = r.getData().formatted(keyword, key.toString());
         Map<String, String> map = JSONUtil.toBean(param, new TypeReference<>() {
         }, true);
 
         HttpRequest req = HttpRequest
                 .get(this.rule.getUrl())
-                .timeout(rule.getTimeout())
-                .header("Referer", rule.getUrl())
+                .timeout(r.getTimeout())
+                .header("Referer", r.getUrl())
                 .formStr(map);
         if (config.getProxyEnabled() == 1)
             req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
@@ -78,17 +78,17 @@ public class SearchResultParser6 extends Source {
     }
 
     private List<SearchResult> getSearchResults(Document document) {
-        Rule.Search rule = this.rule.getSearch();
+        Rule.Search r = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
-        Elements elements = document.select(rule.getResult());
+        Elements elements = document.select(r.getResult());
 
         for (Element element : elements) {
             // jsoup 不支持一次性获取属性的值
-            String href = element.select(rule.getBookName()).attr("href");
-            String bookName = element.select(rule.getBookName()).text();
+            String href = element.select(r.getBookName()).attr("href");
+            String bookName = element.select(r.getBookName()).text();
             // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
-            String author = StrUtil.isNotEmpty(rule.getAuthor())
-                    ? element.select(rule.getAuthor()).text()
+            String author = StrUtil.isNotEmpty(r.getAuthor())
+                    ? element.select(r.getAuthor()).text()
                     : null;
             SearchResult sr = SearchResult.builder()
                     .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))

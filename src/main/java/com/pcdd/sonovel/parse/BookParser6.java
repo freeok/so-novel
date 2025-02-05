@@ -38,7 +38,9 @@ public class BookParser6 extends Source {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
-        Document document = jsoupConn(url, r.getTimeout()).get();
+        Document document = jsoup(url)
+                .timeout(r.getTimeout())
+                .get();
         String bookName = document.select(r.getBookName()).text();
         String author = document.select(r.getAuthor()).text();
         String intro = document.select(r.getIntro()).text();
