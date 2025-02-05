@@ -86,8 +86,8 @@ public class SearchResultParser extends Source {
                 ? jsoup(url).timeout(r.getTimeout()).get()
                 : Jsoup.parse(resp.body());
 
-        // 部分书源完全匹配会直接进入详情页，因此需要构造搜索结果
-        if (document.select(r.getResult()).isEmpty()) {
+        // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
+        if (document.select(r.getResult()).isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
             String bookUrl = resp.url().toString();
             BookParser bookParser = new BookParser(config);
             Book book = bookParser.parse(bookUrl);
