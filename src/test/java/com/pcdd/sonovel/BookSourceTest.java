@@ -50,7 +50,7 @@ class BookSourceTest {
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
             "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
             "9, https://www.369book.cc/book/344580/, https://www.369book.cc/read/344580/66984376.html",
-            "10, https://cn.ttkan.co/novel/chapters/wanxiangzhiwang-tiancantudou, https://cn.wa01.com/novel/pagea/wanxiangzhiwang-tiancantudou_1.html"
+            "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie, https://cn.wa01.com/novel/pagea/tunshixingkongzhiwuzuchuanshuo-dugujiujie_367.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;
@@ -58,10 +58,10 @@ class BookSourceTest {
 
         config.setSourceId(sourceId);
 
-        searchParse("从县委书记到权力巅峰");
+        searchParse("夜无疆");
         bookParse();
         chapterParse();
-        catalogParse();
+        tocParse();
     }
 
     @DisplayName("测试代理书源")
@@ -83,7 +83,7 @@ class BookSourceTest {
         searchParse("夜无疆");
         bookParse();
         chapterParse();
-        catalogParse();
+        tocParse();
     }
 
     public void searchParse(String keyword) {
@@ -110,13 +110,13 @@ class BookSourceTest {
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
 
-    public void catalogParse() {
-        Console.log("\n{} START catalogParse {}", DIVIDER, DIVIDER);
-        CatalogParser catalogParser = new CatalogParser(config);
-        List<Chapter> parse = catalogParser.parse(bookUrl);
-        // catalogParser.shutdown();
+    public void tocParse() {
+        Console.log("\n{} START tocParse {}", DIVIDER, DIVIDER);
+        TocParser tocParser = new TocParser(config);
+        List<Chapter> parse = tocParser.parse(bookUrl);
+        // tocParser.shutdown();
         parse.forEach(System.out::println);
-        Console.log("{} END catalogParse {}\n", DIVIDER, DIVIDER);
+        Console.log("{} END tocParse {}\n", DIVIDER, DIVIDER);
     }
 
     public void chapterParse() {

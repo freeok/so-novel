@@ -19,9 +19,9 @@ import java.util.List;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 
-public class CatalogParser extends Source {
+public class TocParser extends Source {
 
-    public CatalogParser(AppConfig config) {
+    public TocParser(AppConfig config) {
         super(config);
     }
 
@@ -40,67 +40,68 @@ public class CatalogParser extends Source {
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
         Rule.Book ruleBook = this.rule.getBook();
-        Rule.Catalog ruleCatalog = this.rule.getCatalog();
+        Rule.Toc ruleToc = this.rule.getToc();
 
         // 目录和详情不在同一页面
-        if (StrUtil.isNotEmpty(ruleCatalog.getUrl())) {
+        if (StrUtil.isNotEmpty(ruleToc.getUrl())) {
             String id = ReUtil.getGroup1(ruleBook.getUrl(), url);
-            url = ruleCatalog.getUrl().formatted(id);
+            url = ruleToc.getUrl().formatted(id);
         }
 
         List<String> urls = CollUtil.toList(url);
         Document document = jsoup(url)
-                .timeout(ruleCatalog.getTimeout())
+                .timeout(ruleToc.getTimeout())
                 .get();
 
-        if (ruleCatalog.isPagination()) {
-            extractPaginationUrls(urls, document, ruleCatalog);
+        if (ruleToc.isPagination()) {
+            extractPaginationUrls(urls, document, ruleToc);
         }
 
-        return parseCatalog(urls, start, end, ruleCatalog);
+        return parseToc(urls, start, end, ruleToc);
     }
 
     // TODO 优化，一次性获取分页 URL，而不是递归获取
-    private void extractPaginationUrls(List<String> urls, Document document, Rule.Catalog r) throws Exception {
+    private void extractPaginationUrls(List<String> urls, Document document, Rule.Toc r) throws Exception {
         while (true) {
             String href = JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF);
             if (!(Validator.isUrl(href) || StrUtil.startWith(href, "/"))) break;
-            String catalogUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
-            urls.add(catalogUrl);
-            document = jsoup(catalogUrl)
+            String tocUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
+            urls.add(tocUrl);
+            document = jsoup(tocUrl)
                     .timeout(r.getTimeout())
                     .get();
         }
     }
 
     // TODO 优化，改为多线程
-    private List<Chapter> parseCatalog(List<String> urls, int start, int end, Rule.Catalog r) throws Exception {
-        List<Chapter> catalog = new ArrayList<>();
+    private List<Chapter> parseToc(List<String> urls, int start, int end, Rule.Toc r) throws Exception {
+        List<Chapter> toc = new ArrayList<>();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
         int offset = r.getOffset() != null ? r.getOffset() : 0;
 
         for (String s : urls) {
-            Document catalogPage = jsoup(s)
+            Document document = jsoup(s)
                     .timeout(r.getTimeout())
                     .get();
-            List<Element> elements = JsoupUtils.select(catalogPage, r.getResult());
+            // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 更省性能
+            List<Element> elements = JsoupUtils.select(document, r.getResult());
             if (offset != 0) {
                 elements = adjustElementsByOffset(elements, offset);
             }
             int minIndex = Math.min(end, elements.size());
             if (isDesc) {
                 for (int i = minIndex - 1; i >= start - 1; i--) {
-                    addChapter(elements.get(i), catalog, orderNumber++, r);
+                    addChapter(elements.get(i), toc, orderNumber++, r);
                 }
             } else {
                 for (int i = start - 1; i < minIndex; i++) {
-                    addChapter(elements.get(i), catalog, orderNumber++, r);
+                    addChapter(elements.get(i), toc, orderNumber++, r);
                 }
             }
         }
 
-        return catalog;
+        return toc;
     }
 
     private List<Element> adjustElementsByOffset(List<Element> elements, int offset) {
@@ -109,9 +110,9 @@ public class CatalogParser extends Source {
         return elements;
     }
 
-    private void addChapter(Element el, List<Chapter> catalog, int order, Rule.Catalog r) {
+    private void addChapter(Element el, List<Chapter> toc, int order, Rule.Toc r) {
         String url = JsoupUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF);
-        catalog.add(Chapter.builder()
+        toc.add(Chapter.builder()
                 .title(el.text())
                 .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
                 .order(order)
