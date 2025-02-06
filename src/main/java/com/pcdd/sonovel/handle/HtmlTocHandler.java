@@ -19,7 +19,7 @@ import java.util.List;
  * @author pcdd
  * Created at 2024/12/4
  */
-public class HtmlCatalogHandler implements PostProcessingHandler {
+public class HtmlTocHandler implements PostProcessingHandler {
 
     @Override
     public void handle(Book book, File saveDir) {

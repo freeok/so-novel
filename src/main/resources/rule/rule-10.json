@@ -23,8 +23,9 @@
     "latestUpdate": "meta[name=\"og:novel:update_time\"]",
     "isEnd": "meta[name=\"og:novel:status\"]"
   },
-  "catalog": {
-    "result": ".full_chapters > div:nth-child(1) > a"
+  "toc": {
+    "result": ".full_chapters > div:nth-child(1) > a",
+    "nextPage": "##function func(input) {return input.replaceAll('/novel/pagea', 'https://cn.wa01.com/novel/pagea');}"
   },
   "chapter": {
     "title": ".title > h1",

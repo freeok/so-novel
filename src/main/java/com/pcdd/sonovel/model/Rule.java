@@ -18,7 +18,7 @@ public class Rule {
 
     private Search search;
     private Book book;
-    private Catalog catalog;
+    private Toc toc;
     private Chapter chapter;
 
     @Data
@@ -54,7 +54,7 @@ public class Rule {
     }
 
     @Data
-    public static class Catalog {
+    public static class Toc {
         private Integer timeout;
         private String url;
         private String result;
