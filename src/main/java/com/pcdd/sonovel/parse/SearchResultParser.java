@@ -113,20 +113,12 @@ public class SearchResultParser extends Source {
         Elements elements = document.select(r.getResult());
         for (Element element : elements) {
             // jsoup 不支持一次性获取属性的值
-            String href = element.select(r.getBookName()).attr("href");
-            String bookName = element.select(r.getBookName()).text();
-
-            // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
-            String author = StrUtil.isNotEmpty(r.getAuthor())
-                    ? JsoupUtils.selectAndInvokeJs(element, r.getAuthor(), ContentType.TEXT)
-                    : null;
-
-            String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
-                    ? element.select(r.getLatestChapter()).text()
-                    : null;
-            String update = StrUtil.isNotEmpty(r.getUpdate())
-                    ? element.select(r.getUpdate()).text()
-                    : null;
+            String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
+            String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
+            // 以下为非必须属性
+            String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
+            String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
+            String update = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
 
             if (bookName.isEmpty()) continue;
 
