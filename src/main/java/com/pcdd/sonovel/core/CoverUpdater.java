@@ -125,8 +125,11 @@ public class CoverUpdater {
     }
 
     private boolean matchBook(Book book, String name, String author) {
-        return HanLP.convertToSimplifiedChinese(book.getBookName()).equals(HtmlUtil.cleanHtmlTag(name)) &&
-                HanLP.convertToSimplifiedChinese(book.getAuthor()).equals(HtmlUtil.cleanHtmlTag(author));
+        String sourceName = HanLP.convertToSimplifiedChinese(book.getBookName());
+        String sourceAuthor = HanLP.convertToSimplifiedChinese(book.getAuthor());
+        name = HtmlUtil.cleanHtmlTag(name);
+        author = HtmlUtil.cleanHtmlTag(author);
+        return StrUtil.equals(sourceName, name) && StrUtil.equals(sourceAuthor, author);
     }
 
     private boolean isValidCover(String coverUrl) {
