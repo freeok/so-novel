@@ -28,7 +28,7 @@
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
     "isEnd": "meta[property=\"og:novel:status\"]"
   },
-  "catalog": {
+  "toc": {
     "url": "https://www.dxmwx.org/chapter/%s.html",
     "result": "div:nth-child(2n+5) > span > a"
   },

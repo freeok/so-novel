@@ -25,7 +25,7 @@
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
     "isEnd": "meta[property=\"og:novel:status\"]"
   },
-  "catalog": {
+  "toc": {
     "url": "https://www.369book.cc/index/%s/",
     "result": ".am-list-news-bd > ul > li > a",
     "pagination": true,
