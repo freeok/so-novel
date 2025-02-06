@@ -6,8 +6,10 @@ import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
 
@@ -29,24 +31,15 @@ public class BookParser extends Source {
         Document document = jsoup(url)
                 .timeout(r.getTimeout())
                 .get();
-        // 从 head > meta 获取
-        String bookName = document.select(r.getBookName()).attr(CONTENT);
-        String author = document.select(r.getAuthor()).attr(CONTENT);
-        String intro = document.select(r.getIntro()).attr(CONTENT);
-        intro = StrUtil.cleanBlank(intro);
-        String coverUrl;
-        if (r.getCoverUrl().startsWith("meta[property=")) {
-            coverUrl = document.select(r.getCoverUrl()).attr(CONTENT);
-        } else {
-            coverUrl = document.select(r.getCoverUrl()).attr("src");
-        }
-        // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
-        String latestChapter = StrUtil.isNotEmpty(r.getLatestChapter())
-                ? document.select(r.getLatestChapter()).attr(CONTENT)
-                : null;
-        String latestUpdate = StrUtil.isNotEmpty(r.getLatestUpdate())
-                ? document.select(r.getLatestUpdate()).attr(CONTENT)
-                : null;
+
+        String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
+        String author = JsoupUtils.selectAndInvokeJs(document, r.getAuthor(), getContentType(r.getAuthor()));
+        String intro = StrUtil.cleanBlank(JsoupUtils.selectAndInvokeJs(document, r.getIntro(), getContentType(r.getIntro())));
+        String coverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(),
+                r.getCoverUrl().startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.ATTR_SRC);
+        // 以下为非必须属性
+        String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
+        String latestUpdate = JsoupUtils.selectAndInvokeJs(document, r.getLatestUpdate(), getContentType(r.getLatestUpdate()));
 
         Book book = new Book();
         book.setUrl(url);
@@ -58,6 +51,10 @@ public class BookParser extends Source {
         book.setLatestUpdate(latestUpdate);
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
+    }
+
+    private ContentType getContentType(String query) {
+        return query.startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.TEXT;
     }
 
 }
