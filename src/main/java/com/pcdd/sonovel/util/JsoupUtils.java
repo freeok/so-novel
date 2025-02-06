@@ -16,6 +16,8 @@ public class JsoupUtils {
 
     /**
      * 使用查询条件选择元素
+     * <p>
+     * 等价于 document.select(query) | document.selectXpath(query)
      */
     public Elements select(Element e, String query) {
         // 分割查询条件以提取 XPath 或 CSS 查询
@@ -26,6 +28,8 @@ public class JsoupUtils {
 
     /**
      * 执行 JS 脚本并返回处理结果
+     * <p>
+     * 等价于 func(input)
      */
     public String invokeJs(String query, String input) {
         if (StrUtil.isEmpty(query)) return input;
@@ -35,10 +39,12 @@ public class JsoupUtils {
 
     /**
      * 根据查询条件选择元素并执行可能的 JS 脚本
+     * <p>
+     * 等价于 func(document.select(query).(text|html|attr)())
      */
     public String selectAndInvokeJs(Element e, String query, ContentType contentType) {
         if (StrUtil.isEmpty(query)) {
-            return getContent(e, contentType);
+            return null;
         }
 
         String[] split = query.split(JS_SEPARATOR);
@@ -57,12 +63,14 @@ public class JsoupUtils {
 
     /**
      * 获取元素的内容并执行可能的 JS
+     * <p>
+     * 等价于 func(element.(text|html|attr)())
      */
-    public String getStrAndInvokeJs(Element e, String query, ContentType contentType) {
+    public String getStrAndInvokeJs(Element e, String js, ContentType contentType) {
         // 先获取元素的内容
         String result = getContent(e, contentType);
         // 如果查询条件包含 JS，调用它
-        return StrUtil.isNotEmpty(query) ? invokeJs(query, result) : result;
+        return StrUtil.isNotEmpty(js) ? invokeJs(js, result) : result;
     }
 
     /**
