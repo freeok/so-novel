@@ -37,6 +37,10 @@ public class JsoupUtils {
         return split.length == 1 ? input : (String) ScriptUtil.invoke(split[1], "func", input);
     }
 
+    public String selectAndInvokeJs(Element e, String query) {
+        return selectAndInvokeJs(e, query, ContentType.TEXT);
+    }
+
     /**
      * 根据查询条件选择元素并执行可能的 JS 脚本
      * <p>
