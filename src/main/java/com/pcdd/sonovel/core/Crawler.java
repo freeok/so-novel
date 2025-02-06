@@ -68,11 +68,11 @@ public class Crawler {
     /**
      * 爬取小说
      *
-     * @param sr       小说详情
-     * @param catalogs 小说目录
+     * @param sr  小说详情
+     * @param toc 小说目录
      */
     @SneakyThrows
-    public double crawl(SearchResult sr, List<Chapter> catalogs) {
+    public double crawl(SearchResult sr, List<Chapter> toc) {
         // 小说详情页url
         String url = sr.getUrl();
         String bookName = sr.getBookName();
@@ -97,8 +97,8 @@ public class Crawler {
         }
 
         // 防止 start、end 超出范围
-        if (CollUtil.isEmpty(catalogs)) {
-            Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", catalogs.size())));
+        if (CollUtil.isEmpty(toc)) {
+            Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", toc.size())));
             return 0;
         }
 
@@ -106,14 +106,14 @@ public class Crawler {
         // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
         // 阻塞主线程，用于计时
-        CountDownLatch latch = new CountDownLatch(catalogs.size());
+        CountDownLatch latch = new CountDownLatch(toc.size());
 
-        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, catalogs.size(), autoThreads);
+        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, toc.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
         // 下载章节
-        catalogs.forEach(item -> executor.execute(() -> {
+        toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, sr));
             Console.log("<== 待下载章节数：{}", latch.getCount());
         }));

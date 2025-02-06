@@ -54,7 +54,7 @@ public class Source {
     private Rule applyDefaultTimeouts(Rule rule) {
         Rule.Search ruleSearch = rule.getSearch();
         Rule.Book ruleBook = rule.getBook();
-        Rule.Catalog ruleCatalog = rule.getCatalog();
+        Rule.Toc ruleToc = rule.getToc();
         Rule.Chapter ruleChapter = rule.getChapter();
 
         if (ruleSearch != null && ruleSearch.getTimeout() == null) {
@@ -63,8 +63,8 @@ public class Source {
         if (ruleBook != null && ruleBook.getTimeout() == null) {
             ruleBook.setTimeout(10_000);
         }
-        if (ruleCatalog != null && ruleCatalog.getTimeout() == null) {
-            ruleCatalog.setTimeout(30_000);
+        if (ruleToc != null && ruleToc.getTimeout() == null) {
+            ruleToc.setTimeout(30_000);
         }
         if (ruleChapter != null && ruleChapter.getTimeout() == null) {
             ruleChapter.setTimeout(15_000);

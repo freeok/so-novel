@@ -16,7 +16,7 @@
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
     "isEnd": "meta[property=\"og:novel:status\"]"
   },
-  "catalog": {
+  "toc": {
     "url": "https://69shuba.cx/book/%s",
     "result": "#catalog > ul > li > a",
     "offset": 0,
