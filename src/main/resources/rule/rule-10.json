@@ -1,0 +1,36 @@
+{
+  "id": 0,
+  "url": "https://cn.ttkan.co/",
+  "name": "天天看小说",
+  "comment": "老书全",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "https://cn.ttkan.co/novel/search?q=%s",
+    "method": "get",
+    "result": ".frame_body > div.pure-g > div",
+    "bookName": "ul > li > a",
+    "author": "ul > li:nth-child(2)##function func(input){return input.replaceAll('作者：','')}"
+  },
+  "book": {
+    "url": "https://cn.ttkan.co/novel/chapters/(.*?)",
+    "bookName": "meta[name=\"og:novel:book_name\"]",
+    "author": "meta[name=\"og:novel:author\"]",
+    "intro": "meta[name=\"og:description\"]##function func(input){return input.replaceAll('天天看小说：','')}",
+    "category": "meta[name=\"og:novel:category\"]",
+    "coverUrl": "meta[name=\"og:image\"]",
+    "latestChapter": "meta[name=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[name=\"og:novel:update_time\"]",
+    "isEnd": "meta[name=\"og:novel:status\"]"
+  },
+  "catalog": {
+    "result": ".full_chapters > div:nth-child(1) > a"
+  },
+  "chapter": {
+    "title": ".title > h1",
+    "content": "div.content",
+    "paragraphTagClosed": true,
+    "filterTxt": "",
+    "filterTag": "a center div"
+  }
+}

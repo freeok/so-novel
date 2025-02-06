@@ -6,17 +6,17 @@
   "type": "",
   "language": "",
   "search": {
-    "pagination": false,
     "url": "",
     "method": "",
     "data": "{}",
     "cookies": "{}",
-    "nextPage": "",
     "result": "",
     "bookName": "",
     "author": "",
     "latestChapter": "",
-    "update": ""
+    "update": "",
+    "pagination": false,
+    "nextPage": ""
   },
   "book": {
     "url": "",
