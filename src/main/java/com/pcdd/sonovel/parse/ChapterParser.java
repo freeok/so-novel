@@ -106,14 +106,14 @@ public class ChapterParser extends Source {
             document = jsoup(url)
                     .timeout(ruleChapter.getTimeout())
                     .get();
-            Elements contentEl = document.select(ruleChapter.getContent());
+            Elements contentEl = JsoupUtils.select(document, ruleChapter.getContent());
 
             // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
             for (Element el : contentEl.select("*")) {
                 el.clearAttributes();
             }
 
-            return contentEl.html();
+            return JsoupUtils.invokeJs(ruleChapter.getContent(), contentEl.html());
         }
 
         String nextUrl = url;
