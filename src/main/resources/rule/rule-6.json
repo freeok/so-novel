@@ -28,7 +28,7 @@
     "latestUpdate": "",
     "isEnd": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
   },
-  "catalog": {
+  "toc": {
     "timeout": 60000,
     "url": "https://quanben5.com/n/%s/xiaoshuo.html",
     "result": "ul > li > a",

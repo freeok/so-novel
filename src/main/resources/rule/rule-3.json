@@ -25,7 +25,7 @@
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
     "isEnd": ""
   },
-  "catalog": {
+  "toc": {
     "result": "#list > dl > dd > a",
     "offset": 12
   },
