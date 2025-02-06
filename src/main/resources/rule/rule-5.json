@@ -30,7 +30,7 @@
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
     "isEnd": "meta[property=\"og:novel:status\"]"
   },
-  "catalog": {
+  "toc": {
     "url": "https://69shux.co/ajax_novels/chapterlist/%s.html",
     "result": "ul > li > a",
     "offset": 0
