@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -15,9 +14,11 @@ import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.JsoupUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -83,13 +84,10 @@ public class SearchResultParser6 extends Source {
         Elements elements = document.select(r.getResult());
 
         for (Element element : elements) {
-            // jsoup 不支持一次性获取属性的值
-            String href = element.select(r.getBookName()).attr("href");
-            String bookName = element.select(r.getBookName()).text();
-            // 以下为非必须属性，需判空，否则抛出 org.jsoup.helper.ValidationException: String must not be empty
-            String author = StrUtil.isNotEmpty(r.getAuthor())
-                    ? element.select(r.getAuthor()).text()
-                    : null;
+            String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
+            String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
+            String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
+
             SearchResult sr = SearchResult.builder()
                     .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                     .bookName(bookName)
