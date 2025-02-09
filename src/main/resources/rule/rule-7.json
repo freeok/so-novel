@@ -5,6 +5,7 @@
   "comment": "需要梯子、正文内容纯净、搜索有CF、章节限流",
   "type": "html",
   "language": "zh_CN",
+  "needProxy": true,
   "book": {
     "url": "https://69shuba.cx/book/(.*?).htm",
     "bookName": "meta[property=\"og:novel:book_name\"]",

@@ -5,6 +5,7 @@
   "comment": "正文内容纯净，搜索需加密参数b，有时很卡，甚至打不开网站",
   "type": "html",
   "language": "zh_CN",
+  "needProxy": true,
   "search": {
     "timeout": 60000,
     "url": "https://quanben5.com/search.html/",
