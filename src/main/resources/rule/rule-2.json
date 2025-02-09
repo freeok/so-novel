@@ -2,7 +2,7 @@
   "id": "2",
   "url": "https://www.shuhaige.net/",
   "name": "书海阁小说网",
-  "comment": "搜索有反爬机制，爬取过快会丢包",
+  "comment": "搜索有反爬，爬取过快会丢包(Unexpected end of file from server)",
   "type": "html",
   "language": "zh_CN",
   "search": {
