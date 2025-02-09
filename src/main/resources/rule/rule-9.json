@@ -2,7 +2,7 @@
   "id": 9,
   "url": "https://www.369book.cc/",
   "name": "369小说网",
-  "comment": "章节限流，爬取过快会封IP。章节页、目录页都有分页和反爬。搜索结果固定10条。以javascript:开头的href需要特殊处理。书籍数量约57w+",
+  "comment": "搜索(Read timed out)、章节有限流，章节爬取过快会封IP，章节页、目录页都有分页和反爬，搜索结果固定10条，以javascript:开头的href需要特殊处理，书籍数量57w+",
   "type": "html",
   "language": "zh_CN",
   "search": {
