@@ -11,7 +11,7 @@
     "data": "{searchkey: %s}",
     "result": "div.wrap > div > div > div",
     "bookName": "div.bookinfo > h4 > a",
-    "author": "div.bookinfo > div.author",
+    "author": "div.bookinfo > div.author##function func(input){return input.replace('作者：', '');}",
     "latestChapter": "div.bookinfo > div.update > a"
   },
   "book": {
