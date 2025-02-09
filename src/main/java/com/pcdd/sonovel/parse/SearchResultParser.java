@@ -31,10 +31,6 @@ public class SearchResultParser extends Source {
         super(config);
     }
 
-    public SearchResultParser(int sourceId) {
-        super(sourceId, null);
-    }
-
     public List<SearchResult> parse(String keyword) {
         // 模拟搜索请求
         Document document;
