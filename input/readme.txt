@@ -31,6 +31,8 @@ Linux 用户
 - 希望增加某个新功能
 上述情况请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
 非上述情况在此反馈：https://github.com/freeok/so-novel/discussions/new/choose
+反馈前请先查看常见问题：https://github.com/freeok/so-novel/issues?q=is:issue state:closed label:"user error"
+如果都没有，欢迎反馈！
 
 
 项目主页：https://github.com/freeok/so-novel
