@@ -45,7 +45,7 @@ class BookSourceTest {
     @DisplayName("测试直连书源")
     @ParameterizedTest
     @CsvSource({
-            "1, http://www.xbiqugu.net/130/130509/, http://www.xbiqugu.net/130/130509/48221266.html",
+            "1, http://www.xbiqugu.la/130/130509/, http://www.xbiqugu.la/130/130509/48221266.html",
             "2, https://www.shuhaige.net/266625/, https://www.shuhaige.net/266625/102443757.html",
             "3, http://www.mcmssc.la/145_145199/, http://www.mcmssc.la/145_145199/57831284.html",
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
