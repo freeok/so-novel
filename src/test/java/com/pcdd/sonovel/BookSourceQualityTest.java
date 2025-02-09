@@ -4,15 +4,19 @@ package com.pcdd.sonovel;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
+import cn.hutool.log.dialect.console.ConsoleLog;
+import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.SearchResultParser6;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.Data;
@@ -23,124 +27,46 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 根据起点榜单测试书源质量，结果写入 Markdown
+ *
  * @author pcdd
  * Created at 2024/12/5
  */
 class BookSourceQualityTest {
 
-    public static final AppConfig config = ConfigUtils.config();
+    static final AppConfig config = ConfigUtils.config();
+    static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
 
     static {
+        ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }
 
-    @Test
-    void test() {
-        int count = 7;
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("起点月票榜", "https://www.qidian.com/rank/yuepiao/");
-        map.put("起点畅销榜", "https://www.qidian.com/rank/hotsales/");
-        map.put("起点阅读指数榜", "https://www.qidian.com/rank/readIndex/");
-        map.put("起点推荐榜月榜", "https://www.qidian.com/rank/recom/datetype2/");
-        map.put("起点收藏榜", "https://www.qidian.com/rank/collect/");
-        map.put("起点签约作者新书榜", "https://www.qidian.com/rank/signnewbook/");
-        map.put("起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/");
-
-        String divider = "-".repeat(50);
-        ExecutorService executorService = Executors.newFixedThreadPool(map.size() / 2);
-
-        try {
-            // 遍历榜单
-            for (Map.Entry<String, String> kv : map.entrySet()) {
-                executorService.execute(() -> {
-                    Console.log("{} {} {}", divider, kv.getKey(), divider);
-                    List<List<SourceQuality>> lists = new ArrayList<>();
-
-                    // 遍历书源
-                    for (int id = 1; id <= count; id++) {
-                        if (new Source(id).rule.getSearch() != null) {
-                            lists.add(getSourceQualityList(id, kv.getValue()));
-                        }
-                    }
-
-                    generateMarkdown("# " + kv.getKey(), lists, "qidian_rank" + kv.getKey() + ".md");
-                });
-            }
-        } catch (Exception e) {
-            Console.log(e.getMessage());
-        } finally {
-            executorService.shutdown();
-            try {
-                if (!executorService.awaitTermination(10, TimeUnit.MINUTES)) {
-                    executorService.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                executorService.shutdownNow();
-                Thread.currentThread().interrupt();
-            }
+    void qidianRankInit(Map<String, String> map) {
+        for (Map.Entry<String, String> kv : map.entrySet()) {
+            ranks.put(kv.getKey(), getQiDianRanks(kv.getValue()));
         }
     }
 
-
     @SneakyThrows
-    static void generateMarkdown(String name, List<List<SourceQuality>> lists, String fileName) {
-        Console.log("<== 开始生成 {}", fileName);
-        // 表头
-        StringBuilder s1 = new StringBuilder("|");
-        // 分隔线
-        StringBuilder s2 = new StringBuilder("|");
-        for (int i = 1; i <= lists.size(); i++) {
-            s1.append(" 书源 ").append(i).append(" |");
-            s2.append(" ---- |");
-        }
-
-        StringBuilder result = new StringBuilder();
-        // # 起点月票榜前 20 (2024-12-05)
-        result.append(StrUtil.format("{}前 {} ({})\n",
-                name,
-                lists.get(0).size(),
-                DateTime.now().toString(DatePattern.NORM_DATE_PATTERN)));
-        result.append(StrUtil.format("| 排名 | 书名 | 作者 {} 起点链接 |\n", s1));
-        result.append(StrUtil.format("| ---- | ---- | ---- {} ---- |\n", s2));
-
-        List<SourceQuality> list = lists.get(0);
-
-        for (int i = 0; i < list.size(); i++) {
-            SourceQuality o = list.get(i);
-
-            StringBuilder foundBuilder = new StringBuilder();
-            for (List<SourceQuality> item : lists) {
-                SourceQuality sq = item.get(i);
-                foundBuilder.append(StrUtil.format("{} |", sq.getFound() ? "✅" : "❌"));
-            }
-
-            result.append(StrUtil.format("| {} | {} | {} | {} {} |\n",
-                    i + 1,
-                    o.getBookName(),
-                    o.getAuthor(),
-                    foundBuilder,
-                    o.getQiDianUrl()));
-        }
-
-        Writer writer = new FileWriter(fileName);
-        writer.write(result.toString());
-        writer.flush();
-        writer.close();
-    }
-
-    @SneakyThrows
-    static List<Book> getQiDianRanks(String rankUrl) {
-        List<Book> ranks = new ArrayList<>();
-        // 月票榜
-        Document document = Jsoup.connect(rankUrl).timeout(5000).header(Header.USER_AGENT.getValue(), RandomUA.generate()).header(Header.COOKIE.getValue(), "newstatisticUUID=1733353201_1218475646; _csrfToken=xCa4yKqsUG8xYxk6G8B3NZv9VFWJg8ooKtSX5sls; fu=1131660441; Hm_lvt_f00f67093ce2f38f215010b699629083=1733353200; Hm_lpvt_f00f67093ce2f38f215010b699629083=1733353200; HMACCOUNT=98F935B166DF50B4; traffic_utm_referer=https%3A//github.com/freeok/so-novel/issues/new; _gid=GA1.2.296158232.1733353201; _gat_gtag_UA_199934072_2=1; _ga_FZMMH98S83=GS1.1.1733353200.49.1.1733353200.0.0.0; _ga=GA1.1.1897847021.1733353201; _ga_PFYW0QLV3P=GS1.1.1733353200.49.1.1733353200.0.0.0; w_tsfp=ltvuV0MF2utBvS0Q6qnqkUisFjkmfDE4h0wpEaR0f5thQLErU5mG0oV/vcn2MnLY5Mxnvd7DsZoyJTLYCJI3dwMGWd7AIddOzlDBzpMvzo4UARBnEZvcWVcfI7t17DBGfGpeJUXmjG9+JdRBzbVgmEUe4HsgnvE0CbBqdNlK0wkX4PXSnNtpWWiWnFKZQDTPdnYNLerYpr93+K5S9i2R").get();
+    List<Book> getQiDianRanks(String rankUrl) {
+        Console.log("getQiDianRanks: {}", rankUrl);
+        List<Book> rank = new ArrayList<>();
+        Document document = Jsoup.connect(rankUrl)
+                .timeout(5000)
+                .header(Header.USER_AGENT.getValue(), RandomUA.generate())
+                .header(Header.COOKIE.getValue(), "w_tsfp=ltvuV0MF2utBvS0Q6qPpnE2sFzsidD04h0wpEaR0f5thQLErU5mG2IZyuMn2NHDf6sxnvd7DsZoyJTLYCJI3dwMSRpqReokRhQ/ElYgnjtxAVBI1QJzYWAJJJLly7DdAf3hCNxS00jA8eIUd379yilkMsyN1zap3TO14fstJ019E6KDQmI5uDW3HlFWQRzaLbjcMcuqPr6g18L5a5TjetFupeV8iA+sXhU3B3HlKWC4gskCyIuAJNBmlI5j5SqA=")
+                .get();
 
         Elements elements = document.select("#book-img-text > ul > li");
 
@@ -154,45 +80,106 @@ class BookSourceQualityTest {
             book.setAuthor(author);
             book.setUrl(url);
 
-            ranks.add(book);
+            rank.add(book);
         }
 
-        return ranks;
+        return rank;
+    }
+
+    /**
+     * 测试统计
+     * thread: 7
+     * search interval: 500 ~ 1000 ms
+     * 5 m 28 s
+     * <p>
+     * thread: 1
+     * search interval: 0 ms
+     * 10 m 2 s
+     */
+    @Test
+    void test() {
+        int count = 10;
+        // 生成的 markdown 文件
+        Map<String, String> map = Map.of(
+                "起点月票榜", "https://www.qidian.com/rank/yuepiao/",
+                "起点畅销榜", "https://www.qidian.com/rank/hotsales/",
+                "起点阅读指数榜", "https://www.qidian.com/rank/readIndex/",
+                "起点推荐榜·月榜", "https://www.qidian.com/rank/recom/datetype2/",
+                "起点收藏榜", "https://www.qidian.com/rank/collect/",
+                "起点签约作者新书榜", "https://www.qidian.com/rank/signnewbook/",
+                "起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/"
+        );
+        qidianRankInit(map);
+
+        String divider = "-".repeat(50);
+        ExecutorService threadPool = Executors.newFixedThreadPool(map.size());
+
+        try {
+            // 遍历榜单
+            for (Map.Entry<String, String> kv : map.entrySet()) {
+                threadPool.execute(() -> {
+                    Console.log("{} {} {}", divider, kv.getKey(), divider);
+                    Map<Integer, List<SourceQuality>> sourceQualityListMap = new HashMap<>();
+
+                    // 遍历书源
+                    for (int id = 1; id <= count; id++) {
+                        // 跳过不支持搜索的书源
+                        if (new Source(id).rule.getSearch() != null) {
+                            sourceQualityListMap.put(id, getSourceQualityList(id, kv));
+                        }
+                    }
+
+                    generateMarkdown(kv.getKey(), sourceQualityListMap);
+                });
+            }
+        } catch (Exception e) {
+            Console.log(e.getMessage());
+        } finally {
+            threadPool.shutdown();
+            try {
+                if (!threadPool.awaitTermination(10, TimeUnit.MINUTES)) {
+                    threadPool.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                threadPool.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     @SneakyThrows
-    static List<SourceQuality> getSourceQualityList(int sourceId, String rankUrl) {
+    List<SourceQuality> getSourceQualityList(int id, Map.Entry<String, String> rank) {
         int foundCount = 0;
         int notFoundCount = 0;
         List<SourceQuality> list = new ArrayList<>();
-        Rule rule = new Source(sourceId).rule;
+        Rule rule = new Source(id).rule;
 
-        Console.log("<== 开始测试书源质量：书源 {} {} ({})", rule.getId(), rule.getUrl(), rule.getName());
-        config.setSourceId(sourceId);
-        if (sourceId == 5 || sourceId == 6) {
-            config.setProxyEnabled(1);
-        } else {
-            config.setProxyEnabled(0);
-        }
-        SearchResultParser searchResultParser = new SearchResultParser(config);
+        Console.log("<== {}，开始测试书源质量：书源 {} {} ({})", rank.getKey(), rule.getId(), rule.getUrl(), rule.getName());
+        config.setSourceId(id);
+        // 需要代理的书源
+        config.setProxyEnabled(rule.isNeedProxy() ? 1 : 0);
+        SearchResultParser srp = new SearchResultParser(config);
+        SearchResultParser6 srp6 = new SearchResultParser6(config);
 
-        for (Book b : getQiDianRanks(rankUrl)) {
+        // 遍历 20 本，即搜索源站 20 次，注意爬取频率
+        for (Book b : ranks.get(rank.getKey())) {
             SourceQuality sq = new SourceQuality();
             sq.setSourceId(rule.getId());
             sq.setBookName(b.getBookName());
             sq.setAuthor(b.getAuthor());
             sq.setQiDianUrl(b.getUrl());
 
-            List<SearchResult> results = searchResultParser.parse(b.getBookName());
-            // 针对书源 4 author 会包含“作者：”的情况
-            for (SearchResult sr : results) {
-                sr.setAuthor(sr.getAuthor().replace("作者：", ""));
+            List<SearchResult> results;
+            if (config.getSourceId() == 6) {
+                results = srp6.parse(b.getBookName());
+            } else {
+                results = srp.parse(b.getBookName());
             }
             boolean found = false;
-
             for (SearchResult r : results) {
                 if (Objects.equals(r.getBookName(), b.getBookName()) && Objects.equals(r.getAuthor(), b.getAuthor())) {
-                    Console.log("书源 {} 已找到《{}》（{}）\t{}\t{}", sourceId, r.getBookName(), r.getAuthor(), r.getUrl(), b.getUrl());
+                    Console.log("书源 {} 已找到《{}》（{}）{}\t{}\t{}",
+                            id, r.getBookName(), r.getAuthor(), rank.getKey(), r.getUrl(), b.getUrl());
                     sq.setUrl(r.getUrl());
                     found = true;
                     foundCount++;
@@ -200,15 +187,69 @@ class BookSourceQualityTest {
                 }
             }
             if (!found) {
-                Console.log("书源 {} 未找到《{}》（{}）\t{}", sourceId, b.getBookName(), b.getAuthor(), b.getUrl());
+                Console.log("书源 {} 未找到《{}》（{}）{}\t{}",
+                        id, b.getBookName(), b.getAuthor(), rank.getKey(), b.getUrl());
                 notFoundCount++;
             }
             sq.setFound(found);
             list.add(sq);
+            int randomInt = RandomUtil.randomInt(500, 1000);
+            Console.log("搜索间隔 {} ms", randomInt);
+            Thread.sleep(randomInt);
         }
-        Console.log("书源 {} ({})，已找到 {} 本，未找到 {} 本\n", rule.getId(), rule.getUrl(), foundCount, notFoundCount);
+        Console.log("书源 {} ({})，{}已找到 {} 本，未找到 {} 本\n\n",
+                rule.getId(), rule.getUrl(), rank.getKey(), foundCount, notFoundCount);
 
         return list;
+    }
+
+    @SneakyThrows
+    void generateMarkdown(String title, Map<Integer, List<SourceQuality>> map) {
+        String fileName = "qidian_rank/%s.md".formatted(title);
+        Console.log("<== generateMarkdown: {}", fileName);
+        // 表头
+        StringBuilder sourceNameCol = new StringBuilder("|");
+        // 分隔线
+        StringBuilder dividerCol = new StringBuilder("|");
+
+        for (Integer id : map.keySet()) {
+            sourceNameCol.append(" 书源 ").append(id).append(" |");
+            dividerCol.append(" ---- |");
+        }
+
+        StringBuilder md = new StringBuilder();
+        // # 起点xx榜前 20 (yyyy-MM-dd)
+        md.append(StrUtil.format("{}前 {} ({})\n",
+                "# " + title,
+                map.get(1).size(),
+                DateTime.now().toString(DatePattern.NORM_DATE_PATTERN)));
+        md.append(StrUtil.format("| 排名 | 书名 | 作者 {} 起点链接 |\n", sourceNameCol));
+        md.append(StrUtil.format("| ---- | ---- | ---- {} ---- |\n", dividerCol));
+
+        List<SourceQuality> list = map.get(1);
+        for (int i = 0; i < list.size(); i++) {
+            SourceQuality o = list.get(i);
+
+            StringBuilder foundBuilder = new StringBuilder();
+            for (List<SourceQuality> item : map.values()) {
+                SourceQuality sq = item.get(i);
+                foundBuilder.append(StrUtil.format("{} |", sq.getFound() ? "✅" : "❌"));
+            }
+
+            md.append(StrUtil.format("| {} | {} | {} | {} {} |\n",
+                    i + 1,
+                    o.getBookName(),
+                    o.getAuthor(),
+                    foundBuilder,
+                    o.getQiDianUrl()));
+        }
+
+        File file = new File(fileName);
+        file.getParentFile().mkdirs();
+        Writer writer = new FileWriter(file);
+        writer.write(md.toString());
+        writer.flush();
+        writer.close();
     }
 
 }
