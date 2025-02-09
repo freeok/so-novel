@@ -5,6 +5,7 @@
   "comment": "需要梯子、无CF、章节有限流、数量5w+",
   "type": "html",
   "language": "zh_Hant",
+  "needProxy": true,
   "search": {
     "pagination": true,
     "limitPage": 3,

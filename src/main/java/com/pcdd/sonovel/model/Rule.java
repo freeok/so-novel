@@ -16,6 +16,7 @@ public class Rule {
     private String comment;
     private String type;
     private String language;
+    private boolean needProxy;
 
     private Search search;
     private Book book;
