@@ -12,7 +12,6 @@ import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
-import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -75,59 +74,63 @@ public class SearchResultParser extends Source {
         return SearchResultsHandler.handle(unionAll);
     }
 
-    @SneakyThrows
     private List<SearchResult> getSearchResults(String url, Connection.Response resp) {
         Rule.Search r = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
-        // 搜索结果页 DOM
-        Document document = resp == null
-                ? jsoup(url).timeout(r.getTimeout()).get()
-                : Jsoup.parse(resp.body());
+        try {
+            // 搜索结果页 DOM
+            Document document = resp == null
+                    ? jsoup(url).timeout(r.getTimeout()).get()
+                    : Jsoup.parse(resp.body());
 
-        // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
-        if (document.select(r.getResult()).isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
-            String bookUrl = resp.url().toString();
-            BookParser bookParser = new BookParser(config);
-            Book book = bookParser.parse(bookUrl);
+            // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
+            if (document.select(r.getResult()).isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
+                String bookUrl = resp.url().toString();
+                BookParser bookParser = new BookParser(config);
+                Book book = bookParser.parse(bookUrl);
 
-            if (StrUtil.isBlank(book.getBookName())) {
-                return Collections.emptyList();
+                if (StrUtil.isBlank(book.getBookName())) {
+                    return Collections.emptyList();
+                }
+
+                SearchResult build = SearchResult.builder()
+                        .url(bookUrl)
+                        .bookName(book.getBookName())
+                        .author(book.getAuthor())
+                        .latestChapter(book.getLatestChapter())
+                        .latestUpdate(book.getLatestUpdate())
+                        .build();
+                list.add(build);
+                Thread.sleep(CrawlUtils.randomInterval(config, false));
+
+                return list;
             }
 
-            SearchResult build = SearchResult.builder()
-                    .url(bookUrl)
-                    .bookName(book.getBookName())
-                    .author(book.getAuthor())
-                    .latestChapter(book.getLatestChapter())
-                    .latestUpdate(book.getLatestUpdate())
-                    .build();
-            list.add(build);
-            Thread.sleep(CrawlUtils.randomInterval(config, false));
+            Elements elements = document.select(r.getResult());
+            for (Element element : elements) {
+                // jsoup 不支持一次性获取属性的值
+                String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
+                String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
+                // 以下为非必须属性
+                String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
+                String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
+                String update = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
 
-            return list;
-        }
+                if (bookName.isEmpty()) continue;
 
-        Elements elements = document.select(r.getResult());
-        for (Element element : elements) {
-            // jsoup 不支持一次性获取属性的值
-            String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
-            String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
-            // 以下为非必须属性
-            String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
-            String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
-            String update = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
+                SearchResult sr = SearchResult.builder()
+                        .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
+                        .bookName(bookName)
+                        .author(author)
+                        .latestChapter(latestChapter)
+                        .latestUpdate(update)
+                        .build();
 
-            if (bookName.isEmpty()) continue;
-
-            SearchResult sr = SearchResult.builder()
-                    .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
-                    .bookName(bookName)
-                    .author(author)
-                    .latestChapter(latestChapter)
-                    .latestUpdate(update)
-                    .build();
-
-            list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
+                list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
+            }
+        } catch (Exception e) {
+            Console.error(e);
+            return Collections.emptyList();
         }
 
         return list;

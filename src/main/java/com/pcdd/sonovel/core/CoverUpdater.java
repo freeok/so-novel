@@ -88,33 +88,39 @@ public class CoverUpdater {
      * 纵横中文网
      */
     public String fetchZongheng(Book book) {
-        String url = "https://search.zongheng.com/search/book";
-        // 自动拼接查询字符串
-        Map<String, Object> params = new HashMap<>();
-        params.put("keyword", book.getBookName());
-        params.put("pageNo", 1);
-        params.put("pageNum", 20);
-        params.put("isFromHuayu", 0);
+        try {
+            String url = "https://search.zongheng.com/search/book";
+            // 自动拼接查询字符串
+            Map<String, Object> params = new HashMap<>();
+            params.put("keyword", book.getBookName());
+            params.put("pageNo", 1);
+            params.put("pageNum", 20);
+            params.put("isFromHuayu", 0);
 
-        HttpRequest req = HttpRequest.get(url)
-                .form(params)
-                .header(Header.USER_AGENT, RandomUA.generate());
-        HttpResponse resp = req.execute();
-        String body = resp.body();
-        JSONObject obj = JSONUtil.parseObj(body);
-        JSONArray list = obj
-                .getJSONObject("data")
-                .getJSONObject("datas")
-                .getJSONArray("list");
+            HttpRequest req = HttpRequest.get(url)
+                    .form(params)
+                    .header(Header.USER_AGENT, RandomUA.generate());
+            HttpResponse resp = req.execute();
+            String body = resp.body();
+            JSONObject obj = JSONUtil.parseObj(body);
+            JSONArray list = obj
+                    .getJSONObject("data")
+                    .getJSONObject("datas")
+                    .getJSONArray("list");
 
-        for (Object o : list) {
-            JSONObject bookObj = (JSONObject) o;
-            if (matchBook(book, bookObj.getStr("name"), bookObj.getStr("authorName"))) {
-                return "https://static.zongheng.com/upload" + bookObj.getStr("coverUrl");
+            for (Object o : list) {
+                JSONObject bookObj = (JSONObject) o;
+                if (matchBook(book, bookObj.getStr("name"), bookObj.getStr("authorName"))) {
+                    return "https://static.zongheng.com/upload" + bookObj.getStr("coverUrl");
+                }
             }
+
+            resp.close();
+        } catch (Exception e) {
+            Console.error(e);
+            return null;
         }
 
-        resp.close();
         return null;
     }
 
