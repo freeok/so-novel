@@ -25,7 +25,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 结合以下电子书阅读器使用更佳
 
-- 电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://github.com/readest/readest)
+- 电脑：[Readest](https://github.com/readest/readest)、[Koodo Reader](https://www.koodoreader.com/zh)
 - 手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
   微信读书</del>（2024.4 更新后非付费会员每月最多导 3 本书）
 
@@ -76,10 +76,13 @@ brew install so-novel
 
 [点击查看](https://github.com/freeok/so-novel/issues?q=is:issue%20state:closed%20label:%22user%20error%22)
 
+## 支持
+
+*本项目纯粹为爱发电⚡，坚持无偿更新🔥*
+
+*如果觉得有所帮助，欢迎点击顶部右上角的 ⭐Star
+支持！🚀这将是我们持续更新的动力源泉！同时，你也能第一时间获取到最新的更新动态。💡❤️*
+
 ## Star History
-
-本项目纯粹为爱发电⚡，持续无偿更新。
-
-如果觉得有所帮助，欢迎点击顶部右上角的 ⭐Star 支持！🚀这是我们持续更新的最大动力！💡❤️
 
 [![Star History Chart](https://api.star-history.com/svg?repos=freeok/so-novel&type=Date)](https://star-history.com/#freeok/so-novel&Date)
