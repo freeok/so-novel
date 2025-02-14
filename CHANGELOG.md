@@ -4,7 +4,7 @@
 
 - 新增书源 8：大熊猫文学 (https://github.com/freeok/so-novel/issues/86)
 - 新增书源 9：369小说网 (https://github.com/freeok/so-novel/issues/90)
-- 新增书源 10：天天看小说 (https://github.com/freeok/so-novel/issues/90)
+- 新增书源 10：天天看小说
 - 新增封面获取途径：纵横中文网
 - 书源规则支持 JS
 - rule.json 新增 limitPage 和 needProxy 属性
