@@ -1,6 +1,6 @@
 {
   "id": "1",
-  "url": "http://www.xbiqugu.la",
+  "url": "http://www.xbiqugu.la/",
   "name": "香书小说",
   "comment": "无限流",
   "type": "html",
@@ -21,9 +21,7 @@
     "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
-    "latestChapter": "",
-    "latestUpdate": "",
-    "isEnd": ""
+    "isEnd": false
   },
   "toc": {
     "result": "#list > dl > dd > a",

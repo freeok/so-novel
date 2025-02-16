@@ -13,9 +13,7 @@
     "data": "{keywords: %s, a: search.json, b: %s, c: book, callback: search}",
     "result": ".pic_txt_list",
     "bookName": "h3 > a",
-    "author": "p.info > span",
-    "latestChapter": "",
-    "update": ""
+    "author": "p.info > span"
   },
   "book": {
     "timeout": 60000,
@@ -25,8 +23,6 @@
     "intro": "body > div.row > div > div:nth-child(1) > div.description",
     "category": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(4) > span",
     "coverUrl": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > div > img",
-    "latestChapter": "",
-    "latestUpdate": "",
     "isEnd": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
   },
   "toc": {
