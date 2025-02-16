@@ -1,0 +1,40 @@
+{
+  "id": 11,
+  "url": "http://www.xbiquzw.com/",
+  "name": "笔尖中文",
+  "comment": "无限流",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "http://www.xbiquzw.com/modules/article/search.php",
+    "method": "post",
+    "data": "{searchkey: %s}",
+    "result": "#wrapper > table > tbody > tr",
+    "bookName": "td:nth-child(1) > a",
+    "author": "td:nth-child(3)",
+    "latestChapter": "td:nth-child(2)",
+    "update": "td:nth-child(5)"
+  },
+  "book": {
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "isEnd": false
+  },
+  "toc": {
+    "result": "#list > dl > dd > a",
+    "offset": 0
+  },
+  "chapter": {
+    "title": ".bookname > h1",
+    "content": "#content",
+    "paragraphTag": "<br><br>",
+    "paragraphTagClosed": false,
+    "filterTxt": "<!--.*?-->|喜欢.+请大家收藏：.+",
+    "filterTag": ""
+  }
+}
