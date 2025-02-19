@@ -22,7 +22,7 @@
   "book": {
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
-    "intro": "meta[property=\"og:description\"]",
+    "intro": "#intro > p:nth-child(1)",
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
