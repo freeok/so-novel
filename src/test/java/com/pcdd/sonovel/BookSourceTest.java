@@ -46,7 +46,7 @@ class BookSourceTest {
     @ParameterizedTest
     @CsvSource({
             "1, http://www.xbiqugu.la/130/130509/, http://www.xbiqugu.la/130/130509/48221266.html",
-            "2, https://www.shuhaige.net/266625/, https://www.shuhaige.net/266625/102443757.html",
+            "2, https://www.shuhaige.net/199178/, https://www.shuhaige.net/199178/86580492.html",
             "3, http://www.mcmssc.la/145_145199/, http://www.mcmssc.la/145_145199/57831284.html",
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
             "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
