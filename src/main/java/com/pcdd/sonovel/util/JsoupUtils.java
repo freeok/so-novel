@@ -13,7 +13,8 @@ import static com.pcdd.sonovel.model.ContentType.*;
 @UtilityClass
 public class JsoupUtils {
 
-    private static final String JS_SEPARATOR = "##"; // JS 分隔符
+    // JS 分隔符
+    private static final String JS_SEPARATOR = "##";
 
     /**
      * 使用查询条件选择元素
@@ -48,7 +49,7 @@ public class JsoupUtils {
      * 等价于 func(document.select(query).(text|html|attr)())
      */
     public String selectAndInvokeJs(Element e, String query, ContentType contentType) {
-        if (StrUtil.isEmpty(query)) {
+        if (StrUtil.isEmpty(query) || contentType == null) {
             return null;
         }
 
