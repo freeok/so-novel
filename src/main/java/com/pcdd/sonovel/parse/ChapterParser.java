@@ -127,9 +127,9 @@ public class ChapterParser extends Source {
             sb.append(document.select(ruleChapter.getContent()).html());
 
             Elements elNextPage = JsoupUtils.select(document, ruleChapter.getNextPage());
-            // 章节最后一页 TODO 针对书源 2，此处容易出错
+            // 章节最后一页
             if (elNextPage.text().contains("下一章")) break;
-            nextUrl = CrawlUtils.normalizeUrl(elNextPage.attr("href"), this.rule.getUrl());
+            nextUrl = elNextPage.first().absUrl("href");
 
             Thread.sleep(interval);
         }
