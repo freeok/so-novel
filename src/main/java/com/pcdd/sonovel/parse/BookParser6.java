@@ -8,7 +8,6 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.CrawlUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
 
@@ -32,14 +31,14 @@ public class BookParser6 extends Source {
         String author = document.select(r.getAuthor()).text();
         String intro = document.select(r.getIntro()).text();
         intro = StrUtil.cleanBlank(intro);
-        String coverUrl = document.select(r.getCoverUrl()).attr("src");
+        String coverUrl = document.selectFirst(r.getCoverUrl()).attr("src");
 
         Book book = new Book();
         book.setUrl(url);
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, coverUrl));
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
     }
