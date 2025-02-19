@@ -9,7 +9,6 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
@@ -47,7 +46,7 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, coverUrl));
         book.setLatestChapter(latestChapter);
         book.setLatestUpdate(latestUpdate);
 
@@ -55,6 +54,9 @@ public class BookParser extends Source {
     }
 
     private ContentType getContentType(String query) {
+        if (StrUtil.isEmpty(query)) {
+            return null;
+        }
         return query.startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.TEXT;
     }
 
