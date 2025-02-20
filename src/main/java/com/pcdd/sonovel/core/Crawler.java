@@ -88,7 +88,7 @@ public class Crawler {
         }
 
         // 小说目录名格式：书名(作者)
-        bookDir = String.format("%s (%s)", bookName, author);
+        bookDir = StrUtil.format("{} ({}) {}", bookName, author, config.getExtName().toUpperCase());
         // 必须 new File()，否则无法使用 . 和 ..
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
