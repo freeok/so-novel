@@ -6,7 +6,6 @@
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "url": "https://www.shuhaige.net/search.html",
     "method": "post",
     "data": "{searchkey: %s, searchtype: all}",
@@ -17,6 +16,7 @@
     "latestChapter": "dd:nth-child(5) > a",
     "update": "dd:nth-child(5) > span",
     "pagination": true,
+    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
     "limitPage": 3
   },
   "book": {

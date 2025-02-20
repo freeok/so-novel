@@ -2,7 +2,7 @@
   "id": 12,
   "url": "https://www.0xs.net/",
   "name": "零点小说",
-  "comment": "有限流，发布页：https://www.cxysb.com/",
+  "comment": "限流程度和69书吧相似，爬取过快会封IP，发布页：https://www.cxysb.com/",
   "type": "html",
   "language": "zh_CN",
   "search": {
@@ -16,7 +16,7 @@
     "wordCount": ".count",
     "category": ".type",
     "pagination": true,
-    "nextPage": "body > div.page > a:nth-child(3)",
+    "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)",
     "limitPage": 3
   },
   "book": {

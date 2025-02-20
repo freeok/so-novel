@@ -57,8 +57,10 @@ public class SearchResultParser extends Source {
 
         // 搜索结果的分页 URL
         Set<String> urls = new LinkedHashSet<>();
+        // 注意，css 或 xpath 的查询结果必须为多个 a 元素，且 1 <= limitPage < searchPages.size()，否则 limitPage 无效
         Elements searchPages = JsoupUtils.select(document, r.getNextPage());
-        for (Element e : CollUtil.sub(searchPages, 0, r.getLimitPage() - 1)) {
+        List<Element> sub = r.getLimitPage() == null ? searchPages : searchPages.subList(0, r.getLimitPage() - 1);
+        for (Element e : sub) {
             String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
