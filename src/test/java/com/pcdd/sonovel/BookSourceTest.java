@@ -52,7 +52,8 @@ class BookSourceTest {
             "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
             "9, https://www.369book.cc/book/344580/, https://www.369book.cc/read/344580/66984376.html",
             "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie, https://cn.wa01.com/novel/pagea/tunshixingkongzhiwuzuchuanshuo-dugujiujie_367.html",
-            "11, http://www.xbiquzw.com/10_10233/, http://www.xbiquzw.com/10_10233/5011609.html"
+            "11, http://www.xbiquzw.com/10_10233/, http://www.xbiquzw.com/10_10233/5011609.html",
+            "12, https://www.0xs.net/txt/68398.html, https://www.0xs.net/txt/68398/1.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;

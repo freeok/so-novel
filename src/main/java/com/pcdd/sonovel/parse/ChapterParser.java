@@ -43,7 +43,7 @@ public class ChapterParser extends Source {
         Document document = jsoup(chapter.getUrl())
                 .timeout(this.rule.getChapter().getTimeout())
                 .get();
-        chapter.setTitle(document.select(this.rule.getChapter().getTitle()).text());
+        chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
         chapter.setContent(crawl(chapter.getUrl(), 0));
         return chapter;
     }
@@ -118,23 +118,31 @@ public class ChapterParser extends Source {
         }
 
         String nextUrl = url;
-        StringBuilder sb = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
+        boolean isLastPage = false;
         // 章节分页
-        while (true) {
-            document = jsoup(JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl))
+        for (int i = 0; !isLastPage; i++) {
+            // 第一次执行无需对 nextUrl 进行判断
+            String currentUrl = i == 0 ? nextUrl : JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl);
+            if (StrUtil.isEmpty(currentUrl)) {
+                break;
+            }
+            document = jsoup(currentUrl)
                     .timeout(ruleChapter.getTimeout())
                     .get();
-            sb.append(document.select(ruleChapter.getContent()).html());
-
-            Elements elNextPage = JsoupUtils.select(document, ruleChapter.getNextPage());
-            // 章节最后一页
-            if (elNextPage.text().contains("下一章")) break;
-            nextUrl = elNextPage.first().absUrl("href");
-
+            contentBuilder.append(document.select(ruleChapter.getContent()).html());
+            // 获取下一页链接
+            Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
+            // 判断是否为章节最后一页
+            if (nextEls.text().contains("下一章")) {
+                isLastPage = true;
+            }
+            // 更新下一页链接
+            nextUrl = nextEls.first().absUrl("href");
             Thread.sleep(interval);
         }
 
-        return sb.toString();
+        return contentBuilder.toString();
     }
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {

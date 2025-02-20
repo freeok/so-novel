@@ -1,0 +1,47 @@
+{
+  "id": 12,
+  "url": "https://www.0xs.net/",
+  "name": "零点小说",
+  "comment": "有限流，发布页：https://www.cxysb.com/",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "https://www.0xs.net/search.html",
+    "method": "get",
+    "data": "{kw: %s}",
+    "result": ".result_list > ul > li > .book",
+    "bookName": ".name > a",
+    "author": ".author",
+    "status": ".serial",
+    "wordCount": ".count",
+    "category": ".type",
+    "pagination": true,
+    "nextPage": "body > div.page > a:nth-child(3)",
+    "limitPage": 3
+  },
+  "book": {
+    "url": "https://www.0xs.net/txt/(.*?).html",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "isEnd": "meta[property=\"og:novel:status\"]"
+  },
+  "toc": {
+    "url": "https://www.0xs.net/list/%s.html",
+    "result": ".catalog > div > ul > ul > li > a"
+  },
+  "chapter": {
+    "title": ".title > h1##function func(input){return input.replace(/\\(\\d+\\/\\d+\\)/,'')}",
+    "content": ".content",
+    "paragraphTagClosed": true,
+    "paragraphTag": "p",
+    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击[下一页]继续阅读-->>",
+    "filterTag": "",
+    "pagination": true,
+    "nextPage": "#next##function func(input){var reg=/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/;return input.match(reg)?input:''}"
+  }
+}
