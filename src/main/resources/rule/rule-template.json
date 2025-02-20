@@ -16,7 +16,8 @@
     "latestChapter": "",
     "update": "",
     "pagination": false,
-    "nextPage": ""
+    "nextPage": "",
+    "limitPage": 0
   },
   "book": {
     "url": "",
