@@ -7,18 +7,18 @@
   "language": "zh_Hant",
   "needProxy": true,
   "search": {
-    "pagination": true,
-    "limitPage": 3,
     "url": "https://69shux.co/search",
     "method": "post",
     "data": "{searchkey: %s, submit: Search}",
     "cookies": "{'zh_choose': 't'}",
-    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",
     "result": "#article_list_content > li > div.newnav",
     "bookName": "h3 > a:last-child",
     "author": "div.labelbox > label:nth-child(1)",
     "latestChapter": "div.zxzj > p > a",
-    "update": "div.labelbox > label:nth-child(3)"
+    "update": "div.labelbox > label:nth-child(3)",
+    "pagination": true,
+    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",
+    "limitPage": 3
   },
   "book": {
     "url": "https://69shux.co/book/(.*?).html",
