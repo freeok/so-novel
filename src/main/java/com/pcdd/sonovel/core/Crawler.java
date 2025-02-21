@@ -12,7 +12,10 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.*;
+import com.pcdd.sonovel.parse.BookParser;
+import com.pcdd.sonovel.parse.ChapterParser;
+import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.SearchResultParser6;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
@@ -78,14 +81,7 @@ public class Crawler {
         String url = sr.getUrl();
         String bookName = sr.getBookName();
         String author = sr.getAuthor();
-        Book book;
-
-        // 根据 css selector 解析
-        if (config.getSourceId() == 6) {
-            book = new BookParser6(config).parse(url);
-        } else { // 根据 meta 解析
-            book = new BookParser(config).parse(url);
-        }
+        Book book = new BookParser(config).parse(url);
 
         // 小说目录名格式：书名(作者)
         bookDir = StrUtil.format("{} ({}) {}", bookName, author, config.getExtName().toUpperCase());
