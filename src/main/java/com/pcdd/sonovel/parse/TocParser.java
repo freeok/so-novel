@@ -45,7 +45,7 @@ public class TocParser extends Source {
 
         // 目录和详情不在同一页面
         if (StrUtil.isNotEmpty(ruleToc.getUrl())) {
-            String id = ReUtil.getGroup1(ruleBook.getUrl(), url);
+            String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "##", false), url);
             url = ruleToc.getUrl().formatted(id);
         }
 

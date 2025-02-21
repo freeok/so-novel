@@ -39,6 +39,9 @@ public class CoverUpdater {
      * 依次尝试不同来源获取封面
      */
     public String fetchCover(Book book, String coverUrl) {
+        if (StrUtil.isEmpty(book.getBookName())) {
+            return book.getCoverUrl();
+        }
         book.setCoverUrl(coverUrl);
         return Stream.<Supplier<String>>of(
                         () -> fetchQidian(book),

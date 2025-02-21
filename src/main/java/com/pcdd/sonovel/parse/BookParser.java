@@ -19,8 +19,6 @@ import org.jsoup.nodes.Document;
  */
 public class BookParser extends Source {
 
-    public static final String CONTENT = "content";
-
     public BookParser(AppConfig config) {
         super(config);
     }
