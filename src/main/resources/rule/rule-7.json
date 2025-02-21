@@ -7,7 +7,7 @@
   "language": "zh_CN",
   "needProxy": true,
   "book": {
-    "url": "https://69shuba.cx/book/(.*?).htm",
+    "url": "https://69shuba.cx/book/(.*?).htm##function func(input){return input.replace(/https:\\/\\/www\\.69shuba\\.me\\/book\\/(\\d+)\\.htm/,'https://69shuba.cx/book/$1.htm')||input}",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -27,7 +27,7 @@
     "title": ".txtnav > h1",
     "content": ".txtnav",
     "paragraphTagClosed": true,
-    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|(本章完)",
+    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)",
     "filterTag": "h1 div br"
   }
 }
