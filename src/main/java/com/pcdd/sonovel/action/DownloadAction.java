@@ -82,9 +82,9 @@ public class DownloadAction {
 
             sr = results.get(num - 1);
             Console.log("<== 正在获取章节目录 ...");
-            TocParser TOCParser = new TocParser(config);
-            toc = TOCParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
-            // TocParser.shutdown();
+            TocParser tocParser = new TocParser(config);
+            toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+            // tocParser.shutdown();
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
             Console.log("==> 0: 重新选择功能");
