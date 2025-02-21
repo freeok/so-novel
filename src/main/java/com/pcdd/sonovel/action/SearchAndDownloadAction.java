@@ -26,7 +26,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  * Created at 2024/11/10
  */
 @AllArgsConstructor
-public class DownloadAction {
+public class SearchAndDownloadAction {
 
     private final AppConfig config;
 
