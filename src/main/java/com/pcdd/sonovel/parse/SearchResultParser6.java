@@ -55,8 +55,9 @@ public class SearchResultParser6 extends Source {
                 .timeout(r.getTimeout())
                 .header("Referer", r.getUrl())
                 .formStr(map);
-        if (config.getProxyEnabled() == 1)
+        if (config.getProxyEnabled() == 1) {
             req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
+        }
 
         try (HttpResponse resp = req.execute()) {
             String body = resp.body();
@@ -69,9 +70,8 @@ public class SearchResultParser6 extends Source {
                     .replace("\\\"", "'");
             String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
             String beginIndex = "\"content\":";
-            String ans = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
-            List<SearchResult> firstPageResults = getSearchResults(Jsoup.parse(ans));
-            return SearchResultsHandler.handle(firstPageResults);
+            String html = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
+            return SearchResultsHandler.handle(getSearchResults(Jsoup.parse(html)));
 
         } catch (Exception e) {
             Console.error(e.getMessage());
