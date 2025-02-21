@@ -8,8 +8,9 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
+import com.pcdd.sonovel.action.BatchDownloadAction;
 import com.pcdd.sonovel.action.CheckUpdateAction;
-import com.pcdd.sonovel.action.DownloadAction;
+import com.pcdd.sonovel.action.SearchAndDownloadAction;
 import com.pcdd.sonovel.action.ShowSourcesAction;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
@@ -40,11 +41,12 @@ public class Main {
 
     public static final List<String> options = List.of(
             "0.结束程序",
-            "1.下载小说",
+            "1.搜索下载",
             "2.检查更新",
             "3.书源一览",
             "4.使用须知",
-            "5.查看配置文件"
+            "5.查看配置文件",
+            "6.批量下载"
     );
 
     static {
@@ -78,7 +80,7 @@ public class Main {
 
         while (true) {
             Console.log("\n" + StrUtil.join(" ", options));
-            System.out.print("==> 请输入功能序号: ");
+            Console.print("==> 请输入功能序号: ");
             String cmd = sc.nextLine();
 
             if ("0".equals(cmd)) {
@@ -86,7 +88,7 @@ public class Main {
                 System.exit(0);
                 break;
             } else if ("1".equals(cmd)) {
-                new DownloadAction(config).execute(terminal);
+                new SearchAndDownloadAction(config).execute(terminal);
             } else if ("2".equals(cmd)) {
                 new CheckUpdateAction().execute();
             } else if ("3".equals(cmd)) {
@@ -95,6 +97,8 @@ public class Main {
                 printHint();
             } else if ("5".equals(cmd)) {
                 Console.log(JSONUtil.toJsonPrettyStr(config));
+            } else if ("6".equals(cmd)) {
+                new BatchDownloadAction(config).execute();
             } else {
                 Console.error("无效的选项，请重新输入");
             }
@@ -125,7 +129,7 @@ public class Main {
                 break;
             }
             if (options.get(1).equals(cmd)) {
-                new DownloadAction(config).execute(terminal);
+                new SearchAndDownloadAction(config).execute(terminal);
             }
             if (options.get(2).equals(cmd)) {
                 new CheckUpdateAction().execute();
@@ -138,6 +142,9 @@ public class Main {
             }
             if (options.get(5).equals(cmd)) {
                 Console.log(JSONUtil.toJsonPrettyStr(config));
+            }
+            if (options.get(6).equals(cmd)) {
+                new BatchDownloadAction(config).execute();
             }
         }
 
