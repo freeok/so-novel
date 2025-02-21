@@ -6,13 +6,11 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.SearchResultParser;
 import com.pcdd.sonovel.parse.TocParser;
+import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -34,6 +32,9 @@ public class DownloadAction {
 
     public void downloadFromUrl(LineReader reader) {
         String bookUrl = reader.readLine(render("==> @|blue 请输入书籍详情页网址: |@")).strip();
+        Rule rule = new Source(config).rule;
+        // www.69shuba.me 的链接转换为 69shuba.cx 的
+        bookUrl = JsoupUtils.invokeJs(rule.getBook().getUrl(), bookUrl);
         Book book = new BookParser(config).parse(bookUrl);
         SearchResult sr = SearchResult.builder()
                 .url(book.getUrl())
@@ -42,9 +43,9 @@ public class DownloadAction {
                 .latestChapter(book.getLatestChapter())
                 .latestUpdate(book.getLatestUpdate())
                 .build();
-        TocParser TOCParser = new TocParser(config);
-        List<Chapter> toc = TOCParser.parse(sr.getUrl());
-        // TocParser.shutdown();
+        TocParser tocParser = new TocParser(config);
+        List<Chapter> toc = tocParser.parse(sr.getUrl());
+        // tocParser.shutdown();
         Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
         double res = new Crawler(config).crawl(sr, toc);
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
