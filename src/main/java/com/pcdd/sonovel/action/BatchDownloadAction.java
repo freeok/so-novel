@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
@@ -14,7 +13,6 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchResultParser;
 import com.pcdd.sonovel.parse.TocParser;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public class BatchDownloadAction {
     private final AppConfig config;
     public static final String DIVIDER = "=".repeat(50);
 
-    @SneakyThrows
     public void execute() {
         Scanner sc = Console.scanner();
         List<String> lines = new ArrayList<>();
@@ -61,7 +58,7 @@ public class BatchDownloadAction {
                     .filter(sr -> bookName.equals(sr.getBookName()) && author.equals(sr.getAuthor()))
                     .findFirst()
                     .ifPresentOrElse(sr -> {
-                        Console.log("<== 已找到：{}", JSONUtil.toJsonPrettyStr(sr));
+                        Console.log("<== 已找到：《{}》({}) {}", sr.getBookName(), sr.getAuthor(), sr.getUrl());
                         downloadList.add(sr);
                     }, () -> {
                         Console.log("<== 未找到：《{}》({})", bookName, author);
@@ -82,7 +79,7 @@ public class BatchDownloadAction {
                     System.getProperty("user.dir") + File.separator + "批量下载 - 书源 %s 未搜到的书.log".formatted(config.getSourceId()));
         }
         Console.print("==> 输入 Y 以确认下载：");
-        if ("Y".equalsIgnoreCase(sc.nextLine().strip())) {
+        if ("Y".equalsIgnoreCase(sc.next().strip())) {
             double totalTime = 0;
             TocParser tocParser = new TocParser(config);
 

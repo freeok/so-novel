@@ -1,14 +1,14 @@
 # So Novel
 
 <div align="center">
-  <img src="assets/logo-1.ico" alt="logo" style="width: 128px; border-radius: 25px">
+  <img src="assets/logo.png" alt="logo" style="width: 128px;">
 </div>
 
 ## 前言
 
-适合用户：既想免费看正版付费新书，又追求更佳阅读体验的网络文学爱好者。
+适合用户：既想免费看正版新书，又想追求绝佳阅读体验的网络文学爱好者。
 
-适用场景：国内网上 98% 的 TXT 、EPUB 等格式的小说都是完本。如果想看新书，要么去起点等一类的正版平台付费阅读，要么去笔趣阁等一类网站，要么用“阅读”（仅限安卓）等一类
+适用场景：国内网上 98% 的 TXT、EPUB 格式的小说都是完本。如果想看新书，要么去起点等一类的正版平台付费阅读，要么去笔趣阁等一类网站，要么用“阅读”等一类有平台限制的
 APP。其实这些方案足够很多人用了，但总会有众口难调的情况：嫌弃 UI
 难看的、吐槽功能的、受限于平台的。这时阅读器的优势便显现出来了——DIY。这个工具最大的意义就是能把连载的新书免费下载为 EPUB
 等电子书格式，从而导入自己喜爱的阅读器。
@@ -19,23 +19,25 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 交互式小说下载器，Windows、macOS、Linux 解压即用
 
-可根据书名、作者搜索并下载小说
-
-支持导出格式：EPUB、TXT、HTML（支持翻页）
+- 可根据书名、作者搜索并下载小说
+- 支持导出格式：EPUB、TXT、HTML（支持翻页）
+- [高质量书源](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
+- 支持批量下载
 
 结合以下电子书阅读器使用更佳
 
-- 电脑：[Readest](https://github.com/readest/readest)、[Koodo Reader](https://www.koodoreader.com/zh)
-- 手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
-  微信读书</del>（2024.4 更新后非付费会员每月最多导 3 本书）
+- 电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://github.com/readest/readest)
+-
+手机：[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
+微信读书</del>（2024.4 更新后，非付费会员每月最多导 3 本书）
 
 > [!WARNING]
 >
-> iOS 16 Apple Books 目录不能定位到当前章节，如果看到很多章了，就需要从上一直向下划，十分不便
+> iOS 16 Apple Books 目录不能定位到当前章节，如果看到很多章了，就需要从上一直向下划，十分不便（iOS 17 修复了此 Bug）
 >
-> iOS 17 修复了此 Bug
+> Apple Books 不建议开启 iCloud，因为每次打开都要从 iCloud 重新下载
 
-## 效果
+## 预览
 
 保留部分下载日志
 
