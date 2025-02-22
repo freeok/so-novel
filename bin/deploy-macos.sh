@@ -52,4 +52,4 @@ tar czf "$dist_filename_x64" "$dist_dirname_x64"
 mv "$dist_filename_arm64" $project_path/out
 mv "$dist_filename_x64" $project_path/out
 
-echo done!
+echo macOS done!

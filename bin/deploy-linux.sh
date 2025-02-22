@@ -41,4 +41,4 @@ tar czf "$dist_filename" "$dist_dirname"
 # 剪切
 mv "$dist_filename" $project_path/out
 
-echo done!
+echo Linux done!

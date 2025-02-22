@@ -24,10 +24,10 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 - [高质量书源](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
 - 支持批量下载
 
-结合以下电子书阅读器使用更佳
+*结合以下电子书阅读器使用更佳*
 
-- 电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://github.com/readest/readest)
--
+电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://github.com/readest/readest)
+
 手机：[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
 微信读书</del>（2024.4 更新后，非付费会员每月最多导 3 本书）
 

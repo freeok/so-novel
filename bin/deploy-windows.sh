@@ -36,4 +36,4 @@ cd ..
 tar czf $artifacts SoNovel
 mv $artifacts $project_path/out
 
-echo done!
+echo Windows done!
