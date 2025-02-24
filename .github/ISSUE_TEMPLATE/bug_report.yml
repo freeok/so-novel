@@ -11,8 +11,8 @@ body:
       options:
         - label: 我已下载最新版本测试，问题依然存在
         - label: 我已查阅 [使用说明](https://github.com/freeok/so-novel/blob/main/input/readme.txt) 以及 [常见问题](https://github.com/freeok/so-novel?tab=readme-ov-file#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
-        - label: 我已确保 [已有的问题](./?q=is%3Aissue) 中无类似 issue，否则请在已有的 issue 内进行讨论
-        - label: 我已关闭所有杀毒软件/代理软件后测试，问题依然存在
+        - label: 我已确保 [已有问题](./?q=is%3Aissue) 中无类似 issue，否则请在已有的 issue 内进行讨论
+        - label: 我已开启&关闭所有代理软件后测试，问题依然存在
         - label: 我已填写一个简洁明了的标题，以便他人快速检索
 
   - type: dropdown
@@ -27,7 +27,7 @@ body:
 
   - type: input
     attributes:
-      label: 操作系统版本（Windows 通过 systeminfo 命令查看）
+      label: 操作系统版本（Windows、Linux、macOS 用命令查看分别为：systeminfo、lsb_release -a、sw_vers）
       placeholder: Windows 11 专业版 26120.2705
     validations:
       required: true
@@ -35,7 +35,7 @@ body:
   - type: input
     attributes:
       label: so-novel 版本
-      placeholder: v1.7.2
+      placeholder: v1.7.9
     validations:
       required: true
 
@@ -46,13 +46,13 @@ body:
   - type: textarea
     attributes:
       label: 问题描述
-      description: 详细清晰地描述你遇到的问题，并提供截图
+      description: 清晰地描述你遇到的问题，并提供完整的输入&输出信息，尽量用截图
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 复现步骤
-      description: 请提供复现问题的步骤
+      description: 请提供复现问题的完整步骤
     validations:
       required: true
