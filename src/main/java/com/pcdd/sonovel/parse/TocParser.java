@@ -2,6 +2,7 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,11 +15,14 @@ import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
+import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
 
 public class TocParser extends Source {
 
@@ -49,7 +53,7 @@ public class TocParser extends Source {
             url = ruleToc.getUrl().formatted(id);
         }
 
-        List<String> urls = CollUtil.toList(url);
+        Set<String> urls = CollUtil.set(true, url);
         Document document = jsoup(url)
                 .timeout(ruleToc.getTimeout())
                 .get();
@@ -61,21 +65,36 @@ public class TocParser extends Source {
         return parseToc(urls, start, end, ruleToc);
     }
 
-    // TODO 优化，一次性获取分页 URL，而不是递归获取
-    private void extractPaginationUrls(List<String> urls, Document document, Rule.Toc r) throws Exception {
+    @SneakyThrows
+    private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
+        Elements elements = JsoupUtils.select(document, r.getNextPage());
+        // 一次性获取分页 URL（下拉菜单）
+        if (elements.size() > 1) {
+            List<String> list = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
+                    ? elements.eachAttr(ATTR_VALUE.getValue())
+                    : elements.eachAttr(ATTR_HREF.getValue());
+            list.forEach(s -> urls.add(CrawlUtils.normalizeUrl(s, this.rule.getUrl())));
+            return;
+        }
+        // 递归获取分页 URL（点击下一页）
         while (true) {
-            String href = JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF);
-            if (!(Validator.isUrl(href) || StrUtil.startWith(href, "/"))) break;
-            String tocUrl = CrawlUtils.normalizeUrl(href, this.rule.getUrl());
-            urls.add(tocUrl);
-            document = jsoup(tocUrl)
+            String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
+                    .filter(StrUtil::isNotEmpty)
+                    .orElse(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_VALUE));
+
+            if (!(Validator.isUrl(nextUrl) || StrUtil.startWith(nextUrl, "/"))) break;
+            nextUrl = CrawlUtils.normalizeUrl(nextUrl, this.rule.getUrl());
+            urls.add(nextUrl);
+            document = jsoup(nextUrl)
                     .timeout(r.getTimeout())
                     .get();
+            Thread.sleep(CrawlUtils.randomInterval(config));
         }
     }
 
     // TODO 优化，改为多线程
-    private List<Chapter> parseToc(List<String> urls, int start, int end, Rule.Toc r) throws Exception {
+    @SneakyThrows
+    private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new ArrayList<>();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
