@@ -12,6 +12,7 @@ import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
+import lombok.SneakyThrows;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,6 +31,7 @@ public class SearchResultParser extends Source {
         super(config);
     }
 
+    @SneakyThrows
     public List<SearchResult> parse(String keyword) {
         // 模拟搜索请求
         Document document;
@@ -55,19 +57,31 @@ public class SearchResultParser extends Source {
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
         if (!r.isPagination()) return SearchResultsHandler.handle(firstPageResults);
 
-        // 搜索结果的分页 URL
-        Set<String> urls = new LinkedHashSet<>();
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素，且 1 <= limitPage < searchPages.size()，否则 limitPage 无效
         Elements nextPages = JsoupUtils.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
         if (nextPages.isEmpty()) {
             return firstPageResults;
         }
-        List<Element> sub = r.getLimitPage() == null ? nextPages : nextPages.subList(0, r.getLimitPage() - 1);
-        for (Element e : sub) {
-            String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
-            // 中文解码，针对69書吧
-            urls.add(URLUtil.decode(href));
+        // 分页搜索结果的 URL，不含首页
+        Set<String> urls = new LinkedHashSet<>();
+        // nextPage 简单规则的查询结果只有一个
+        if (nextPages.size() == 1) {
+            String nextUrl = CrawlUtils.normalizeUrl(nextPages.attr("href"), this.rule.getUrl());
+            for (int i = 0; i < r.getLimitPage() - 1; i++) {
+                urls.add(nextUrl);
+                resp = jsoup(nextUrl).timeout(r.getTimeout()).execute();
+                nextPages = JsoupUtils.select(Jsoup.parse(resp.body()), r.getNextPage());
+                nextUrl = CrawlUtils.normalizeUrl(nextPages.attr("href"), this.rule.getUrl());
+                Thread.sleep(CrawlUtils.randomInterval(config));
+            }
+        } else { // nextPage 复杂规则的查询结果有多个
+            List<Element> els = r.getLimitPage() == null ? nextPages : CollUtil.sub(nextPages, 0, r.getLimitPage() - 1);
+            for (Element e : els) {
+                String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
+                // 中文解码，针对69書吧
+                urls.add(URLUtil.decode(href));
+            }
         }
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
@@ -107,7 +121,7 @@ public class SearchResultParser extends Source {
                         .latestUpdate(book.getLatestUpdate())
                         .build();
                 list.add(build);
-                Thread.sleep(CrawlUtils.randomInterval(config, false));
+                Thread.sleep(CrawlUtils.randomInterval(config));
 
                 return list;
             }
@@ -142,6 +156,7 @@ public class SearchResultParser extends Source {
         return list;
     }
 
+    // TODO 只打印非空字段
     public static void printSearchResult(List<SearchResult> results) {
         ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
         for (int i = 1; i <= results.size(); i++) {

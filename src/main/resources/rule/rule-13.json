@@ -14,10 +14,7 @@
     "bookName": "div > h3 > a",
     "author": "div > p:nth-child(3)##function func(input){return input.replaceAll('作者：','')}",
     "latestChapter": "div > ul > li:nth-child(1) > a",
-    "update": "div > ul > li:nth-child(1) > i",
-    "pagination": true,
-    "nextPage": ".page > ul > li:nth-child(4) > a",
-    "limitPage": 2
+    "update": "div > ul > li:nth-child(1) > i"
   },
   "book": {
     "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",

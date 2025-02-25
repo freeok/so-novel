@@ -50,7 +50,7 @@ public class ChapterParser extends Source {
 
     public Chapter parse(Chapter chapter, CountDownLatch latch, SearchResult sr) {
         try {
-            long interval = CrawlUtils.randomInterval(config, false);
+            long interval = CrawlUtils.randomInterval(config);
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
