@@ -53,7 +53,8 @@ class BookSourceTest {
             "9, https://www.369book.cc/book/344580/, https://www.369book.cc/read/344580/66984376.html",
             "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie, https://cn.wa01.com/novel/pagea/tunshixingkongzhiwuzuchuanshuo-dugujiujie_367.html",
             "11, http://www.xbiquzw.com/10_10233/, http://www.xbiquzw.com/10_10233/5011609.html",
-            "12, https://www.0xs.net/txt/68398.html, https://www.0xs.net/txt/68398/1.html"
+            "12, https://www.0xs.net/txt/68398.html, https://www.0xs.net/txt/68398/1.html",
+            "13, https://www.deqixs.com/xiaoshuo/323/, https://www.deqixs.com/xiaoshuo/323/369060.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;
@@ -97,18 +98,13 @@ class BookSourceTest {
         } else {
             list = new SearchResultParser(config).parse(keyword);
         }
-        list.forEach(System.out::println);
+        SearchResultParser.printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
     public void bookParse() {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
-        Book book;
-        if (config.getSourceId() == 6) {
-            book = new BookParser6(config).parse(bookUrl);
-        } else {
-            book = new BookParser(config).parse(bookUrl);
-        }
+        Book book = new BookParser(config).parse(bookUrl);
         Console.log(JSONUtil.toJsonPrettyStr(book));
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
