@@ -59,7 +59,7 @@ public class SearchAndDownloadAction {
         if (results.isEmpty()) return;
 
         // 2. 打印搜索结果
-        SearchResultParser.printSearchResult(results);
+        new SearchResultParser(config).printSearchResult(results);
 
         int num;
         int action;

@@ -2,8 +2,10 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -134,7 +136,9 @@ public class SearchResultParser extends Source {
                 // 以下为非必须属性
                 String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
                 String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
-                String update = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
+                String latestUpdate = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
+                String status = JsoupUtils.selectAndInvokeJs(element, r.getStatus());
+                String wordCount = JsoupUtils.selectAndInvokeJs(element, r.getWordCount());
 
                 if (bookName.isEmpty()) continue;
 
@@ -143,7 +147,9 @@ public class SearchResultParser extends Source {
                         .bookName(bookName)
                         .author(author)
                         .latestChapter(latestChapter)
-                        .latestUpdate(update)
+                        .latestUpdate(latestUpdate)
+                        .status(status)
+                        .wordCount(wordCount)
                         .build();
 
                 list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
@@ -156,8 +162,40 @@ public class SearchResultParser extends Source {
         return list;
     }
 
-    // TODO 只打印非空字段
-    public static void printSearchResult(List<SearchResult> results) {
+    public void printSearchResult(List<SearchResult> results) {
+        Rule.Search r = this.rule.getSearch();
+        List<String> titles = ListUtil.toList("序号", "书名");
+        addColumnIfNotEmpty(titles, "作者", r.getAuthor());
+        addColumnIfNotEmpty(titles, "最新章节", r.getLatestChapter());
+        addColumnIfNotEmpty(titles, "更新时间", r.getUpdate());
+        addColumnIfNotEmpty(titles, "总字数", r.getWordCount());
+        addColumnIfNotEmpty(titles, "状态", r.getStatus());
+
+        ConsoleTable consoleTable = ConsoleTable.create().addHeader(ArrayUtil.toArray(titles, String.class));
+
+        for (int i = 1; i <= results.size(); i++) {
+            SearchResult sr = results.get(i - 1);
+            List<String> cols = ListUtil.toList(String.valueOf(i), sr.getBookName());
+            addColumnIfNotEmpty(cols, sr.getAuthor(), r.getAuthor());
+            addColumnIfNotEmpty(cols, sr.getLatestChapter(), r.getLatestChapter());
+            addColumnIfNotEmpty(cols, sr.getLatestUpdate(), r.getUpdate());
+            addColumnIfNotEmpty(cols, sr.getWordCount(), r.getWordCount());
+            addColumnIfNotEmpty(cols, sr.getStatus(), r.getStatus());
+
+            consoleTable.addBody(ArrayUtil.toArray(cols, String.class));
+        }
+
+        Console.table(consoleTable);
+    }
+
+    // 辅助方法：只有非空的情况下才添加列
+    private void addColumnIfNotEmpty(List<String> list, String title, String value) {
+        if (StrUtil.isNotEmpty(value)) {
+            list.add(title);
+        }
+    }
+
+    public static void printAggregateSearchResult(List<SearchResult> results) {
         ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
         for (int i = 1; i <= results.size(); i++) {
             SearchResult r = results.get(i - 1);
