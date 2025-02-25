@@ -50,11 +50,12 @@ class BookSourceTest {
             "3, http://www.mcmssc.la/145_145199/, http://www.mcmssc.la/145_145199/57831284.html",
             "4, http://www.99xs.info/tag/129_129843/, http://www.99xs.info/tag/129_129843/47783670.html",
             "8, https://www.dxmwx.org/book/56441.html, https://www.dxmwx.org/read/56441_49483830.html",
-            "9, https://www.369book.cc/book/344580/, https://www.369book.cc/read/344580/66984376.html",
+            "9, https://www.369book.cc/book/38894/, https://www.369book.cc/read/38894/40253.html",
             "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie, https://cn.wa01.com/novel/pagea/tunshixingkongzhiwuzuchuanshuo-dugujiujie_367.html",
             "11, http://www.xbiquzw.com/10_10233/, http://www.xbiquzw.com/10_10233/5011609.html",
             "12, https://www.0xs.net/txt/68398.html, https://www.0xs.net/txt/68398/1.html",
-            "13, https://www.deqixs.com/xiaoshuo/323/, https://www.deqixs.com/xiaoshuo/323/369060.html"
+            "13, https://www.deqixs.com/xiaoshuo/323/, https://www.deqixs.com/xiaoshuo/323/369060.html",
+            "14, https://www.xbqg06.com/1582/, https://www.xbqg06.com/1582/4559.html"
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;
@@ -62,7 +63,7 @@ class BookSourceTest {
 
         config.setSourceId(sourceId);
 
-        searchParse("夜无疆");
+        searchParse("唐家三少");
         bookParse();
         chapterParse();
         tocParse();
@@ -84,7 +85,7 @@ class BookSourceTest {
         config.setProxyHost("127.0.0.1");
         config.setProxyPort(7890);
 
-        searchParse("夜无疆");
+        searchParse("唐家三少");
         bookParse();
         chapterParse();
         tocParse();
@@ -98,7 +99,7 @@ class BookSourceTest {
         } else {
             list = new SearchResultParser(config).parse(keyword);
         }
-        SearchResultParser.printSearchResult(list);
+        new SearchResultParser(config).printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
