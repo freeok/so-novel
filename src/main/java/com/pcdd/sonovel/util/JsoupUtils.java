@@ -104,6 +104,7 @@ public class JsoupUtils {
                 case ATTR_SRC -> el.attr(ATTR_SRC.getValue());
                 case ATTR_HREF -> el.attr(ATTR_HREF.getValue());
                 case ATTR_CONTENT -> el.attr(ATTR_CONTENT.getValue());
+                case ATTR_VALUE -> el.attr(ATTR_VALUE.getValue());
             };
         } else if (obj instanceof Elements els) {
             return switch (contentType) {
@@ -112,6 +113,7 @@ public class JsoupUtils {
                 case ATTR_SRC -> els.attr(ATTR_SRC.getValue());
                 case ATTR_HREF -> els.attr(ATTR_HREF.getValue());
                 case ATTR_CONTENT -> els.attr(ATTR_CONTENT.getValue());
+                case ATTR_VALUE -> els.attr(ATTR_VALUE.getValue());
             };
         }
         return "";
