@@ -32,9 +32,11 @@ public class Rule {
         private String cookies;
         private String result;
         private String bookName;
-        private String latestChapter;
         private String author;
+        private String latestChapter;
         private String update;
+        private String status;
+        private String wordCount;
         // 搜索结果是否分页
         private boolean pagination;
         private String nextPage;
