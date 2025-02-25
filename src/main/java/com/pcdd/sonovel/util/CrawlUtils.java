@@ -68,6 +68,10 @@ public class CrawlUtils {
         };
     }
 
+    public long randomInterval(AppConfig config) {
+        return randomInterval(config, false);
+    }
+
     public long randomInterval(AppConfig config, boolean isRetry) {
         return ThreadLocalRandom.current().nextLong(
                 isRetry ? config.getRetryMinInterval() : config.getMinInterval(),
