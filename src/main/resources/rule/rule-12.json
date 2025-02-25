@@ -39,7 +39,7 @@
     "content": ".content",
     "paragraphTagClosed": true,
     "paragraphTag": "p",
-    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击[下一页]继续阅读-->>",
+    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*",
     "filterTag": "",
     "pagination": true,
     "nextPage": "#next##function func(input){var reg=/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/;return input.match(reg)?input:''}"
