@@ -55,7 +55,8 @@ class BookSourceTest {
             "11, http://www.xbiquzw.com/10_10233/, http://www.xbiquzw.com/10_10233/5011609.html",
             "12, https://www.0xs.net/txt/68398.html, https://www.0xs.net/txt/68398/1.html",
             "13, https://www.deqixs.com/xiaoshuo/323/, https://www.deqixs.com/xiaoshuo/323/369060.html",
-            "14, https://www.xbqg06.com/1582/, https://www.xbqg06.com/1582/4559.html"
+            "14, https://www.xbqg06.com/1582/, https://www.xbqg06.com/1582/4559.html",
+            "15, https://www.luegeng.com/book186856/, https://www.luegeng.com/book186856/2448008/",
     })
     void testDirectSources(int sourceId, String bookUrl, String chapterUrl) {
         this.bookUrl = bookUrl;

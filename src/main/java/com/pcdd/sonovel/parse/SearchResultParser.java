@@ -164,6 +164,9 @@ public class SearchResultParser extends Source {
 
     public void printSearchResult(List<SearchResult> results) {
         Rule.Search r = this.rule.getSearch();
+        if (r == null) {
+            return;
+        }
         List<String> titles = ListUtil.toList("序号", "书名");
         addColumnIfNotEmpty(titles, "作者", r.getAuthor());
         addColumnIfNotEmpty(titles, "最新章节", r.getLatestChapter());
@@ -198,12 +201,12 @@ public class SearchResultParser extends Source {
     public static void printAggregateSearchResult(List<SearchResult> results) {
         ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
         for (int i = 1; i <= results.size(); i++) {
-            SearchResult r = results.get(i - 1);
+            SearchResult sr = results.get(i - 1);
             consoleTable.addBody(String.valueOf(i),
-                    r.getBookName(),
-                    r.getAuthor(),
-                    r.getLatestChapter(),
-                    r.getLatestUpdate());
+                    sr.getBookName(),
+                    sr.getAuthor(),
+                    sr.getLatestChapter(),
+                    sr.getLatestUpdate());
         }
         Console.table(consoleTable);
     }
