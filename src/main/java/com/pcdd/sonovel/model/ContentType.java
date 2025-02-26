@@ -17,7 +17,8 @@ public enum ContentType {
     ATTR_SRC("src"),
     ATTR_HREF("href"),
     ATTR_CONTENT("content"),
-    ATTR_VALUE("value");
+    ATTR_VALUE("value"),
+    ;
 
     private final String value;
 
