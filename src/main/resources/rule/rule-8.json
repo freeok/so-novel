@@ -11,7 +11,7 @@
     "result": "#ListContents > div",
     "bookName": ".margin0h5 > a.fonttext",
     "author": ".margin0h5 > a:nth-child(2)",
-    "latestChapter": ".right_wid > div:nth-child(4) > a",
+    "latestChapter": ".right_wid > div:nth-child(4) > a@js:r=r.replaceAll('最新章节','');",
     "update": ".right_wid > div:nth-child(4) > span",
     "pagination": true,
     "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]",
@@ -26,7 +26,7 @@
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
-    "isEnd": "meta[property=\"og:novel:status\"]"
+    "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
     "url": "https://www.dxmwx.org/chapter/%s.html",

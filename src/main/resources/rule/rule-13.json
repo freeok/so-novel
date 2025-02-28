@@ -25,7 +25,7 @@
     "coverUrl": ".item > a > img",
     "latestChapter": ".item > div > ul > li:nth-child(1) > a",
     "latestUpdate": ".item > div > ul > li:nth-child(1) > i",
-    "isEnd": ".item > div > p:nth-child(2) > span:nth-child(1)"
+    "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
   },
   "toc": {
     "result": "#list > ul > li > a"
