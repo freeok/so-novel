@@ -55,7 +55,7 @@ public class Rule {
         private String coverUrl;
         private String latestChapter;
         private String latestUpdate;
-        private String isEnd;
+        private String status;
     }
 
     @Data
