@@ -134,7 +134,7 @@ public class ChapterParser extends Source {
             // 获取下一页链接
             Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
             // 判断是否为章节最后一页
-            if (nextEls.text().matches("下一章|没有了")) {
+            if (nextEls.text().matches(".*(下一章|没有了|>>).*")) {
                 isLastPage = true;
             }
             // 更新下一页链接
