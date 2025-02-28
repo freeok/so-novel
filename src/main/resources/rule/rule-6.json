@@ -23,7 +23,7 @@
     "intro": "body > div.row > div > div:nth-child(1) > div.description",
     "category": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(4) > span",
     "coverUrl": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > div > img",
-    "isEnd": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
+    "status": "body > div.row > div > div:nth-child(1) > div.pic_txt_list > p:nth-child(5) > span"
   },
   "toc": {
     "timeout": 60000,
