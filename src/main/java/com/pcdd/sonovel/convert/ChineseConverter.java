@@ -48,7 +48,7 @@ public class ChineseConverter {
             book.setCategory(convertIfNotNull(book.getCategory(), convertFunc));
             book.setLatestChapter(convertIfNotNull(book.getLatestChapter(), convertFunc));
             book.setLatestUpdate(convertIfNotNull(book.getLatestUpdate(), convertFunc));
-            book.setIsEnd(convertIfNotNull(book.getIsEnd(), convertFunc));
+            book.setStatus(convertIfNotNull(book.getStatus(), convertFunc));
             return (T) book;
         }
 
@@ -62,8 +62,11 @@ public class ChineseConverter {
             sr.setBookName(convertIfNotNull(sr.getBookName(), convertFunc));
             sr.setAuthor(convertIfNotNull(sr.getAuthor(), convertFunc));
             sr.setIntro(convertIfNotNull(sr.getIntro(), convertFunc));
+            sr.setCategory(convertIfNotNull(sr.getCategory(), convertFunc));
             sr.setLatestChapter(convertIfNotNull(sr.getLatestChapter(), convertFunc));
             sr.setLatestUpdate(convertIfNotNull(sr.getLatestUpdate(), convertFunc));
+            sr.setWordCount(convertIfNotNull(sr.getWordCount(), convertFunc));
+            sr.setStatus(convertIfNotNull(sr.getStatus(), convertFunc));
             return (T) sr;
         }
 

@@ -15,7 +15,7 @@
     "coverUrl": ".bookimg2 > img",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
     "latestUpdate": "meta[property=\"og:novel:update_time\"]",
-    "isEnd": "meta[property=\"og:novel:status\"]"
+    "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
     "url": "https://69shuba.cx/book/%s",
@@ -27,7 +27,7 @@
     "title": ".txtnav > h1",
     "content": ".txtnav",
     "paragraphTagClosed": true,
-    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)",
+    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
     "filterTag": "h1 div br"
   }
 }

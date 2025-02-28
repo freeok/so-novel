@@ -115,14 +115,14 @@ public class SearchResultParser extends Source {
                     return Collections.emptyList();
                 }
 
-                SearchResult build = SearchResult.builder()
+                SearchResult sr = SearchResult.builder()
                         .url(bookUrl)
                         .bookName(book.getBookName())
                         .author(book.getAuthor())
                         .latestChapter(book.getLatestChapter())
                         .latestUpdate(book.getLatestUpdate())
                         .build();
-                list.add(build);
+                list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
                 Thread.sleep(CrawlUtils.randomInterval(config));
 
                 return list;

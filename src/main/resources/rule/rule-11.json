@@ -22,8 +22,7 @@
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
-    "isEnd": false
+    "latestUpdate": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
     "result": "#list > dl > dd > a",
