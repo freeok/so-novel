@@ -19,10 +19,10 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 交互式小说下载器，Windows、macOS、Linux 解压即用
 
-- 可根据书名、作者搜索并下载小说
-- 支持导出格式：EPUB、TXT、HTML（支持翻页）
-- [高质量书源](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
-- 支持批量下载
+- 根据书名、作者，搜索&下载小说
+- 导出格式：EPUB、TXT、HTML（支持翻页）
+- [多书源](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
+- 批量下载
 
 *结合以下电子书阅读器使用更佳*
 
