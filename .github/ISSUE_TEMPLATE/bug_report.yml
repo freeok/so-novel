@@ -35,7 +35,7 @@ body:
   - type: input
     attributes:
       label: so-novel 版本
-      placeholder: v1.7.9
+      placeholder: v1.0.0
     validations:
       required: true
 
