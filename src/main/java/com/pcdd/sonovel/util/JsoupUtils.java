@@ -14,7 +14,7 @@ import static com.pcdd.sonovel.model.ContentType.*;
 public class JsoupUtils {
 
     // JS 分隔符
-    private static final String JS_SEPARATOR = "##";
+    private static final String JS_SEPARATOR = "@js:";
 
     /**
      * 使用查询条件选择元素
@@ -35,8 +35,17 @@ public class JsoupUtils {
      */
     public String invokeJs(String query, String input) {
         if (StrUtil.isEmpty(query)) return input;
+        // @js:
         String[] split = query.split(JS_SEPARATOR);
-        return split.length == 1 ? input : (String) ScriptUtil.invoke(split[1], "func", input);
+        if (split.length == 1) {
+            return input;
+        }
+        return (String) ScriptUtil.invoke("""
+                function func(r) {
+                    %s
+                    return r;
+                }
+                """.formatted(split[1]), "func", input);
     }
 
     public String selectAndInvokeJs(Element e, String query) {

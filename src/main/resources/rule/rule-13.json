@@ -12,14 +12,14 @@
     "cookies": "{}",
     "result": ".container > div",
     "bookName": "div > h3 > a",
-    "author": "div > p:nth-child(3)##function func(input){return input.replaceAll('作者：','')}",
+    "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",
     "latestChapter": "div > ul > li:nth-child(1) > a",
     "update": "div > ul > li:nth-child(1) > i"
   },
   "book": {
     "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",
     "bookName": ".item > div > h1 > a",
-    "author": ".item > div > p:nth-child(3) > a##function func(input){return input.replaceAll('作者：','')}",
+    "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
     "intro": "//div[@class='des bb'][1]",
     "category": ".item > div > p:nth-child(2) > span:nth-child(2)",
     "coverUrl": ".item > a > img",
