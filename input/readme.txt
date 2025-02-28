@@ -7,15 +7,14 @@ macOS 用户
 Linux 用户
 运行 linux-run.sh
 
+
 温馨提示
-- 为获得更好的使用体验，请将终端窗口最大化。
-- config.ini 是配置文件，您可以在其中修改书源和下载格式。修改后无需重启应用（非 Windows 系统的兼容性未完全保证）。
-- 如何选择适合自己的书源，请参考：https://github.com/freeok/so-novel/issues/50（必读）
-- 如果搜索失败，建议多次尝试，稍后再试，并检查您的网络连接。
-- 若章节下载失败，您可以尝试增大爬取间隔，直到找到合适的设置。
+- 为获得最佳使用体验，请将终端窗口最大化。
+- config.ini 是配置文件，每个配置项有对应的注释，修改保存后无需重启应用（非 Windows 不保证）。
+- 必看，书源信息：https://github.com/freeok/so-novel/issues/50
 - 如果认为下载速度较慢，适当减小爬取间隔可能有助于提高速度，直到达到合适的平衡。
-- 请注意，设置过小的爬取间隔会导致部分书源封禁 IP，从而无法使用。
-- 如果书名搜不到，建议用作者名搜索
+- 设置过小的爬取间隔会导致部分书源封禁 IP，从而无法使用。
+- 如果书名搜不到，就用作者名搜
 
 
 问题反馈
@@ -25,7 +24,7 @@ Linux 用户
 上述情况请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
 非上述情况在此反馈：https://github.com/freeok/so-novel/discussions/new/choose
 反馈前请务必查看常见问题：https://github.com/freeok/so-novel/issues?q=is:issue state:closed label:"user error"
-如果都没有，再进行反馈！
+常见问题基本都是用户使用不当导致的！如果都没有，再进行反馈！反馈时请按照要求填写，否则不予处理
 
 
 交互模式 2 (interactive-mode = 2) 使用方法
