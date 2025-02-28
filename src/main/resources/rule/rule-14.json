@@ -40,6 +40,6 @@
     "filterTxt": "",
     "filterTag": "a script",
     "pagination": true,
-    "nextPage": "#next_url"
+    "nextPage": "(//*[@id='next_url'])[1]"
   }
 }
