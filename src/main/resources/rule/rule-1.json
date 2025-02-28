@@ -20,8 +20,7 @@
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
-    "coverUrl": "meta[property=\"og:image\"]",
-    "isEnd": false
+    "coverUrl": "meta[property=\"og:image\"]"
   },
   "toc": {
     "result": "#list > dl > dd > a",
