@@ -25,10 +25,10 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
-        if (extName.matches("txt|epub")) {
+        if (extName.matches("(?i)txt|epub")) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
-        if ("html".equals(extName)) {
+        if ("html".equalsIgnoreCase(extName)) {
             s.append("正在生成 HTML 目录文件");
         }
         Console.log(s.append(" ..."));
