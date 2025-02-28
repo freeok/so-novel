@@ -33,6 +33,7 @@ public class Rule {
         private String result;
         private String bookName;
         private String author;
+        private String category;
         private String latestChapter;
         private String update;
         private String status;

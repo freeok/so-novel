@@ -135,6 +135,7 @@ public class SearchResultParser extends Source {
                 String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
                 // 以下为非必须属性
                 String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
+                String category = JsoupUtils.selectAndInvokeJs(element, r.getCategory());
                 String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
                 String latestUpdate = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
                 String status = JsoupUtils.selectAndInvokeJs(element, r.getStatus());
@@ -146,6 +147,7 @@ public class SearchResultParser extends Source {
                         .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                         .bookName(bookName)
                         .author(author)
+                        .category(category)
                         .latestChapter(latestChapter)
                         .latestUpdate(latestUpdate)
                         .status(status)
@@ -169,6 +171,7 @@ public class SearchResultParser extends Source {
         }
         List<String> titles = ListUtil.toList("序号", "书名");
         addColumnIfNotEmpty(titles, "作者", r.getAuthor());
+        addColumnIfNotEmpty(titles, "类别", r.getCategory());
         addColumnIfNotEmpty(titles, "最新章节", r.getLatestChapter());
         addColumnIfNotEmpty(titles, "更新时间", r.getUpdate());
         addColumnIfNotEmpty(titles, "总字数", r.getWordCount());
@@ -180,6 +183,7 @@ public class SearchResultParser extends Source {
             SearchResult sr = results.get(i - 1);
             List<String> cols = ListUtil.toList(String.valueOf(i), sr.getBookName());
             addColumnIfNotEmpty(cols, sr.getAuthor(), r.getAuthor());
+            addColumnIfNotEmpty(cols, sr.getCategory(), r.getCategory());
             addColumnIfNotEmpty(cols, sr.getLatestChapter(), r.getLatestChapter());
             addColumnIfNotEmpty(cols, sr.getLatestUpdate(), r.getUpdate());
             addColumnIfNotEmpty(cols, sr.getWordCount(), r.getWordCount());
@@ -193,9 +197,7 @@ public class SearchResultParser extends Source {
 
     // 辅助方法：只有非空的情况下才添加列
     private void addColumnIfNotEmpty(List<String> list, String title, String value) {
-        if (StrUtil.isNotEmpty(value)) {
-            list.add(title);
-        }
+        list.add(StrUtil.isAllNotEmpty(title, value) ? title : "");
     }
 
     public static void printAggregateSearchResult(List<SearchResult> results) {

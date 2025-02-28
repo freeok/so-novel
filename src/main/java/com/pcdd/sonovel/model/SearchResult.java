@@ -16,6 +16,7 @@ public class SearchResult {
     private String bookName;
     private String author;
     private String intro;
+    private String category;
     private String latestChapter;
     private String latestUpdate;
     private String status;
