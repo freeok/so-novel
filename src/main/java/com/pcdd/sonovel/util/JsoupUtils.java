@@ -25,7 +25,7 @@ public class JsoupUtils {
         // 分割查询条件以提取 XPath 或 CSS 查询
         String actualQuery = StrUtil.subBefore(query, JS_SEPARATOR, false);
         // 根据查询条件选择元素
-        return actualQuery.startsWith("/") ? e.selectXpath(actualQuery) : e.select(actualQuery);
+        return actualQuery.matches("^(/|//|\\(/).*") ? e.selectXpath(actualQuery) : e.select(actualQuery);
     }
 
     /**
