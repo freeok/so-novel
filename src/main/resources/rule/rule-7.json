@@ -7,7 +7,7 @@
   "language": "zh_CN",
   "needProxy": true,
   "book": {
-    "url": "https://69shuba.cx/book/(.*?).htm##function func(input){return input.replace(/https:\\/\\/www\\.69shuba\\.me\\/book\\/(\\d+)\\.htm/,'https://69shuba.cx/book/$1.htm')||input}",
+    "url": "https://69shuba.cx/book/(.*?).htm@js:r=r.replace(/https:\\/\\/www\\.69shuba\\.me\\/book\\/(\\d+)\\.htm/,'https://69shuba.cx/book/$1.htm')||r",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",

@@ -35,13 +35,13 @@
     "result": ".catalog > div > ul > ul > li > a"
   },
   "chapter": {
-    "title": ".title > h1##function func(input){return input.replace(/\\(\\d+\\/\\d+\\)/,'')}",
+    "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
     "content": ".content",
     "paragraphTagClosed": true,
     "paragraphTag": "p",
     "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*",
     "filterTag": "",
     "pagination": true,
-    "nextPage": "#next##function func(input){var reg=/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/;return input.match(reg)?input:''}"
+    "nextPage": "#next@js:r=r.match(/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/)?r:''"
   }
 }
