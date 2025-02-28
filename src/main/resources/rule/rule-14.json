@@ -11,8 +11,8 @@
     "data": "{type: articlename, searchkey: %s}",
     "cookies": "{}",
     "result": ".container > div > div > ul > li",
-    "bookName": "span.s2 > a##function func(input){return input.length > 15 ? input.substring(0, 15) + \"...\" : input;}",
-    "author": "span.s4##function func(input){return input.length > 10 ? input.substring(0, 10) + \"...\" : input;}",
+    "bookName": "span.s2 > a@js:r=r.length>15?r.substring(0,15)+\"...\":r;",
+    "author": "span.s4@js:r=r.length>10?r.substring(0,10)+\"...\":r;",
     "latestChapter": "span.s3 > a",
     "update": "span.s5"
   },
@@ -28,7 +28,7 @@
     "isEnd": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": ".row.row-section > div > div:nth-child(4) > ul > li",
+    "result": ".row.row-section > div > div:nth-child(4) > ul > li > a",
     "pagination": true,
     "nextPage": "#indexselect > option"
   },
