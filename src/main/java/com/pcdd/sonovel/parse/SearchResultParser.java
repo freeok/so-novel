@@ -166,9 +166,10 @@ public class SearchResultParser extends Source {
 
     public void printSearchResult(List<SearchResult> results) {
         Rule.Search r = this.rule.getSearch();
-        if (r == null) {
+        if (r == null || CollUtil.isEmpty(results)) {
             return;
         }
+        // 表头
         List<String> titles = ListUtil.toList("序号", "书名");
         addColumnIfNotEmpty(titles, "作者", r.getAuthor());
         addColumnIfNotEmpty(titles, "类别", r.getCategory());
@@ -196,8 +197,10 @@ public class SearchResultParser extends Source {
     }
 
     // 辅助方法：只有非空的情况下才添加列
-    private void addColumnIfNotEmpty(List<String> list, String title, String value) {
-        list.add(StrUtil.isAllNotEmpty(title, value) ? title : "");
+    private void addColumnIfNotEmpty(List<String> list, String field, String rule) {
+        if (StrUtil.isNotEmpty(rule)) {
+            list.add(StrUtil.isNotEmpty(field) ? field : "");
+        }
     }
 
     public static void printAggregateSearchResult(List<SearchResult> results) {
