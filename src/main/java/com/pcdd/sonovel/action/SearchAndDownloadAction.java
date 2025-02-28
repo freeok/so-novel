@@ -4,6 +4,7 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
@@ -56,7 +57,6 @@ public class SearchAndDownloadAction {
         String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).strip();
         if (keyword.isEmpty()) return;
         List<SearchResult> results = new Crawler(config).search(keyword);
-        if (results.isEmpty()) return;
 
         // 2. 打印搜索结果
         new SearchResultParser(config).printSearchResult(results);
@@ -107,6 +107,10 @@ public class SearchAndDownloadAction {
                 String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").strip().split("\\s+");
                 int start = Integer.parseInt(split[0]) - 1;
                 int end = Integer.parseInt(split[1]);
+                if (start > toc.size() || end > toc.size()) {
+                    Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", toc.size())));
+                    return;
+                }
                 toc = CollUtil.sub(toc, start, end);
             } catch (Exception e) {
                 return;
