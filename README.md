@@ -41,7 +41,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 保留部分下载日志
 
-![sample.jpg](assets/sample.jpg)
+![sample.jpg](assets/preview.jpg)
 
 ## 使用
 
@@ -72,7 +72,7 @@ brew install so-novel
 >
 > 若最新版的书源无法使用，请 New issue，将尽快修复
 >
-> 欢迎在 issue 推荐高质量书源（无需点击“确认您是真人”、能搜到[起点人气榜单](https://www.qidian.com/rank/)的书、错别字少、排版不错乱）
+> 欢迎在 issue 推荐优质书源
 
 ## 常见问题
 
