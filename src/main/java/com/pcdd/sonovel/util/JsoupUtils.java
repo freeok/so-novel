@@ -13,7 +13,6 @@ import static com.pcdd.sonovel.model.ContentType.*;
 @UtilityClass
 public class JsoupUtils {
 
-    // JS 分隔符
     private static final String JS_SEPARATOR = "@js:";
 
     /**
@@ -34,7 +33,9 @@ public class JsoupUtils {
      * 等价于 func(input)
      */
     public String invokeJs(String query, String input) {
-        if (StrUtil.isEmpty(query)) return input;
+        if (StrUtil.isEmpty(query)) {
+            return input;
+        }
         // @js:
         String[] split = query.split(JS_SEPARATOR);
         if (split.length == 1) {
