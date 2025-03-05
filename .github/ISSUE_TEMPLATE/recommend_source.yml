@@ -1,6 +1,6 @@
 name: 推荐书源
 description: 我希望增加某个书源
-title: '[推荐书源] 此处填写书源网址'
+title: '[推荐书源] 此处填写书源网址（示例：[推荐书源] https://example.com/）'
 labels:
   - "new source"
 body:
@@ -51,12 +51,11 @@ body:
     attributes:
       label: 勾选满足的条件，不确定的不勾选
       options:
-        - label: 起点月票榜的书能搜到：https://www.qidian.com/rank/yuepiao/
-        - label: 起点收藏榜的书能搜到：https://www.qidian.com/rank/collect/
-        - label: 能搜到知名小说
-        - label: 正文内容纯净（没有与文章无关的内容）
-        - label: 正文错别字少
-        - label: 正文排版正常
+        - label: 能搜到[新书](https://www.qidian.com/rank/yuepiao/)
+        - label: 能搜到[知名小说](https://www.qidian.com/rank/collect/)
+        - label: 错别字少
+        - label: 排版正常
+        - label: 内容纯净（没有与文章无关的内容）
 
   - type: textarea
     attributes:
