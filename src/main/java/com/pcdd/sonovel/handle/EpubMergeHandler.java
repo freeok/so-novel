@@ -29,8 +29,8 @@ public class EpubMergeHandler implements PostProcessingHandler {
 
     @SneakyThrows
     @Override
-    public void handle(Book b, File saveDir) {
-        if (FileUtil.isDirEmpty(saveDir)) {
+    public void handle(Book b, File savePath) {
+        if (FileUtil.isDirEmpty(savePath)) {
             Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 EPUB|@"), b.getBookName(), b.getAuthor());
             return;
         }
@@ -56,7 +56,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
         meta.setRights(List.of("本电子书由 so-novel(https://github.com/freeok/so-novel) 制作生成。仅供交流使用，不得用于商业用途。"));
 
         // content.opf > manifest
-        List<File> files = FileUtils.sortFilesByName(saveDir);
+        List<File> files = FileUtils.sortFilesByName(savePath);
         int len = String.valueOf(files.size()).length();
         // 添加封面页
         book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME));
@@ -70,13 +70,10 @@ public class EpubMergeHandler implements PostProcessingHandler {
         }
 
         // 设置 guide，用于指定封面
-        book.getGuide().addReference(new GuideReference(new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"),
-                COVER_NAME), "封面", COVER_NAME));
-
+        book.getGuide().addReference(new GuideReference(new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME), "封面", COVER_NAME));
         EpubWriter epubWriter = new EpubWriter();
-        String savePath = StrUtil.format("{}/{}.epub", saveDir.getParent(), b.getBookName());
-        epubWriter.write(book, new FileOutputStream(savePath));
-        FileUtil.del(saveDir);
+        epubWriter.write(book, new FileOutputStream(StrUtil.format("{}/{}.epub", savePath.getParent(), b.getBookName())));
+        FileUtil.del(savePath);
     }
 
 }
