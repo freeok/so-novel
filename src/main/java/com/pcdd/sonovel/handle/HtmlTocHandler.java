@@ -23,26 +23,26 @@ import java.util.List;
 public class HtmlTocHandler implements PostProcessingHandler {
 
     @Override
-    public void handle(Book book, File saveDir) {
+    public void handle(Book book, File savePath) {
         List<String> strings = new ArrayList<>();
         String regex = "<title>(.*?)</title>";
 
         strings.add("文件名\t\t章节名");
-        List<File> files = FileUtils.sortFilesByName(saveDir);
+        List<File> files = FileUtils.sortFilesByName(savePath);
         int i = Integer.parseInt(StrUtil.subBefore(files.get(0).getName(), "_", false));
         for (File file : files) {
             FileReader fr = FileReader.create(file, StandardCharsets.UTF_8);
             // 获取 <title> 内容
             String title = ReUtil.getGroup1(regex, fr.readString());
-            strings.add(StrUtil.format("{}_.html\t\t{}", i++, title));
+            strings.add(StrUtil.format("{}.html\t\t{}", i++, title));
         }
 
-        File file = FileUtil.touch(saveDir + File.separator, "0_目录.txt");
+        File file = FileUtil.touch(savePath + File.separator, "0_目录.txt");
         FileWriter fw = FileWriter.create(file, StandardCharsets.UTF_8);
         fw.writeLines(strings);
 
         Console.log("<== 正在下载封面：{}", book.getCoverUrl());
-        File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), System.getProperty("user.dir") + File.separator + saveDir);
+        File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), System.getProperty("user.dir") + File.separator + savePath);
         FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
     }
 

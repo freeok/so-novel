@@ -25,29 +25,27 @@ public class TxtMergeHandler implements PostProcessingHandler {
     private final AppConfig config;
 
     @Override
-    public void handle(Book book, File saveDir) {
-        String outputPath = StrUtil.format("{}{}{}（{}）.txt",
-                System.getProperty("user.dir") + File.separator, config.getDownloadPath() + File.separator,
-                book.getBookName(), book.getAuthor());
+    public void handle(Book book, File savePath) {
+        String outputPath = StrUtil.format("{}{}（{}）.txt",
+                config.getDownloadPath() + File.separator, book.getBookName(), book.getAuthor());
         File outputFile = FileUtil.touch(outputPath);
         FileAppender appender = new FileAppender(outputFile, 16, true);
 
-        List<String> format = List.of(
+        List<String> info = List.of(
                 StrUtil.format("书名：{}", book.getBookName()),
                 StrUtil.format("作者：{}", book.getAuthor()),
-                StrUtil.format("简介：{}", StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro())),
-                StrUtil.format("{}", "\u3000".repeat(2))
+                StrUtil.format("简介：{}\n", StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
         );
         // 首页添加书籍信息
-        format.forEach(appender::append);
+        info.forEach(appender::append);
 
-        for (File f : FileUtils.sortFilesByName(saveDir)) {
+        for (File f : FileUtils.sortFilesByName(savePath)) {
             appender.append(FileUtil.readUtf8String(f));
         }
         appender.flush();
 
         Console.log("<== 正在下载封面：{}", book.getCoverUrl());
-        File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), System.getProperty("user.dir") + File.separator + saveDir);
+        File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), savePath);
         FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
     }
 
