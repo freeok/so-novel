@@ -29,7 +29,7 @@
     "url": "https://www.369book.cc/index/%s/",
     "result": ".am-list-news-bd > ul > li > a",
     "pagination": true,
-    "nextPage": ".book-list-chapter > div > div:nth-child(4) > a:nth-child(3)@js:var matches=r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/);if(r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/)){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]+\".html\"}"
+    "nextPage": "(//select[@id='indexselect'])[1]/option@js:var matches=r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/);if(r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/)){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]+\".html\"}"
   },
   "chapter": {
     "title": "ol > li.active",
