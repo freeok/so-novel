@@ -69,14 +69,15 @@ public class TocParser extends Source {
     private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
         Elements elements = JsoupUtils.select(document, r.getNextPage());
         // 一次性获取分页 URL（下拉菜单）
-        if (elements.size() > 1) {
+        if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
             List<String> list = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
                     ? elements.eachAttr(ATTR_VALUE.getValue())
                     : elements.eachAttr(ATTR_HREF.getValue());
             list.forEach(s -> urls.add(CrawlUtils.normalizeUrl(s, this.rule.getUrl())));
             return;
         }
-        // 递归获取分页 URL（点击下一页）
+        // 以下代码覆盖率可能为 0，因为分页的目录基本全都是通过下拉菜单一次性获取的
+        // 递归获取分页 URL（模拟点击下一页）
         while (true) {
             String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
