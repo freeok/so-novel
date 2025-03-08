@@ -53,8 +53,8 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 ### 🍨 Scoop 安装
 
 ```bash
-scoop bucket add spc https://gh.idayer.com/github.com/lzwme/scoop-proxy-cn
-scoop install so-novel
+scoop bucket add freeok https://github.com/freeok/scoop-bucket
+scoop install freeok/so-novel
 ```
 
 ### 🍺 Homebrew 安装
