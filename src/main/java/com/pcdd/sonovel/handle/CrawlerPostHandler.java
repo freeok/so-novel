@@ -28,7 +28,7 @@ public class CrawlerPostHandler {
         if (extName.matches("(?i)txt|epub")) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
-        if ("html".equalsIgnoreCase(extName)) {
+        if ("html".equals(extName)) {
             s.append("正在生成 HTML 目录文件");
         }
         Console.log(s.append(" ..."));

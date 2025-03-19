@@ -46,7 +46,7 @@
   const prefixUrl = url.substring(0, url.lastIndexOf('/') + 1)
 
   // 获取当前文件名
-  let index = url.match(/(\d+)\_.html/)[1]
+  let index = url.match(/(\d+)_.html/)[1]
   console.log('当前页索引', index)
 
   if (index <= 1) {

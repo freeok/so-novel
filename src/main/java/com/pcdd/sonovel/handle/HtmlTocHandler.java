@@ -34,7 +34,7 @@ public class HtmlTocHandler implements PostProcessingHandler {
             FileReader fr = FileReader.create(file, StandardCharsets.UTF_8);
             // 获取 <title> 内容
             String title = ReUtil.getGroup1(regex, fr.readString());
-            strings.add(StrUtil.format("{}.html\t\t{}", i++, title));
+            strings.add(StrUtil.format("{}_.html\t\t{}", i++, title));
         }
 
         File file = FileUtil.touch(savePath + File.separator, "0_目录.txt");
