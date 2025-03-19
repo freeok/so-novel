@@ -63,7 +63,8 @@ public class ConfigUtils {
         int sourceCount = SourceUtils.getSourceCount();
         config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, sourceCount + 1)));
         config.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
-        config.setExtName(usr.getStr("extname", SELECTION_1, "epub"));
+        // 一律转为小写
+        config.setExtName(usr.getStr("extname", SELECTION_1, "epub").toLowerCase());
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
         config.setInteractiveMode(usr.getInt("interactive-mode", SELECTION_1, 1));
 

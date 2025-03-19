@@ -102,7 +102,7 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
-        // 下载章节
+        // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, sr));
             Console.log("<== 待下载章节数：{}", latch.getCount());
@@ -132,7 +132,7 @@ public class Crawler {
 
     private String generatePath(Chapter chapter) {
         // epub 格式转换前的格式为 html
-        String extName = Objects.equals("epub", config.getExtName()) ? "html" : config.getExtName();
+        String extName = "epub".equals(config.getExtName()) ? "html" : config.getExtName();
         String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
         return switch (config.getExtName()) {
             case "html" -> parentPath + chapter.getOrder() + "_." + extName;
