@@ -32,12 +32,12 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.18.3</version>
+            <version>1.19.1</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.35</version>
+            <version>5.8.36</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
