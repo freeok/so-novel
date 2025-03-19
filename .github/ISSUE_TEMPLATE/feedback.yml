@@ -1,8 +1,6 @@
 name: 问题反馈
 description: 反馈你遇到的问题
 title: '[问题反馈] 此处填写简洁明了的标题'
-labels:
-  - "bug"
 body:
   - type: checkboxes
     attributes:
