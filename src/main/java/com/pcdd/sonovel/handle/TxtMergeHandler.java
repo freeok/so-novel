@@ -28,6 +28,7 @@ public class TxtMergeHandler implements PostProcessingHandler {
     public void handle(Book book, File savePath) {
         String outputPath = StrUtil.format("{}{}（{}）.txt",
                 config.getDownloadPath() + File.separator, book.getBookName(), book.getAuthor());
+        // 开发环境下，生成的 TXT 位于 target/classes/downloadPath 下
         File outputFile = FileUtil.touch(outputPath);
         FileAppender appender = new FileAppender(outputFile, 16, true);
 
