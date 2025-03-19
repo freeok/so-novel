@@ -90,7 +90,7 @@ public class ChapterFilter extends Source {
             }
 
             // 删除全部空标签，例如 <p></p>
-            return this.content.replaceAll("<(\\w+)([^>]*)>\\s*</\\1>", "");
+            return HtmlUtil.cleanEmptyTag(this.content);
         }
     }
 
