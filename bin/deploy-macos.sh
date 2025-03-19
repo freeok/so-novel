@@ -24,7 +24,7 @@ project_path=$(
 cd "$project_path" || exit
 
 mvn clean package -Dmaven.test.skip=true -DjrePath=runtime
-mkdir -p out
+mkdir -p dist
 mkdir "target/$dist_dirname_arm64"
 mkdir "target/$dist_dirname_x64"
 
@@ -51,7 +51,7 @@ cd ..
 tar czf "$dist_filename_arm64" "$dist_dirname_arm64"
 tar czf "$dist_filename_x64" "$dist_dirname_x64"
 
-mv "$dist_filename_arm64" $project_path/out
-mv "$dist_filename_x64" $project_path/out
+mv "$dist_filename_arm64" $project_path/dist
+mv "$dist_filename_x64" $project_path/dist
 
 echo macOS done!

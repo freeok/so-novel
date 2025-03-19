@@ -22,7 +22,7 @@ project_path=$(
 )
 cd "$project_path" || exit
 # -p 表示：如果存在则没有错误，根据需要创建父目录
-mkdir -p out/
+mkdir -p dist/
 
 $maven_command
 # 拷贝配置文件、使用说明
@@ -35,6 +35,6 @@ tar zxf "$jre_filename" && rm "$jre_filename"
 mv "$jre_dirname" runtime
 cd ..
 tar czf $artifacts SoNovel
-mv $artifacts $project_path/out
+mv $artifacts $project_path/dist
 
 echo Windows done!

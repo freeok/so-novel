@@ -21,7 +21,7 @@ project_path=$(
 cd "$project_path" || exit
 
 mvn clean package -Dmaven.test.skip=true -DjrePath=runtime
-mkdir -p out
+mkdir -p dist
 mkdir "target/$dist_dirname"
 
 # 复制配置文件、使用说明、启动脚本、JRE
@@ -41,6 +41,6 @@ cd ..
 # 压缩
 tar czf "$dist_filename" "$dist_dirname"
 # 剪切
-mv "$dist_filename" $project_path/out
+mv "$dist_filename" $project_path/dist
 
 echo Linux done!
