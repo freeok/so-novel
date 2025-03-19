@@ -57,6 +57,9 @@ public class SearchAndDownloadAction {
         String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).strip();
         if (keyword.isEmpty()) return;
         List<SearchResult> results = new Crawler(config).search(keyword);
+        if (CollUtil.isEmpty(results)) {
+            return;
+        }
 
         // 2. 打印搜索结果
         new SearchResultParser(config).printSearchResult(results);
