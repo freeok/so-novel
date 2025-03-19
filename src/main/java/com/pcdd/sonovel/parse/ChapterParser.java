@@ -54,21 +54,18 @@ public class ChapterParser extends Source {
             Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
             // ExceptionUtils.randomThrow();
             chapter.setContent(crawl(chapter.getUrl(), interval));
-            latch.countDown();
             // 确保简繁互转最后调用
-            return ChineseConverter.convert(chapterConverter.convert(chapter),
-                    this.rule.getLanguage(), config.getLanguage());
+            return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
-            Chapter retryChapter = retry(chapter, latch, sr);
-            if (retryChapter == null) {
-                return null;
-            }
-            return ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
+            Chapter retryChapter = retry(chapter, sr);
+            return retryChapter == null ? null : ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
+        } finally {
+            latch.countDown();
         }
     }
 
-    private Chapter retry(Chapter chapter, CountDownLatch latch, SearchResult sr) {
+    private Chapter retry(Chapter chapter, SearchResult sr) {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
@@ -76,13 +73,11 @@ public class ChapterParser extends Source {
                         chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
                 chapter.setContent(crawl(chapter.getUrl(), interval));
                 Console.log("<== 重试成功: 【{}】", chapter.getTitle());
-                latch.countDown();
                 return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
                 Console.error(e, "==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle());
                 if (attempt == config.getMaxRetryAttempts()) {
-                    latch.countDown();
                     // 最终失败时记录日志
                     saveErrorLog(chapter, sr, e.getMessage());
                 }
