@@ -58,16 +58,16 @@ port = 改为你的代理端口
 
 ## 质量对比
 
-[起点月票榜](qidian_rank/起点月票榜.md)
+> 可能跳过的书源： 不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的
 
-[起点畅销榜](qidian_rank/起点畅销榜.md)
+[起点月票榜](qidian_rank/1-起点月票榜.md)
 
-[起点阅读指数榜](qidian_rank/起点阅读指数榜.md)
+[起点畅销榜](qidian_rank/2-起点畅销榜.md)
 
-[起点推荐榜·月榜](qidian_rank/起点推荐榜·月榜.md)
+[起点阅读指数榜](qidian_rank/3-起点阅读指数榜.md)
 
-[起点收藏榜](qidian_rank/起点收藏榜.md)
+[起点推荐榜·月榜](qidian_rank/4-起点推荐榜·月榜.md)
 
-[起点签约作者新书榜](qidian_rank/起点签约作者新书榜.md)
+[起点收藏榜](qidian_rank/5-起点收藏榜.md)
 
-[起点月票榜·VIP新作](qidian_rank/起点月票榜·VIP新作.md)
+[起点签约作者新书榜](qidian_rank/6-起点签约作者新书榜.md)
