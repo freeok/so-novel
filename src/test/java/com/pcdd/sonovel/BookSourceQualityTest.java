@@ -19,6 +19,7 @@ import com.pcdd.sonovel.parse.SearchResultParser;
 import com.pcdd.sonovel.parse.SearchResultParser6;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
@@ -46,6 +47,8 @@ class BookSourceQualityTest {
 
     static final AppConfig config = ConfigUtils.config();
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
+    // 0 < TOP_NUM <= 20
+    public static final int TOP_NUM = 20;
 
     static {
         ConsoleLog.setLevel(Level.OFF);
@@ -63,14 +66,14 @@ class BookSourceQualityTest {
         Console.log("getQiDianRanks: {}", rankUrl);
         List<Book> rank = new ArrayList<>();
         Document document = Jsoup.connect(rankUrl)
-                .timeout(5000)
+                .timeout(3000)
                 .header(Header.USER_AGENT.getValue(), RandomUA.generate())
                 .header(Header.COOKIE.getValue(), "w_tsfp=ltvuV0MF2utBvS0Q6qPpnE2sFzsidD04h0wpEaR0f5thQLErU5mG2IZyuMn2NHDf6sxnvd7DsZoyJTLYCJI3dwMSRpqReokRhQ/ElYgnjtxAVBI1QJzYWAJJJLly7DdAf3hCNxS00jA8eIUd379yilkMsyN1zap3TO14fstJ019E6KDQmI5uDW3HlFWQRzaLbjcMcuqPr6g18L5a5TjetFupeV8iA+sXhU3B3HlKWC4gskCyIuAJNBmlI5j5SqA=")
                 .get();
 
         Elements elements = document.select("#book-img-text > ul > li");
-
-        for (Element e : elements) {
+        // 取前 N 名
+        for (Element e : elements.subList(0, TOP_NUM)) {
             String url = URLUtil.normalize(e.select("div.book-mid-info > h2 > a").attr("href"));
             String bookName = e.select("div.book-mid-info > h2 > a").text();
             String author = e.select("div.book-mid-info > p.author > a.name").text();
@@ -87,27 +90,24 @@ class BookSourceQualityTest {
     }
 
     /**
-     * 测试统计
-     * thread: 7
+     * 测试统计，前 20 名
+     * test count: 11
+     * thread: 6
      * search interval: 500 ~ 1000 ms
-     * 5 m 28 s
+     * 4 m 41 s
      * <p>
-     * thread: 1
-     * search interval: 0 ms
-     * 10 m 2 s
      */
     @Test
     void test() {
-        int count = 10;
+        int count = SourceUtils.getSourceCount();
         // 生成的 markdown 文件
         Map<String, String> map = Map.of(
-                "起点月票榜", "https://www.qidian.com/rank/yuepiao/",
-                "起点畅销榜", "https://www.qidian.com/rank/hotsales/",
-                "起点阅读指数榜", "https://www.qidian.com/rank/readIndex/",
-                "起点推荐榜·月榜", "https://www.qidian.com/rank/recom/datetype2/",
-                "起点收藏榜", "https://www.qidian.com/rank/collect/",
-                "起点签约作者新书榜", "https://www.qidian.com/rank/signnewbook/",
-                "起点月票榜·VIP新作", "https://www.qidian.com/rank/yuepiao/chn0/"
+                "1-起点月票榜", "https://www.qidian.com/rank/yuepiao/",
+                "2-起点畅销榜", "https://www.qidian.com/rank/hotsales/",
+                "3-起点阅读指数榜", "https://www.qidian.com/rank/readIndex/",
+                "4-起点推荐榜·月榜", "https://www.qidian.com/rank/recom/datetype2/",
+                "5-起点收藏榜", "https://www.qidian.com/rank/collect/",
+                "6-起点签约作者新书榜", "https://www.qidian.com/rank/signnewbook/"
         );
         qidianRankInit(map);
 
@@ -123,8 +123,9 @@ class BookSourceQualityTest {
 
                     // 遍历书源
                     for (int id = 1; id <= count; id++) {
-                        // 跳过不支持搜索的书源
-                        if (new Source(id).rule.getSearch() != null) {
+                        Rule rule = new Source(id).rule;
+                        // 跳过书源：不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的
+                        if (rule.getSearch() != null && !String.valueOf(rule.getId()).matches("5|6|9|10")) {
                             sourceQualityListMap.put(id, getSourceQualityList(id, kv));
                         }
                     }
