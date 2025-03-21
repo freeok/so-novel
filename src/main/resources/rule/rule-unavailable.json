@@ -1,0 +1,90 @@
+[
+  {
+    "id": "5",
+    "url": "https://69shux.co/",
+    "name": "69書吧",
+    "comment": "新加了CF，已无法使用。需要梯子，章节有限流，数量5w+",
+    "type": "html",
+    "language": "zh_Hant",
+    "needProxy": true,
+    "search": {
+      "url": "https://69shux.co/search/%s/1.html",
+      "method": "get",
+      "cookies": "{'zh_choose':'s','_ga':'GA1.1.307367057.1740763296','cf_clearance':'lhmV_voO7kxHujKEcSTlinlwtdfUn404f3SNINvJP5s-1742481156-1.2.1.1-zZmDLFkkhDoxVlHaL0AE0HLcKdI_EFWf43nPpPJspPZl3GZo5mGBr8pd3C0ABtclWo6J9Mr4nAD2vuu9F8Kk6PyxY80Cp.RhuiW4xwkPvpkAgcwCv2ch_XjAZ6ByyjL1X.O4vSvrialdrl4VdM91eGjXO_Sg6RcOVGIcAqKJGehaDJsFRrgBbSoT1rxHBJYavwrwcd0CKFBaF.xPyMgPcFZ4YNyU0shIH7QVb87OF7qgtdelGmlCHLnaIbz9R9_tKz.zmRjqOI2xNjDuSCgJtgaMnmfp6_.wwk9tzbRRHpu9ai3kGdyrDNNHlOuti7ANNFxIe.pAaM73tGqgZGgSWaOG7mFigjH0swG0Z1tz2MSv3K.zcCs7OwBx3a0Ota.z','_ga_BBJPVSH9B2':'GS1.1.1742480542.5.1.1742481772.0.0.0'}",
+      "result": "#article_list_content > li > div.newnav",
+      "bookName": "h3 > a:last-child",
+      "author": "div.labelbox > label:nth-child(1)",
+      "category": "div.labelbox > label:nth-child(2)",
+      "latestChapter": "div.zxzj > p > a",
+      "status": "div.labelbox > label:nth-child(3)",
+      "pagination": true,
+      "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",
+      "limitPage": 3
+    },
+    "book": {
+      "url": "https://69shux.co/book/(.*?).html",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "url": "https://69shux.co/ajax_novels/chapterlist/%s.html",
+      "result": "ul > li > a",
+      "offset": 0
+    },
+    "chapter": {
+      "title": ".txtnav > h1",
+      "content": "#txtcontent",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br><br>",
+      "filterTxt": "",
+      "filterTag": "div"
+    },
+    "crawl": {
+      "threads": 1,
+      "min": 1000,
+      "max": 2000,
+      "maxAttempts": 5,
+      "retryMin": 2000,
+      "retryMax": 5000
+    }
+  },
+  {
+    "id": 7,
+    "url": "https://69shuba.cx/",
+    "name": "69书吧",
+    "comment": "需要梯子、正文内容纯净、搜索有CF、章节限流",
+    "type": "html",
+    "language": "zh_CN",
+    "needProxy": true,
+    "book": {
+      "url": "https://69shuba.cx/book/(.*?).htm@js:r=r.replace(/https:\\/\\/www\\.69shuba\\.me\\/book\\/(\\d+)\\.htm/,'https://69shuba.cx/book/$1.htm')||r",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": ".bookimg2 > img",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "url": "https://69shuba.cx/book/%s",
+      "result": "#catalog > ul > li > a",
+      "offset": 0,
+      "isDesc": true
+    },
+    "chapter": {
+      "title": ".txtnav > h1",
+      "content": ".txtnav",
+      "paragraphTagClosed": true,
+      "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
+      "filterTag": "h1 div br"
+    }
+  }
+]
