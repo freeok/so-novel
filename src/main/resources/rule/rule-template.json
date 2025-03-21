@@ -4,7 +4,7 @@
   "name": "",
   "comment": "",
   "type": "",
-  "language": "",
+  "language": "zh_CN",
   "search": {
     "url": "",
     "method": "",
@@ -31,7 +31,8 @@
     "coverUrl": "",
     "latestChapter": "",
     "latestUpdate": "",
-    "status": ""
+    "status": "",
+    "wordCount": ""
   },
   "toc": {
     "url": "",
