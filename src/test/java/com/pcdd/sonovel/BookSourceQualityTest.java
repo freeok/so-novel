@@ -49,6 +49,7 @@ class BookSourceQualityTest {
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
     // 0 < TOP_NUM <= 20
     public static final int TOP_NUM = 20;
+    public static final String RE_SKIP_IDS = "6|9|10";
 
     static {
         ConsoleLog.setLevel(Level.OFF);
@@ -125,7 +126,7 @@ class BookSourceQualityTest {
                     for (int id = 1; id <= count; id++) {
                         Rule rule = new Source(id).rule;
                         // 跳过书源：不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的
-                        if (rule.getSearch() != null && !String.valueOf(rule.getId()).matches("5|6|9|10")) {
+                        if (rule.getSearch() != null && !String.valueOf(rule.getId()).matches(RE_SKIP_IDS)) {
                             sourceQualityListMap.put(id, getSourceQualityList(id, kv));
                         }
                     }
