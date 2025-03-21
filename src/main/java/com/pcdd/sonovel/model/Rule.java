@@ -56,6 +56,7 @@ public class Rule {
         private String latestChapter;
         private String latestUpdate;
         private String status;
+        private String wordCount;
     }
 
     @Data
