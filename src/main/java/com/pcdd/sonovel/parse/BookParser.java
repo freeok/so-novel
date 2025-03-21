@@ -37,8 +37,11 @@ public class BookParser extends Source {
         String coverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(),
                 r.getCoverUrl().startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.ATTR_SRC);
         // 以下为非必须属性
+        String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
         String latestUpdate = JsoupUtils.selectAndInvokeJs(document, r.getLatestUpdate(), getContentType(r.getLatestUpdate()));
+        String status = JsoupUtils.selectAndInvokeJs(document, r.getStatus(), getContentType(r.getStatus()));
+        String wordCount = JsoupUtils.selectAndInvokeJs(document, r.getWordCount(), getContentType(r.getWordCount()));
 
         Book book = new Book();
         book.setUrl(url);
@@ -46,8 +49,11 @@ public class BookParser extends Source {
         book.setAuthor(author);
         book.setIntro(intro);
         book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
+        book.setCategory(category);
         book.setLatestChapter(latestChapter);
         book.setLatestUpdate(latestUpdate);
+        book.setStatus(status);
+        book.setWordCount(wordCount);
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
     }
