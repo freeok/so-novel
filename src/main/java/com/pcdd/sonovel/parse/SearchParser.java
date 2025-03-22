@@ -27,9 +27,9 @@ import java.util.*;
  * @author pcdd
  * Created at 2024/3/23
  */
-public class SearchResultParser extends Source {
+public class SearchParser extends Source {
 
-    public SearchResultParser(AppConfig config) {
+    public SearchParser(AppConfig config) {
         super(config);
     }
 

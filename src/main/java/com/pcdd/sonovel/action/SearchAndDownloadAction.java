@@ -9,7 +9,7 @@ import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.AllArgsConstructor;
@@ -62,7 +62,7 @@ public class SearchAndDownloadAction {
         }
 
         // 2. 打印搜索结果
-        new SearchResultParser(config).printSearchResult(results);
+        new SearchParser(config).printSearchResult(results);
 
         int num;
         int action;
