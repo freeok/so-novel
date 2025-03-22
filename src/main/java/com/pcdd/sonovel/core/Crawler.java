@@ -13,8 +13,8 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.ChapterParser;
-import com.pcdd.sonovel.parse.SearchResultParser;
-import com.pcdd.sonovel.parse.SearchResultParser6;
+import com.pcdd.sonovel.parse.SearchParser;
+import com.pcdd.sonovel.parse.SearchParser6;
 import lombok.SneakyThrows;
 
 import java.io.BufferedOutputStream;
@@ -56,9 +56,9 @@ public class Crawler {
         List<SearchResult> searchResults;
 
         if (config.getSourceId() == 6) {
-            searchResults = new SearchResultParser6(config).parse(keyword);
+            searchResults = new SearchParser6(config).parse(keyword);
         } else {
-            searchResults = new SearchResultParser(config).parse(keyword, true);
+            searchResults = new SearchParser(config).parse(keyword, true);
         }
 
         stopWatch.stop();

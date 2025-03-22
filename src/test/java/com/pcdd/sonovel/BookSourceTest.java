@@ -97,14 +97,14 @@ class BookSourceTest {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
         List<SearchResult> list;
         if (config.getSourceId() == 6) {
-            list = new SearchResultParser6(config).parse(keyword);
+            list = new SearchParser6(config).parse(keyword);
         } else {
-            list = new SearchResultParser(config).parse(keyword);
+            list = new SearchParser(config).parse(keyword, true);
         }
         if (CollUtil.isEmpty(list)) {
             Console.log("\"{}\"搜索结果为空", keyword);
         }
-        new SearchResultParser(config).printSearchResult(list);
+        new SearchParser(config).printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
