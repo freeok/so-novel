@@ -2,14 +2,12 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
@@ -44,7 +42,7 @@ public class ChapterParser extends Source {
                 .timeout(this.rule.getChapter().getTimeout())
                 .get();
         chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
-        chapter.setContent(crawl(chapter.getUrl(), 0));
+        chapter.setContent(crawl(chapter.getUrl(), RandomUtil.randomInt(100, 200)));
         return chapter;
     }
 
@@ -126,14 +124,18 @@ public class ChapterParser extends Source {
                     .timeout(ruleChapter.getTimeout())
                     .get();
             contentBuilder.append(document.select(ruleChapter.getContent()).html());
-            // 获取下一页链接
+            // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
             // 判断是否为章节最后一页
             if (nextEls.text().matches(".*(下一章|没有了|>>).*")) {
                 isLastPage = true;
             }
-            // 更新下一页链接
-            nextUrl = nextEls.first().absUrl("href");
+            // 从 JS 获取下一页链接
+            if (ruleChapter.getNextPageInJs() != null) {
+                nextUrl = JsoupUtils.selectAndInvokeJs(document, ruleChapter.getNextPageInJs(), ContentType.HTML);
+            } else { // 从按钮获取下一页链接
+                nextUrl = nextEls.first().absUrl("href");
+            }
             Thread.sleep(interval);
         }
 
