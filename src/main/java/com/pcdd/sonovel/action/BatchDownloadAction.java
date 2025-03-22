@@ -53,7 +53,7 @@ public class BatchDownloadAction {
             String[] split = line.split("\\s+");
             String bookName = split[0];
             String author = split[1];
-            List<SearchResult> res = srp.parse(bookName);
+            List<SearchResult> res = srp.parse(bookName, true);
             res.stream()
                     .filter(sr -> bookName.equals(sr.getBookName()) && author.equals(sr.getAuthor()))
                     .findFirst()
