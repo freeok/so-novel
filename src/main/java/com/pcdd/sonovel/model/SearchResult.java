@@ -12,6 +12,7 @@ import lombok.Data;
 @Builder
 public class SearchResult {
 
+    private Integer sourceId;
     private String url;
     private String bookName;
     private String author;
