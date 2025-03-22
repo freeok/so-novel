@@ -121,6 +121,7 @@ public class SearchResultParser extends Source {
                 }
 
                 SearchResult sr = SearchResult.builder()
+                        .sourceId(this.rule.getId())
                         .url(bookUrl)
                         .bookName(book.getBookName())
                         .author(book.getAuthor())
@@ -150,6 +151,7 @@ public class SearchResultParser extends Source {
                 if (bookName.isEmpty()) continue;
 
                 SearchResult sr = SearchResult.builder()
+                        .sourceId(this.rule.getId())
                         .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
                         .bookName(bookName)
                         .author(author)
