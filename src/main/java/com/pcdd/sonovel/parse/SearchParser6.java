@@ -36,9 +36,9 @@ import java.util.Map;
  * @author pcdd
  * Created at 2024/3/23
  */
-public class SearchResultParser6 extends Source {
+public class SearchParser6 extends Source {
 
-    public SearchResultParser6(AppConfig config) {
+    public SearchParser6(AppConfig config) {
         super(config);
     }
 
