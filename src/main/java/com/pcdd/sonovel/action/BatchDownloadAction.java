@@ -10,7 +10,7 @@ import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.SearchResultParser;
+import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.TocParser;
 import lombok.AllArgsConstructor;
 
@@ -45,7 +45,7 @@ public class BatchDownloadAction {
             }
         }
 
-        SearchResultParser srp = new SearchResultParser(config);
+        SearchParser sp = new SearchParser(config);
         List<SearchResult> downloadList = new ArrayList<>();
         StringBuilder notFound = new StringBuilder();
 
@@ -53,7 +53,7 @@ public class BatchDownloadAction {
             String[] split = line.split("\\s+");
             String bookName = split[0];
             String author = split[1];
-            List<SearchResult> res = srp.parse(bookName, true);
+            List<SearchResult> res = sp.parse(bookName, true);
             res.stream()
                     .filter(sr -> bookName.equals(sr.getBookName()) && author.equals(sr.getAuthor()))
                     .findFirst()
