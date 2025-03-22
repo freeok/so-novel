@@ -83,7 +83,10 @@ public class Rule {
         private String filterTag;
         // 章节是否分页
         private boolean pagination;
+        // 下一页的 HTML 元素
         private String nextPage;
+        // 位于 JS 中的下一页链接
+        private String nextPageInJs;
     }
 
 }
