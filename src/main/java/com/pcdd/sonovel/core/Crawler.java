@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,7 +58,7 @@ public class Crawler {
         if (config.getSourceId() == 6) {
             searchResults = new SearchResultParser6(config).parse(keyword);
         } else {
-            searchResults = new SearchResultParser(config).parse(keyword);
+            searchResults = new SearchResultParser(config).parse(keyword, true);
         }
 
         stopWatch.stop();

@@ -33,6 +33,10 @@ public class SearchResultParser extends Source {
         super(config);
     }
 
+    public List<SearchResult> parse(String keyword, boolean isSort) {
+        return isSort ? SearchResultsHandler.sort(parse(keyword)) : parse(keyword);
+    }
+
     @SneakyThrows
     public List<SearchResult> parse(String keyword) {
         // 模拟搜索请求
@@ -57,7 +61,10 @@ public class SearchResultParser extends Source {
         }
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
-        if (!r.isPagination()) return SearchResultsHandler.handle(firstPageResults);
+        // 搜索结果无分页
+        if (!r.isPagination()) {
+            return firstPageResults;
+        }
 
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素，且 1 <= limitPage < searchPages.size()，否则 limitPage 无效
         Elements nextPages = JsoupUtils.select(document, r.getNextPage());
@@ -91,9 +98,7 @@ public class SearchResultParser extends Source {
                 .toList();
 
         // 合并，不去重（去重用 union）
-        List<SearchResult> unionAll = CollUtil.unionAll(firstPageResults, additionalResults);
-
-        return SearchResultsHandler.handle(unionAll);
+        return CollUtil.unionAll(firstPageResults, additionalResults);
     }
 
     private List<SearchResult> getSearchResults(String url, Connection.Response resp) {
@@ -129,6 +134,7 @@ public class SearchResultParser extends Source {
             }
 
             Elements elements = document.select(r.getResult());
+            // 只获取前 N 条记录
             for (Element element : elements) {
                 // jsoup 不支持一次性获取属性的值
                 String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
@@ -201,19 +207,6 @@ public class SearchResultParser extends Source {
         if (StrUtil.isNotEmpty(rule)) {
             list.add(StrUtil.isNotEmpty(field) ? field : "");
         }
-    }
-
-    public static void printAggregateSearchResult(List<SearchResult> results) {
-        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间");
-        for (int i = 1; i <= results.size(); i++) {
-            SearchResult sr = results.get(i - 1);
-            consoleTable.addBody(String.valueOf(i),
-                    sr.getBookName(),
-                    sr.getAuthor(),
-                    sr.getLatestChapter(),
-                    sr.getLatestUpdate());
-        }
-        Console.table(consoleTable);
     }
 
 }
