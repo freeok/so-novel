@@ -1,12 +1,12 @@
 {
   "id": 11,
-  "url": "http://www.xbiquzw.com/",
+  "url": "http://www.xbiquzw.net/",
   "name": "笔尖中文",
   "comment": "无限流",
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "url": "http://www.xbiquzw.com/modules/article/search.php",
+    "url": "http://www.xbiquzw.net/modules/article/search.php",
     "method": "post",
     "data": "{searchkey: %s}",
     "result": "#wrapper > table > tbody > tr",
