@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class SearchResultsHandler {
 
     /**
-     * 优化源站的搜索结果
+     * 优化某个源站的搜索结果
      */
-    public List<SearchResult> handle(List<SearchResult> list) {
+    public List<SearchResult> sort(List<SearchResult> list) {
         // 按照作者分组
         Map<String, List<SearchResult>> authorGroups = list.stream()
                 .collect(Collectors.groupingBy(SearchResult::getAuthor, LinkedHashMap::new, Collectors.toList()));
