@@ -71,7 +71,7 @@ public class SearchResultParser6 extends Source {
             String s3 = ReUtil.getGroup0("\\{(.*?)\\}", s2);
             String beginIndex = "\"content\":";
             String html = s3.substring(s3.indexOf(beginIndex) + beginIndex.length(), s3.lastIndexOf("}"));
-            return SearchResultsHandler.handle(getSearchResults(Jsoup.parse(html)));
+            return SearchResultsHandler.sort(getSearchResults(Jsoup.parse(html)));
 
         } catch (Exception e) {
             Console.error(e.getMessage());
