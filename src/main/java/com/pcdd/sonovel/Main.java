@@ -158,7 +158,7 @@ public class Main {
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", config.getVersion())) + "（本项目开源且免费）")
                 .addHeader("官方地址：https://github.com/freeok/so-novel")
-                .addHeader(StrUtil.format("当前书源：{} ({} ID: {})", r.getUrl(), r.getName(), r.getId()))
+                .addHeader(StrUtil.format("当前书源：{} (ID: {})", r.getName(), r.getId()))
                 .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
                 .addBody(render("@|yellow 使用前请务必阅读 readme.txt|@"))
         );
