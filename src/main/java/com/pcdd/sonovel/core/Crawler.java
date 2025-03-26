@@ -87,7 +87,7 @@ public class Crawler {
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
             // C:\Program Files 下创建需要管理员权限
-            Console.log(render("@|red 创建下载目录失败\n1. 检查下载路径是否合法\n2. 尝试以管理员身份运行（C 盘部分目录需要管理员权限）|@"));
+            Console.log(render("创建下载目录失败\n1. 检查下载路径是否合法\n2. 尝试以管理员身份运行（C 盘部分目录需要管理员权限）", "red"));
             return 0;
         }
 
