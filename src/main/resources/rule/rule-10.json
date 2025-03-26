@@ -24,8 +24,7 @@
     "status": "meta[name=\"og:novel:status\"]"
   },
   "toc": {
-    "result": ".full_chapters > div:nth-child(1) > a",
-    "nextPage": "@js:r=r.replaceAll('/novel/pagea', 'https://cn.wa01.com/novel/pagea');"
+    "result": ".full_chapters > div:nth-child(1) > a"
   },
   "chapter": {
     "title": ".title > h1",
