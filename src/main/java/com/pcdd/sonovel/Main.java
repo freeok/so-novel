@@ -80,7 +80,7 @@ public class Main {
 
         while (true) {
             Console.log("\n" + StrUtil.join(" ", options));
-            Console.print("==> 请输入功能序号: ");
+            Console.print(render("==> 请输入功能序号: ", "green"));
             String cmd = sc.nextLine();
 
             if ("0".equals(cmd)) {
@@ -156,11 +156,10 @@ public class Main {
         Console.table(ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader(render(StrUtil.format("@|BG_blue,ITALIC,BOLD  so-novel v{} |@", config.getVersion())) + "（本项目开源且免费）")
-                .addHeader("官方地址：https://github.com/freeok/so-novel")
+                .addHeader(render(StrUtil.format(" so-novel v{} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_RED", "BOLD"))
                 .addHeader(StrUtil.format("当前书源：{} (ID: {})", r.getName(), r.getId()))
-                .addHeader(render("导出格式：@|blue " + config.getExtName() + "|@"))
-                .addBody(render("@|yellow 使用前请务必阅读 readme.txt|@"))
+                .addHeader("导出格式：" + config.getExtName().toLowerCase())
+                .addBody(render("使用前请务必阅读 readme.txt", "yellow"))
         );
     }
 

@@ -31,7 +31,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
     @Override
     public void handle(Book b, File savePath) {
         if (FileUtil.isDirEmpty(savePath)) {
-            Console.error(render("==> @|red 《{}》（{}）下载章节数为 0，取消生成 EPUB|@"), b.getBookName(), b.getAuthor());
+            Console.error(render("==> 《{}》（{}）下载章节数为 0，取消生成 EPUB", "red"), b.getBookName(), b.getAuthor());
             return;
         }
 
@@ -47,7 +47,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
             book.setCoverImage(new Resource(bytes, "cover.jpg"));
         } catch (Exception e) {
-            Console.error(render("@|red 封面下载失败：{}|@"), e.getMessage());
+            Console.error(render("封面下载失败：{}", "red"), e.getMessage());
         }
         // 不设置会导致 Apple Books 无法使用苹方字体
         meta.setLanguage("zh");

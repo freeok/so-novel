@@ -69,7 +69,7 @@ public class CheckUpdateAction {
                 Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
             }
         } catch (Exception e) {
-            Console.log(render("\n@|red <== 更新失败，当前网络环境无法访问 GitHub，请稍后再试 ({})|@"), e.getMessage());
+            Console.log(render("\n<== 更新失败，当前网络环境无法访问 GitHub，请稍后再试 ({})", "red"), e.getMessage());
         }
     }
 

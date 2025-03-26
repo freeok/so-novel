@@ -32,7 +32,7 @@ public class SearchAndDownloadAction {
     private final AppConfig config;
 
     public void downloadFromUrl(LineReader reader) {
-        String bookUrl = reader.readLine(render("==> @|blue 请输入书籍详情页网址: |@")).strip();
+        String bookUrl = reader.readLine(render("==> 请输入书籍详情页网址: ", "green")).strip();
         Rule rule = new Source(config).rule;
         // www.69shuba.me 的链接转换为 69shuba.cx 的
         bookUrl = JsoupUtils.invokeJs(rule.getBook().getUrl(), bookUrl);
@@ -54,7 +54,7 @@ public class SearchAndDownloadAction {
 
     public void downloadByKeyword(LineReader reader) {
         // 1. 查询
-        String keyword = reader.readLine(render("==> @|blue 请输入书名或作者（宁少字别错字）: |@")).strip();
+        String keyword = reader.readLine(render("==> 请输入书名或作者（宁少字别错字）: ", "green")).strip();
         if (keyword.isEmpty()) return;
         List<SearchResult> results = new Crawler(config).search(keyword);
         if (CollUtil.isEmpty(results)) {
@@ -70,7 +70,7 @@ public class SearchAndDownloadAction {
         List<Chapter> toc;
         // 3. 选择下载章节
         while (true) {
-            String input = reader.readLine("==> 请输入下载序号（首列的数字，或输入 0 返回）：").strip();
+            String input = reader.readLine(render("==> 请输入下载序号（首列的数字，或输入 0 返回）：", "green")).strip();
             // 健壮性判断：必须为数字
             try {
                 num = Integer.parseInt(input);
@@ -90,14 +90,14 @@ public class SearchAndDownloadAction {
             // tocParser.shutdown();
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
-            Console.log("==> 0: 重新选择功能");
-            Console.log("==> 1: 下载全本");
-            Console.log("==> 2: 下载指定范围章节");
-            Console.log("==> 3: 下载最新章节");
-            Console.log("==> 4: 重新输入序号");
+            Console.log("0: 重新选择功能");
+            Console.log("1: 下载全本");
+            Console.log("2: 下载指定范围章节");
+            Console.log("3: 下载最新章节");
+            Console.log("4: 重新输入序号");
 
             try {
-                action = Integer.parseInt(reader.readLine("==> 请输入序号："));
+                action = Integer.parseInt(reader.readLine(render("==> 请输入序号：", "green")));
             } catch (NumberFormatException e) {
                 continue;
             }
@@ -107,11 +107,11 @@ public class SearchAndDownloadAction {
         if (action == 0) return;
         if (action == 2) {
             try {
-                String[] split = reader.readLine("==> 请输起始章(最小为1)和结束章，用空格隔开：").strip().split("\\s+");
+                String[] split = reader.readLine(render("==> 请输起始章(最小为1)和结束章，用空格隔开：", "green")).strip().split("\\s+");
                 int start = Integer.parseInt(split[0]) - 1;
                 int end = Integer.parseInt(split[1]);
                 if (start > toc.size() || end > toc.size()) {
-                    Console.log(render(StrUtil.format("@|yellow 超出章节范围，该小说共 {} 章|@", toc.size())));
+                    Console.log(render(StrUtil.format("超出章节范围，该小说共 {} 章", toc.size()), "yellow"));
                     return;
                 }
                 toc = CollUtil.sub(toc, start, end);
@@ -121,7 +121,7 @@ public class SearchAndDownloadAction {
         }
         if (action == 3) {
             try {
-                int i = Integer.parseInt(reader.readLine("==> 请输入要下载最新章节的数量："));
+                int i = Integer.parseInt(reader.readLine(render("==> 请输入要下载最新章节的数量：", "green")));
                 toc = CollUtil.sub(toc, toc.size() - i, toc.size());
             } catch (Exception e) {
                 return;
