@@ -34,7 +34,7 @@ public class BatchDownloadAction {
     public void execute() {
         Scanner sc = Console.scanner();
         List<String> lines = new ArrayList<>();
-        Console.log(render("==> @|blue 请依次输入书名和作者，用空格隔开，每输入一条按回车。输入 # 结束: |@"));
+        Console.log(render("==> 请依次输入书名和作者，用空格隔开，每输入一条按回车。输入 # 结束: ", "green"));
         while (true) {
             String line = sc.nextLine();
             if ("#".equals(line.strip())) {
@@ -78,7 +78,7 @@ public class BatchDownloadAction {
             FileUtil.writeUtf8String(notFound.toString(),
                     System.getProperty("user.dir") + File.separator + "批量下载 - 书源 %s 未搜到的书.log".formatted(config.getSourceId()));
         }
-        Console.print("==> 输入 Y 以确认下载：");
+        Console.print(render("==> 输入 Y 以确认下载：", "green"));
         if ("Y".equalsIgnoreCase(sc.next().strip())) {
             double totalTime = 0;
             TocParser tocParser = new TocParser(config);
