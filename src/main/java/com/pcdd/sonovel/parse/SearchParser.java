@@ -6,6 +6,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -144,7 +145,7 @@ public class SearchParser extends Source {
                 String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
                 String category = JsoupUtils.selectAndInvokeJs(element, r.getCategory());
                 String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
-                String latestUpdate = JsoupUtils.selectAndInvokeJs(element, r.getUpdate());
+                String latestUpdate = JsoupUtils.selectAndInvokeJs(element, r.getLatestUpdate());
                 String status = JsoupUtils.selectAndInvokeJs(element, r.getStatus());
                 String wordCount = JsoupUtils.selectAndInvokeJs(element, r.getWordCount());
 
@@ -181,8 +182,8 @@ public class SearchParser extends Source {
         List<String> titles = ListUtil.toList("序号", "书名");
         addColumnIfNotEmpty(titles, "作者", r.getAuthor());
         addColumnIfNotEmpty(titles, "类别", r.getCategory());
-        addColumnIfNotEmpty(titles, "最新章节", r.getLatestChapter());
-        addColumnIfNotEmpty(titles, "更新时间", r.getUpdate());
+        addColumnIfNotEmpty(titles, "最新章节", StrUtil.subPre(r.getLatestChapter(), 20) + "...");
+        addColumnIfNotEmpty(titles, "更新时间", ReUtil.replaceAll(r.getLatestUpdate(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
         addColumnIfNotEmpty(titles, "总字数", r.getWordCount());
         addColumnIfNotEmpty(titles, "状态", r.getStatus());
 
@@ -194,7 +195,7 @@ public class SearchParser extends Source {
             addColumnIfNotEmpty(cols, sr.getAuthor(), r.getAuthor());
             addColumnIfNotEmpty(cols, sr.getCategory(), r.getCategory());
             addColumnIfNotEmpty(cols, sr.getLatestChapter(), r.getLatestChapter());
-            addColumnIfNotEmpty(cols, sr.getLatestUpdate(), r.getUpdate());
+            addColumnIfNotEmpty(cols, sr.getLatestUpdate(), r.getLatestUpdate());
             addColumnIfNotEmpty(cols, sr.getWordCount(), r.getWordCount());
             addColumnIfNotEmpty(cols, sr.getStatus(), r.getStatus());
 
@@ -230,7 +231,7 @@ public class SearchParser extends Source {
                     sr.getBookName(),
                     sr.getAuthor(),
                     sr.getLatestChapter(),
-                    sr.getLatestUpdate(),
+                    ReUtil.replaceAll(sr.getLatestUpdate(), "\\d{2}:\\d{2}(:\\d{2})?", ""),
                     String.valueOf(sr.getSourceId())
             );
         }
