@@ -100,7 +100,7 @@ class BookSourceQualityTest {
      */
     @Test
     void test() {
-        int count = SourceUtils.getSourceCount();
+        int count = SourceUtils.getCount();
         // 生成的 markdown 文件
         Map<String, String> map = Map.of(
                 "1-起点月票榜", "https://www.qidian.com/rank/yuepiao/",
