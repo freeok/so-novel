@@ -56,7 +56,7 @@ public class SearchParser extends Source {
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
-            Console.error(e.getMessage());
+            Console.error("书源 {} 搜索解析出错: {}", this.rule.getId(), e.getMessage());
             return Collections.emptyList();
         }
 
@@ -209,6 +209,32 @@ public class SearchParser extends Source {
         if (StrUtil.isNotEmpty(rule)) {
             list.add(StrUtil.isNotEmpty(field) ? field : "");
         }
+    }
+
+    public static void printAggregateSearchResult(List<SearchResult> results) {
+        ConsoleTable consoleTable = ConsoleTable.create().addHeader("序号", "书名", "作者", "最新章节", "最后更新时间", "书源");
+        for (int i = 1; i <= results.size(); i++) {
+            SearchResult sr = results.get(i - 1);
+
+            if (sr.getLatestChapter() == null) {
+                sr.setLatestChapter("/");
+            } else {
+                sr.setLatestChapter(StrUtil.subPre(sr.getLatestChapter(), 20) + "...");
+            }
+            if (sr.getLatestUpdate() == null) {
+                sr.setLatestUpdate("/");
+            }
+
+            consoleTable.addBody(
+                    String.valueOf(i),
+                    sr.getBookName(),
+                    sr.getAuthor(),
+                    sr.getLatestChapter(),
+                    sr.getLatestUpdate(),
+                    String.valueOf(sr.getSourceId())
+            );
+        }
+        Console.table(consoleTable);
     }
 
 }

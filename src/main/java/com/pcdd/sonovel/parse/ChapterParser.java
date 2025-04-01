@@ -88,6 +88,7 @@ public class ChapterParser extends Source {
     /**
      * 爬取正文内容
      *
+     * @param url      章节 url
      * @param interval 爬取间隔
      */
     @SneakyThrows
