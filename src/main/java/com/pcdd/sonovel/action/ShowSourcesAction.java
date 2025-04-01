@@ -3,6 +3,7 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.core.Source;
@@ -33,18 +34,15 @@ public class ShowSourcesAction {
     }
 
     public void execute() {
-        Console.log("<== Please wait ...");
-
-        List<Rule> list = new ArrayList<>();
-        for (int i = 1; i <= SourceUtils.getSourceCount(); i++) {
-            Source source = new Source(i);
-            list.add(source.rule);
-        }
+        Console.log("<== 测试延迟中 ...");
 
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "延迟", "状态码", "URL");
-        testWebsiteDelays(list).forEach(e -> asciiTables.addBody(
+        List<Rule> rules = SourceUtils.IDS.stream()
+                .map(id -> new Source(id).rule)
+                .toList();
+        testWebsiteDelays(rules).forEach(e -> asciiTables.addBody(
                 e.getId() + "",
                 e.getName(),
                 e.getDelay() + " ms",
@@ -57,7 +55,7 @@ public class ShowSourcesAction {
     @SneakyThrows
     private static List<SourceInfo> testWebsiteDelays(List<Rule> rules) {
         List<SourceInfo> res = new ArrayList<>();
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(rules.size(), 2 * RuntimeUtil.getProcessorCount()));
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executorService);
         int timeout = 3000;
 
@@ -78,7 +76,8 @@ public class ShowSourcesAction {
                     source.setDelay((int) (System.currentTimeMillis() - startTime));
                     source.setCode(conn.getResponseCode());
                 } catch (Exception e) {
-                    source.setDelay(-1);  // 出现异常时设置为负值或其他标记
+                    source.setDelay(-1);
+                    source.setCode(-1);
                 }
                 return source;
             });
