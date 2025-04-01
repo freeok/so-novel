@@ -4,7 +4,6 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
@@ -14,25 +13,27 @@ import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.terminal.Terminal;
 
 import java.util.List;
+import java.util.Scanner;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
+ * 搜索指定书源
+ *
  * @author pcdd
  * Created at 2024/11/10
  */
 @AllArgsConstructor
-public class SearchAndDownloadAction {
+public class SingleSearchAction {
 
     private final AppConfig config;
+    public final Scanner sc = Console.scanner();
 
-    public void downloadFromUrl(LineReader reader) {
-        String bookUrl = reader.readLine(render("==> 请输入书籍详情页网址: ", "green")).strip();
+    public void downloadFromUrl() {
+        Console.print(render("==> 请输入书籍详情页网址: ", "green"));
+        String bookUrl = sc.nextLine().strip();
         Rule rule = new Source(config).rule;
         // www.69shuba.me 的链接转换为 69shuba.cx 的
         bookUrl = JsoupUtils.invokeJs(rule.getBook().getUrl(), bookUrl);
@@ -52,96 +53,32 @@ public class SearchAndDownloadAction {
         Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
     }
 
-    public void downloadByKeyword(LineReader reader) {
+    public void downloadByKeyword() {
         // 1. 查询
-        String keyword = reader.readLine(render("==> 请输入书名或作者（宁少字别错字）: ", "green")).strip();
+        Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", "green"));
+        String keyword = sc.nextLine().strip();
         if (keyword.isEmpty()) return;
-        List<SearchResult> results = new Crawler(config).search(keyword);
-        if (CollUtil.isEmpty(results)) {
+        List<SearchResult> searchResults = new Crawler(config).search(keyword);
+        if (CollUtil.isEmpty(searchResults)) {
             return;
         }
 
         // 2. 打印搜索结果
-        new SearchParser(config).printSearchResult(results);
+        new SearchParser(config).printSearchResult(searchResults);
 
-        int num;
-        int action;
-        SearchResult sr;
-        List<Chapter> toc;
-        // 3. 选择下载章节
-        while (true) {
-            String input = reader.readLine(render("==> 请输入下载序号（首列的数字，或输入 0 返回）：", "green")).strip();
-            // 健壮性判断：必须为数字
-            try {
-                num = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                continue;
-            }
-
-            // 没有搜到想要的书，返回
-            if (num == 0) return;
-            // 健壮性判断：必须为首列的序号
-            if (num < 0 || num > results.size()) continue;
-
-            sr = results.get(num - 1);
-            Console.log("<== 正在获取章节目录 ...");
-            TocParser tocParser = new TocParser(config);
-            toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
-            // tocParser.shutdown();
-
-            Console.log("<== 你选择了《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
-            Console.log("0: 重新选择功能");
-            Console.log("1: 下载全本");
-            Console.log("2: 下载指定范围章节");
-            Console.log("3: 下载最新章节");
-            Console.log("4: 重新输入序号");
-
-            try {
-                action = Integer.parseInt(reader.readLine(render("==> 请输入序号：", "green")));
-            } catch (NumberFormatException e) {
-                continue;
-            }
-
-            if (action != 4) break;
-        }
-        if (action == 0) return;
-        if (action == 2) {
-            try {
-                String[] split = reader.readLine(render("==> 请输起始章(最小为1)和结束章，用空格隔开：", "green")).strip().split("\\s+");
-                int start = Integer.parseInt(split[0]) - 1;
-                int end = Integer.parseInt(split[1]);
-                if (start > toc.size() || end > toc.size()) {
-                    Console.log(render(StrUtil.format("超出章节范围，该小说共 {} 章", toc.size()), "yellow"));
-                    return;
-                }
-                toc = CollUtil.sub(toc, start, end);
-            } catch (Exception e) {
-                return;
-            }
-        }
-        if (action == 3) {
-            try {
-                int i = Integer.parseInt(reader.readLine(render("==> 请输入要下载最新章节的数量：", "green")));
-                toc = CollUtil.sub(toc, toc.size() - i, toc.size());
-            } catch (Exception e) {
-                return;
-            }
-        }
-
-        double res = new Crawler(config).crawl(sr, toc);
-        Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
+        // 3. 下载
+        new DownloadAction(config).execute(searchResults);
     }
 
     @SneakyThrows
-    public void execute(Terminal terminal) {
-        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
+    public void execute() {
         Source source = new Source(config.getSourceId());
 
         // URL 下载的小说，rule.json 删除 search
         if (source.rule.getSearch() == null) {
-            downloadFromUrl(reader);
+            downloadFromUrl();
         } else {
-            downloadByKeyword(reader);
+            downloadByKeyword();
         }
     }
 
