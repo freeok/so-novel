@@ -3,11 +3,10 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
-import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -29,38 +28,37 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @AllArgsConstructor
 public class AggregatedSearchAction {
 
-    private final List<Integer> ids = List.of(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16);
-
-    @SneakyThrows
     public void execute() {
         Scanner sc = Console.scanner();
         Console.print(render("==> 请输入书名或作者（尽量输完整）: ", "green"));
         String kw = sc.nextLine().strip();
-        ExecutorService threadPool = Executors.newFixedThreadPool(ids.size());
-        List<List<SearchResult>> results = new ArrayList<>();
-        CountDownLatch latch = new CountDownLatch(ids.size());
 
-        for (Integer id : ids) {
+        List<SearchResult> results = getSearchResults(kw);
+
+        SearchParser.printAggregateSearchResult(results);
+
+        new DownloadAction(null).execute(results);
+    }
+
+    @SneakyThrows
+    public static List<SearchResult> getSearchResults(String kw) {
+        List<Source> searchableSources = SourceUtils.getSearchableSources();
+        ExecutorService threadPool = Executors.newFixedThreadPool(searchableSources.size());
+        List<List<SearchResult>> results = new ArrayList<>();
+        CountDownLatch latch = new CountDownLatch(searchableSources.size());
+        for (Source source : searchableSources) {
             threadPool.execute(() -> {
-                AppConfig conf = ConfigUtils.config();
-                conf.setSourceId(id);
-                Source source = new Source(conf);
+                List<SearchResult> res = new SearchParser(source.config).parse(kw);
                 Rule rule = source.rule;
-                List<SearchResult> res = new SearchParser(conf).parse(kw);
-                Console.log("书源 {} ({}) 搜索结果数: {}", id, rule.getName(), res.size());
+                Console.log("书源 {} ({}) 搜索结果数: {}", rule.getId(), rule.getName(), res.size());
                 results.add(res);
                 latch.countDown();
             });
         }
         latch.await();
-
         List<SearchResult> flatList = new ArrayList<>();
         results.forEach(flatList::addAll);
-        List<SearchResult> searchResults = SearchResultsHandler.aggregateSort(flatList, kw);
-
-        SearchParser.printAggregateSearchResult(searchResults);
-
-        new DownloadAction(null).execute(searchResults);
+        return SearchResultsHandler.aggregateSort(flatList, kw);
     }
 
 }

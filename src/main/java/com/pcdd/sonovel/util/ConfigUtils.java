@@ -60,7 +60,7 @@ public class ConfigUtils {
         config.setVersion(sys.getStr("version"));
 
         config.setLanguage(usr.getStr("language", SELECTION_1, "zh_CN"));
-        int sourceCount = SourceUtils.getSourceCount();
+        int sourceCount = SourceUtils.getCount();
         config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, sourceCount + 1)));
         config.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         // 一律转为小写
