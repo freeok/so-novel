@@ -17,7 +17,7 @@
     "wordCount": "",
     "status": "",
     "latestChapter": "",
-    "update": "",
+    "lastUpdateTime": "",
     "pagination": false,
     "nextPage": "",
     "limitPage": 0
@@ -30,7 +30,7 @@
     "category": "",
     "coverUrl": "",
     "latestChapter": "",
-    "latestUpdate": "",
+    "lastUpdateTime": "",
     "status": "",
     "wordCount": ""
   },

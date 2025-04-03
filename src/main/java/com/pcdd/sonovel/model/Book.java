@@ -17,7 +17,7 @@ public class Book {
     private String category;
     private String coverUrl;
     private String latestChapter;
-    private String latestUpdate;
+    private String lastUpdateTime;
     private String status;
     private String wordCount;
 

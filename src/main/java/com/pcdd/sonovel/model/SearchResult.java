@@ -19,7 +19,7 @@ public class SearchResult {
     private String intro;
     private String category;
     private String latestChapter;
-    private String latestUpdate;
+    private String lastUpdateTime;
     private String status;
     private String wordCount;
 

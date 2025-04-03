@@ -127,7 +127,7 @@ public class SearchParser extends Source {
                         .bookName(book.getBookName())
                         .author(book.getAuthor())
                         .latestChapter(book.getLatestChapter())
-                        .latestUpdate(book.getLatestUpdate())
+                        .lastUpdateTime(book.getLastUpdateTime())
                         .build();
                 list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
                 Thread.sleep(CrawlUtils.randomInterval(config));
@@ -145,7 +145,7 @@ public class SearchParser extends Source {
                 String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
                 String category = JsoupUtils.selectAndInvokeJs(element, r.getCategory());
                 String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
-                String latestUpdate = JsoupUtils.selectAndInvokeJs(element, r.getLatestUpdate());
+                String lastUpdateTime = JsoupUtils.selectAndInvokeJs(element, r.getLastUpdateTime());
                 String status = JsoupUtils.selectAndInvokeJs(element, r.getStatus());
                 String wordCount = JsoupUtils.selectAndInvokeJs(element, r.getWordCount());
 
@@ -158,7 +158,7 @@ public class SearchParser extends Source {
                         .author(author)
                         .category(category)
                         .latestChapter(latestChapter)
-                        .latestUpdate(latestUpdate)
+                        .lastUpdateTime(lastUpdateTime)
                         .status(status)
                         .wordCount(wordCount)
                         .build();
@@ -183,7 +183,7 @@ public class SearchParser extends Source {
         addColumnIfNotEmpty(titles, "作者", r.getAuthor());
         addColumnIfNotEmpty(titles, "类别", r.getCategory());
         addColumnIfNotEmpty(titles, "最新章节", StrUtil.subPre(r.getLatestChapter(), 20) + "...");
-        addColumnIfNotEmpty(titles, "更新时间", ReUtil.replaceAll(r.getLatestUpdate(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
+        addColumnIfNotEmpty(titles, "更新时间", ReUtil.replaceAll(r.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
         addColumnIfNotEmpty(titles, "总字数", r.getWordCount());
         addColumnIfNotEmpty(titles, "状态", r.getStatus());
 
@@ -195,7 +195,7 @@ public class SearchParser extends Source {
             addColumnIfNotEmpty(cols, sr.getAuthor(), r.getAuthor());
             addColumnIfNotEmpty(cols, sr.getCategory(), r.getCategory());
             addColumnIfNotEmpty(cols, sr.getLatestChapter(), r.getLatestChapter());
-            addColumnIfNotEmpty(cols, sr.getLatestUpdate(), r.getLatestUpdate());
+            addColumnIfNotEmpty(cols, sr.getLastUpdateTime(), r.getLastUpdateTime());
             addColumnIfNotEmpty(cols, sr.getWordCount(), r.getWordCount());
             addColumnIfNotEmpty(cols, sr.getStatus(), r.getStatus());
 
@@ -222,8 +222,8 @@ public class SearchParser extends Source {
             } else {
                 sr.setLatestChapter(StrUtil.subPre(sr.getLatestChapter(), 20) + "...");
             }
-            if (sr.getLatestUpdate() == null) {
-                sr.setLatestUpdate("/");
+            if (sr.getLastUpdateTime() == null) {
+                sr.setLastUpdateTime("/");
             }
 
             consoleTable.addBody(
@@ -231,7 +231,7 @@ public class SearchParser extends Source {
                     sr.getBookName(),
                     sr.getAuthor(),
                     sr.getLatestChapter(),
-                    ReUtil.replaceAll(sr.getLatestUpdate(), "\\d{2}:\\d{2}(:\\d{2})?", ""),
+                    ReUtil.replaceAll(sr.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""),
                     String.valueOf(sr.getSourceId())
             );
         }

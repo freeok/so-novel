@@ -43,7 +43,7 @@ public class SingleSearchAction {
                 .bookName(book.getBookName())
                 .author(book.getAuthor())
                 .latestChapter(book.getLatestChapter())
-                .latestUpdate(book.getLatestUpdate())
+                .lastUpdateTime(book.getLastUpdateTime())
                 .build();
         TocParser tocParser = new TocParser(config);
         List<Chapter> toc = tocParser.parse(sr.getUrl());
