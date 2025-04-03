@@ -32,6 +32,7 @@ public class AggregatedSearchAction {
         Scanner sc = Console.scanner();
         Console.print(render("==> 请输入书名或作者（尽量输完整）: ", "green"));
         String kw = sc.nextLine().strip();
+        if (kw.isEmpty()) return;
 
         List<SearchResult> results = getSearchResults(kw);
 
@@ -50,7 +51,7 @@ public class AggregatedSearchAction {
             threadPool.execute(() -> {
                 List<SearchResult> res = new SearchParser(source.config).parse(kw);
                 Rule rule = source.rule;
-                Console.log("书源 {} ({}) 搜索结果数: {}", rule.getId(), rule.getName(), res.size());
+                Console.log("书源 {} ({}) 搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
                 results.add(res);
                 latch.countDown();
             });

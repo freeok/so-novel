@@ -13,7 +13,7 @@
     "bookName": "td:nth-child(1) > a",
     "author": "td:nth-child(3)",
     "latestChapter": "td:nth-child(2)",
-    "update": "td:nth-child(5)"
+    "lastUpdateTime": "td:nth-child(5)"
   },
   "book": {
     "bookName": "meta[property=\"og:novel:book_name\"]",
@@ -22,7 +22,7 @@
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[property=\"og:novel:update_time\"]"
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
     "result": "#list > dl > dd > a",

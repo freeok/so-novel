@@ -12,7 +12,7 @@
     "bookName": "h4 > a",
     "author": ".book-list-1-author@js:r=r.replace(/[\\/文\\s]/g,'');\n",
     "latestChapter": ".am-badge-primary",
-    "update": ".am-badge-secondary.am-radius"
+    "lastUpdateTime": ".am-badge-secondary.am-radius"
   },
   "book": {
     "url": "https://www.369book.cc/book/(.*?)/",
@@ -22,7 +22,7 @@
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": ".book-info-cover > a > img",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
