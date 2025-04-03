@@ -13,7 +13,7 @@
     "category": ".booknav2 > p:nth-child(3) > a",
     "coverUrl": ".bookimg2 > img",
     "latestChapter": "",
-    "latestUpdate": ".booknav2 > p:nth-child(5)@js:r=r.replaceAll('更新：','');",
+    "lastUpdateTime": ".booknav2 > p:nth-child(5)@js:r=r.replaceAll('更新：','');",
     "status": ".booknav2 > p:nth-child(4)@js:r=r.split('|')[1];",
     "wordCount": ".booknav2 > p:nth-child(4)@js:r=r.split('|')[0];"
   },

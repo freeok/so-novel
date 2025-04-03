@@ -12,7 +12,7 @@
     "bookName": ".margin0h5 > a.fonttext",
     "author": ".margin0h5 > a:nth-child(2)",
     "latestChapter": ".right_wid > div:nth-child(4) > a@js:r=r.replaceAll('最新章节','');",
-    "update": ".right_wid > div:nth-child(4) > span",
+    "lastUpdateTime": ".right_wid > div:nth-child(4) > span",
     "pagination": true,
     "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]",
     "limitPage": 3
@@ -25,7 +25,7 @@
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[property=\"og:novel:update_time\"]",
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {

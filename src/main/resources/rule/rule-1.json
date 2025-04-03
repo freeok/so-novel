@@ -13,7 +13,7 @@
     "bookName": "td.even > a",
     "author": "td:nth-of-type(3)",
     "latestChapter": "td.odd > a",
-    "update": "td:nth-of-type(4)"
+    "lastUpdateTime": "td:nth-of-type(4)"
   },
   "book": {
     "bookName": "meta[property=\"og:novel:book_name\"]",

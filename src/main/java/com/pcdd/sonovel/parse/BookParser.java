@@ -39,7 +39,7 @@ public class BookParser extends Source {
         // 以下为非必须属性
         String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
-        String latestUpdate = JsoupUtils.selectAndInvokeJs(document, r.getLatestUpdate(), getContentType(r.getLatestUpdate()));
+        String lastUpdateTime = JsoupUtils.selectAndInvokeJs(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
         String status = JsoupUtils.selectAndInvokeJs(document, r.getStatus(), getContentType(r.getStatus()));
         String wordCount = JsoupUtils.selectAndInvokeJs(document, r.getWordCount(), getContentType(r.getWordCount()));
 
@@ -51,7 +51,7 @@ public class BookParser extends Source {
         book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
-        book.setLatestUpdate(latestUpdate);
+        book.setLastUpdateTime(lastUpdateTime);
         book.setStatus(status);
         book.setWordCount(wordCount);
 

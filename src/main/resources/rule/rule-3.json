@@ -13,7 +13,7 @@
     "bookName": "span.s2.wid > a",
     "author": "span.s4.wid > a",
     "latestChapter": "span.s3.wid3 > a",
-    "update": "span.s6.wid6"
+    "lastUpdateTime": "span.s6.wid6"
   },
   "book": {
     "bookName": "meta[property=\"og:novel:book_name\"]",
@@ -22,7 +22,7 @@
     "category": "meta[property=\"og:novel:category\"]",
     "coverUrl": "meta[property=\"og:image\"]",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[property=\"og:novel:update_time\"]"
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
     "result": "#list > dl > dd > a",
