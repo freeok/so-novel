@@ -13,7 +13,7 @@
     "bookName": "div > h3 > a",
     "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",
     "latestChapter": "div > ul > li:nth-child(1) > a",
-    "update": "div > ul > li:nth-child(1) > i"
+    "lastUpdateTime": "div > ul > li:nth-child(1) > i"
   },
   "book": {
     "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",
@@ -23,7 +23,7 @@
     "category": ".item > div > p:nth-child(2) > span:nth-child(2)",
     "coverUrl": ".item > a > img",
     "latestChapter": ".item > div > ul > li:nth-child(1) > a",
-    "latestUpdate": ".item > div > ul > li:nth-child(1) > i",
+    "lastUpdateTime": ".item > div > ul > li:nth-child(1) > i",
     "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
   },
   "toc": {
