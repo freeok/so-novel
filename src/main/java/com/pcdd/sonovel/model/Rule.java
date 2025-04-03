@@ -35,7 +35,7 @@ public class Rule {
         private String author;
         private String category;
         private String latestChapter;
-        private String latestUpdate;
+        private String lastUpdateTime;
         private String status;
         private String wordCount;
         // 搜索结果是否分页
@@ -54,7 +54,7 @@ public class Rule {
         private String category;
         private String coverUrl;
         private String latestChapter;
-        private String latestUpdate;
+        private String lastUpdateTime;
         private String status;
         private String wordCount;
     }

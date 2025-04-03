@@ -20,7 +20,7 @@
     "category": "meta[name=\"og:novel:category\"]",
     "coverUrl": "meta[name=\"og:image\"]",
     "latestChapter": "meta[name=\"og:novel:latest_chapter_name\"]",
-    "latestUpdate": "meta[name=\"og:novel:update_time\"]",
+    "lastUpdateTime": "meta[name=\"og:novel:update_time\"]",
     "status": "meta[name=\"og:novel:status\"]"
   },
   "toc": {
