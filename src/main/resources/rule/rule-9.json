@@ -35,7 +35,6 @@
     "title": ".title",
     "content": "#content",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
