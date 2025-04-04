@@ -19,7 +19,6 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
@@ -53,7 +52,7 @@ public class TocParser extends Source {
             url = ruleToc.getUrl().formatted(id);
         }
 
-        Set<String> urls = CollUtil.set(true, url);
+        List<String> urls = CollUtil.newArrayList(url);
         Document document = jsoup(url)
                 .timeout(ruleToc.getTimeout())
                 .get();
@@ -66,7 +65,7 @@ public class TocParser extends Source {
     }
 
     @SneakyThrows
-    private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
+    private void extractPaginationUrls(List<String> urls, Document document, Rule.Toc r) {
         Elements elements = JsoupUtils.select(document, r.getNextPage());
         // 一次性获取分页 URL（下拉菜单）
         if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
@@ -82,8 +81,7 @@ public class TocParser extends Source {
             String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
                     .orElse(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_VALUE));
-
-            if (!(Validator.isUrl(nextUrl) || StrUtil.startWith(nextUrl, "/"))) break;
+            if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
             nextUrl = CrawlUtils.normalizeUrl(nextUrl, this.rule.getUrl());
             urls.add(nextUrl);
             document = jsoup(nextUrl)
@@ -95,7 +93,7 @@ public class TocParser extends Source {
 
     // TODO 优化，改为多线程
     @SneakyThrows
-    private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
+    private List<Chapter> parseToc(List<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new ArrayList<>();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
@@ -105,7 +103,7 @@ public class TocParser extends Source {
             Document document = jsoup(s)
                     .timeout(r.getTimeout())
                     .get();
-            // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 更省性能
+            // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 性能更好
             List<Element> elements = JsoupUtils.select(document, r.getResult());
             if (offset != 0) {
                 elements = adjustElementsByOffset(elements, offset);
@@ -122,7 +120,7 @@ public class TocParser extends Source {
             }
         }
 
-        return toc;
+        return CollUtil.distinct(toc, Chapter::getTitle, false);
     }
 
     private List<Element> adjustElementsByOffset(List<Element> elements, int offset) {
