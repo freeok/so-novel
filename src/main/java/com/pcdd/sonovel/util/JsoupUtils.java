@@ -49,8 +49,8 @@ public class JsoupUtils {
                 """.formatted(split[1]), "func", input);
     }
 
-    public String selectAndInvokeJs(Element e, String query) {
-        return selectAndInvokeJs(e, query, ContentType.TEXT);
+    public String selectAndInvokeJs(Element el, String query) {
+        return selectAndInvokeJs(el, query, ContentType.TEXT);
     }
 
     /**
@@ -58,7 +58,7 @@ public class JsoupUtils {
      * <p>
      * 等价于 func(document.select(query).(text|html|attr)())
      */
-    public String selectAndInvokeJs(Element e, String query, ContentType contentType) {
+    public String selectAndInvokeJs(Element el, String query, ContentType contentType) {
         if (StrUtil.isEmpty(query) || contentType == null) {
             return null;
         }
@@ -67,11 +67,13 @@ public class JsoupUtils {
         String actualQuery = split[0];
 
         // 根据查询条件选择元素
-        Elements elements = select(e, actualQuery);
-        if (elements.isEmpty()) return "";
+        Elements els = select(el, actualQuery);
+        if (els.isEmpty()) return "";
 
         // 获取选中元素的内容
-        String result = getContents(elements, contentType);
+        String result = els.size() == 1
+                ? getContentByType(els.first(), contentType)
+                : getContentByType(els, contentType);
 
         // 如果查询条件包含 JS，调用它
         return split.length == 2 ? invokeJs(query, result) : result;
@@ -82,25 +84,11 @@ public class JsoupUtils {
      * <p>
      * 等价于 func(element.(text|html|attr)())
      */
-    public String getStrAndInvokeJs(Element e, String js, ContentType contentType) {
+    public String getStrAndInvokeJs(Element el, String js, ContentType contentType) {
         // 先获取元素的内容
-        String result = getContent(e, contentType);
+        String result = getContentByType(el, contentType);
         // 如果查询条件包含 JS，调用它
         return StrUtil.isNotEmpty(js) ? invokeJs(js, result) : result;
-    }
-
-    /**
-     * 获取单个元素的内容
-     */
-    public String getContent(Element el, ContentType contentType) {
-        return getContentByType(el, contentType);
-    }
-
-    /**
-     * 获取多个元素的内容
-     */
-    private String getContents(Elements els, ContentType contentType) {
-        return getContentByType(els, contentType);
     }
 
     /**
