@@ -32,7 +32,6 @@
     "title": ".active",
     "content": "#booktxt",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "",
     "filterTag": "",
     "pagination": true,

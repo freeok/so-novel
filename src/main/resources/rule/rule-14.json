@@ -36,7 +36,6 @@
     "title": ".reader-main > h1",
     "content": "#content",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "",
     "filterTag": "a script",
     "pagination": true,

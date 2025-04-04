@@ -40,8 +40,8 @@
     "chapter": {
       "title": ".txtnav > h1",
       "content": "#txtcontent",
+      "paragraphTag": "<br>+",
       "paragraphTagClosed": false,
-      "paragraphTag": "<br><br>",
       "filterTxt": "",
       "filterTag": "div"
     },
