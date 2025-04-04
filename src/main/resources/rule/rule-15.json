@@ -32,7 +32,7 @@
     "title": ".active",
     "content": "#booktxt",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
     "nextPage": "#next_url"

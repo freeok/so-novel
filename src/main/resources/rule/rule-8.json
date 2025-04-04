@@ -36,7 +36,7 @@
     "title": "#ChapterTitle",
     "content": "#Lab_Contents",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": ""
   }
 }

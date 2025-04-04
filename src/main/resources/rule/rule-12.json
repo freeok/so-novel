@@ -38,7 +38,7 @@
     "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
     "content": ".content",
     "paragraphTagClosed": true,
-    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*",
+    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*|\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
     "nextPage": "#next@js:r=r.match(/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/)?r:''"

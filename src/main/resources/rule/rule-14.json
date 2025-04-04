@@ -1,7 +1,7 @@
 {
   "id": 14,
   "url": "https://www.xbqg06.com/",
-  "name": "新笔趣阁",
+  "name": "新笔趣阁6",
   "comment": "",
   "type": "html",
   "language": "zh_CN",
@@ -36,7 +36,7 @@
     "title": ".reader-main > h1",
     "content": "#content",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": "a script",
     "pagination": true,
     "nextPage": "(//*[@id='next_url'])[1]"
