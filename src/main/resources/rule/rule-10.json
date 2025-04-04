@@ -30,7 +30,7 @@
     "title": ".title > h1",
     "content": "div.content",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": "a center div"
   }
 }
