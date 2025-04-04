@@ -178,27 +178,29 @@ public class SearchParser extends Source {
         if (r == null || CollUtil.isEmpty(results)) {
             return;
         }
-        // 表头
-        List<String> titles = ListUtil.toList("序号", "书名");
-        addColumnIfNotEmpty(titles, "作者", r.getAuthor());
-        addColumnIfNotEmpty(titles, "类别", r.getCategory());
-        addColumnIfNotEmpty(titles, "最新章节", StrUtil.subPre(r.getLatestChapter(), 20) + "...");
-        addColumnIfNotEmpty(titles, "更新时间", ReUtil.replaceAll(r.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
-        addColumnIfNotEmpty(titles, "总字数", r.getWordCount());
-        addColumnIfNotEmpty(titles, "状态", r.getStatus());
 
-        ConsoleTable consoleTable = ConsoleTable.create().addHeader(ArrayUtil.toArray(titles, String.class));
-
+        ConsoleTable consoleTable = ConsoleTable.create();
         for (int i = 1; i <= results.size(); i++) {
             SearchResult sr = results.get(i - 1);
             List<String> cols = ListUtil.toList(String.valueOf(i), sr.getBookName());
-            addColumnIfNotEmpty(cols, sr.getAuthor(), r.getAuthor());
-            addColumnIfNotEmpty(cols, sr.getCategory(), r.getCategory());
-            addColumnIfNotEmpty(cols, sr.getLatestChapter(), r.getLatestChapter());
-            addColumnIfNotEmpty(cols, sr.getLastUpdateTime(), r.getLastUpdateTime());
-            addColumnIfNotEmpty(cols, sr.getWordCount(), r.getWordCount());
-            addColumnIfNotEmpty(cols, sr.getStatus(), r.getStatus());
-
+            boolean existsAuthor = addColumnIfNotEmpty(cols, r.getAuthor(), sr.getAuthor());
+            boolean existsCategory = addColumnIfNotEmpty(cols, r.getCategory(), sr.getCategory());
+            boolean existsLatestChapter = addColumnIfNotEmpty(cols, r.getLatestChapter(), StrUtil.subPre(sr.getLatestChapter(), 20) + "...");
+            boolean existsLastUpdateTime = addColumnIfNotEmpty(cols, r.getLastUpdateTime(), ReUtil.replaceAll(sr.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
+            boolean existsStatus = addColumnIfNotEmpty(cols, r.getStatus(), sr.getStatus());
+            boolean existsWordCount = addColumnIfNotEmpty(cols, r.getWordCount(), sr.getWordCount());
+            // 构造表头
+            if (i == 1) {
+                // 必定存在的列
+                List<String> titles = ListUtil.toList("序号", "书名");
+                if (existsAuthor) titles.add("作者");
+                if (existsCategory) titles.add("类别");
+                if (existsLatestChapter) titles.add("最新章节");
+                if (existsLastUpdateTime) titles.add("更新时间");
+                if (existsStatus) titles.add("状态");
+                if (existsWordCount) titles.add("总字数");
+                consoleTable.addHeader(ArrayUtil.toArray(titles, String.class));
+            }
             consoleTable.addBody(ArrayUtil.toArray(cols, String.class));
         }
 
@@ -206,10 +208,12 @@ public class SearchParser extends Source {
     }
 
     // 辅助方法：只有非空的情况下才添加列
-    private void addColumnIfNotEmpty(List<String> list, String field, String rule) {
+    private boolean addColumnIfNotEmpty(List<String> list, String rule, String value) {
         if (StrUtil.isNotEmpty(rule)) {
-            list.add(StrUtil.isNotEmpty(field) ? field : "");
+            list.add(StrUtil.isNotEmpty(value) ? value : "");
+            return true;
         }
+        return false;
     }
 
     public static void printAggregateSearchResult(List<SearchResult> results) {
