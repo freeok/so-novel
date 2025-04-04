@@ -34,7 +34,7 @@
     "title": "#wrapper > article > h1",
     "content": "#booktxt",
     "paragraphTagClosed": true,
-    "filterTxt": "首发网址.+。",
+    "filterTxt": "首发网址.+。|\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
     "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
