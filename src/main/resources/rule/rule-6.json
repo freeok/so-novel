@@ -36,7 +36,7 @@
     "title": ".content > h1",
     "content": "#content",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": ""
   }
 }
