@@ -33,7 +33,7 @@
     "title": ".submenu > h1",
     "content": ".con",
     "paragraphTagClosed": true,
-    "filterTxt": "",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
     "nextPage": ".prenext > span:nth-child(3) > a"

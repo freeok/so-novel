@@ -33,7 +33,7 @@
     "content": "#content",
     "paragraphTagClosed": false,
     "paragraphTag": "<br>+",
-    "filterTxt": "<!--.*?-->|喜欢.+请大家收藏：.+",
+    "filterTxt": "<!--.*?-->|喜欢.+请大家收藏：.+|\\(本章完\\)",
     "filterTag": ""
   }
 }
