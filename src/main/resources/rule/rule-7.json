@@ -1,31 +1,33 @@
 {
   "id": 7,
-  "url": "https://www.69yuedu.net/",
-  "name": "69阅读",
-  "comment": "需要梯子，搜索有CF、章节无限流",
+  "url": "https://www.69shuba.com/",
+  "name": "69书吧-1",
+  "comment": "搜索有CF",
   "type": "html",
   "language": "zh_CN",
   "needProxy": true,
   "book": {
-    "url": "https://www.69yuedu.net/article/(.*?).html",
-    "bookName": ".booknav2 > h1 > a",
-    "author": ".booknav2 > p:nth-child(2) > a",
-    "category": ".booknav2 > p:nth-child(3) > a",
-    "coverUrl": ".bookimg2 > img",
-    "latestChapter": "",
-    "lastUpdateTime": ".booknav2 > p:nth-child(5)@js:r=r.replaceAll('更新：','');",
-    "status": ".booknav2 > p:nth-child(4)@js:r=r.split('|')[1];",
-    "wordCount": ".booknav2 > p:nth-child(4)@js:r=r.split('|')[0];"
+    "url": "https://www.69shuba.com/book/(.*?).htm",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[property=\"og:description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+    "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "url": "https://www.69yuedu.net/chapters/%s.html",
-    "result": "#chapters > ul > li > a"
+    "url": "https://69shuba.com/book/%s/",
+    "result": "#catalog > ul > li > a",
+    "isDesc": true
   },
   "chapter": {
-    "title": ".txtbox > h1",
-    "content": ".content",
-    "paragraphTagClosed": true,
-    "filterTxt": "\\(本章完\\)",
-    "filterTag": "div br"
+    "title": ".txtnav > h1",
+    "content": ".txtnav",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br>+",
+    "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
+    "filterTag": "h1 div"
   }
 }
