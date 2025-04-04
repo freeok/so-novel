@@ -52,7 +52,7 @@ class BookSourceTest {
             "4, http://www.99xs.info/tag/129_129843/",
             "5, https://www.tianxibook.com/book/94376180/",
             "8, https://www.dxmwx.org/book/56441.html",
-            "9, https://www.369book.cc/book/38894/",
+            "9, https://www.22biqu.com/biqu79148/",
             "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie",
             "11, http://www.xbiquzw.net/10_10233/",
             "12, https://www.0xs.net/txt/68398.html",
