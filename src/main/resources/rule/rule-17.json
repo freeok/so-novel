@@ -1,12 +1,12 @@
 {
-  "id": 13,
-  "url": "https://www.deqixs.com/",
-  "name": "得奇小说网",
+  "id": 17,
+  "url": "https://www.sudugu.com/",
+  "name": "速读谷",
   "comment": "基本只有新书，爬取频率过快会永久封禁 IP (Remote host terminated the handshake)",
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "url": "https://www.deqixs.com/tag/",
+    "url": "https://www.sudugu.com/i/sor.aspx",
     "method": "get",
     "data": "{key: %s}",
     "result": ".container > div",
@@ -16,7 +16,7 @@
     "lastUpdateTime": "div > ul > li:nth-child(1) > i"
   },
   "book": {
-    "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",
+    "url": "https://www.sudugu.com/(.*?)/",
     "bookName": ".item > div > h1 > a",
     "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
     "intro": "//div[@class='des bb'][1]",
