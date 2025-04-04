@@ -56,10 +56,10 @@ class BookSourceTest {
             "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie",
             "11, http://www.xbiquzw.net/10_10233/",
             "12, https://www.0xs.net/txt/68398.html",
-            "13, https://www.deqixs.com/xiaoshuo/323/",
             "14, https://www.xbqg06.com/1582/",
             "15, https://www.luegeng.com/book186856/",
             "16, https://www.96dushu.com/book/344921/",
+            "17, https://www.sudugu.com/1012/",
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -75,15 +75,15 @@ class BookSourceTest {
     @ParameterizedTest
     @CsvSource({
             "6, https://quanben5.com/n/xinghedadi/",
-            "7, https://www.69yuedu.net/article/emtzibcrtd.html",
+            "7, https://www.69shuba.com/book/48273.htm",
+            "13, https://www.deqixs.com/xiaoshuo/106/",
     })
     void testProxySources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
-
         config.setSourceId(sourceId);
-        config.setProxyEnabled(0);
-        config.setProxyHost("127.0.0.1");
-        config.setProxyPort(7890);
+        // config.setProxyEnabled(0);
+        // config.setProxyHost("127.0.0.1");
+        // config.setProxyPort(7890);
 
         searchParse("斗罗大陆");
         bookParse();
