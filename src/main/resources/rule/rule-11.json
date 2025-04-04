@@ -31,8 +31,8 @@
   "chapter": {
     "title": ".bookname > h1",
     "content": "#content",
-    "paragraphTag": "<br><br>",
     "paragraphTagClosed": false,
+    "paragraphTag": "<br>+",
     "filterTxt": "<!--.*?-->|喜欢.+请大家收藏：.+",
     "filterTag": ""
   }
