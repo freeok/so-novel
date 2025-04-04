@@ -42,8 +42,8 @@ public class Main {
             "1.聚合搜索",
             "2.检查更新",
             "3.书源一览",
-            "4.使用须知",
-            "5.查看配置文件",
+            "4.版本信息",
+            "5.配置信息",
             "6.批量下载",
             "7.搜索指定书源"
     );
@@ -158,8 +158,9 @@ public class Main {
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format(" so-novel v{} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_RED", "BOLD"))
-                .addHeader(StrUtil.format("当前书源：{} (ID: {})", r.getName(), r.getId()))
                 .addHeader("导出格式：" + config.getExtName().toLowerCase())
+                .addHeader("下载路径：" + new File(config.getDownloadPath()).getAbsolutePath())
+                .addHeader(StrUtil.format("指定书源：{} (ID: {})", r.getName(), r.getId()))
                 .addBody(render("使用前请务必阅读 readme.txt", "yellow"))
         );
     }
