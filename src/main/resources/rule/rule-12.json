@@ -38,7 +38,6 @@
     "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
     "content": ".content",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*",
     "filterTag": "",
     "pagination": true,

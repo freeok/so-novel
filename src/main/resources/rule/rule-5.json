@@ -34,7 +34,6 @@
     "title": "#wrapper > article > h1",
     "content": "#booktxt",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "首发网址.+。",
     "filterTag": "",
     "pagination": true,
