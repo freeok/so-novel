@@ -38,7 +38,6 @@
     "title": "#mlfy_main_text > h1",
     "content": "#content",
     "paragraphTagClosed": true,
-    "paragraphTag": "p",
     "filterTxt": "\\((继续下一页|本章完)\\)",
     "filterTag": "最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
     "pagination": true,
