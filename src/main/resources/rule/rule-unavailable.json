@@ -86,5 +86,48 @@
       "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
       "filterTag": "h1 div br"
     }
+  },
+  {
+    "id": 9,
+    "url": "https://www.369book.cc/",
+    "name": "369小说网",
+    "comment": "网站被攻击导致数据丢失，搜索暂不可用。搜索(Read timed out)、章节有限流，章节爬取过快会封IP，章节页、目录页都有分页和反爬，搜索结果固定10条，以javascript:开头的href需要特殊处理，书籍数量57w+",
+    "type": "html",
+    "language": "zh_CN",
+    "search": {
+      "url": "https://www.369book.cc/search/?searchkey=%s",
+      "method": "get",
+      "result": ".am-panel-bd > div > div",
+      "bookName": "h4 > a",
+      "author": ".book-list-1-author@js:r=r.replace(/[\\/文\\s]/g,'');\n",
+      "latestChapter": ".am-badge-primary",
+      "lastUpdateTime": ".am-badge-secondary.am-radius"
+    },
+    "book": {
+      "url": "https://www.369book.cc/book/(.*?)/",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": ".book-info-cover > a > img",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "url": "https://www.369book.cc/index/%s/",
+      "result": ".am-list-news-bd > ul > li > a",
+      "pagination": true,
+      "nextPage": "(//select[@id='indexselect'])[1]/option@js:var matches=r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/);if(r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/)){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]+\".html\"}"
+    },
+    "chapter": {
+      "title": "ol > li.active",
+      "content": "#chaptercontent",
+      "paragraphTagClosed": true,
+      "filterTxt": ".*转载请注明来源：369小说网\\(www.369book.cc\\)|本章未完，请点击下一页继续阅读！",
+      "filterTag": "div",
+      "pagination": true,
+      "nextPage": ".book-read > div > div:nth-child(8) > a:nth-child(4)@js:var matches=r.match(/'(\\d+)',\\s*'([^']+)'/);if(matches){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]}"
+    }
   }
 ]
