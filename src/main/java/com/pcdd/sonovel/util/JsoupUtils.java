@@ -8,6 +8,13 @@ import lombok.experimental.UtilityClass;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
 import static com.pcdd.sonovel.model.ContentType.*;
 
 @UtilityClass
@@ -119,6 +126,40 @@ public class JsoupUtils {
             };
         }
         return "";
+    }
+
+    /**
+     * 忽略所有 SSL 证书校验
+     * 用于解决部分书源报错 PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException
+     */
+    public void trustAllSSL() {
+        try {
+            // 信任所有证书
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        }
+
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+                    }
+            };
+
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new SecureRandom());
+
+            // 强制设置为默认的 SSLSocketFactory（关键）
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // 忽略主机名校验（关键）
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+        } catch (Exception e) {
+            throw new RuntimeException("初始化 SSL 信任失败", e);
+        }
     }
 
 }
