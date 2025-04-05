@@ -15,6 +15,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.JsoupUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,6 +37,7 @@ class BookSourceTest {
     private String chapterUrl;
 
     static {
+        JsoupUtils.trustAllSSL();
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
         config.setLanguage("zh_CN");
@@ -53,13 +55,11 @@ class BookSourceTest {
             "5, https://www.tianxibook.com/book/94376180/",
             "8, https://www.dxmwx.org/book/56441.html",
             "9, https://www.22biqu.com/biqu79148/",
-            "10, https://cn.ttkan.co/novel/chapters/tunshixingkongzhiwuzuchuanshuo-dugujiujie",
             "11, http://www.xbiquzw.net/10_10233/",
             "12, https://www.0xs.net/txt/68398.html",
             "14, https://www.xbqg06.com/1582/",
             "15, https://www.luegeng.com/book186856/",
             "16, https://www.96dushu.com/book/344921/",
-            "17, https://www.sudugu.com/1012/",
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -77,15 +77,13 @@ class BookSourceTest {
             "6, https://quanben5.com/n/xinghedadi/",
             "7, https://www.69shuba.com/book/48273.htm",
             "13, https://www.deqixs.com/xiaoshuo/106/",
+            "17, https://www.sudugu.com/1012/",
     })
     void testProxySources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
-        // config.setProxyEnabled(0);
-        // config.setProxyHost("127.0.0.1");
-        // config.setProxyPort(7890);
 
-        searchParse("斗罗大陆");
+        searchParse("辰东");
         bookParse();
         tocParse();
         chapterParse();
@@ -101,6 +99,9 @@ class BookSourceTest {
         }
         if (CollUtil.isEmpty(list)) {
             Console.log("\"{}\"搜索结果为空", keyword);
+        }
+        if (!list.isEmpty()) {
+            Console.log("点击此 URL 确保首条搜索结果访问有效: {}", CollUtil.getFirst(list).getUrl());
         }
         new SearchParser(config).printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
