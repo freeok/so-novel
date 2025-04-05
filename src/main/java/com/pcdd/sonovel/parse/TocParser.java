@@ -19,6 +19,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
@@ -51,8 +52,8 @@ public class TocParser extends Source {
             String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
             url = ruleToc.getUrl().formatted(id);
         }
-
-        List<String> urls = CollUtil.newArrayList(url);
+        // 目录分页 url
+        Set<String> urls = CollUtil.newLinkedHashSet(url);
         Document document = jsoup(url)
                 .timeout(ruleToc.getTimeout())
                 .get();
@@ -65,7 +66,7 @@ public class TocParser extends Source {
     }
 
     @SneakyThrows
-    private void extractPaginationUrls(List<String> urls, Document document, Rule.Toc r) {
+    private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
         Elements elements = JsoupUtils.select(document, r.getNextPage());
         // 一次性获取分页 URL（下拉菜单）
         if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
@@ -93,7 +94,7 @@ public class TocParser extends Source {
 
     // TODO 优化，改为多线程
     @SneakyThrows
-    private List<Chapter> parseToc(List<String> urls, int start, int end, Rule.Toc r) {
+    private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new ArrayList<>();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
