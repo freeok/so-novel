@@ -1,46 +1,43 @@
 {
   "id": 12,
-  "url": "https://www.0xs.net/",
-  "name": "零点小说",
-  "comment": "限流严重，爬取过快会永久封IP，发布页：https://www.cxysb.com/",
+  "url": "https://www.deqixs.com/",
+  "name": "得奇小说网",
+  "comment": "同得奇小说网",
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "url": "https://www.0xs.net/search.html",
+    "url": "https://www.deqixs.com/tag/",
     "method": "get",
-    "data": "{kw: %s}",
-    "result": ".result_list > ul > li > .book",
-    "bookName": ".name > a",
-    "author": ".author",
-    "status": ".serial",
-    "wordCount": ".count",
-    "category": ".type",
-    "pagination": true,
-    "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)",
-    "limitPage": 3
+    "data": "{key: %s}",
+    "result": ".container > div",
+    "bookName": "div > h3 > a",
+    "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",
+    "latestChapter": "div > ul > li:nth-child(1) > a",
+    "lastUpdateTime": "div > ul > li:nth-child(1) > i"
   },
   "book": {
-    "url": "https://www.0xs.net/txt/(.*?).html",
-    "bookName": "meta[property=\"og:novel:book_name\"]",
-    "author": "meta[property=\"og:novel:author\"]",
-    "intro": "meta[property=\"og:description\"]",
-    "category": "meta[property=\"og:novel:category\"]",
-    "coverUrl": "meta[property=\"og:image\"]",
-    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-    "status": "meta[property=\"og:novel:status\"]"
+    "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",
+    "bookName": ".item > div > h1 > a",
+    "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
+    "intro": "//div[@class='des bb'][1]",
+    "category": ".item > div > p:nth-child(2) > span:nth-child(2)",
+    "coverUrl": ".item > a > img",
+    "latestChapter": ".item > div > ul > li:nth-child(1) > a",
+    "lastUpdateTime": ".item > div > ul > li:nth-child(1) > i",
+    "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
   },
   "toc": {
-    "url": "https://www.0xs.net/list/%s.html",
-    "result": ".catalog > div > ul > ul > li > a"
+    "result": "#list > ul > li > a",
+    "pagination": true,
+    "nextPage": "#pages > .gr"
   },
   "chapter": {
-    "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
-    "content": ".content",
+    "title": ".submenu > h1",
+    "content": ".con",
     "paragraphTagClosed": true,
-    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*|\\(本章完\\)",
+    "filterTxt": "\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
-    "nextPage": "#next@js:r=r.match(/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/)?r:''"
+    "nextPage": ".prenext > span:nth-child(3) > a"
   }
 }
