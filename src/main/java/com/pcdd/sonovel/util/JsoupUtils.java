@@ -102,7 +102,7 @@ public class JsoupUtils {
                 case HTML -> el.html();
                 case ATTR_SRC -> el.attr(ATTR_SRC.getValue());
                 // 如果href是完整的url，jsoup absUrl会返回错误的链接（包含两个http）
-                case ATTR_HREF -> href.matches("^(https?://|/).*")
+                case ATTR_HREF -> StrUtil.startWithAny(href, "https://", "http://", "/")
                         ? href
                         : el.absUrl(ATTR_HREF.getValue());
                 case ATTR_CONTENT -> el.attr(ATTR_CONTENT.getValue());
