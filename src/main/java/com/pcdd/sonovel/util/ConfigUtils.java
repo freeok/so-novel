@@ -66,6 +66,7 @@ public class ConfigUtils {
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
         config.setInteractiveMode(usr.getInt("interactive-mode", SELECTION_1, 1));
         config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, SourceUtils.getCount() + 1)));
+        config.setSearchLimit(usr.getInt("search-limit", SELECTION_1, 0));
 
         config.setThreads(usr.getInt("threads", SELECTION_2, -1));
         config.setMinInterval(usr.getInt("min", SELECTION_2, 50));
