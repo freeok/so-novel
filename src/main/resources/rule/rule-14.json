@@ -1,44 +1,40 @@
 {
   "id": 14,
-  "url": "https://www.xbqg06.com/",
-  "name": "新笔趣阁6",
-  "comment": "",
+  "url": "https://www.luegeng.com/",
+  "name": "略更网",
+  "comment": "无限流",
   "type": "html",
   "language": "zh_CN",
   "search": {
-    "url": "https://www.xbqg06.com/search/",
-    "method": "post",
-    "data": "{type: articlename, searchkey: %s}",
-    "cookies": "{}",
-    "result": ".container > div > div > ul > li",
-    "bookName": "span.s2 > a@js:r=r.length>15?r.substring(0,15)+\"...\":r;",
-    "author": "span.s4@js:r=r.length>10?r.substring(0,10)+\"...\":r;",
-    "latestChapter": "span.s3 > a",
-    "lastUpdateTime": "span.s5"
+    "url": "https://www.luegeng.com/search/?searchkey=%s",
+    "method": "get",
+    "result": ".content > dl",
+    "bookName": "dt > a",
+    "author": "dd > a",
+    "status": "dd:nth-child(4) > span:nth-child(2)",
+    "wordCount": "dd:nth-child(4) > span:nth-child(3)"
   },
   "book": {
-    "url": "https://www.xbqg06.com/(.*?)/",
+    "url": "https://www.luegeng.com/book(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
-    "intro": ".desc.m-desc",
+    "intro": "meta[property=\"og:description\"]",
     "category": "meta[property=\"og:novel:category\"]",
-    "coverUrl": ".imgbox > img",
-    "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
+    "coverUrl": ".left > div > a > img",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": ".row.row-section > div > div:nth-child(4) > ul > li > a",
-    "pagination": true,
-    "nextPage": "#indexselect > option"
+    "result": ".all > ul > li > a"
   },
   "chapter": {
-    "title": ".reader-main > h1",
-    "content": "#content",
+    "title": ".active",
+    "content": "#booktxt",
     "paragraphTagClosed": true,
     "filterTxt": "\\(本章完\\)",
-    "filterTag": "a script",
+    "filterTag": "",
     "pagination": true,
-    "nextPage": "(//*[@id='next_url'])[1]"
+    "nextPage": "#next_url"
   }
 }
