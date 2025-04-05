@@ -2,7 +2,7 @@
   "id": 13,
   "url": "https://www.deqixs.com/",
   "name": "得奇小说网",
-  "comment": "基本只有新书，爬取频率过快会永久封禁 IP (Remote host terminated the handshake)",
+  "comment": "同得奇小说网",
   "type": "html",
   "language": "zh_CN",
   "search": {
