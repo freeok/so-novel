@@ -14,11 +14,12 @@ public class AppConfig {
 
     // [base]
     private String language;
-    private Integer sourceId;
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
     private Integer interactiveMode;
+    private Integer sourceId;
+    private Integer searchLimit;
 
     // [crawl]
     private Integer threads;
