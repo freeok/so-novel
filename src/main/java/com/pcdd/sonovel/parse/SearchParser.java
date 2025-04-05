@@ -32,6 +32,8 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class SearchParser extends Source {
 
+    public static final int TEXT_LIMIT_LENGTH = 30;
+
     public SearchParser(AppConfig config) {
         super(config);
     }
@@ -46,6 +48,7 @@ public class SearchParser extends Source {
         Document document;
         Connection.Response resp;
         Rule.Search r = this.rule.getSearch();
+
         if (r == null) {
             Console.log("书源 {} 不支持搜索", config.getSourceId());
             return Collections.emptyList();
@@ -70,38 +73,27 @@ public class SearchParser extends Source {
         }
 
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素，且 1 <= limitPage < searchPages.size()，否则 limitPage 无效
-        Elements nextPages = JsoupUtils.select(document, r.getNextPage());
+        Elements nextPageUrls = JsoupUtils.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
-        if (nextPages.isEmpty()) {
+        if (nextPageUrls.isEmpty()) {
             return firstPageResults;
         }
         // 分页搜索结果的 URL，不含首页
         Set<String> urls = new LinkedHashSet<>();
-        // nextPage 简单规则的查询结果只有一个
-        if (nextPages.size() == 1) {
-            String nextUrl = CrawlUtils.normalizeUrl(nextPages.attr("href"), this.rule.getUrl());
-            for (int i = 0; i < r.getLimitPage() - 1; i++) {
-                urls.add(nextUrl);
-                resp = jsoup(nextUrl).timeout(r.getTimeout()).execute();
-                nextPages = JsoupUtils.select(Jsoup.parse(resp.body()), r.getNextPage());
-                nextUrl = CrawlUtils.normalizeUrl(nextPages.attr("href"), this.rule.getUrl());
-                Thread.sleep(CrawlUtils.randomInterval(config));
-            }
-        } else { // nextPage 复杂规则的查询结果有多个
-            List<Element> els = r.getLimitPage() == null ? nextPages : CollUtil.sub(nextPages, 0, r.getLimitPage() - 1);
-            for (Element e : els) {
-                String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
-                // 中文解码，针对69書吧
-                urls.add(URLUtil.decode(href));
-            }
+        // 一次性获取分页 URL，不考虑逐个点击下一页的情况
+        for (Element e : nextPageUrls) {
+            String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
+            // 中文解码，针对69書吧
+            urls.add(URLUtil.decode(href));
         }
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
                 .flatMap(url -> getSearchResults(url, null).stream())
                 .toList();
-
         // 合并，不去重（去重用 union）
-        return CollUtil.unionAll(firstPageResults, additionalResults);
+        List<SearchResult> searchResults = CollUtil.unionAll(firstPageResults, additionalResults);
+        // TODO 优化，需要几条获取几条，而不是一次性获取然后截取
+        return CollUtil.sub(searchResults, 0, config.getSearchLimit());
     }
 
     private List<SearchResult> getSearchResults(String url, Connection.Response resp) {
@@ -112,9 +104,10 @@ public class SearchParser extends Source {
             Document document = resp == null
                     ? jsoup(url).timeout(r.getTimeout()).get()
                     : Jsoup.parse(resp.body());
+            Elements resultEls = document.select(r.getResult());
 
             // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
-            if (document.select(r.getResult()).isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
+            if (resultEls.isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
                 String bookUrl = resp.url().toString();
                 BookParser bookParser = new BookParser(config);
                 Book book = bookParser.parse(bookUrl);
@@ -137,9 +130,13 @@ public class SearchParser extends Source {
                 return list;
             }
 
-            Elements elements = document.select(r.getResult());
-            // 只获取前 N 条记录
-            for (Element el : elements) {
+            // 只获取前 N 条搜索记录
+            List<Element> limitResultEls = resultEls.stream()
+                    .filter(e -> StrUtil.isNotEmpty(JsoupUtils.selectAndInvokeJs(e, r.getBookName())))
+                    .limit(config.getSearchLimit())
+                    .toList();
+
+            for (Element el : limitResultEls) {
                 // jsoup 不支持一次性获取属性的值
                 String href = JsoupUtils.selectAndInvokeJs(el, r.getBookName(), ContentType.ATTR_HREF);
                 String bookName = JsoupUtils.selectAndInvokeJs(el, r.getBookName());
@@ -187,7 +184,7 @@ public class SearchParser extends Source {
             List<String> cols = ListUtil.toList(String.valueOf(i), sr.getBookName());
             boolean existsAuthor = addColumnIfNotEmpty(cols, r.getAuthor(), sr.getAuthor());
             boolean existsCategory = addColumnIfNotEmpty(cols, r.getCategory(), sr.getCategory());
-            boolean existsLatestChapter = addColumnIfNotEmpty(cols, r.getLatestChapter(), StrUtil.subPre(sr.getLatestChapter(), 20) + "...");
+            boolean existsLatestChapter = addColumnIfNotEmpty(cols, r.getLatestChapter(), StrUtil.subPre(sr.getLatestChapter(), TEXT_LIMIT_LENGTH));
             boolean existsLastUpdateTime = addColumnIfNotEmpty(cols, r.getLastUpdateTime(), ReUtil.replaceAll(sr.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
             boolean existsStatus = addColumnIfNotEmpty(cols, r.getStatus(), sr.getStatus());
             boolean existsWordCount = addColumnIfNotEmpty(cols, r.getWordCount(), sr.getWordCount());
@@ -226,7 +223,7 @@ public class SearchParser extends Source {
             if (sr.getLatestChapter() == null) {
                 sr.setLatestChapter("/");
             } else {
-                sr.setLatestChapter(StrUtil.subPre(sr.getLatestChapter(), 20) + "...");
+                sr.setLatestChapter(StrUtil.subPre(sr.getLatestChapter(), TEXT_LIMIT_LENGTH));
             }
             if (sr.getLastUpdateTime() == null) {
                 sr.setLastUpdateTime("/");
