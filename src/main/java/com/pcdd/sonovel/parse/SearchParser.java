@@ -24,6 +24,8 @@ import org.jsoup.select.Elements;
 
 import java.util.*;
 
+import static org.fusesource.jansi.AnsiRenderer.render;
+
 /**
  * @author pcdd
  * Created at 2024/3/23
@@ -57,7 +59,7 @@ public class SearchParser extends Source {
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
-            Console.error("书源 {} 搜索解析出错: {}", this.rule.getId(), e.getMessage());
+            Console.error(render("书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
             return Collections.emptyList();
         }
 
@@ -137,17 +139,17 @@ public class SearchParser extends Source {
 
             Elements elements = document.select(r.getResult());
             // 只获取前 N 条记录
-            for (Element element : elements) {
+            for (Element el : elements) {
                 // jsoup 不支持一次性获取属性的值
-                String href = JsoupUtils.selectAndInvokeJs(element, r.getBookName(), ContentType.ATTR_HREF);
-                String bookName = JsoupUtils.selectAndInvokeJs(element, r.getBookName());
+                String href = JsoupUtils.selectAndInvokeJs(el, r.getBookName(), ContentType.ATTR_HREF);
+                String bookName = JsoupUtils.selectAndInvokeJs(el, r.getBookName());
                 // 以下为非必须属性
-                String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
-                String category = JsoupUtils.selectAndInvokeJs(element, r.getCategory());
-                String latestChapter = JsoupUtils.selectAndInvokeJs(element, r.getLatestChapter());
-                String lastUpdateTime = JsoupUtils.selectAndInvokeJs(element, r.getLastUpdateTime());
-                String status = JsoupUtils.selectAndInvokeJs(element, r.getStatus());
-                String wordCount = JsoupUtils.selectAndInvokeJs(element, r.getWordCount());
+                String author = JsoupUtils.selectAndInvokeJs(el, r.getAuthor());
+                String category = JsoupUtils.selectAndInvokeJs(el, r.getCategory());
+                String latestChapter = JsoupUtils.selectAndInvokeJs(el, r.getLatestChapter());
+                String lastUpdateTime = JsoupUtils.selectAndInvokeJs(el, r.getLastUpdateTime());
+                String status = JsoupUtils.selectAndInvokeJs(el, r.getStatus());
+                String wordCount = JsoupUtils.selectAndInvokeJs(el, r.getWordCount());
 
                 if (bookName.isEmpty()) continue;
 
