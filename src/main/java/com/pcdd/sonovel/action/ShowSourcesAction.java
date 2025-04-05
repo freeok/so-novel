@@ -39,7 +39,7 @@ public class ShowSourcesAction {
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "延迟", "状态码", "URL");
-        List<Rule> rules = SourceUtils.IDS.stream()
+        List<Rule> rules = SourceUtils.ALL_IDS.stream()
                 .map(id -> new Source(id).rule)
                 .toList();
         testWebsiteDelays(rules).forEach(e -> asciiTables.addBody(
