@@ -1,21 +1,39 @@
-## v1.7.11 (2025-03-19)
+## v1.8.0 (2025-04-06)
 
-### 🐛 Bug 修复
+### ✨ 新特性
 
-- 修复 https://github.com/freeok/so-novel/issues/116
-- 修复书源一览显示过长
-- 修复非小写扩展名导致下载失败
+- 新增聚合搜索功能 https://github.com/freeok/so-novel/issues/106
+- 新增书源 16：96读书 https://github.com/freeok/so-novel/issues/102
+- 新增书源 17：速读谷 https://github.com/freeok/so-novel/issues/115
+- 书源 9 替换为笔趣阁 https://github.com/freeok/so-novel/issues/129
+- 新增配置项 search-limit
+- 书籍详情抓取更多信息
 
-### ♻️ 重构优化
+### 🐛 修复
 
-- 改进搜索结果为空时的后续操作体验
-- 优化书源 9 目录解析速度
-- 优化书源 1、9 规则
-- 重构 `ChapterFilter.java`
-- 重构 `ChapterParser.java`
+- 书源 5 替换为：新天禧小说 https://github.com/freeok/so-novel/issues/112
+- 修复失效书源
+- 修复正文内容包含 \<br\>
+- 修复搜索结果列错位
+- 修复部分书源目录章节链接错误
+- 修复部分书源分页目录仅获取首页
 
-### 📝 其它
+### ♻️ 重构
 
-- 更新 Scoop 安装命令 https://github.com/freeok/so-novel/issues/117
-- 更新 ISSUE_TEMPLATE
-- 升级依赖
+- 重构 `SourceUtils.java`
+- 重构 `BookSourceQualityTest.java`
+- 重构 `SearchResultParser` 并重命名为 `SearchParser`
+- 重命名 `SearchResultsHandler#handle`
+- 新增属性 `SearchResult#sourceId`
+- 新增重载 `SearchResultParser#parse`
+
+### 🎨 UI
+
+- 修改 ANSI 样式
+- 修改功能选项文本
+
+### 📝 文档
+
+- 精简 `BOOK_SOURCES.md`
+- 修复 `ISSUE_TEMPLATE` 无效链接
+- 更新 `qidian_rank`

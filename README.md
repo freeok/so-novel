@@ -28,7 +28,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://github.com/readest/readest)
 
-手机：[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、<del>
+手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、<del>
 微信读书</del>（2024.4 更新后，非付费会员每月最多导 3 本书）
 
 > [!WARNING]
@@ -41,7 +41,7 @@ APP。其实这些方案足够很多人用了，但总会有众口难调的情�
 
 保留部分下载日志
 
-![sample.jpg](assets/preview.jpg)
+![sample.jpg](assets/preview.png)
 
 ## 使用
 
