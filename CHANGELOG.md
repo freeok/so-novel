@@ -1,17 +1,17 @@
-## v1.8.0 (2025-04-06)
+## v1.8.0-beta.1 (2025-04-06)
 
 ### ✨ 新特性
 
-- 新增聚合搜索功能 https://github.com/freeok/so-novel/issues/106
+- 新增聚合搜索功能（显著提升用户体验） https://github.com/freeok/so-novel/issues/106
 - 新增书源 16：96读书 https://github.com/freeok/so-novel/issues/102
 - 新增书源 17：速读谷 https://github.com/freeok/so-novel/issues/115
+- 书源 5 替换为：新天禧小说 https://github.com/freeok/so-novel/issues/112
 - 书源 9 替换为笔趣阁 https://github.com/freeok/so-novel/issues/129
 - 新增配置项 search-limit
 - 书籍详情抓取更多信息
 
 ### 🐛 修复
 
-- 书源 5 替换为：新天禧小说 https://github.com/freeok/so-novel/issues/112
 - 修复失效书源
 - 修复正文内容包含 \<br\>
 - 修复搜索结果列错位
