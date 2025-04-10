@@ -2,9 +2,10 @@
   "id": 16,
   "url": "https://www.sudugu.com/",
   "name": "速读谷",
-  "comment": "基本只有新书，爬取频率过快会永久封禁 IP (Remote host terminated the handshake)",
+  "comment": "同得奇小说网",
   "type": "html",
   "language": "zh_CN",
+  "needProxy": true,
   "search": {
     "url": "https://www.sudugu.com/i/sor.aspx",
     "method": "get",
