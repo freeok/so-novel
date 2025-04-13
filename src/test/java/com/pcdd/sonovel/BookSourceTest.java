@@ -60,7 +60,8 @@ class BookSourceTest {
             "13, https://www.xbqg06.com/1582/",
             "14, https://www.luegeng.com/book186856/",
             "15, https://www.96dushu.com/book/344921/",
-            "17, http://www.81zwwww.com/90_90170/"
+            "17, http://www.81zwwww.com/90_90170/",
+            "18, http://www.ujxsw.net/book/107612/",
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
