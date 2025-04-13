@@ -14,9 +14,9 @@ class CoverUpdaterTest {
     @Test
     void test01() {
         Book book = new Book();
-        book.setBookName("从遮天开始穿越");
-        book.setAuthor("心之火");
-        System.out.println(CoverUpdater.fetchZongheng(book));
+        book.setBookName("星辰大道");
+        book.setAuthor("随散飘风");
+        System.out.println(CoverUpdater.fetchCover(book, null));
     }
 
 }
