@@ -9,7 +9,6 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
@@ -106,13 +105,16 @@ public class CoverUpdater {
                     .header(Header.USER_AGENT, RandomUA.generate());
             HttpResponse resp = req.execute();
             String body = resp.body();
-            JSONObject obj = JSONUtil.parseObj(body);
-            JSONArray list = obj
+            JSONObject datasField = JSONUtil.parseObj(body)
                     .getJSONObject("data")
-                    .getJSONObject("datas")
-                    .getJSONArray("list");
+                    .getJSONObject("datas");
 
-            for (Object o : list) {
+            // 搜索结果未空
+            if (datasField == null) {
+                return null;
+            }
+
+            for (Object o : datasField.getJSONArray("list")) {
                 JSONObject bookObj = (JSONObject) o;
                 if (matchBook(book, bookObj.getStr("name"), bookObj.getStr("authorName"))) {
                     return "https://static.zongheng.com/upload" + bookObj.getStr("coverUrl");
