@@ -1,0 +1,37 @@
+{
+  "id": 17,
+  "url": "http://www.81zwwww.com/",
+  "name": "八一中文网",
+  "comment": "暂无",
+  "language": "zh_CN",
+  "search": {
+    "url": "http://www.81zwwww.com/search/",
+    "method": "post",
+    "data": "{searchkey: %s, Submit: ''}",
+    "result": ".mb20 > div > div",
+    "bookName": ".commend-title > a",
+    "author": ".commend-title > span"
+  },
+  "book": {
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": ".info-main-intro > p",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": ".info-main-wap > a > p@js:r=r.replaceAll('最新章节：','');",
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+  },
+  "toc": {
+    "result": "body > div.container.border3-2.mt8.mb20 > div.info-chapters.flex.flex-wrap > a"
+  },
+  "chapter": {
+    "title": ".reader-main > h1@js:r=r.replace(/（\\d+ \\/ \\d+）/, '');",
+    "content": "#article",
+    "paragraphTagClosed": true,
+    "paragraphTag": "p",
+    "filterTxt": "\\(本章完\\)|最近转码严重，让我们更有动力，更新更快，麻烦你动动小手退出阅读模式。谢谢",
+    "filterTag": "",
+    "pagination": true,
+    "nextPage": "(//*[@id='next_url'])[1]"
+  }
+}

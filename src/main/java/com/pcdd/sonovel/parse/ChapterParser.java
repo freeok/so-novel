@@ -113,9 +113,8 @@ public class ChapterParser extends Source {
 
         String nextUrl = url;
         StringBuilder contentBuilder = new StringBuilder();
-        boolean isLastPage = false;
         // 章节分页
-        for (int i = 0; !isLastPage; i++) {
+        for (int i = 0; ; i++) {
             // 第一次执行无需对 nextUrl 进行判断
             String currentUrl = i == 0 ? nextUrl : JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl);
             if (StrUtil.isEmpty(currentUrl)) {
@@ -128,8 +127,8 @@ public class ChapterParser extends Source {
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
             // 判断是否为章节最后一页
-            if (nextEls.text().matches(".*(下一章|没有了|>>).*")) {
-                isLastPage = true;
+            if (nextEls.text().matches(".*(下一章|没有了|>>|书末页).*")) {
+                break;
             }
             // 从 JS 获取下一页链接
             if (ruleChapter.getNextPageInJs() != null) {
