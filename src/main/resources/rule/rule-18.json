@@ -1,0 +1,42 @@
+{
+  "id": 18,
+  "url": "http://www.ujxsw.net/",
+  "name": "悠久小说网",
+  "comment": "暂无",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "http://www.ujxsw.net/searchbooks.php",
+    "method": "post",
+    "data": "{searchkey: %s}",
+    "result": "#main > div.shuku_list > div.shulist > ul",
+    "bookName": "li.three > a",
+    "author": "li.four > a",
+    "category": "li.two",
+    "status": "li.six",
+    "latestChapter": "li.three > span > a",
+    "lastUpdateTime": "li.five"
+  },
+  "book": {
+    "url": "http://www.ujxsw.net/book/(.*?)/",
+    "bookName": "#maininfo > div.coverecom.w_770.left > div.tabstit > a:nth-child(4)",
+    "author": "#bookinfo > div.bookright > div.d_title > h1 > em > a",
+    "intro": "#bookintro",
+    "category": "#count > span:nth-child(1)",
+    "latestChapter": "#bookinfo > div.bookright > div.new > span.new_t > a",
+    "lastUpdateTime": "#bookinfo > div.bookright > div.new > span.new_p",
+    "wordCount": "#count > span:nth-child(5)"
+  },
+  "toc": {
+    "url": "http://www.ujxsw.net/read/%s/",
+    "result": "#readerlist > ul > li > a"
+  },
+  "chapter": {
+    "title": "#mlfy_main_text > h3",
+    "content": "#mlfy_main_text > div.read-content > p",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br>+",
+    "filterTxt": "【悠久小説網ωωω.ＵＪХＳw.ｎｅｔ】，免费小说无弹窗免费阅读！|佰度搜索 【悠久小說網 ＷＷＷ.ＵＪХＳw．ＮＥＴ】 全集TXT电子书免费下载！",
+    "filterTag": ""
+  }
+}
