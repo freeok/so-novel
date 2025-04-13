@@ -20,6 +20,7 @@
 | 14    | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 15    | [96读书](https://www.96dushu.com/)     | ✅     | ❌      | ✅    | 晋江的书多，非大陆IP会跳CF，章节限流，推荐线程数2                                                        |
 | 16    | [速读谷](https://www.sudugu.com/)       | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
+| 17    | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）

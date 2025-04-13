@@ -55,11 +55,12 @@ class BookSourceTest {
             "5, https://www.tianxibook.com/book/94376180/",
             "8, https://www.dxmwx.org/book/56441.html",
             "9, https://www.22biqu.com/biqu79148/",
-            "11, http://www.xbiquzw.net/10_10233/",
-            "12, https://www.0xs.net/txt/68398.html",
-            "14, https://www.xbqg06.com/1582/",
-            "15, https://www.luegeng.com/book186856/",
-            "16, https://www.96dushu.com/book/344921/",
+            "10, http://www.xbiquzw.net/10_10233/",
+            "11, https://www.0xs.net/txt/68398.html",
+            "13, https://www.xbqg06.com/1582/",
+            "14, https://www.luegeng.com/book186856/",
+            "15, https://www.96dushu.com/book/344921/",
+            "17, http://www.81zwwww.com/90_90170/"
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -76,8 +77,8 @@ class BookSourceTest {
     @CsvSource({
             "6, https://quanben5.com/n/xinghedadi/",
             "7, https://www.69shuba.com/book/48273.htm",
-            "13, https://www.deqixs.com/xiaoshuo/106/",
-            "17, https://www.sudugu.com/1012/",
+            "12, https://www.deqixs.com/xiaoshuo/106/",
+            "16, https://www.sudugu.com/1012/",
     })
     void testProxySources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -119,8 +120,12 @@ class BookSourceTest {
         TocParser tocParser = new TocParser(config);
         List<Chapter> toc = tocParser.parse(bookUrl);
         toc.forEach(System.out::println);
-        // 测试目录首章
-        chapterUrl = toc.get(0).getUrl();
+        if (CollUtil.isNotEmpty(toc)) {
+            // 测试目录首章
+            chapterUrl = toc.get(0).getUrl();
+        } else {
+            Console.log("目录为空");
+        }
         Console.log("{} END tocParse {}\n", DIVIDER, DIVIDER);
     }
 
