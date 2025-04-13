@@ -23,9 +23,10 @@ public class CrawlUtils {
 
     // 有的 href 是相对路径，需要拼接为完整路径
     public String normalizeUrl(String s, String host) {
-        if (s.matches("^http(s)?://.*")) {
-            return s;
-        }
+        if (s == null) return null;
+
+        if (s.matches("^http(s)?://.*")) return s;
+
         return URLUtil.normalize(Validator.isUrl(s) ? s : host + s, true, true);
     }
 
