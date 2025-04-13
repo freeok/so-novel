@@ -33,7 +33,7 @@
     "nextPage": "#indexselect > option"
   },
   "chapter": {
-    "title": ".reader-main > h1",
+    "title": ".reader-main > h1@js:r=r.replace(/（\\d+\\s*\\/\\s*\\d+）/, '');",
     "content": "#content",
     "paragraphTagClosed": true,
     "filterTxt": "\\(本章完\\)",
