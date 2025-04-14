@@ -88,6 +88,12 @@ brew tap ownia/homebrew-ownia
 brew install so-novel
 ```
 
+### 🐳 Docker 安装
+
+```bash
+curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install-sonovel.sh | bash
+```
+
 > [!TIP]
 >
 > 许多书源会屏蔽国外 IP，需关闭代理后使用
