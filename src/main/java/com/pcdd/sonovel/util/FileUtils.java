@@ -48,4 +48,30 @@ public class FileUtils {
         return contentLength == -1 ? 0 : contentLength;
     }
 
+    /**
+     * 替换文件名非法字符，仅用于文件名而非路径
+     */
+    public String sanitizeFileName(String fileName) {
+        String osName = System.getProperty("os.name").toLowerCase();
+
+        if (osName.contains("win")) {
+            return fileName
+                    .replace(':', '：')
+                    .replace('*', '※')
+                    .replace('?', '？')
+                    .replace('"', '\'')
+                    .replace('|', '_')
+                    .replace('<', '《')
+                    .replace('>', '》')
+                    .replaceAll("[/\\\\]", "");
+        } else if (osName.contains("mac")) {
+            return fileName
+                    .replace('.', '。')
+                    .replace(':', '：');
+        } else { // linux & others
+            return fileName.replace("/", "");
+        }
+
+    }
+
 }
