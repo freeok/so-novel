@@ -72,7 +72,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
         // 设置 guide，用于指定封面
         book.getGuide().addReference(new GuideReference(new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME), "封面", COVER_NAME));
         EpubWriter epubWriter = new EpubWriter();
-        epubWriter.write(book, new FileOutputStream(StrUtil.format("{}/{}.epub", savePath.getParent(), b.getBookName())));
+        epubWriter.write(book, new FileOutputStream(StrUtil.format("{}/{}({}).epub", savePath.getParent(), b.getBookName(), b.getAuthor())));
         FileUtil.del(savePath);
     }
 
