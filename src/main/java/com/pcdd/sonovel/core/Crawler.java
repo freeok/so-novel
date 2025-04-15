@@ -140,7 +140,7 @@ public class Crawler {
 
         return parentPath + chapter.getOrder() + switch (config.getExtName()) {
             case "html" -> "_." + extName;
-            case "epub", "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle() + "." + extName);
+            case "epub", "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + "." + extName;
             default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
         };
     }
