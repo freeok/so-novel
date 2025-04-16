@@ -69,7 +69,7 @@
 
 ## 使用
 
-### 普通安装
+### 📦 普通安装
 
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](input%2Freadme.txt) 使用
