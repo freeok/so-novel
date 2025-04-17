@@ -1,6 +1,2 @@
-<div class="chapter">
-  <h2>${title}</h2>
-  <div>
-    ${content}
-  </div>
-</div>
+<h2>${title}</h2>
+<div>${content}</div>

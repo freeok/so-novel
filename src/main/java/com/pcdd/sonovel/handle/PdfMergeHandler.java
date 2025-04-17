@@ -90,7 +90,10 @@ public class PdfMergeHandler implements PostProcessingHandler {
                 .filter(f -> f.getName().endsWith(".html"))
                 .forEach(f -> {
                     String chapterHtml = FileUtil.readUtf8String(f);
-                    mergedHtml.append(chapterHtml);
+                    mergedHtml
+                            .append("<div class=\"chapter\">")
+                            .append(chapterHtml)
+                            .append("</div>");
                 });
 
         return mergedHtml.toString();
