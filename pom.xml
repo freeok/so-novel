@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.0-beta.2</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -190,19 +190,15 @@
                             </jre>
                             <!-- Windows 资源管理器显示的可选版本信息 -->
                             <versionInfo>
-                                <fileVersion>${project.version}.0</fileVersion>
-                                <txtFileVersion>${project.version}.0</txtFileVersion>
                                 <!-- 中文会乱码，待解决 -->
-                                <fileDescription>Interactive online novel downloader</fileDescription>
-                                <copyright>Copyright (C) 2021-2025 pcdd. All rights reserved.</copyright>
-                                <productVersion>${project.version}.0</productVersion>
-                                <txtProductVersion>${project.version}.0</txtProductVersion>
+                                <fileDescription>Chinese Web Novel Downloader</fileDescription>
+                                <copyright>Copyright (C) 2021-2025 SoNovel. All rights reserved.</copyright>
                                 <!-- 中文会乱码，待解决 -->
-                                <productName>So Novel</productName>
+                                <productName>SoNovel</productName>
                                 <companyName>github.com/freeok</companyName>
                                 <internalName>SoNovel</internalName>
                                 <originalFilename>SoNovel.exe</originalFilename>
-                                <trademarks>pcdd</trademarks>
+                                <trademarks>SoNovel</trademarks>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
                         </configuration>
