@@ -8,7 +8,7 @@ body:
       description: 在提交之前，请勾选以下所有选项以证明您已经阅读并理解了以下要求，否则该 issue 将被关闭
       options:
         - label: 我已下载最新版本测试，问题依然存在
-        - label: 我已认真查阅 [使用说明](https://github.com/freeok/so-novel/blob/main/input/readme.txt) 以及 [常见问题](https://github.com/freeok/so-novel?tab=readme-ov-file#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+        - label: 我已认真查阅 [使用说明](https://github.com/freeok/so-novel/blob/main/bundle/readme.txt) 以及 [常见问题](https://github.com/freeok/so-novel?tab=readme-ov-file#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
         - label: 我已确保 [已有问题](./issues?q=is%3Aissue) 中无类似 issue，否则请在已有的 issue 内进行讨论
         - label: 我已开启&关闭所有代理软件后测试，问题依然存在
         - label: 我已填写一个简洁明了的标题，以便他人快速检索
