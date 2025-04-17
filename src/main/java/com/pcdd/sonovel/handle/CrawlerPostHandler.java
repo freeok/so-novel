@@ -25,7 +25,7 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
-        if (extName.matches("(?i)txt|epub")) {
+        if (extName.matches("(?i)^(txt|epub|pdf)$")) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
         if ("html".equals(extName)) {
