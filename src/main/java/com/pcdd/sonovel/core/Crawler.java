@@ -81,8 +81,8 @@ public class Crawler {
         String author = sr.getAuthor();
         Book book = new BookParser(config).parse(url);
 
-        // 小说目录名格式：书名(作者)，临时目录
-        bookDir = FileUtils.sanitizeFileName("%s (%s) %s".formatted(bookName, author, config.getExtName().toUpperCase()));
+        // 下载临时目录名格式：书名(作者) EXT
+        bookDir = FileUtils.sanitizeFileName("%s(%s) %s".formatted(bookName, author, config.getExtName().toUpperCase()));
         // 必须 new File()，否则无法使用 . 和 ..
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
@@ -134,13 +134,13 @@ public class Crawler {
     }
 
     private String generateChapterPath(Chapter chapter) {
-        // epub 格式转换前的格式为 html
-        String extName = "epub".equals(config.getExtName()) ? "html" : config.getExtName();
         String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
 
         return parentPath + chapter.getOrder() + switch (config.getExtName()) {
-            case "html" -> "_." + extName;
-            case "epub", "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + "." + extName;
+            case "html" -> "_.html";
+            case "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".txt";
+            // 转换前的格式为 html
+            case "epub", "pdf" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".html";
             default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
         };
     }
