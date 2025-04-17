@@ -51,7 +51,7 @@ public class Main {
     );
 
     static {
-        if (System.getProperty("env").equalsIgnoreCase("prod")) {
+        if (System.getProperty("env", "dev").equalsIgnoreCase("prod")) {
             // 关闭 openhtmltopdf 日志
             XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.OFF));
         }
@@ -173,7 +173,7 @@ public class Main {
     }
 
     private static void watchConfig() {
-        String path = System.getProperty("user.dir") + File.separator + "config.ini";
+        String path = System.getProperty("user.dir") + File.separator + ConfigUtils.resolveConfigFileName();
         Setting setting = new Setting(path);
         // 监听配置文件
         setting.autoLoad(true, aBoolean -> {

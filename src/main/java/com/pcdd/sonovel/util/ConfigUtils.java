@@ -42,7 +42,7 @@ public class ConfigUtils {
         // 若未指定或指定路径不存在，则从默认位置获取
         if (!FileUtil.exist(configFilePath)) {
             // 用户配置文件默认路径
-            String defaultPath = System.getProperty("user.dir") + File.separator + "config.ini";
+            String defaultPath = System.getProperty("user.dir") + File.separator + resolveConfigFileName();
             // 若默认路径也不存在，则抛出 FileNotFoundException
             return new Setting(defaultPath);
         }
@@ -81,6 +81,15 @@ public class ConfigUtils {
         config.setProxyPort(usr.getInt("port", SELECTION_4, 7890));
 
         return config;
+    }
+
+    public String resolveConfigFileName() {
+        String env = System.getProperty("env", "dev").toLowerCase();
+        return switch (env) {
+            case "dev" -> "config-dev.ini";
+            case "test" -> "config-test.ini";
+            default -> "config.ini";
+        };
     }
 
 }
