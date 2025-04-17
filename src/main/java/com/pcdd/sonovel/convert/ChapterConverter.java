@@ -47,7 +47,7 @@ public class ChapterConverter {
 
             content = chapter.getTitle() + "\n".repeat(2) + result;
         }
-        if ("epub".equals(extName) || "html".equals(extName)) {
+        if (extName.matches("(?i)^(epub|html|pdf)$")) {
             chapter.setContent(content);
             content = templateRender(chapter, extName);
         }
