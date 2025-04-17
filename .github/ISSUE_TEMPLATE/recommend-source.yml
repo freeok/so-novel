@@ -8,14 +8,18 @@ body:
     attributes:
       value: |
         ## 先决条件
+        **为避免重复推荐，请先查看：[书源一览](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)、[已推荐书源](https://github.com/freeok/so-novel/issues?q=label%3A%22new%20source%22)**
+        如果您推荐的书源能够搜到已知书源均搜不到的书名，哪怕只有一本，强烈欢迎推荐！！
 
   - type: markdown
     attributes:
       value: |
-        - 无付费
-        - 支持搜索
-        - 无需输入验证码、无需点击“确认您是真人”
-        - 国内网络可直连访问（优质书源可忽略）
+        > [!Tip]
+        > 仅接收均满足以下条件的书源
+        > 1. 免费
+        > 2. 支持搜索（优质书源除外）
+        > 3. 无 [Cloudflare Turnstile](https://www.cloudflare.com/zh-cn/application-services/products/turnstile/)（真人验证）
+        > 4. 国内网络可直连访问（优质书源可忽略）
 
   - type: checkboxes
     attributes:
