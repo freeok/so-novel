@@ -4,8 +4,6 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.RuntimeUtil;
-import cn.hutool.log.dialect.console.ConsoleLog;
-import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
@@ -28,10 +26,6 @@ import java.util.concurrent.Executors;
  * Created at 2025/1/9
  */
 public class ShowSourcesAction {
-
-    static {
-        ConsoleLog.setLevel(Level.OFF);
-    }
 
     public void execute() {
         Console.log("<== 测试延迟中 ...");

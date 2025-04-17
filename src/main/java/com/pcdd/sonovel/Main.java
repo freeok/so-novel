@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
+import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
@@ -50,7 +51,11 @@ public class Main {
     );
 
     static {
-        // release 前改为 Level.OFF
+        if (System.getProperty("env").equalsIgnoreCase("prod")) {
+            // 关闭 openhtmltopdf 日志
+            XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.OFF));
+        }
+        // 关闭 hutool 日志
         ConsoleLog.setLevel(Level.OFF);
         JsoupUtils.trustAllSSL();
     }
