@@ -56,9 +56,9 @@ public class CheckUpdateAction {
             String jsonStr = resp.body();
             JSONArray arr = JSONUtil.parseArray(jsonStr);
             JSONObject latest = JSONUtil.parseObj(arr.get(0));
-            // v1.7.0-beta.2
-            String currentVersion = ("v" + sys.getStr("version"));
             // v1.7.0
+            String currentVersion = "v" + sys.getStr("version");
+            // v1.7.0-beta.2
             String latestVersion = latest.get("tag_name", String.class);
             String latestUrl = latest.get("html_url", String.class);
 

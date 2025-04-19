@@ -33,9 +33,9 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  * Created at 2021/6/10
  * <p>
  * <p>
- * psh: {@code mvnd clean compile; mvn exec:java}
+ * psh: {@code mvnd clean compile; mvn exec:java -Denv=dev}
  * <p>
- * bash: {@code mvnd clean compile && mvn exec:java}
+ * bash: {@code mvnd clean compile && mvn exec:java -Denv=dev}
  */
 public class Main {
 
