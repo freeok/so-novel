@@ -3,21 +3,24 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
-import cn.hutool.core.util.RuntimeUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
+import com.pcdd.sonovel.util.OkHttpUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.jline.jansi.AnsiRenderer.render;
 
 /**
  * 书源一览
@@ -36,6 +39,7 @@ public class ShowSourcesAction {
         List<Rule> rules = SourceUtils.ALL_IDS.stream()
                 .map(id -> new Source(id).rule)
                 .toList();
+
         testWebsiteDelays(rules).forEach(e -> asciiTables.addBody(
                 e.getId() + "",
                 e.getName(),
@@ -43,36 +47,43 @@ public class ShowSourcesAction {
                 e.getCode() + "",
                 e.getUrl())
         );
+
         Console.table(asciiTables);
     }
 
     @SneakyThrows
     private static List<SourceInfo> testWebsiteDelays(List<Rule> rules) {
         List<SourceInfo> res = new ArrayList<>();
-        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(rules.size(), 2 * RuntimeUtil.getProcessorCount()));
-        CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executorService);
-        int timeout = 3000;
+        ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
+        CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
+        OkHttpClient client = OkHttpUtils.createUnsafeClient();
 
         for (Rule r : rules) {
             completionService.submit(() -> {
-                SourceInfo source = new SourceInfo();
-                source.setId(r.getId());
-                source.setName(r.getName());
-                source.setUrl(r.getUrl());
-                long startTime = System.currentTimeMillis();
+                SourceInfo source = SourceInfo.builder()
+                        .id(r.getId())
+                        .name(r.getName())
+                        .url(r.getUrl())
+                        .build();
                 try {
-                    URL url = new URL(r.getUrl());
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(timeout);
-                    conn.setReadTimeout(timeout);
-                    conn.connect();
-                    source.setDelay((int) (System.currentTimeMillis() - startTime));
-                    source.setCode(conn.getResponseCode());
+                    Request req = new Request.Builder()
+                            .url(r.getUrl())
+                            .head() // 只发 HEAD 请求，不获取 body，更快！
+                            .build();
+                    // 放这里才最准确
+                    long startTime = System.currentTimeMillis();
+                    try (Response resp = client.newCall(req).execute()) {
+                        source.setDelay((int) (System.currentTimeMillis() - startTime));
+                        source.setCode(resp.code());
+                    }
                 } catch (Exception e) {
                     source.setDelay(-1);
                     source.setCode(-1);
+                    if (System.getProperty("env").equalsIgnoreCase("dev")) {
+                        Console.error(render("书源 {} 【{}】 测试延迟异常：{}", "red"), r.getId(), r.getName(), e.getMessage());
+                    }
                 }
+
                 return source;
             });
         }
@@ -82,16 +93,11 @@ public class ShowSourcesAction {
             res.add(completionService.take().get());
         }
 
-        executorService.shutdown();
+        threadPool.shutdown();
 
-        // 按照延迟排序
         res.sort((o1, o2) -> {
-            int delay1 = o1.getDelay();
-            int delay2 = o2.getDelay();
-
-            if (delay1 < 0) delay1 = Integer.MAX_VALUE;
-            if (delay2 < 0) delay2 = Integer.MAX_VALUE;
-
+            int delay1 = o1.getDelay() < 0 ? Integer.MAX_VALUE : o1.getDelay();
+            int delay2 = o2.getDelay() < 0 ? Integer.MAX_VALUE : o2.getDelay();
             return Integer.compare(delay1, delay2);
         });
 

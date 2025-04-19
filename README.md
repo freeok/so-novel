@@ -100,6 +100,8 @@ curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-inst
 >
 > 由于书源域名会变动，旧版可能无法使用，请使用最新版
 >
+> 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
+>
 > 若最新版的某个书源无法使用，请 New issue，将尽快修复
 >
 > 欢迎[推荐优质书源](https://github.com/freeok/so-novel/issues/new?template=recommend-source.yml)！
