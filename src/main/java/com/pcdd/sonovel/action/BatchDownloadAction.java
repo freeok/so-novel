@@ -84,12 +84,15 @@ public class BatchDownloadAction {
             double totalTime = 0;
             TocParser tocParser = new TocParser(config);
 
-            for (SearchResult sr : downloadList) {
-                Console.log("\n{} START 《{}》({}) {}", DIVIDER, sr.getBookName(), sr.getAuthor(), DIVIDER);
+            for (int i = 0; i < downloadList.size(); i++) {
+                SearchResult sr = downloadList.get(i);
+                String logTemplate = StrUtil.format(DIVIDER + " %s 《{}》({}) 进度: {}/{} " + DIVIDER,
+                        sr.getBookName(), sr.getAuthor(), i + 1, downloadList.size());
+                Console.log("\n" + logTemplate.formatted("START"));
                 List<Chapter> toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
                 double res = new Crawler(config).crawl(sr, toc);
                 Console.log("<== 完成！总耗时 {} s\n", NumberUtil.round(res, 2));
-                Console.log("{} END 《{}》({}) {}\n", DIVIDER, sr.getBookName(), sr.getAuthor(), DIVIDER);
+                Console.log(logTemplate.formatted("END") + "\n");
                 totalTime += res;
             }
 
