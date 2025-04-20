@@ -22,6 +22,8 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 
+import static org.jline.jansi.AnsiRenderer.render;
+
 /**
  * @author pcdd
  * Created at 2024/3/27
@@ -67,14 +69,14 @@ public class ChapterParser extends Source {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
-                Console.log("==> 章节下载失败，正在重试: 【{}】，尝试次数: {}/{}，重试间隔：{} ms",
+                Console.log(render("==> 章节下载失败，正在重试: 【{}】 重试次数: {}/{} 重试间隔: {} ms", "red"),
                         chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
                 chapter.setContent(crawl(chapter.getUrl(), interval));
-                Console.log("<== 重试成功: 【{}】", chapter.getTitle());
+                Console.log(render("<== 重试成功: 【{}】", "green"), chapter.getTitle());
                 return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
-                Console.error(e, "==> 第 {} 次重试失败: 【{}】，原因: {}", attempt, chapter.getTitle());
+                Console.error(render("==> 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
                 if (attempt == config.getMaxRetryAttempts()) {
                     // 最终失败时记录日志
                     saveErrorLog(chapter, sr, e.getMessage());
@@ -143,7 +145,7 @@ public class ChapterParser extends Source {
     }
 
     private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
-        String line = StrUtil.format("下载失败章节：【{}】({})，原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
+        String line = StrUtil.format("下载失败章节：【{}】({}) 原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
         String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", config.getDownloadPath(), File.separator, sr.getBookName(), sr.getAuthor());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, StandardCharsets.UTF_8, true))) {

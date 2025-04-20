@@ -82,7 +82,7 @@ public class CoverUpdater {
                 }
             }
         } catch (Exception e) {
-            Console.error(render("获取起点封面失败：{}", e.getMessage()));
+            Console.error(render("获取起点封面失败：{}", e.getMessage(), "red"));
         }
         return null;
     }
