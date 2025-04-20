@@ -50,9 +50,9 @@
 
 *结合以下阅读器使用，体验更佳*
 
-电脑：[Koodo Reader](https://www.koodoreader.com/zh)、[Readest](https://readest.com/)
+电脑：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)
 
-手机：[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、<del>
+手机：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、<del>
 微信读书</del>（2024.4 更新后，非付费会员每月最多导 3 本书）
 
 > [!WARNING]
