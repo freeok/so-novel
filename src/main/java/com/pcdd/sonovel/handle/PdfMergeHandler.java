@@ -52,9 +52,10 @@ public class PdfMergeHandler implements PostProcessingHandler {
                               font-family: 'PingFangSC', 'Microsoft YaHei', sans-serif;
                             }
                             p {
-                              font-size: 16px;
-                              text-indent: 2em;
-                            }
+                               font-size: 18px;
+                               text-indent: 2em;
+                               line-height: 1.6;
+                             }
                             /* 关键：每个.chapter 类的 div 都从新页开始 */
                             .chapter {
                               page-break-before: always;
