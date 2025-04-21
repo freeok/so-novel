@@ -36,7 +36,7 @@
 
 - 开箱即用 (OOTB)
 - [内置多书源](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
-- 导出格式：EPUB、TXT、HTML (支持翻页)
+- 导出格式：EPUB、TXT、HTML (支持翻页)、PDF
 - 极速下载 (仅针对无限流书源)
 - 聚合搜索 (无需逐一切换书源)
 - 批量下载
@@ -50,9 +50,9 @@
 
 *结合以下阅读器使用，体验更佳*
 
-电脑：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)
+电脑：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)、[Calibre](https://calibre-ebook.com/)、[Neat Reader (网页版)](https://www.neat-reader.cn/webapp)
 
-手机：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、<del>
+手机：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader (静读天下)](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)、<del>
 微信读书</del>（2024.4 更新后，非付费会员每月最多导 3 本书）
 
 > [!WARNING]
