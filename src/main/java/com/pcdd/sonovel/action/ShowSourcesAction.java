@@ -7,6 +7,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
 import com.pcdd.sonovel.util.OkHttpUtils;
+import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -68,6 +69,7 @@ public class ShowSourcesAction {
                 try {
                     Request req = new Request.Builder()
                             .url(r.getUrl())
+                            .header("User-Agent", RandomUA.generate())
                             .head() // 只发 HEAD 请求，不获取 body，更快！
                             .build();
                     // 放这里才最准确
