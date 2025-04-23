@@ -6,7 +6,7 @@
 |-------|--------------------------------------|-------|--------|------|------------------------------------------------------------------------------------|
 | 1     | [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
 | 2     | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | ✅    | 搜索限流 (Unexpected end of file from server)                                          |
-| 3     | [梦书中文](http://www.mcmssc.la/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                                                           |
+| 3     | [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                                                           |
 | 4     | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | ✅    | 搜索限流 (Read timed out)，数量15w+                                                       |
 | 5     | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 暂无                                                                                 |
 | 6     | [全本小说网](https://quanben5.com/)       | ❌     | ✅      | ✅    | 需要梯子，只能搜老书                                                                         |
