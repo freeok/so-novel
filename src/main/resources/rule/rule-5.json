@@ -34,7 +34,7 @@
     "title": "#wrapper > article > h1",
     "content": "#booktxt",
     "paragraphTagClosed": true,
-    "filterTxt": "首发网址.+。|\\(本章完\\)",
+    "filterTxt": "首发网址.+。|\\(本章完\\)|一秒记住【新天禧小说\\s*】手机用户输入地址：www\\s*\\.xtxxs\\s*\\.com|支持（新天禧小说\\s*）把本站分享那些需要的小伙伴！找不到书请留言！|搜.+免费看精品文学",
     "filterTag": "",
     "pagination": true,
     "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
