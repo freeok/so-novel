@@ -49,7 +49,7 @@ class BookSourceTest {
     @CsvSource({
             "1, http://www.xbiqugu.la/130/130509/",
             "2, https://www.shuhaige.net/199178/",
-            "3, http://www.mcmssc.la/145_145199/",
+            "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",
             "5, https://www.tianxibook.com/book/94376180/",
             "8, https://www.dxmwx.org/book/56441.html",
