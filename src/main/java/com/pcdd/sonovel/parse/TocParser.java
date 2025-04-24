@@ -119,7 +119,7 @@ public class TocParser extends Source {
                 }
             }
         }
-
+        // 根据章节名去重
         return CollUtil.distinct(toc, Chapter::getTitle, false);
     }
 
