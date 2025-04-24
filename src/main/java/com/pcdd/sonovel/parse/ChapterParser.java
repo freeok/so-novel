@@ -135,11 +135,11 @@ public class ChapterParser extends Source {
             if (ruleChapter.getNextPageInJs() != null) {
                 nextUrl = JsoupUtils.selectAndInvokeJs(document, ruleChapter.getNextPageInJs(), ContentType.HTML);
             } else { // 从按钮获取下一页链接
-                // FIXME nextEls NPE
-                if (StrUtil.isNotEmpty(nextEls.outerHtml())) {
+                // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
+                if (StrUtil.isNotEmpty(nextEls.toString())) {
                     nextUrl = nextEls.first().absUrl("href");
                 } else {
-                    Console.log("nextUrl = {}", nextUrl);
+                    Console.error("nextUrl = {}", nextUrl);
                 }
             }
             Thread.sleep(interval);
@@ -150,7 +150,7 @@ public class ChapterParser extends Source {
 
     private void saveDownloadErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
         String line = StrUtil.format("下载失败章节：【{}】({}) 原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
-        String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", config.getDownloadPath(), File.separator, sr.getBookName(), sr.getAuthor());
+        String path = StrUtil.format("{}{}《{}》({})下载失败章节.log", config.getDownloadPath(), File.separator, sr.getBookName(), sr.getAuthor());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, StandardCharsets.UTF_8, true))) {
             pw.println(line);

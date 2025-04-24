@@ -34,10 +34,10 @@ public class BatchDownloadAction {
     public void execute() {
         Scanner sc = Console.scanner();
         List<String> lines = new ArrayList<>();
-        Console.log(render("==> 请依次输入书名和作者，用空格隔开，每输入一条按回车。输入 # 结束: ", "green"));
+        Console.log(render("==> 每行输入一组书名和作者，以空格分隔；每输入一组按回车，输入 # 结束: ", "green"));
         while (true) {
-            String line = sc.nextLine();
-            if ("#".equals(line.strip())) {
+            String line = sc.nextLine().strip();
+            if ("#".equals(line)) {
                 break;
             }
             if (StrUtil.isNotEmpty(line)) {
@@ -51,6 +51,7 @@ public class BatchDownloadAction {
 
         for (String line : lines) {
             String[] split = line.split("\\s+");
+            if (split.length != 2) continue;
             String bookName = split[0];
             String author = split[1];
             List<SearchResult> res = sp.parse(bookName, true);

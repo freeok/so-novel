@@ -80,16 +80,16 @@ public class Main {
             String cmd = sc.nextLine().strip();
 
             switch (cmd.toLowerCase()) {
-                case "z":
-                    Console.log("<== Bye :)");
-                    System.exit(0);
-                    return;
                 case "q":
                     new AggregatedSearchAction().execute();
                     break;
-                case "x":
-                    new CheckUpdateAction().execute();
+                case "w":
+                    new SingleSearchAction(config).execute();
                     break;
+                case "e":
+                    new BatchDownloadAction(config).execute();
+                    break;
+
                 case "a":
                     new ShowSourcesAction().execute();
                     break;
@@ -99,12 +99,15 @@ public class Main {
                 case "d":
                     Console.log(JSONUtil.toJsonPrettyStr(config));
                     break;
-                case "e":
-                    new BatchDownloadAction(config).execute();
+
+                case "z":
+                    Console.log("<== Bye :)");
+                    System.exit(0);
+                    return;
+                case "x":
+                    new CheckUpdateAction().execute();
                     break;
-                case "w":
-                    new SingleSearchAction(config).execute();
-                    break;
+
                 default:
                     Console.error("无效的序号，请重新输入");
                     break;
