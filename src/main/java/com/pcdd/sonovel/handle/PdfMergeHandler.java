@@ -32,7 +32,7 @@ public class PdfMergeHandler implements PostProcessingHandler {
 
         // 获取 chapter_html 目录下所有 HTML 文件并合并内容
         String htmlContent = getHtmlContentFromDirectory(saveDir);
-        String outputPath = StrUtil.format("{}{}（{}）.pdf",
+        String outputPath = StrUtil.format("{}{}({}).pdf",
                 config.getDownloadPath() + File.separator,
                 book.getBookName(),
                 book.getAuthor());
