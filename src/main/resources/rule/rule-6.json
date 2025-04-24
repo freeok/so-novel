@@ -2,10 +2,9 @@
   "id": 6,
   "url": "https://quanben5.com/",
   "name": "全本小说网",
-  "comment": "需要梯子，只能搜老书，搜索需逆向加密参数b",
+  "comment": "基本只能搜老书，搜索需逆向加密参数b",
   "type": "html",
   "language": "zh_CN",
-  "needProxy": true,
   "search": {
     "timeout": 60000,
     "url": "https://quanben5.com/search.html/",

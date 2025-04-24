@@ -6,7 +6,6 @@ import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
-import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
@@ -59,6 +58,7 @@ class BookSourceTest {
             "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",
             "5, https://www.tianxibook.com/book/66120/",
+            "6, https://quanben5.com/n/yishixiejun/",
             "8, https://www.dxmwx.org/book/56441.html",
             "9, https://www.22biqu.com/biqu79148/",
             "10, http://www.xbiquzw.net/10_10233/",
@@ -85,7 +85,6 @@ class BookSourceTest {
     @DisplayName("测试代理书源")
     @ParameterizedTest
     @CsvSource({
-            "6, https://quanben5.com/n/xinghedadi/",
             "7, https://www.69shuba.com/book/48273.htm",
             "12, https://www.deqixs.com/xiaoshuo/106/",
             "16, https://www.sudugu.com/1012/",
