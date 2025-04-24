@@ -30,7 +30,7 @@ public class EpubMergeHandler implements PostProcessingHandler {
     @Override
     public void handle(Book b, File savePath) {
         if (FileUtil.isDirEmpty(savePath)) {
-            Console.error(render("==> 《{}》（{}）下载章节数为 0，取消生成 EPUB", "red"), b.getBookName(), b.getAuthor());
+            Console.error(render("<== 《{}》（{}）下载章节数为 0，取消生成 EPUB", "red"), b.getBookName(), b.getAuthor());
             return;
         }
 
