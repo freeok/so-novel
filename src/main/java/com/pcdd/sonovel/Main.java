@@ -178,7 +178,7 @@ public class Main {
         ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
-                .addHeader(render(StrUtil.format(" v{} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_MAGENTA", "BOLD"))
+                .addHeader(render(StrUtil.format(" version {} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_MAGENTA", "BOLD"))
                 .addHeader("导出格式: " + config.getExtName().toLowerCase())
                 .addHeader("下载路径: " + new File(config.getDownloadPath()).getAbsolutePath())
                 .addHeader(StrUtil.format("指定书源: {} (ID: {})", r.getName(), r.getId()))

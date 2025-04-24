@@ -2,26 +2,26 @@
 
 ## 书源基本信息
 
-| 书源 ID | 书源名称                                 | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要额外注意                                                                          |
-|-------|--------------------------------------|-------|--------|------|------------------------------------------------------------------------------------|
-| 1     | [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
-| 2     | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | ✅    | 搜索限流 (Unexpected end of file from server)                                          |
-| 3     | [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                                                           |
-| 4     | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | ✅    | 搜索限流 (Read timed out)，数量15w+                                                       |
-| 5     | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 暂无                                                                                 |
-| 6     | [全本小说网](https://quanben5.com/)       | ❌     | ✅      | ✅    | 需要梯子，只能搜老书                                                                         |
-| 7     | [69书吧1](https://www.69shuba.com/)    | ❌     | ✅      | ❌    | 需要梯子，搜索有CF，章节限流，推荐线程数1                                                             |
-| 8     | [大熊猫文学](https://www.dxmwx.org/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 9     | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 10    | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      | ✅    | 暂无                                                                                 |
-| 11    | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP                                                               |
-| 12    | [得奇小说网](https://www.deqixs.com/)     | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
-| 13    | [新笔趣阁6](https://www.xbqg06.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 14    | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 15    | [96读书](https://www.96dushu.com/)     | ✅     | ❌      | ✅    | 晋江的书多，非大陆IP会跳CF，章节限流，推荐线程数2                                                        |
-| 16    | [速读谷](https://www.sudugu.com/)       | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
-| 17    | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 18    | [悠久小说网](http://www.ujxsw.net/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
+| 书源 ID  | 书源名称                                 | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要额外注意                                                                          |
+|--------|--------------------------------------|-------|--------|------|------------------------------------------------------------------------------------|
+| 1      | [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
+| 2      | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | ✅    | 搜索限流 (Unexpected end of file from server)                                          |
+| 3      | [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                                                           |
+| 4      | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | ✅    | 搜索限流 (Read timed out)，数量15w+                                                       |
+| 5      | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 暂无                                                                                 |
+| 6      | [全本小说网](https://quanben5.com/)       | ❌     | ✅      | ✅    | 需要梯子，只能搜老书                                                                         |
+| 7      | [69书吧1](https://www.69shuba.com/)    | ❌     | ✅      | ❌    | 需要梯子，搜索有CF，章节限流，推荐线程数1                                                             |
+| 8      | [大熊猫文学](https://www.dxmwx.org/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
+| 9      | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
+| 10     | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      | ✅    | 暂无                                                                                 |
+| 11     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP                                                               |
+| 12     | [得奇小说网](https://www.deqixs.com/)     | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
+| ~~13~~ | ~~[新笔趣阁6](https://www.xbqg06.com/)~~ | ✅     | ✅      | ✅    | 有 bug，暂时禁用                                                                         |
+| 14     | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
+| 15     | [96读书](https://www.96dushu.com/)     | ✅     | ❌      | ✅    | 晋江的书多，非大陆IP会跳CF，章节限流，推荐线程数2                                                        |
+| 16     | [速读谷](https://www.sudugu.com/)       | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
+| 17     | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
+| 18     | [悠久小说网](http://www.ujxsw.net/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）
