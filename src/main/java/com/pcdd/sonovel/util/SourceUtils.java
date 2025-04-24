@@ -23,7 +23,6 @@ public class SourceUtils {
     // 支持聚合搜索的书源
     public final Collection<Integer> AGGREGATED_IDS = CollUtil.disjunction(ALL_IDS, PROXY_IDS);
 
-
     public int getCount() {
         return ALL_IDS.size();
     }

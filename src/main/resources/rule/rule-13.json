@@ -5,6 +5,7 @@
   "comment": "",
   "type": "html",
   "language": "zh_CN",
+  "disabled": true,
   "search": {
     "url": "https://www.xbqg06.com/search/",
     "method": "post",
