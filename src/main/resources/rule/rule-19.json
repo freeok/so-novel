@@ -1,0 +1,40 @@
+{
+  "id": 19,
+  "url": "http://www.yeudusk.com/",
+  "name": "阅读库",
+  "comment": "",
+  "type": "html",
+  "language": "zh_CN",
+  "search": {
+    "url": "http://www.yeudusk.com/modules/article/search.php?q=%s",
+    "method": "get",
+    "result": "#jieqi_page_contents > div > div:nth-child(2)",
+    "bookName": "div:nth-child(1) > span > a",
+    "author": "div:nth-child(2) > span:nth-child(2)",
+    "category": "div:nth-child(2) > span:nth-child(4)",
+    "status": "span:nth-child(8)",
+    "latestChapter": "div:nth-child(4) > span:nth-child(2) > a",
+    "lastUpdateTime": "div:nth-child(4) > span:nth-child(4)"
+  },
+  "book": {
+    "url": "http://www.yeudusk.com/book/(.*?)/",
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "#content > div.divbox.cf > div:nth-child(2) > div:nth-child(3) > div.tabcontent > div:nth-child(1) > div",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": "#content > div:nth-child(4) > h3",
+    "status": "meta[property=\"og:novel:status\"]"
+  },
+  "toc": {
+    "url": "http://www.yeudusk.com/html/0/%s/",
+    "result": "ul > li > a"
+  },
+  "chapter": {
+    "title": "#cont > h1",
+    "content": "#clickeye_content",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br>+",
+    "filterTxt": "\\(阅读库\\s?www\\.yeudusk\\.com\\)|阅读库 www.yeudusk.comyeudusk www.yeudusk.com|《.+》阅读库全文字更新,牢记网址:www\\.yeudusk\\.com"
+  }
+}
