@@ -40,8 +40,7 @@ public class Source {
             // 根据 sourceId 获取对应书源规则
             jsonStr = ResourceUtil.readUtf8Str("rule/rule-" + id + ".json");
         } catch (Exception e) {
-            Console.error(render("书源规则初始化失败，请检查配置项 source-id 是否正确", "red"));
-            Console.error(render("错误信息：{}", "red"), e.getMessage());
+            Console.error(render("书源规则初始化失败，请检查配置项 source-id 是否正确。{}", "red"), e.getMessage());
             System.exit(1);
         }
 
