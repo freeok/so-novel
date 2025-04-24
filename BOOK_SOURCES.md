@@ -9,7 +9,7 @@
 | 3      | [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                                                           |
 | 4      | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | ✅    | 搜索限流 (Read timed out)，数量15w+                                                       |
 | 5      | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 暂无                                                                                 |
-| 6      | [全本小说网](https://quanben5.com/)       | ❌     | ✅      | ✅    | 需要梯子，只能搜老书                                                                         |
+| 6      | [全本小说网](https://quanben5.com/)       | ❓     | ✅      | ✅    | 完本很全，连载基本搜不到，有时需要梯子才能访问                                                            |
 | 7      | [69书吧1](https://www.69shuba.com/)    | ❌     | ✅      | ❌    | 需要梯子，搜索有CF，章节限流，推荐线程数1                                                             |
 | 8      | [大熊猫文学](https://www.dxmwx.org/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 9      | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
