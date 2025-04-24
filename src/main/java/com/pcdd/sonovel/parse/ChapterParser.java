@@ -78,7 +78,7 @@ public class ChapterParser extends Source {
                 Console.error(render("<== 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
                 if (attempt == config.getMaxRetryAttempts()) {
                     // 最终失败时记录日志
-                    saveErrorLog(chapter, sr, e.getMessage());
+                    saveDownloadErrorLog(chapter, sr, e.getMessage());
                 }
             }
         }
@@ -135,7 +135,12 @@ public class ChapterParser extends Source {
             if (ruleChapter.getNextPageInJs() != null) {
                 nextUrl = JsoupUtils.selectAndInvokeJs(document, ruleChapter.getNextPageInJs(), ContentType.HTML);
             } else { // 从按钮获取下一页链接
-                nextUrl = nextEls.first().absUrl("href");
+                // FIXME nextEls NPE
+                if (StrUtil.isNotEmpty(nextEls.outerHtml())) {
+                    nextUrl = nextEls.first().absUrl("href");
+                } else {
+                    Console.log("nextUrl = {}", nextUrl);
+                }
             }
             Thread.sleep(interval);
         }
@@ -143,12 +148,11 @@ public class ChapterParser extends Source {
         return contentBuilder.toString();
     }
 
-    private void saveErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
+    private void saveDownloadErrorLog(Chapter chapter, SearchResult sr, String errMsg) {
         String line = StrUtil.format("下载失败章节：【{}】({}) 原因：{}", chapter.getTitle(), chapter.getUrl(), errMsg);
         String path = StrUtil.format("{}{}《{}》（{}）下载失败章节.log", config.getDownloadPath(), File.separator, sr.getBookName(), sr.getAuthor());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(path, StandardCharsets.UTF_8, true))) {
-            // 自带换行符
             pw.println(line);
 
         } catch (IOException e) {

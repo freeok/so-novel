@@ -40,6 +40,7 @@ public class CrawlerPostHandler {
         }
 
         PostHandlerFactory.getHandler(extName, config).handle(book, saveDir);
+        FileUtil.del(saveDir);
     }
 
 }

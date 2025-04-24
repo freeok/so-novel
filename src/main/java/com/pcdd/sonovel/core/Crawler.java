@@ -4,6 +4,7 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -94,7 +95,7 @@ public class Crawler {
             return 0;
         }
 
-        int autoThreads = config.getThreads() == -1 ? Runtime.getRuntime().availableProcessors() * 2 : config.getThreads();
+        int autoThreads = config.getThreads() == -1 ? RuntimeUtil.getProcessorCount() * 2 : config.getThreads();
         // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
         // 阻塞主线程，用于计时
