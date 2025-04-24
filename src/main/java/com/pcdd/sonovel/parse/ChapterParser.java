@@ -68,14 +68,14 @@ public class ChapterParser extends Source {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
-                Console.log(render("==> 章节下载失败，正在重试: 【{}】 重试次数: {}/{} 重试间隔: {} ms", "red"),
+                Console.log(render("<== 章节下载失败，正在重试: 【{}】 重试次数: {}/{} 重试间隔: {} ms", "red"),
                         chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval);
                 chapter.setContent(crawl(chapter.getUrl(), interval));
                 Console.log(render("<== 重试成功: 【{}】", "green"), chapter.getTitle());
                 return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
-                Console.error(render("==> 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
+                Console.error(render("<== 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
                 if (attempt == config.getMaxRetryAttempts()) {
                     // 最终失败时记录日志
                     saveErrorLog(chapter, sr, e.getMessage());

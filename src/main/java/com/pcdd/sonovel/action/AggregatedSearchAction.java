@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.action;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
@@ -36,6 +37,11 @@ public class AggregatedSearchAction {
 
         List<SearchResult> results = getSearchResults(kw);
 
+        if (CollUtil.isEmpty(results)) {
+            Console.log(render("聚合搜索结果为空！", "yellow"));
+            return;
+        }
+
         SearchParser.printAggregateSearchResult(results);
 
         new DownloadAction(null).execute(results);
@@ -51,7 +57,7 @@ public class AggregatedSearchAction {
             threadPool.execute(() -> {
                 List<SearchResult> res = new SearchParser(source.config).parse(kw);
                 Rule rule = source.rule;
-                Console.log("==> 书源 {} ({}) 搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
+                Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
                 results.add(res);
                 latch.countDown();
             });
