@@ -1,23 +1,23 @@
-## v1.8.0-beta.2 (2025-04-17)
+## v1.8.0 (2025-04-25)
 
 ### ✨ 新特性
 
-- 新增书源：八一中文网 https://github.com/freeok/so-novel/issues/140
-- 新增书源：悠久小说网 https://github.com/freeok/so-novel/issues/154
-- 新增 Docker 安装脚本 https://github.com/freeok/so-novel/issues/144
+- 支持导出 PDF 格式
 
 ### 🐛 修复
 
-- 修复封面获取 NPE
-- 修复 https://github.com/freeok/so-novel/issues/157
-- corrected full-width period in chapter filenames (#158)
+- 修复书源 3 搜索失效（更换域名）
+- 暂时禁用书源 13 https://github.com/freeok/so-novel/issues/148
 
 ### ♻️ 重构
 
-- 修改 epub 文件名格式
+- 更新初始界面 UI
+- 优化书源延迟测试
+- 优化日志格式
+- 更新书源 5 规则
 
 ### 📝 文档
 
-- 更新 `README.md`
-- 更新 `BOOK_SOURCES.md`
-- 更新 `qidian_rank`
+- 修复问题反馈 issue 模板中的错误链接
+- 更新推荐书源 issue 模板
+- add donation methods to README
