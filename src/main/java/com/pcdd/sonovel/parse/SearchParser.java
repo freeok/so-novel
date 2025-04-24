@@ -49,12 +49,12 @@ public class SearchParser extends Source {
         Rule.Search r = this.rule.getSearch();
 
         if (r == null) {
-            Console.log("书源 {} 不支持搜索", config.getSourceId());
+            Console.log(render("<== 书源 {} 不支持搜索", "red"), config.getSourceId());
             return Collections.emptyList();
         }
 
         if (this.rule.isDisabled()) {
-            Console.error("书源 {} 暂被禁用！", this.rule.getId());
+            Console.error(render("<== 书源 {} 暂被禁用！", "red"), this.rule.getId());
             return Collections.emptyList();
         }
 
@@ -66,7 +66,7 @@ public class SearchParser extends Source {
                     .execute();
             document = Jsoup.parse(resp.body());
         } catch (Exception e) {
-            Console.error(render("书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
+            Console.error(render("<== 书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
             return Collections.emptyList();
         }
 
