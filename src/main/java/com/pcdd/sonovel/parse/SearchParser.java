@@ -53,6 +53,11 @@ public class SearchParser extends Source {
             return Collections.emptyList();
         }
 
+        if (this.rule.isDisabled()) {
+            Console.error("书源 {} 暂被禁用！", this.rule.getId());
+            return Collections.emptyList();
+        }
+
         try {
             resp = jsoup(r.getUrl().formatted(keyword))
                     .timeout(r.getTimeout())
