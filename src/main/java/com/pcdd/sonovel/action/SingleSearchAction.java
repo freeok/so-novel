@@ -3,6 +3,7 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
@@ -55,9 +56,9 @@ public class SingleSearchAction {
     public void downloadByKeyword() {
         // 1. 查询
         Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", "green"));
-        String keyword = sc.nextLine().strip();
-        if (keyword.isEmpty()) return;
-        List<SearchResult> searchResults = new Crawler(config).search(keyword);
+        String kw = sc.nextLine().strip();
+        if (StrUtil.isEmpty(kw)) return;
+        List<SearchResult> searchResults = new Crawler(config).search(kw);
         if (CollUtil.isEmpty(searchResults)) {
             return;
         }
