@@ -23,6 +23,7 @@
 | 17     | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 18     | [悠久小说网](http://www.ujxsw.net/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
 | 19     | [阅读库](http://www.yeudusk.com/)       | ✅     | ✅      | ✅    | 暂无                                                                                 |
+| 20     | [顶点小说](https://www.wxsy.net/)        | ✅     | ✅      | ✅    | 章节页限流                                                                              |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）
