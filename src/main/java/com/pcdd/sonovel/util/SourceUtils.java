@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 public class SourceUtils {
 
     // 全部书源
-    public final List<Integer> ALL_IDS = IntStream.rangeClosed(1, 19).boxed().toList();
+    public final List<Integer> ALL_IDS = IntStream.rangeClosed(1, 20).boxed().toList();
     // 需要代理的书源
     public final List<Integer> PROXY_IDS = CollUtil.newArrayList(6, 7, 12, 16);
     // 支持聚合搜索的书源
