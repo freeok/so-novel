@@ -118,19 +118,19 @@ public class ChapterParser extends Source {
         for (int i = 0; ; i++) {
             // 第一次执行无需对 nextUrl 进行判断
             String currentUrl = i == 0 ? nextUrl : JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl);
-            if (StrUtil.isEmpty(currentUrl)) {
-                break;
-            }
+            if (StrUtil.isEmpty(currentUrl)) break;
             document = jsoup(currentUrl)
                     .timeout(ruleChapter.getTimeout())
                     .get();
-            contentBuilder.append(document.select(ruleChapter.getContent()).html());
+            contentBuilder.append(JsoupUtils.selectAndInvokeJs(document, ruleChapter.getContent(), ContentType.HTML));
+
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
-            // 判断是否为章节最后一页
-            if (nextEls.text().matches(".*(下一章|没有了|>>|书末页).*")) {
-                break;
-            }
+            // 判断是否为章节最后一页，依据：不以 "_个位数字.html" 结尾
+            if (!nextEls.attr("href").matches(".*_\\d\\.html/?$")) break;
+            // 这种方法不可靠，因为部分网站会用“下一章”代替“下一页”
+            // if (nextEls.text().matches(".*(下一章|没有了|>>|书末页).*")) break;
+
             // 从 JS 获取下一页链接
             if (ruleChapter.getNextPageInJs() != null) {
                 nextUrl = JsoupUtils.selectAndInvokeJs(document, ruleChapter.getNextPageInJs(), ContentType.HTML);

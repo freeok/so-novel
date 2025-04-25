@@ -70,6 +70,7 @@ class BookSourceTest {
             "18, http://www.ujxsw.net/book/107612/",
             "18, http://www.ujxsw.net/book/107612/",
             "19, http://www.yeudusk.com/book/1322535/",
+            "20, https://www.wxsy.net/novel/1803/",
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -79,7 +80,7 @@ class BookSourceTest {
         bookParse();
         tocParse();
         chapterParse();
-        // chapterBatchParse(1, 850);
+        // chapterBatchParse(100, 300);
     }
 
     @DisplayName("测试代理书源")
