@@ -19,6 +19,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
@@ -51,8 +52,9 @@ public class TocParser extends Source {
             String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
             url = ruleToc.getUrl().formatted(id);
         }
-        // 目录分页 url
-        Set<String> urls = CollUtil.newLinkedHashSet(url);
+        // 目录分页 url，需要对 url 进行排序，原因是首个页面不一定是 select 的第一个 option
+        Set<String> urls = new TreeSet<>();
+        urls.add(url);
         Document document = jsoup(url)
                 .timeout(ruleToc.getTimeout())
                 .get();
@@ -119,6 +121,9 @@ public class TocParser extends Source {
                 }
             }
         }
+
+        // 不要根据章节名中的小写数字或大写数字对 urls 进行排序（此方法仍不可靠，因为某些章节名的数字不按顺序，例如番外 1）
+
         // 根据章节名去重
         return CollUtil.distinct(toc, Chapter::getTitle, false);
     }
