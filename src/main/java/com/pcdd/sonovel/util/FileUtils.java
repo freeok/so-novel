@@ -59,10 +59,9 @@ public class FileUtils {
                     .replace('*', '※')
                     .replace('?', '？')
                     .replace('"', '\'')
-                    .replace('|', '_')
                     .replace('<', '《')
                     .replace('>', '》')
-                    .replaceAll("[/\\\\]", "");
+                    .replaceAll("[/\\\\|]", "_");
         } else if (osName.contains("mac")) {
             return fileName
                     .replace('.', '。')
