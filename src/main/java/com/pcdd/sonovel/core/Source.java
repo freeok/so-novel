@@ -3,6 +3,7 @@ package com.pcdd.sonovel.core;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
@@ -55,6 +56,27 @@ public class Source {
     }
 
     private Rule applyDefaultTimeouts(Rule rule) {
+        Rule.Search ruleSearch = rule.getSearch();
+        Rule.Book ruleBook = rule.getBook();
+        Rule.Toc ruleToc = rule.getToc();
+        Rule.Chapter ruleChapter = rule.getChapter();
+
+        if (StrUtil.isEmpty(ruleSearch.getBaseUri())) {
+            ruleSearch.setBaseUri(rule.getUrl());
+        }
+        if (StrUtil.isEmpty(ruleBook.getBaseUri())) {
+            ruleBook.setBaseUri(rule.getUrl());
+        }
+        if (StrUtil.isEmpty(ruleToc.getBaseUri())) {
+            ruleToc.setBaseUri(rule.getUrl());
+        }
+        if (StrUtil.isEmpty(ruleToc.getBaseUri())) {
+            ruleToc.setBaseUri(rule.getUrl());
+        }
+        if (StrUtil.isEmpty(ruleChapter.getBaseUri())) {
+            ruleChapter.setBaseUri(rule.getUrl());
+        }
+
         return rule;
     }
 

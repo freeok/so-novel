@@ -44,7 +44,7 @@ public class ChapterParser extends Source {
         Document document;
 
         try (Response resp = request(chapter.getUrl())) {
-            document = Jsoup.parse(resp.body().string());
+            document = Jsoup.parse(resp.body().string(), this.rule.getChapter().getBaseUri());
         }
 
         chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
@@ -105,7 +105,7 @@ public class ChapterParser extends Source {
         // 章节不分页，只请求一次
         if (!ruleChapter.isPagination()) {
             try (Response resp = request(url)) {
-                document = Jsoup.parse(resp.body().string());
+                document = Jsoup.parse(resp.body().string(), ruleChapter.getBaseUri());
             }
 
             Elements contentEl = JsoupUtils.select(document, ruleChapter.getContent());
@@ -126,7 +126,7 @@ public class ChapterParser extends Source {
             if (StrUtil.isEmpty(currentUrl)) break;
 
             try (Response resp = request(currentUrl)) {
-                document = Jsoup.parse(resp.body().string());
+                document = Jsoup.parse(resp.body().string(), ruleChapter.getBaseUri());
             }
 
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(document, ruleChapter.getContent(), ContentType.HTML));
@@ -134,9 +134,9 @@ public class ChapterParser extends Source {
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(document, ruleChapter.getNextPage());
             // 判断是否为章节最后一页，依据：不以 "_个位数字.html" 结尾
-            if (!nextEls.attr("href").matches(".*_\\d\\.html/?$")) break;
-            // 这种方法不可靠，因为部分网站会用“下一章”代替“下一页”
-            // if (nextEls.text().matches(".*(下一章|没有了|>>|书末页).*")) break;
+            if (!nextEls.attr("href").matches(".*[-_]\\d\\.html")) break;
+                // 这种方法不可靠，因为部分网站会用“下一章”代替“下一页”
+            else if (nextEls.text().matches(".*(下一章|没有了|>>|书末页).*")) break;
 
             // 从 JS 获取下一页链接
             if (ruleChapter.getNextPageInJs() != null) {
@@ -144,7 +144,8 @@ public class ChapterParser extends Source {
             } else { // 从按钮获取下一页链接
                 // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
                 if (StrUtil.isNotEmpty(nextEls.toString())) {
-                    nextUrl = nextEls.first().absUrl("href");
+                    Element first = nextEls.first();
+                    nextUrl = first.absUrl("href");
                 } else {
                     Console.error("nextUrl = {}", nextUrl);
                 }

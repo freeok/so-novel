@@ -28,6 +28,7 @@
   },
   "toc": {
     "result": "#list > ul > li > a",
+    "offset": 12,
     "pagination": true,
     "nextPage": "#pages > .gr"
   },
