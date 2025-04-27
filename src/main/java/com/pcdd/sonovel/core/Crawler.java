@@ -105,6 +105,7 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
+
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch, sr));

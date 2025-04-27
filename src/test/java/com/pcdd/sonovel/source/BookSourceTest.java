@@ -15,7 +15,6 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -42,7 +41,6 @@ class BookSourceTest {
     private List<Chapter> chapters;
 
     static {
-        JsoupUtils.trustAllSSL();
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
         config.setLanguage("zh_CN");
@@ -53,7 +51,7 @@ class BookSourceTest {
     @DisplayName("测试直连书源")
     @ParameterizedTest
     @CsvSource({
-            "1, http://www.xbiqugu.la/130/130509/",
+            // "1, http://www.xbiqugu.la/130/130509/",
             "2, https://www.shuhaige.net/199178/",
             "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",

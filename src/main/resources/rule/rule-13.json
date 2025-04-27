@@ -10,7 +10,6 @@
     "url": "https://www.xbqg06.com/search/",
     "method": "post",
     "data": "{type: articlename, searchkey: %s}",
-    "cookies": "{}",
     "result": ".container > div > div > ul > li",
     "bookName": "span.s2 > a@js:r=r.length>15?r.substring(0,15)+\"...\":r;",
     "author": "span.s4@js:r=r.length>10?r.substring(0,10)+\"...\":r;",

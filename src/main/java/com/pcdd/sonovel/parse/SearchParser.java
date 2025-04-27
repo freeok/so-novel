@@ -15,7 +15,8 @@ import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
-import org.jsoup.Connection;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,28 +44,32 @@ public class SearchParser extends Source {
 
     @SneakyThrows
     public List<SearchResult> parse(String keyword) {
-        // 模拟搜索请求
-        Document document;
-        Connection.Response resp;
         Rule.Search r = this.rule.getSearch();
 
         if (r == null) {
             Console.log(render("<== 书源 {} 不支持搜索", "red"), config.getSourceId());
             return Collections.emptyList();
         }
-
         if (this.rule.isDisabled()) {
             Console.error(render("<== 书源 {} 暂被禁用！", "red"), this.rule.getId());
             return Collections.emptyList();
         }
 
+        Response resp;
+        Document document;
         try {
-            resp = jsoup(r.getUrl().formatted(keyword))
-                    .timeout(r.getTimeout())
-                    .data(CrawlUtils.buildData(r.getData(), keyword))
-                    .cookies(CrawlUtils.buildCookies(r.getCookies()))
-                    .execute();
-            document = Jsoup.parse(resp.body());
+            Request.Builder builder = new Request.Builder().url(r.getUrl().formatted(keyword));
+
+            if (StrUtil.isNotBlank(r.getCookies())) {
+                builder.addHeader("Cookie", r.getCookies());
+            }
+            if ("post".equalsIgnoreCase(r.getMethod())) {
+                builder = builder.post(CrawlUtils.buildData(r.getData(), keyword));
+            }
+
+            resp = request(builder);
+            document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string());
+
         } catch (Exception e) {
             Console.error(render("<== 书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
             return Collections.emptyList();
@@ -100,19 +105,26 @@ public class SearchParser extends Source {
         return CollUtil.sub(searchResults, 0, config.getSearchLimit());
     }
 
-    private List<SearchResult> getSearchResults(String url, Connection.Response resp) {
+    private List<SearchResult> getSearchResults(String url, Response resp) {
         Rule.Search r = this.rule.getSearch();
         List<SearchResult> list = new ArrayList<>();
         try {
             // 搜索结果页 DOM
-            Document document = resp == null
-                    ? jsoup(url).timeout(r.getTimeout()).get()
-                    : Jsoup.parse(resp.body());
+            Document document;
+            if (resp == null) {
+                try (Response resp2 = request(url)) {
+                    // peekBody 不会关闭原body流，可以拿一份副本出来
+                    document = Jsoup.parse(resp2.peekBody(Long.MAX_VALUE).string());
+                }
+            } else {
+                document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string());
+            }
+
             Elements resultEls = document.select(r.getResult());
 
             // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
             if (resultEls.isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
-                String bookUrl = resp.url().toString();
+                String bookUrl = resp.request().url().toString();
                 BookParser bookParser = new BookParser(config);
                 Book book = bookParser.parse(bookUrl);
 
@@ -171,6 +183,11 @@ public class SearchParser extends Source {
         } catch (Exception e) {
             Console.error(e);
             return Collections.emptyList();
+
+        } finally {
+            if (resp != null) {
+                resp.close();
+            }
         }
 
         return list;

@@ -11,6 +11,8 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
+import okhttp3.Response;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
@@ -26,9 +28,11 @@ public class BookParser extends Source {
     @SneakyThrows
     public Book parse(String url) {
         Rule.Book r = this.rule.getBook();
-        Document document = jsoup(url)
-                .timeout(r.getTimeout())
-                .get();
+
+        Document document;
+        try (Response resp = request(url)) {
+            document = Jsoup.parse(resp.body().string());
+        }
 
         String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
         String author = JsoupUtils.selectAndInvokeJs(document, r.getAuthor(), getContentType(r.getAuthor()));
