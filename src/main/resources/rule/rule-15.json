@@ -2,7 +2,7 @@
   "id": 15,
   "url": "https://www.96dushu.com/",
   "name": "96读书",
-  "comment": "晋江的书多，非大陆IP会跳CF，章节有限流，章节翻页需要额外代码适配（下一页的url在js代码中），暂时搁置",
+  "comment": "晋江的书多，非大陆IP会跳CF，搜索、章节限流，章节翻页需要额外代码适配（下一页的url在js代码中），暂时搁置",
   "type": "html",
   "language": "zh_CN",
   "search": {

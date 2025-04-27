@@ -16,6 +16,7 @@
     "lastUpdateTime": "td:nth-child(5)"
   },
   "book": {
+    "url": "http://www.xbiquzw.net/(.*?)/",
     "bookName": "meta[property=\"og:novel:book_name\"]",
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[property=\"og:description\"]",
@@ -25,9 +26,11 @@
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
+    "baseUri": "http://www.xbiquzw.net/%s/",
     "result": "#list > dl > dd > a"
   },
   "chapter": {
+    "baseUri": "",
     "title": ".bookname > h1",
     "content": "#content",
     "paragraphTagClosed": false,
