@@ -68,7 +68,7 @@ public class SearchParser extends Source {
             }
 
             resp = request(builder);
-            document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string());
+            document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
 
         } catch (Exception e) {
             Console.error(render("<== 书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
@@ -91,7 +91,7 @@ public class SearchParser extends Source {
         Set<String> urls = new LinkedHashSet<>();
         // 一次性获取分页 URL，不考虑逐个点击下一页的情况
         for (Element e : nextPageUrls) {
-            String href = CrawlUtils.normalizeUrl(e.attr("href"), this.rule.getUrl());
+            String href = e.absUrl("href");
             // 中文解码，针对69書吧
             urls.add(URLUtil.decode(href));
         }
@@ -114,10 +114,10 @@ public class SearchParser extends Source {
             if (resp == null) {
                 try (Response resp2 = request(url)) {
                     // peekBody 不会关闭原body流，可以拿一份副本出来
-                    document = Jsoup.parse(resp2.peekBody(Long.MAX_VALUE).string());
+                    document = Jsoup.parse(resp2.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
                 }
             } else {
-                document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string());
+                document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
             }
 
             Elements resultEls = document.select(r.getResult());
@@ -168,7 +168,7 @@ public class SearchParser extends Source {
 
                 SearchResult sr = SearchResult.builder()
                         .sourceId(this.rule.getId())
-                        .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
+                        .url(href)
                         .bookName(bookName)
                         .author(author)
                         .category(category)

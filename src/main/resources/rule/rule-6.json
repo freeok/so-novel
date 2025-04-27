@@ -2,7 +2,7 @@
   "id": 6,
   "url": "https://quanben5.com/",
   "name": "全本小说网",
-  "comment": "基本只能搜老书，搜索需逆向加密参数b",
+  "comment": "基本只能搜老书，搜索需逆向加密参数b，搜索限流",
   "type": "html",
   "language": "zh_CN",
   "search": {

@@ -13,7 +13,6 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -76,7 +75,7 @@ public class SearchParser6 extends Source {
             String author = JsoupUtils.selectAndInvokeJs(element, r.getAuthor());
 
             SearchResult sr = SearchResult.builder()
-                    .url(CrawlUtils.normalizeUrl(href, this.rule.getUrl()))
+                    .url(href)
                     .bookName(bookName)
                     .author(author)
                     .build();
