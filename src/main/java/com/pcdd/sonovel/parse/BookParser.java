@@ -8,7 +8,6 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.Response;
@@ -31,7 +30,7 @@ public class BookParser extends Source {
 
         Document document;
         try (Response resp = request(url)) {
-            document = Jsoup.parse(resp.body().string());
+            document = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
 
         String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
@@ -51,7 +50,7 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CoverUpdater.fetchCover(book, CrawlUtils.normalizeUrl(coverUrl, this.rule.getUrl())));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, coverUrl));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
         book.setLastUpdateTime(lastUpdateTime);

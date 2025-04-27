@@ -7,13 +7,6 @@ import lombok.experimental.UtilityClass;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-
 import static com.pcdd.sonovel.model.ContentType.*;
 
 @UtilityClass
@@ -102,21 +95,16 @@ public class JsoupUtils {
      */
     private String getContentByType(Object obj, ContentType contentType) {
         if (obj instanceof Element el) {
-            String href = el.attr(ATTR_HREF.getValue());
-            String absUrl = el.absUrl(ATTR_HREF.getValue());
-
             return switch (contentType) {
                 case TEXT -> el.text();
                 case HTML -> el.html();
-                case ATTR_SRC -> el.attr(ATTR_SRC.getValue());
-                // 如果href是完整的url，jsoup absUrl会返回错误的链接（包含两个http）
-                case ATTR_HREF -> StrUtil.startWithAny(href, "https://", "http://", "/")
-                        ? href
-                        // : StrUtil.isBlank(absUrl) ? href : absUrl;
-                        : absUrl;
+                case ATTR_SRC -> el.absUrl(ATTR_SRC.getValue());
+                case ATTR_HREF -> el.absUrl(ATTR_HREF.getValue());
+                // 以下 2 个切勿改为 absUrl
                 case ATTR_CONTENT -> el.attr(ATTR_CONTENT.getValue());
                 case ATTR_VALUE -> el.attr(ATTR_VALUE.getValue());
             };
+
         } else if (obj instanceof Elements els) {
             return switch (contentType) {
                 case TEXT -> els.text();
@@ -129,40 +117,6 @@ public class JsoupUtils {
         }
 
         return "";
-    }
-
-    /**
-     * 忽略所有 SSL 证书校验
-     * 用于解决部分书源报错 PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException
-     */
-    public void trustAllSSL() {
-        try {
-            // 信任所有证书
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
-                        }
-
-                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
-                        }
-
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[0];
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new SecureRandom());
-
-            // 强制设置为默认的 SSLSocketFactory（关键）
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            // 忽略主机名校验（关键）
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-        } catch (Exception e) {
-            throw new RuntimeException("初始化 SSL 信任失败", e);
-        }
     }
 
 }
