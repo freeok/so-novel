@@ -9,7 +9,6 @@
     "url": "https://www.wxsy.net/search.html",
     "method": "post",
     "data": "{s: %s}",
-    "cookies": "{}",
     "result": "body > div.container > div:nth-child(1) > div > ul > li",
     "bookName": "span.s2 > a",
     "author": "span.s3 > a",

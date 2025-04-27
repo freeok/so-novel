@@ -7,9 +7,8 @@
   "language": "zh_CN",
   "search": {
     "timeout": 60000,
-    "url": "https://quanben5.com/search.html/",
+    "url": "https://quanben5.com/search.html/?keywords=%s&a=search.json&b=%s&c=book&callback=search",
     "method": "get",
-    "data": "{keywords: %s, a: search.json, b: %s, c: book, callback: search}",
     "result": ".pic_txt_list",
     "bookName": "h3 > a",
     "author": "p.info > span"
