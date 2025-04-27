@@ -9,7 +9,7 @@
     "url": "https://www.shuhaige.net/search.html",
     "method": "post",
     "data": "{searchkey: %s, searchtype: all}",
-    "cookies": "{'waf_sc': '', 'HMACCOUNT': ''}",
+    "cookies": "waf_sc=''; HMACCOUNT=''",
     "result": "#sitembox > dl",
     "bookName": "dd > h3 > a",
     "author": "dd:nth-child(3) > span:nth-child(1)",

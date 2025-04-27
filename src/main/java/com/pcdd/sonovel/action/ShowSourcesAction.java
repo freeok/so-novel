@@ -5,6 +5,7 @@ import cn.hutool.core.lang.ConsoleTable;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.OkHttpUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
@@ -56,7 +57,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
-        OkHttpClient client = OkHttpUtils.createUnsafeClient();
+        OkHttpClient client = OkHttpUtils.createClient(ConfigUtils.config(), true);
 
         for (Rule r : rules) {
             completionService.submit(() -> {

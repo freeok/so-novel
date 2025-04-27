@@ -10,6 +10,8 @@ import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
+import okhttp3.Response;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,9 +41,12 @@ public class ChapterParser extends Source {
     // 用于测试
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
-        Document document = jsoup(chapter.getUrl())
-                .timeout(this.rule.getChapter().getTimeout())
-                .get();
+        Document document;
+
+        try (Response resp = request(chapter.getUrl())) {
+            document = Jsoup.parse(resp.body().string());
+        }
+
         chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
         chapter.setContent(crawl(chapter.getUrl(), RandomUtil.randomInt(100, 200)));
         return chapter;
@@ -99,11 +104,11 @@ public class ChapterParser extends Source {
         Thread.sleep(interval);
         // 章节不分页，只请求一次
         if (!ruleChapter.isPagination()) {
-            document = jsoup(url)
-                    .timeout(ruleChapter.getTimeout())
-                    .get();
-            Elements contentEl = JsoupUtils.select(document, ruleChapter.getContent());
+            try (Response resp = request(url)) {
+                document = Jsoup.parse(resp.body().string());
+            }
 
+            Elements contentEl = JsoupUtils.select(document, ruleChapter.getContent());
             // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
             for (Element el : contentEl.select("*")) {
                 el.clearAttributes();
@@ -119,9 +124,11 @@ public class ChapterParser extends Source {
             // 第一次执行无需对 nextUrl 进行判断
             String currentUrl = i == 0 ? nextUrl : JsoupUtils.invokeJs(ruleChapter.getNextPage(), nextUrl);
             if (StrUtil.isEmpty(currentUrl)) break;
-            document = jsoup(currentUrl)
-                    .timeout(ruleChapter.getTimeout())
-                    .get();
+
+            try (Response resp = request(currentUrl)) {
+                document = Jsoup.parse(resp.body().string());
+            }
+
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(document, ruleChapter.getContent(), ContentType.HTML));
 
             // 获取下一页按钮元素

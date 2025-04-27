@@ -5,10 +5,10 @@
   "comment": "限流严重，爬取过快会永久封IP，发布页：https://www.cxysb.com/",
   "type": "html",
   "language": "zh_CN",
+  "ignoreSsl": true,
   "search": {
-    "url": "https://www.0xs.net/search.html",
+    "url": "https://www.0xs.net/search.html?kw=%s",
     "method": "get",
-    "data": "{kw: %s}",
     "result": ".result_list > ul > li > .book",
     "bookName": ".name > a",
     "author": ".author",

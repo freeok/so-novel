@@ -18,10 +18,12 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.util.OkHttpUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.Data;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -50,11 +52,10 @@ class BookSourceQualityTest {
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
     // 测试排行榜前几名 (0,20]
     static final int TOP_NUM = 20;
-    // 1：封IP，6：老书，12、15：限流，15：523错误
-    static final String RE_SKIP_IDS = "1|6|12|15|16";
+    // 1：封IP，6：老书，12、16：限流
+    static final String RE_SKIP_IDS = "1|6|12|16";
 
     static {
-        JsoupUtils.trustAllSSL();
         ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }
@@ -69,12 +70,15 @@ class BookSourceQualityTest {
         Console.log("getQiDianRanks: {}", rankUrl);
         List<Book> rank = new ArrayList<>();
         Document document = null;
-        try {
-            document = Jsoup.connect(rankUrl)
-                    .timeout(3000)
-                    .header(Header.USER_AGENT.getValue(), RandomUA.generate())
-                    .header(Header.COOKIE.getValue(), "w_tsfp=ltvuV0MF2utBvS0Q6qPpnE2sFzsidD04h0wpEaR0f5thQLErU5mG2IZyuMn2NHDf6sxnvd7DsZoyJTLYCJI3dwMSRpqReokRhQ/ElYgnjtxAVBI1QJzYWAJJJLly7DdAf3hCNxS00jA8eIUd379yilkMsyN1zap3TO14fstJ019E6KDQmI5uDW3HlFWQRzaLbjcMcuqPr6g18L5a5TjetFupeV8iA+sXhU3B3HlKWC4gskCyIuAJNBmlI5j5SqA=")
-                    .get();
+        try (Response resp = OkHttpUtils.createClient()
+                .newCall(new Request.Builder()
+                        .url(rankUrl)
+                        .addHeader(Header.USER_AGENT.getValue(), RandomUA.generate())
+                        .addHeader(Header.COOKIE.getValue(), "w_tsfp=ltvuV0MF2utBvS0Q6qPpnE2sFzsidD04h0wpEaR0f5thQLErU5mG2IZyuMn2NHDf6sxnvd7DsZoyJTLYCJI3dwMSRpqReokRhQ/ElYgnjtxAVBI1QJzYWAJJJLly7DdAf3hCNxS00jA8eIUd379yilkMsyN1zap3TO14fstJ019E6KDQmI5uDW3HlFWQRzaLbjcMcuqPr6g18L5a5TjetFupeV8iA+sXhU3B3HlKWC4gskCyIuAJNBmlI5j5SqA=")
+                        .build()
+                )
+                .execute()) {
+            document = Jsoup.parse(resp.body().string());
         } catch (IOException e) {
             Console.error(e);
         }

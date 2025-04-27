@@ -12,6 +12,8 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
+import okhttp3.Response;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -44,8 +46,8 @@ public class TocParser extends Source {
      */
     @SneakyThrows
     public List<Chapter> parse(String url, int start, int end) {
-        Rule.Book ruleBook = this.rule.getBook();
         Rule.Toc ruleToc = this.rule.getToc();
+        Rule.Book ruleBook = this.rule.getBook();
 
         // 目录和详情不在同一页面
         if (StrUtil.isNotEmpty(ruleToc.getUrl())) {
@@ -55,9 +57,11 @@ public class TocParser extends Source {
         // 目录分页 url，需要对 url 进行排序，原因是首个页面不一定是 select 的第一个 option
         Set<String> urls = new TreeSet<>();
         urls.add(url);
-        Document document = jsoup(url)
-                .timeout(ruleToc.getTimeout())
-                .get();
+
+        Document document;
+        try (Response resp = request(url)) {
+            document = Jsoup.parse(resp.body().string());
+        }
 
         if (ruleToc.isPagination()) {
             extractPaginationUrls(urls, document, ruleToc);
@@ -86,9 +90,11 @@ public class TocParser extends Source {
             if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
             nextUrl = CrawlUtils.normalizeUrl(nextUrl, this.rule.getUrl());
             urls.add(nextUrl);
-            document = jsoup(nextUrl)
-                    .timeout(r.getTimeout())
-                    .get();
+
+            try (Response resp = request(nextUrl)) {
+                document = Jsoup.parse(resp.body().string());
+            }
+
             Thread.sleep(CrawlUtils.randomInterval(config));
         }
     }
@@ -101,10 +107,12 @@ public class TocParser extends Source {
         int orderNumber = 1;
         int offset = r.getOffset() != null ? r.getOffset() : 0;
 
-        for (String s : urls) {
-            Document document = jsoup(s)
-                    .timeout(r.getTimeout())
-                    .get();
+        for (String url : urls) {
+            Document document;
+            try (Response resp = request(url)) {
+                document = Jsoup.parse(resp.body().string());
+            }
+
             // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 性能更好
             List<Element> elements = JsoupUtils.select(document, r.getResult());
             if (offset != 0) {

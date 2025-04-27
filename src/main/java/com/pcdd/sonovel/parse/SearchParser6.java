@@ -2,13 +2,9 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HtmlUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
@@ -19,6 +15,8 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,7 +25,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 书源 6 搜索特殊处理
@@ -45,21 +42,11 @@ public class SearchParser6 extends Source {
         Rule.Search r = this.rule.getSearch();
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
         Object key = ScriptUtil.invoke(js, "getParamB", keyword);
-        String param = r.getData().formatted(keyword, key.toString());
-        Map<String, String> map = JSONUtil.toBean(param, new TypeReference<>() {
-        }, true);
 
-        HttpRequest req = HttpRequest
-                .get(this.rule.getUrl())
-                .timeout(r.getTimeout())
-                .header("Referer", r.getUrl())
-                .formStr(map);
-        if (config.getProxyEnabled() == 1) {
-            req.setHttpProxy(config.getProxyHost(), config.getProxyPort());
-        }
-
-        try (HttpResponse resp = req.execute()) {
-            String body = resp.body();
+        try (Response resp = request(new Request.Builder()
+                .url(this.rule.getUrl().formatted(keyword, key.toString()))
+                .addHeader("Referer", r.getUrl()))) {
+            String body = resp.body().string();
             String s = UnicodeUtil.toString(body);
             String s2 = HtmlUtil.unescape(s)
                     .replace("\\r", "")

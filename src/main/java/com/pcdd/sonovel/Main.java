@@ -14,7 +14,6 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -46,7 +45,6 @@ public class Main {
         }
         // 关闭 hutool 日志
         ConsoleLog.setLevel(Level.OFF);
-        JsoupUtils.trustAllSSL();
     }
 
     private static AppConfig config = ConfigUtils.config();
