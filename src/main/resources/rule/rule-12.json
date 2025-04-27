@@ -7,9 +7,8 @@
   "language": "zh_CN",
   "needProxy": true,
   "search": {
-    "url": "https://www.deqixs.com/tag/",
+    "url": "https://www.deqixs.com/tag/?key=%s",
     "method": "get",
-    "data": "{key: %s}",
     "result": ".container > div",
     "bookName": "div > h3 > a",
     "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",

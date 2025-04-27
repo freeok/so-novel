@@ -9,7 +9,6 @@
     "url": "https://www.22biqu.com/ss/",
     "method": "post",
     "data": "{searchkey: %s, Submit: 搜索}",
-    "cookies": "{}",
     "result": "body > div.container > div > div > ul > li",
     "bookName": "span.s2 > a",
     "author": "span.s4",
