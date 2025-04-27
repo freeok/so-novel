@@ -1,7 +1,5 @@
 package com.pcdd.sonovel.util;
 
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
@@ -18,15 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @UtilityClass
 public class CrawlUtils {
-
-    // 有的 href 是相对路径，需要拼接为完整路径
-    public String normalizeUrl(String s, String host) {
-        if (s == null) return null;
-
-        if (s.matches("^http(s)?://.*")) return s;
-
-        return URLUtil.normalize(Validator.isUrl(s) ? s : host + s, true, true);
-    }
 
     // 构建 POST Body
     public static RequestBody buildData(String jsonStr, String... args) {

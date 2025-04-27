@@ -54,13 +54,18 @@ public class TocParser extends Source {
             String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
             url = ruleToc.getUrl().formatted(id);
         }
+        // 非 / 开头的 path 需设置 baseUri
+        if (StrUtil.isNotEmpty(ruleToc.getBaseUri())) {
+            String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
+            ruleToc.setBaseUri(ruleToc.getBaseUri().formatted(id));
+        }
         // 目录分页 url，需要对 url 进行排序，原因是首个页面不一定是 select 的第一个 option
         Set<String> urls = new TreeSet<>();
         urls.add(url);
 
         Document document;
         try (Response resp = request(url)) {
-            document = Jsoup.parse(resp.body().string());
+            document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
         }
 
         if (ruleToc.isPagination()) {
@@ -75,10 +80,16 @@ public class TocParser extends Source {
         Elements elements = JsoupUtils.select(document, r.getNextPage());
         // 一次性获取分页 URL（下拉菜单）
         if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
-            List<String> list = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
-                    ? elements.eachAttr(ATTR_VALUE.getValue())
-                    : elements.eachAttr(ATTR_HREF.getValue());
-            list.forEach(s -> urls.add(CrawlUtils.normalizeUrl(s, this.rule.getUrl())));
+            String attrKey = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
+                    ? ATTR_VALUE.getValue()
+                    : ATTR_HREF.getValue();
+
+            List<String> list = elements.stream()
+                    .map(el -> el.absUrl(attrKey))
+                    .toList();
+
+            urls.addAll(list);
+
             return;
         }
         // 以下代码覆盖率可能为 0，因为分页的目录基本全都是通过下拉菜单一次性获取的
@@ -88,11 +99,10 @@ public class TocParser extends Source {
                     .filter(StrUtil::isNotEmpty)
                     .orElse(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_VALUE));
             if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
-            nextUrl = CrawlUtils.normalizeUrl(nextUrl, this.rule.getUrl());
             urls.add(nextUrl);
 
             try (Response resp = request(nextUrl)) {
-                document = Jsoup.parse(resp.body().string());
+                document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
             Thread.sleep(CrawlUtils.randomInterval(config));
@@ -110,7 +120,7 @@ public class TocParser extends Source {
         for (String url : urls) {
             Document document;
             try (Response resp = request(url)) {
-                document = Jsoup.parse(resp.body().string());
+                document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
             // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 性能更好
@@ -153,7 +163,8 @@ public class TocParser extends Source {
         String url = JsoupUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF);
         toc.add(Chapter.builder()
                 .title(el.text())
-                .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
+                .url(url)
+                // .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
                 .order(order)
                 .build());
     }

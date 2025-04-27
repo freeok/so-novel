@@ -51,7 +51,7 @@ class BookSourceTest {
     @DisplayName("测试直连书源")
     @ParameterizedTest
     @CsvSource({
-            // "1, http://www.xbiqugu.la/130/130509/",
+            "1, http://www.xbiqugu.la/130/130509/",
             "2, https://www.shuhaige.net/199178/",
             "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",
@@ -65,7 +65,6 @@ class BookSourceTest {
             "14, https://www.luegeng.com/book186856/",
             "15, https://www.96dushu.com/book/344921/",
             "17, http://www.81zwwww.com/90_90170/",
-            "18, http://www.ujxsw.net/book/107612/",
             "18, http://www.ujxsw.net/book/107612/",
             "19, http://www.yeudusk.com/book/1322535/",
             "20, https://www.wxsy.net/novel/1803/",
@@ -110,7 +109,7 @@ class BookSourceTest {
             Console.log("\"{}\"搜索结果为空", keyword);
         }
         if (!list.isEmpty()) {
-            Console.log("点击此 URL 确保首条搜索结果访问有效: {}", CollUtil.getFirst(list).getUrl());
+            Console.log("点击此 URL 检查首条搜索结果有效性: {}", CollUtil.getFirst(list).getUrl());
         }
         new SearchParser(config).printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
