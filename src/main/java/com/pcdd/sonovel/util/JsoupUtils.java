@@ -103,6 +103,8 @@ public class JsoupUtils {
     private String getContentByType(Object obj, ContentType contentType) {
         if (obj instanceof Element el) {
             String href = el.attr(ATTR_HREF.getValue());
+            String absUrl = el.absUrl(ATTR_HREF.getValue());
+
             return switch (contentType) {
                 case TEXT -> el.text();
                 case HTML -> el.html();
@@ -110,7 +112,8 @@ public class JsoupUtils {
                 // 如果href是完整的url，jsoup absUrl会返回错误的链接（包含两个http）
                 case ATTR_HREF -> StrUtil.startWithAny(href, "https://", "http://", "/")
                         ? href
-                        : el.absUrl(ATTR_HREF.getValue());
+                        // : StrUtil.isBlank(absUrl) ? href : absUrl;
+                        : absUrl;
                 case ATTR_CONTENT -> el.attr(ATTR_CONTENT.getValue());
                 case ATTR_VALUE -> el.attr(ATTR_VALUE.getValue());
             };
@@ -124,6 +127,7 @@ public class JsoupUtils {
                 case ATTR_VALUE -> els.attr(ATTR_VALUE.getValue());
             };
         }
+
         return "";
     }
 

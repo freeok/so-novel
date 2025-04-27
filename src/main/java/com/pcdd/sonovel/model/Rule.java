@@ -17,6 +17,7 @@ public class Rule {
     private String language;
     private boolean needProxy;
     private boolean disabled;
+    private boolean ignoreSsl;
 
     private Search search;
     private Book book;
