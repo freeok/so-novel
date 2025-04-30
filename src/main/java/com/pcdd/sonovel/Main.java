@@ -14,6 +14,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.EnvUtils;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -39,12 +40,12 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class Main {
 
     static {
-        if (System.getProperty("env", "dev").equalsIgnoreCase("prod")) {
+        // 关闭 hutool 日志
+        ConsoleLog.setLevel(Level.OFF);
+        if (EnvUtils.isProd()) {
             // 关闭 openhtmltopdf 日志
             XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.OFF));
         }
-        // 关闭 hutool 日志
-        ConsoleLog.setLevel(Level.OFF);
     }
 
     private static AppConfig config = ConfigUtils.config();

@@ -83,12 +83,7 @@ public class ConfigUtils {
     }
 
     public String resolveConfigFileName() {
-        String env = System.getProperty("env", "dev").toLowerCase();
-        return switch (env) {
-            case "dev" -> "config-dev.ini";
-            case "test" -> "config-test.ini";
-            default -> "config.ini";
-        };
+        return EnvUtils.isDev() ? "config-dev.ini" : "config.ini";
     }
 
 }

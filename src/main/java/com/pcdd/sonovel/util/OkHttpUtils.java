@@ -41,7 +41,9 @@ public class OkHttpUtils {
      */
     @SneakyThrows
     public OkHttpClient createClient(AppConfig config, boolean unsafe) {
-        Console.log("OkHttpClient#createClient");
+        if (EnvUtils.isDev()) {
+            Console.log("com.pcdd.sonovel.util.OkHttpUtils # " + "createClient");
+        }
 
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                 .tlsVersions(TlsVersion.TLS_1_2) // 强制使用 TLS 1.2
