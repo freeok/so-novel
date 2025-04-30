@@ -3,6 +3,7 @@ package com.pcdd.sonovel.source;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
@@ -73,11 +74,11 @@ class BookSourceTest {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("zhttty");
+        searchParse("风消逝");
         bookParse();
         tocParse();
         chapterParse();
-        // chapterBatchParse(100, 300);
+        // chapterBatchParse(1, 101);
     }
 
     @DisplayName("测试代理书源")
@@ -91,7 +92,7 @@ class BookSourceTest {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("zhttty");
+        searchParse("风消逝");
         bookParse();
         tocParse();
         chapterParse();
@@ -151,7 +152,7 @@ class BookSourceTest {
     @SneakyThrows
     public void chapterBatchParse(int start, int end) {
         Console.log("\n{} START chapterBatchParse {}", DIVIDER, DIVIDER);
-        ExecutorService threadPool = Executors.newFixedThreadPool(RuntimeUtil.getProcessorCount());
+        ExecutorService threadPool = Executors.newFixedThreadPool(RuntimeUtil.getProcessorCount() * 5);
         CountDownLatch latch = new CountDownLatch(end - start);
         Source source = new Source(config.getSourceId());
 
@@ -160,8 +161,20 @@ class BookSourceTest {
                 Chapter o = Chapter.builder().url(chapter.getUrl()).build();
                 Chapter beforeFiltration = new ChapterParser(config).parse(o);
                 Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
-                ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
-                Console.log("✅ " + o.getTitle());
+                Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
+                if (StrUtil.isAllNotEmpty(res.getTitle(), res.getContent())) {
+                    Console.log("✅ " + res.getTitle());
+                } else {
+                    StringBuilder errMsg = new StringBuilder("❌ %s %s ".formatted(res.getTitle(), res.getUrl()));
+                    if (StrUtil.isEmpty(res.getTitle())) {
+                        errMsg.append("章节标题为空 ");
+                    }
+                    if (StrUtil.isEmpty(res.getContent())) {
+                        errMsg.append("章节正文为空");
+                    }
+                    Console.log(errMsg);
+                }
+
                 latch.countDown();
             });
         }
