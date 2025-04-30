@@ -61,19 +61,16 @@ public class Source {
         Rule.Toc ruleToc = rule.getToc();
         Rule.Chapter ruleChapter = rule.getChapter();
 
-        if (StrUtil.isEmpty(ruleSearch.getBaseUri())) {
+        if (ruleSearch != null && StrUtil.isEmpty(ruleSearch.getBaseUri())) {
             ruleSearch.setBaseUri(rule.getUrl());
         }
-        if (StrUtil.isEmpty(ruleBook.getBaseUri())) {
+        if (ruleBook != null && StrUtil.isEmpty(ruleBook.getBaseUri())) {
             ruleBook.setBaseUri(rule.getUrl());
         }
-        if (StrUtil.isEmpty(ruleToc.getBaseUri())) {
+        if (ruleToc != null && StrUtil.isEmpty(ruleToc.getBaseUri())) {
             ruleToc.setBaseUri(rule.getUrl());
         }
-        if (StrUtil.isEmpty(ruleToc.getBaseUri())) {
-            ruleToc.setBaseUri(rule.getUrl());
-        }
-        if (StrUtil.isEmpty(ruleChapter.getBaseUri())) {
+        if (ruleChapter != null && StrUtil.isEmpty(ruleChapter.getBaseUri())) {
             ruleChapter.setBaseUri(rule.getUrl());
         }
 
