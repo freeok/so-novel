@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -25,10 +26,8 @@ public class PdfMergeHandler implements PostProcessingHandler {
     @Override
     public void handle(Book book, File saveDir) {
         // 获取字体文件
-        String fontPath = System.getProperty("env", "dev").equalsIgnoreCase("dev")
-                ? "bundle/fonts/PingFangSC-Regular.ttf"
-                : "fonts/PingFangSC-Regular.ttf";
-        File fontFile = new File(fontPath);
+        String basePath = EnvUtils.isDev() ? "bundle/fonts/" : "fonts/";
+        File fontFile = new File(basePath + "PingFangSC-Regular.ttf");
 
         // 获取 chapter_html 目录下所有 HTML 文件并合并内容
         String htmlContent = getHtmlContentFromDirectory(saveDir);
