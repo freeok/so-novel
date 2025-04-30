@@ -5,6 +5,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.util.BookContext;
+import com.pcdd.sonovel.util.EnvUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -20,7 +22,8 @@ public class CrawlerPostHandler {
     private final AppConfig config;
 
     @SneakyThrows
-    public void handle(Book book, File saveDir) {
+    public void handle(File saveDir) {
+        Book book = BookContext.get();
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
@@ -40,7 +43,10 @@ public class CrawlerPostHandler {
         }
 
         PostHandlerFactory.getHandler(extName, config).handle(book, saveDir);
-        // FileUtil.del(saveDir);
+
+        if (EnvUtils.isProd()) {
+            FileUtil.del(saveDir);
+        }
     }
 
 }

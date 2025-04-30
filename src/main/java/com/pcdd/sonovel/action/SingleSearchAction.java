@@ -48,8 +48,10 @@ public class SingleSearchAction {
         TocParser tocParser = new TocParser(config);
         List<Chapter> toc = tocParser.parse(sr.getUrl());
         // tocParser.shutdown();
+
         Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
-        double res = new Crawler(config).crawl(sr, toc);
+        // 重复请求详情页
+        double res = new Crawler(config).crawl(sr.getUrl(), toc);
         Console.log("<== 完成！总耗时 {} s", NumberUtil.round(res, 2));
     }
 
@@ -73,8 +75,6 @@ public class SingleSearchAction {
     @SneakyThrows
     public void execute() {
         Source source = new Source(config.getSourceId());
-
-        // URL 下载的小说，rule.json 删除 search
         if (source.rule.getSearch() == null) {
             downloadFromUrl();
         } else {

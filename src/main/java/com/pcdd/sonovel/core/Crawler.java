@@ -14,6 +14,7 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
+import com.pcdd.sonovel.util.BookContext;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.SneakyThrows;
 
@@ -70,19 +71,16 @@ public class Crawler {
     /**
      * 爬取小说
      *
-     * @param sr  小说详情
-     * @param toc 小说目录
+     * @param bookUrl 详情页链接
+     * @param toc     章节目录
      */
     @SneakyThrows
-    public double crawl(SearchResult sr, List<Chapter> toc) {
-        // 小说详情页url
-        String url = sr.getUrl();
-        String bookName = sr.getBookName();
-        String author = sr.getAuthor();
-        Book book = new BookParser(config).parse(url);
+    public double crawl(String bookUrl, List<Chapter> toc) {
+        Book book = new BookParser(config).parse(bookUrl);
+        BookContext.set(book);
 
         // 下载临时目录名格式：书名(作者) EXT
-        bookDir = FileUtils.sanitizeFileName("%s(%s) %s".formatted(bookName, author, config.getExtName().toUpperCase()));
+        bookDir = FileUtils.sanitizeFileName("%s(%s) %s".formatted(book.getBookName(), book.getAuthor(), config.getExtName().toUpperCase()));
         // 必须 new File()，否则无法使用 . 和 ..
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
@@ -101,22 +99,24 @@ public class Crawler {
         // 阻塞主线程，用于计时
         CountDownLatch latch = new CountDownLatch(toc.size());
 
-        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", bookName, author, toc.size(), autoThreads);
+        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
 
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
-            createChapterFile(chapterParser.parse(item, latch, sr));
+            createChapterFile(chapterParser.parse(item, latch));
             Console.log("<== 待下载章节数：{}", latch.getCount());
         }));
 
-        // 阻塞主线程，等待章节全部下载完毕
+        // 阻塞主线程，等待全部章节下载完毕
         latch.await();
-        executor.shutdown();
-        new CrawlerPostHandler(config).handle(book, dir);
+        new CrawlerPostHandler(config).handle(dir);
         stopWatch.stop();
+
+        executor.shutdown();
+        BookContext.clear();
 
         return stopWatch.getTotalTimeSeconds();
     }
