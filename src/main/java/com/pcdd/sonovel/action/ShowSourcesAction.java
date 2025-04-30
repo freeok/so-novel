@@ -5,10 +5,7 @@ import cn.hutool.core.lang.ConsoleTable;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
-import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.OkHttpUtils;
-import com.pcdd.sonovel.util.RandomUA;
-import com.pcdd.sonovel.util.SourceUtils;
+import com.pcdd.sonovel.util.*;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,7 +78,7 @@ public class ShowSourcesAction {
                 } catch (Exception e) {
                     source.setDelay(-1);
                     source.setCode(-1);
-                    if (System.getProperty("env").equalsIgnoreCase("dev")) {
+                    if (EnvUtils.isDev()) {
                         Console.error(render("书源 {} 【{}】 测试延迟异常：{}", "red"), r.getId(), r.getName(), e.getMessage());
                     }
                 }
