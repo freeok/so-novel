@@ -140,11 +140,13 @@ class BookSourceTest {
 
     public void chapterParse() {
         Console.log("\n{} START chapterParse {}", DIVIDER, DIVIDER);
+
         Chapter chapter = Chapter.builder().url(chapterUrl).build();
         Chapter beforeFiltration = new ChapterParser(config).parse(chapter);
         Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
-        Source source = new Source(config.getSourceId());
-        ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
+
+        // Source source = new Source(config.getSourceId());
+        // Chapter converted = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
         Console.log(afterFiltration.getContent());
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
     }

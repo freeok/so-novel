@@ -29,6 +29,7 @@ public class ChapterConverter {
 
     public Chapter convert(Chapter chapter) {
         String extName = config.getExtName();
+        // 转换前过滤
         String filteredContent = new ChapterFilter(config).filter(chapter);
         String content = new ChapterFormatter(config).format(filteredContent);
 
@@ -46,6 +47,7 @@ public class ChapterConverter {
 
             content = chapter.getTitle() + "\n".repeat(2) + result;
         }
+
         if (extName.matches("(?i)^(epub|html|pdf)$")) {
             chapter.setContent(content);
             content = templateRender(chapter, extName);

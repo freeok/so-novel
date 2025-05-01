@@ -93,6 +93,8 @@ public class Rule {
         private String nextPage;
         // 位于 JS 中的下一页链接
         private String nextPageInJs;
+        // 下一章链接的正则
+        private String nextChapterLink;
     }
 
 }
