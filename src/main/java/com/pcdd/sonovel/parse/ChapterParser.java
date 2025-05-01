@@ -50,7 +50,8 @@ public class ChapterParser extends Source {
         }
 
         chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
-        chapter.setContent(fetchContent(chapter.getUrl(), RandomUtil.randomInt(100, 200)));
+        String content = fetchContent(chapter.getUrl(), RandomUtil.randomInt(100, 200));
+        chapter.setContent(content);
 
         return chapter;
     }
@@ -119,66 +120,81 @@ public class ChapterParser extends Source {
      * 爬取正文内容
      *
      * @param url      章节 url
-     * @param interval 爬取间隔
+     * @param interval 爬取间隔（毫秒）
      */
     @SneakyThrows
-    private String fetchContent(String url, long interval) {
-        Document document;
-        Rule.Chapter r = this.rule.getChapter();
+    public String fetchContent(String url, long interval) {
+        Rule.Chapter r = rule.getChapter();
+        return r.isPagination()
+                ? fetchPaginatedContent(url, interval, r)
+                : fetchSinglePageContent(url, interval, r);
+    }
 
-        // 章节不分页，只请求一次
-        if (!r.isPagination()) {
-            try (Response resp = request(url)) {
-                document = Jsoup.parse(resp.body().string(), r.getBaseUri());
-            }
+    @SneakyThrows
+    private String fetchSinglePageContent(String url, long interval, Rule.Chapter r) {
+        try (Response resp = request(url)) {
+            Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
 
-            Elements contentEl = JsoupUtils.select(document, r.getContent());
             // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
+            Elements contentEl = JsoupUtils.select(doc, r.getContent());
             for (Element el : contentEl.select("*")) {
                 el.clearAttributes();
             }
 
-            Thread.sleep(interval);
-
             return JsoupUtils.invokeJs(r.getContent(), contentEl.html());
         }
+    }
 
-        String nextUrl = url;
+    @SneakyThrows
+    private String fetchPaginatedContent(String startUrl, long interval, Rule.Chapter r) {
+        String nextUrl = startUrl;
         StringBuilder contentBuilder = new StringBuilder();
-        // 章节分页
+
         while (true) {
+            Document doc;
             try (Response resp = request(nextUrl)) {
-                document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+                doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
-            contentBuilder.append(JsoupUtils.selectAndInvokeJs(document, r.getContent(), ContentType.HTML));
-
+            contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
             // 获取下一页按钮元素
-            Elements nextEls = JsoupUtils.select(document, r.getNextPage());
-
-            // 从 JS 获取下一页链接
-            if (r.getNextPageInJs() != null) {
-                nextUrl = JsoupUtils.selectAndInvokeJs(document, r.getNextPageInJs(), ContentType.HTML);
-            } else { // 从按钮获取下一页链接
-                // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
-                if (StrUtil.isNotEmpty(nextEls.toString())) {
-                    Element first = nextEls.first();
-                    nextUrl = first.absUrl("href");
-                } else {
-                    Console.error("分页章节正文获取为空，可能被限流！出错链接：{}", nextUrl);
-                    break;
-                }
+            Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
+            String candidateNext = resolveNextUrl(doc, nextEls, r);
+            if (isLastPage(candidateNext, nextEls, r)) {
+                break;
             }
 
-            // 正则判断是否为章节最后一页
-            boolean b1 = r.getNextChapterLink() != null && nextUrl.matches(r.getNextChapterLink());
-            // 通用规则，大多数分页的 url 以 "_个位数字.html" 结尾。&& 部分网站会用“下一章”代替“下一页”
-            boolean b2 = !nextUrl.matches(".*[-_]\\d\\.html") && nextEls.text().matches(".*(下一章|没有了|>>|书末页).*");
-            if (b1 || b2) break;
-
+            nextUrl = candidateNext;
             Thread.sleep(interval);
         }
 
         return contentBuilder.toString();
+    }
+
+    private String resolveNextUrl(Document doc, Elements nextEls, Rule.Chapter r) {
+        // 从 JS 获取下一页链接
+        if (r.getNextPageInJs() != null) {
+            return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
+        }
+        // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
+        if (nextEls.isEmpty()) {
+            Console.error("分页章节正文获取为空，可能被限流！出错链接：{}", doc.baseUri());
+            return null;
+        }
+        // 从按钮获取下一页链接
+        return nextEls.first().absUrl("href");
+    }
+
+    private boolean isLastPage(String nextUrl, Elements nextEls, Rule.Chapter r) {
+        if (nextUrl == null) {
+            return true;
+        }
+
+        // 正则判断是否为章节最后一页
+        boolean endByChapterRule = r.getNextChapterLink() != null && nextUrl.matches(r.getNextChapterLink());
+        // 通用规则，大多数分页的 url 以 "_个位数字.html" 结尾。&& 部分网站会用“下一章”代替“下一页”
+        boolean genericEnd = !nextUrl.matches(".*[-_]\\d\\.html") && nextEls.text().matches(".*(下一章|没有了|>>|书末页).*");
+
+        return endByChapterRule || genericEnd;
     }
 
 }
