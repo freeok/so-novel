@@ -98,11 +98,11 @@
             <artifactId>hanlp</artifactId>
             <version>portable-1.8.6</version>
         </dependency>
-        <!-- JS 引擎 -->
+        <!-- 现代 JS 引擎 -->
         <dependency>
-            <groupId>org.openjdk.nashorn</groupId>
-            <artifactId>nashorn-core</artifactId>
-            <version>15.6</version>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <version>23.0.6</version>
         </dependency>
         <dependency>
             <groupId>io.github.openhtmltopdf</groupId>
