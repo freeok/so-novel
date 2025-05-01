@@ -26,7 +26,7 @@
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": ".all > ul > li > a"
+    "item": ".all > ul > li > a"
   },
   "chapter": {
     "title": ".active",

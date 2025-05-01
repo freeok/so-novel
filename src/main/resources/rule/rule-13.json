@@ -28,7 +28,7 @@
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": ".row.row-section > div > div:nth-child(4) > ul > li > a",
+    "item": ".row.row-section > div > div:nth-child(4) > ul > li > a",
     "pagination": true,
     "nextPage": "#indexselect > option"
   },
