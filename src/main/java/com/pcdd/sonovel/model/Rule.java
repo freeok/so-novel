@@ -67,6 +67,7 @@ public class Rule {
         private String baseUri;
         private Integer timeout;
         private String url;
+        private String body;
         private String result;
         private Integer offset;
         private boolean isDesc;
