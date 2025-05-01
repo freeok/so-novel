@@ -1,7 +1,6 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.model.ContentType;
 import lombok.experimental.UtilityClass;
 import org.jsoup.nodes.Element;
@@ -35,17 +34,14 @@ public class JsoupUtils {
         if (StrUtil.isEmpty(query)) {
             return input;
         }
+
         // @js:
         String[] split = query.split(JS_SEPARATOR);
         if (split.length == 1) {
             return input;
         }
-        return (String) ScriptUtil.invoke("""
-                function func(r) {
-                    %s
-                    return r;
-                }
-                """.formatted(split[1]), "func", input);
+
+        return JsCaller.call(split[1], input);
     }
 
     public String selectAndInvokeJs(Element el, String query) {
