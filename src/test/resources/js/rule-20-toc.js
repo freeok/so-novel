@@ -1,3 +1,4 @@
+// 必须是 jsoup 的 document，而不是网页源代码
 r = `
 <!doctype html>
 <html lang="zh">
@@ -338,29 +339,17 @@ r = `
 </html>
 `;
 
-// 计算 nth-child 和 nth-last-child 的次数
-var childRegex = /\.section-list\.ycxsid>li:nth-child\(\d+\){display:none}/g;
-var lastChildRegex = /\.section-list\.ycxsid>li:nth-last-child\(\d+\){display:none}/g;
-var childMatches = [];
-var m;
-while ((m = childRegex.exec(r)) !== null) {
-  childMatches.push(m[0]);
-}
-var lastChildMatches = [];
-while ((m = lastChildRegex.exec(r)) !== null) {
-  lastChildMatches.push(m[0]);
-}
-var preHiddenCount = childMatches.length;
-var afterHiddenCount = lastChildMatches.length;
+// ES 6
+childRegex = /\.section-list\.ycxsid>li:nth-child\(\d+\){display:none}/g;
+lastChildRegex = /\.section-list\.ycxsid>li:nth-last-child\(\d+\){display:none}/g;
+preHiddenCount = [...r.matchAll(childRegex)].length;
+afterHiddenCount = [...r.matchAll(lastChildRegex)].length;
+r = r.replace(/<ul[^>]*class="[^"]*\bsection-list\b[^"]*\bycxsid\b[^"]*"[^>]*>([\s\S]*?)<\/ul>/g, (match, liContent) => {
+  const lis = liContent.match(/<li[\s\S]*?<\/li>/g) || [];
+  const newLis = lis.slice(preHiddenCount, lis.length - afterHiddenCount);
+  return match.replace(liContent, newLis.join(''))
+});
 
-// 替换ul>li
-r = r.replace(/<ul[^>]*class="[^"]*\bsection-list\b[^"]*\bycxsid\b[^"]*"[^>]*>([\s\S]*?)<\/ul>/g,
-  function (match, liContent) {
-    var lis = liContent.match(/<li[\s\S]*?<\/li>/g) || [];
-    var newLis = lis.slice(preHiddenCount, lis.length - afterHiddenCount);
-    return match.replace(liContent, newLis.join(''));
-  }
-);
-
-console.log(preHiddenCount)
-console.log(afterHiddenCount)
+console.log("nth-child count:", preHiddenCount);
+console.log("nth-last-child count:", afterHiddenCount);
+console.log(r)
