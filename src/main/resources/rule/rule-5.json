@@ -26,7 +26,7 @@
   },
   "toc": {
     "url": "https://www.tianxibook.com/xiaoshuo/%s/",
-    "result": "#content_1 > a",
+    "item": "#content_1 > a",
     "pagination": true,
     "nextPage": "#indexselect > option"
   },

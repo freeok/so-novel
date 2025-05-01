@@ -28,7 +28,7 @@
   },
   "toc": {
     "url": "http://www.yeudusk.com/html/0/%s/",
-    "result": "ul > li > a"
+    "item": "ul > li > a"
   },
   "chapter": {
     "title": "#cont > h1",

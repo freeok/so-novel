@@ -29,7 +29,7 @@
   },
   "toc": {
     "url": "http://www.ujxsw.net/read/%s/",
-    "result": "#readerlist > ul > li > a"
+    "item": "#readerlist > ul > li > a"
   },
   "chapter": {
     "title": "#mlfy_main_text > h3",

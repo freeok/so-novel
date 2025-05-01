@@ -30,7 +30,7 @@
   },
   "toc": {
     "url": "https://www.dxmwx.org/chapter/%s.html",
-    "result": "div:nth-child(2n+5) > span > a"
+    "item": "div:nth-child(2n+5) > span > a"
   },
   "chapter": {
     "title": "#ChapterTitle",

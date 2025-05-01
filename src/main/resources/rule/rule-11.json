@@ -32,7 +32,7 @@
   },
   "toc": {
     "url": "https://www.0xs.net/list/%s.html",
-    "result": ".catalog > div > ul > ul > li > a"
+    "item": ".catalog > div > ul > ul > li > a"
   },
   "chapter": {
     "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",

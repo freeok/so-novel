@@ -23,7 +23,7 @@
     "coverUrl": "meta[property=\"og:image\"]"
   },
   "toc": {
-    "result": "#list > dl > dd > a",
+    "item": "#list > dl > dd > a",
     "offset": 0
   },
   "chapter": {

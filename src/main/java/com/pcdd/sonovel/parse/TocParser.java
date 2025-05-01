@@ -124,15 +124,15 @@ public class TocParser extends Source {
                 document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
-            // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 性能更好
+            // TODO rule.toc.item 实现 JS 语法，在此调用比 addChapter 性能更好
             List<Element> elements;
             // 处理 ul
-            if (StrUtil.isNotEmpty(r.getBody())) {
-                String tocHtml = JsoupUtils.selectAndInvokeJs(document, r.getBody(), ContentType.HTML);
+            if (StrUtil.isNotEmpty(r.getList())) {
+                String tocHtml = JsoupUtils.selectAndInvokeJs(document, r.getList(), ContentType.HTML);
                 Document tocDocument = Jsoup.parse(tocHtml);
-                elements = JsoupUtils.select(tocDocument, r.getResult());
+                elements = JsoupUtils.select(tocDocument, r.getItem());
             } else { // 处理 ul > li > a
-                elements = JsoupUtils.select(document, r.getResult());
+                elements = JsoupUtils.select(document, r.getItem());
             }
 
             if (offset != 0) {

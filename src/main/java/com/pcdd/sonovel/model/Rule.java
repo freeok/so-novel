@@ -67,8 +67,8 @@ public class Rule {
         private String baseUri;
         private Integer timeout;
         private String url;
-        private String body;
-        private String result;
+        private String list;
+        private String item;
         private Integer offset;
         private boolean isDesc;
         // 目录是否分页
