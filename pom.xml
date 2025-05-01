@@ -103,6 +103,7 @@
             <groupId>org.graalvm.js</groupId>
             <artifactId>js</artifactId>
             <version>23.0.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.openhtmltopdf</groupId>
