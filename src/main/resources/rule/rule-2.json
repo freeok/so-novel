@@ -33,7 +33,7 @@
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": "#list > dl > dd > a",
+    "item": "#list > dl > dd > a",
     "offset": 12
   },
   "chapter": {

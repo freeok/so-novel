@@ -25,7 +25,7 @@
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
-    "result": "#list > dl > dd > a",
+    "item": "#list > dl > dd > a",
     "offset": 12
   },
   "chapter": {
