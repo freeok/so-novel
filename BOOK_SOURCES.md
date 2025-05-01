@@ -14,7 +14,7 @@
 | 8      | [大熊猫文学](https://www.dxmwx.org/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 9      | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 10     | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      | ✅    | 暂无                                                                                 |
-| 11     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP                                                               |
+| 11     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP且获取不到正文                                                        |
 | 12     | [得奇小说网](https://www.deqixs.com/)     | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
 | ~~13~~ | ~~[新笔趣阁6](https://www.xbqg06.com/)~~ | ✅     | ✅      | ✅    | 有 bug，暂时禁用                                                                         |
 | 14     | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
@@ -23,7 +23,7 @@
 | 17     | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 18     | [悠久小说网](http://www.ujxsw.net/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
 | 19     | [阅读库](http://www.yeudusk.com/)       | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 20     | [顶点小说](https://www.wxsy.net/)        | ✅     | ✅      | ✅    | 章节页限流                                                                              |
+| 20     | [顶点小说](https://www.wxsy.net/)        | ✅     | ✅      | ✅    | 仅限大陆IP，搜索、详情、章节限流                                                                  |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）
