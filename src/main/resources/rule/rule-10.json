@@ -27,7 +27,7 @@
   },
   "toc": {
     "baseUri": "http://www.xbiquzw.net/%s/",
-    "result": "#list > dl > dd > a"
+    "item": "#list > dl > dd > a"
   },
   "chapter": {
     "baseUri": "",

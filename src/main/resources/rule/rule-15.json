@@ -32,7 +32,7 @@
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "result": "#chapterList > li > a"
+    "item": "#chapterList > li > a"
   },
   "chapter": {
     "title": "#mlfy_main_text > h1",

@@ -19,7 +19,7 @@
   },
   "toc": {
     "url": "https://69shuba.com/book/%s/",
-    "result": "#catalog > ul > li > a",
+    "item": "#catalog > ul > li > a",
     "isDesc": true
   },
   "chapter": {
