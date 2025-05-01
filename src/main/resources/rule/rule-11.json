@@ -2,7 +2,7 @@
   "id": 11,
   "url": "https://www.0xs.net/",
   "name": "零点小说",
-  "comment": "限流严重，爬取过快会永久封IP，发布页：https://www.cxysb.com/",
+  "comment": "章节限流，爬取过快会封IP，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”，发布页：https://www.cxysb.com/",
   "type": "html",
   "language": "zh_CN",
   "ignoreSsl": true,
@@ -38,9 +38,10 @@
     "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
     "content": ".content",
     "paragraphTagClosed": true,
-    "filterTxt": "【.+】小说免费阅读，请收藏.+【.+】|本章未完，点击.+继续阅读.*|\\(本章完\\)",
+    "filterTxt": "【[^】]+】小说免费阅读，请收藏[^【】]*【[^】]+】|本章未完，点击\\[下一页]继续阅读--|\\(本章完\\)",
     "filterTag": "",
     "pagination": true,
-    "nextPage": "#next@js:r=r.match(/https?:\\/\\/[a-zA-Z0-9.-]+\\/txt\\/\\d+\\/\\d+\\/\\d+\\.html/)?r:''"
+    "nextPage": "#next",
+    "nextChapterLink": "https://www\\.0xs\\.net/txt/\\d+/\\d+\\.html"
   }
 }
