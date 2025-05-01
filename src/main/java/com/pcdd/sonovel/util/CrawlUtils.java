@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.experimental.UtilityClass;
@@ -44,6 +45,11 @@ public class CrawlUtils {
         return ThreadLocalRandom.current().nextLong(
                 isRetry ? config.getRetryMinInterval() : config.getMinInterval(),
                 isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());
+    }
+
+    public String cleanInvisibleChars(String text) {
+        // 过滤：控制字符、格式控制符、私有区 PUA 字符 (导致中文乱码的根源)
+        return StrUtil.isEmpty(text) ? null : text.replaceAll("[\\p{C}\\p{Cf}\\p{Co}\\p{Zl}\\p{Zp}\\u200B\\uFEFF]", "");
     }
 
 }
