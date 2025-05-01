@@ -78,7 +78,7 @@ class BookSourceTest {
         bookParse();
         tocParse();
         chapterParse();
-        // chapterBatchParse(1, 101);
+        // chapterBatchParse(0, 100);
     }
 
     @DisplayName("测试代理书源")
@@ -163,7 +163,7 @@ class BookSourceTest {
                 Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
                 Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
                 if (StrUtil.isAllNotEmpty(res.getTitle(), res.getContent())) {
-                    Console.log("✅ " + res.getTitle());
+                    Console.log("✅ {}", res.getTitle());
                 } else {
                     StringBuilder errMsg = new StringBuilder("❌ %s %s ".formatted(res.getTitle(), res.getUrl()));
                     if (StrUtil.isEmpty(res.getTitle())) {

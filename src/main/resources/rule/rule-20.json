@@ -29,6 +29,7 @@
   },
   "toc": {
     "url": "https://www.wxsy.net/novel/%s/chapter_1.html",
+    "body": "/html@js:var childRegex=/\\.section-list\\.ycxsid>li:nth-child\\(\\d+\\){display:none}/g;var lastChildRegex=/\\.section-list\\.ycxsid>li:nth-last-child\\(\\d+\\){display:none}/g;var childMatches=[];var m;while((m=childRegex.exec(r))!==null){childMatches.push(m[0])}var lastChildMatches=[];while((m=lastChildRegex.exec(r))!==null){lastChildMatches.push(m[0])}var preHiddenCount=childMatches.length;var afterHiddenCount=lastChildMatches.length;r=r.replace(/<ul[^>]*class=\"[^\"]*\\bsection-list\\b[^\"]*\\bycxsid\\b[^\"]*\"[^>]*>([\\s\\S]*?)<\\/ul>/g,function(match,liContent){var lis=liContent.match(/<li[\\s\\S]*?<\\/li>/g)||[];var newLis=lis.slice(preHiddenCount,lis.length-afterHiddenCount);return match.replace(liContent,newLis.join(''))});",
     "result": ".biqunaicc > div:nth-child(2) > div > ul > li > a",
     "pagination": true,
     "nextPage": ".biqunaicc > div:nth-child(2) > div > div:nth-child(2) > select > option"

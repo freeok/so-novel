@@ -8,9 +8,11 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.util.TocList;
 import lombok.SneakyThrows;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
@@ -18,7 +20,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -112,7 +113,7 @@ public class TocParser extends Source {
     // TODO 优化，改为多线程
     @SneakyThrows
     private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
-        List<Chapter> toc = new ArrayList<>();
+        List<Chapter> toc = new TocList();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
         int offset = r.getOffset() != null ? r.getOffset() : 0;
@@ -124,7 +125,16 @@ public class TocParser extends Source {
             }
 
             // TODO rule.toc.result 实现 JS 语法，在此调用比 addChapter 性能更好
-            List<Element> elements = JsoupUtils.select(document, r.getResult());
+            List<Element> elements;
+            // 处理 ul
+            if (StrUtil.isNotEmpty(r.getBody())) {
+                String tocHtml = JsoupUtils.selectAndInvokeJs(document, r.getBody(), ContentType.HTML);
+                Document tocDocument = Jsoup.parse(tocHtml);
+                elements = JsoupUtils.select(tocDocument, r.getResult());
+            } else { // 处理 ul > li > a
+                elements = JsoupUtils.select(document, r.getResult());
+            }
+
             if (offset != 0) {
                 elements = adjustElementsByOffset(elements, offset);
             }
@@ -142,8 +152,7 @@ public class TocParser extends Source {
 
         // 不要根据章节名中的小写数字或大写数字对 urls 进行排序（此方法仍不可靠，因为某些章节名的数字不按顺序，例如番外 1）
 
-        // 根据章节名去重
-        return CollUtil.distinct(toc, Chapter::getTitle, false);
+        return toc;
     }
 
     private List<Element> adjustElementsByOffset(List<Element> elements, int offset) {
@@ -164,7 +173,6 @@ public class TocParser extends Source {
         toc.add(Chapter.builder()
                 .title(el.text())
                 .url(url)
-                // .url(CrawlUtils.normalizeUrl(url, this.rule.getUrl()))
                 .order(order)
                 .build());
     }
