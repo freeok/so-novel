@@ -27,7 +27,7 @@
     "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
   },
   "toc": {
-    "result": "#list > ul > li > a",
+    "item": "#list > ul > li > a",
     "offset": 12,
     "pagination": true,
     "nextPage": "#pages > .gr"

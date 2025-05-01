@@ -22,7 +22,7 @@
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
-    "result": "body > div.container.border3-2.mt8.mb20 > div.info-chapters.flex.flex-wrap > a"
+    "item": "body > div.container.border3-2.mt8.mb20 > div.info-chapters.flex.flex-wrap > a"
   },
   "chapter": {
     "title": ".reader-main > h1@js:r=r.replace(/（\\d+ \\/ \\d+）/, '');",

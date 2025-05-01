@@ -26,7 +26,7 @@
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
   },
   "toc": {
-    "result": "div:nth-child(4) > ul > li > a",
+    "item": "div:nth-child(4) > ul > li > a",
     "pagination": true,
     "nextPage": "#indexselect > option"
   },
