@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.util.CrawlUtils;
 
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ public class ChapterFilter extends Source {
      */
     public String filter(Chapter chapter) {
         return new FilterBuilder(chapter)
+                .filterInvisibleChars(true)
                 .filterEscape(true)
                 .filterAds(true)
                 .filterDuplicateTitle(true)
@@ -34,6 +36,7 @@ public class ChapterFilter extends Source {
     public class FilterBuilder {
         private final String title;
         private String content;
+        private boolean applyInvisibleCharsFilter;
         private boolean applyEscapeFilter;
         private boolean applyAdsFilter;
         private boolean applyDuplicateTitleFilter;
@@ -41,6 +44,14 @@ public class ChapterFilter extends Source {
         public FilterBuilder(Chapter chapter) {
             this.title = chapter.getTitle();
             this.content = chapter.getContent();
+        }
+
+        /**
+         * 是否启用不可见字符过滤
+         */
+        public FilterBuilder filterInvisibleChars(boolean apply) {
+            this.applyInvisibleCharsFilter = apply;
+            return this;
         }
 
         /**
@@ -71,6 +82,10 @@ public class ChapterFilter extends Source {
          * 构建最终过滤内容
          */
         public String build() {
+            if (applyInvisibleCharsFilter) {
+                this.content = CrawlUtils.cleanInvisibleChars(this.content);
+            }
+
             if (applyEscapeFilter) {
                 // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
                 this.content = this.content.replaceAll("&[^;]+;", "");
