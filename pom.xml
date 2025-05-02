@@ -98,12 +98,17 @@
             <artifactId>hanlp</artifactId>
             <version>portable-1.8.6</version>
         </dependency>
-        <!-- 现代 JS 引擎 -->
+        <!-- JS Runtime -->
         <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <version>23.0.6</version>
-            <scope>provided</scope>
+            <groupId>com.caoccao.javet</groupId>
+            <artifactId>javet</artifactId>
+            <version>4.1.3</version>
+        </dependency>
+        <!-- V8 引擎 -->
+        <dependency>
+            <groupId>com.caoccao.javet</groupId>
+            <artifactId>javet-v8-windows-x86_64</artifactId>
+            <version>4.1.3</version>
         </dependency>
         <dependency>
             <groupId>io.github.openhtmltopdf</groupId>
