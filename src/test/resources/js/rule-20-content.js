@@ -1,71 +1,72 @@
 var qsbs = {
   _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-  bb: function (input) {
-    var output = "";
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
-    input = input.replace(/[^A-Za-z0-9+\/=]/g, "");
-    while (i < input.length) {
-      enc1 = this._keyStr.indexOf(input.charAt(i++));
-      enc2 = this._keyStr.indexOf(input.charAt(i++));
-      enc3 = this._keyStr.indexOf(input.charAt(i++));
-      enc4 = this._keyStr.indexOf(input.charAt(i++));
-      chr1 = (enc1 << 2) | (enc2 >> 4);
-      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-      chr3 = ((enc3 & 3) << 6) | enc4;
-      output = output + String.fromCharCode(chr1);
-      if (enc3 != 64) {
-        output = output + String.fromCharCode(chr2);
-      }
-      if (enc4 != 64) {
-        output = output + String.fromCharCode(chr3);
-      }
+  bb: function(a) {
+    var b = "",
+      d, c, i, e, f, h, j, g = 0;
+    a = a.replace(/[^A-Za-z0-9+\/=]/g, "");
+    while (g < a.length) {
+      e = this._keyStr.indexOf(a.charAt(g++));
+      f = this._keyStr.indexOf(a.charAt(g++));
+      h = this._keyStr.indexOf(a.charAt(g++));
+      j = this._keyStr.indexOf(a.charAt(g++));
+      d = (e << 2) | (f >> 4);
+      c = ((f & 15) << 4) | (h >> 2);
+      i = ((h & 3) << 6) | j;
+      b += String.fromCharCode(d);
+      if (h != 64) b += String.fromCharCode(c);
+      if (j != 64) b += String.fromCharCode(i)
     }
-    output = qsbs._utf8_decode(output);
-    return output;
+    return this._utf8_decode(b)
   },
-  _utf8_encode: function (string) {
-    string = string.replace(/\r\n/g, "\n");
-    var utftext = "";
-    for (var n = 0; n < string.length; n++) {
-      var c = string.charCodeAt(n);
+  _utf8_encode: function(a) {
+    a = a.replace(/\r\n/g, "\n");
+    var b = "";
+    for (var d = 0; d < a.length; d++) {
+      var c = a.charCodeAt(d);
       if (c < 128) {
-        utftext += String.fromCharCode(c);
-      } else if ((c > 127) && (c < 2048)) {
-        utftext += String.fromCharCode((c >> 6) | 192);
-        utftext += String.fromCharCode((c & 63) | 128);
+        b += String.fromCharCode(c)
+      } else if (c < 2048) {
+        b += String.fromCharCode((c >> 6) | 192);
+        b += String.fromCharCode((c & 63) | 128)
       } else {
-        utftext += String.fromCharCode((c >> 12) | 224);
-        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-        utftext += String.fromCharCode((c & 63) | 128);
+        b += String.fromCharCode((c >> 12) | 224);
+        b += String.fromCharCode(((c >> 6) & 63) | 128);
+        b += String.fromCharCode((c & 63) | 128)
       }
     }
-    return utftext;
+    return b
   },
-  _utf8_decode: function (utftext) {
-    var string = "";
-    var i = 0;
-    var c = c1 = c2 = 0;
-    while (i < utftext.length) {
-      c = utftext.charCodeAt(i);
+  _utf8_decode: function(a) {
+    var b = "",
+      d = 0,
+      c = 0,
+      i = 0,
+      e = 0,
+      f = 0;
+    while (d < a.length) {
+      c = a.charCodeAt(d);
       if (c < 128) {
-        string += String.fromCharCode(c);
-        i++;
-      } else if ((c > 191) && (c < 224)) {
-        c2 = utftext.charCodeAt(i + 1);
-        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-        i += 2;
+        b += String.fromCharCode(c);
+        d++
+      } else if (c < 224) {
+        e = a.charCodeAt(d + 1);
+        b += String.fromCharCode(((c & 31) << 6) | (e & 63));
+        d += 2
       } else {
-        c2 = utftext.charCodeAt(i + 1);
-        c3 = utftext.charCodeAt(i + 2);
-        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-        i += 3;
+        e = a.charCodeAt(d + 1);
+        f = a.charCodeAt(d + 2);
+        b += String.fromCharCode(((c & 15) << 12) | ((e & 63) << 6) | (f & 63));
+        d += 3
       }
     }
-    return string;
+    return b
   }
 };
+r=''
+r = r.replace(/<script>\s*document\.writeln\(qsbs\.bb\('([^']+)'\)\);\s*<\/script>/g, function(a, b) {
+  return qsbs.bb(b)
+});
+r = r.replace(/<p>相邻推荐:[\s\S]*$/, '');
 
 console.log(qsbs.bb('PHA+4oCc5ZiO5ZCx77yB4oCdPC9wPg=='));
 console.log(qsbs.bb('PHA+5LiA6L6G57qi55m955u46Ze055qE5o235YWL5pav56eR6L6+5YWs5Lqk6L2m5Zyo5YmN6Zeo6ZmE6L+R5YGc5LqG5LiL5p2l44CCPC9wPg=='));
