@@ -7,7 +7,6 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * @author pcdd
@@ -17,7 +16,7 @@ import java.util.stream.IntStream;
 public class SourceUtils {
 
     // 全部书源
-    public final List<Integer> ALL_IDS = IntStream.rangeClosed(1, 20).boxed().toList();
+    public final List<Integer> ALL_IDS = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20);
     // 需要代理的书源
     public final List<Integer> PROXY_IDS = CollUtil.newArrayList(6, 7, 12, 16);
     // 支持聚合搜索的书源

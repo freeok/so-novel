@@ -26,7 +26,7 @@ import static org.jline.jansi.AnsiRenderer.render;
  */
 public class ShowSourcesAction {
 
-    public static final int TIMEOUT = 10;
+    public static final int TIMEOUT = 5;
 
     public void execute() {
         Console.log("<== 测试延迟中 ...");
