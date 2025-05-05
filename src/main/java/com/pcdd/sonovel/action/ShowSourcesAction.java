@@ -81,7 +81,7 @@ public class ShowSourcesAction {
                     source.setDelay(-1);
                     source.setCode(-1);
                     if (EnvUtils.isDev()) {
-                        Console.error(render("书源 {} 【{}】 测试延迟异常：{}", "red"), r.getId(), r.getName(), e.getMessage());
+                        Console.error(render("书源 {} ({}) 测试延迟异常：{}", "red"), r.getId(), r.getName(), e.getMessage());
                     }
                 }
 
