@@ -17,7 +17,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.util.OkHttpUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
