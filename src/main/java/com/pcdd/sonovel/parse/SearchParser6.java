@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HtmlUtil;
-import cn.hutool.script.ScriptUtil;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
@@ -15,6 +14,7 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.util.JsCaller;
 import com.pcdd.sonovel.util.JsoupUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,7 +45,7 @@ public class SearchParser6 extends Source {
     public List<SearchResult> parse(String keyword) {
         Rule.Search r = this.rule.getSearch();
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
-        Object key = ScriptUtil.invoke(js, "getParamB", keyword);
+        Object key = JsCaller.callFunction(js, "getParamB", keyword);
 
         try (Response resp = CrawlUtils.request(client, new Request.Builder()
                 .url(this.rule.getUrl().formatted(keyword, key.toString()))
