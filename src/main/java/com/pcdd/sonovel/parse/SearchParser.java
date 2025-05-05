@@ -50,11 +50,11 @@ public class SearchParser extends Source {
         Rule.Search r = this.rule.getSearch();
 
         if (r == null) {
-            Console.log(render("<== 书源 {} 不支持搜索", "red"), config.getSourceId());
+            Console.log(render("<== 书源 {} 不支持搜索", "yellow"), config.getSourceId());
             return Collections.emptyList();
         }
         if (this.rule.isDisabled()) {
-            Console.error(render("<== 书源 {} 暂被禁用！", "red"), this.rule.getId());
+            // Console.error(render("<== 书源 {} 已禁用", "yellow"), this.rule.getId());
             return Collections.emptyList();
         }
 
@@ -76,6 +76,7 @@ public class SearchParser extends Source {
         } catch (Exception e) {
             Console.error(render("<== 书源 {} ({}) 搜索解析出错: {}", "red"),
                     this.rule.getId(), this.rule.getName(), e.getMessage());
+            Console.error(e);
             return Collections.emptyList();
         }
 
