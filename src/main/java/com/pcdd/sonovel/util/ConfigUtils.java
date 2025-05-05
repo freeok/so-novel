@@ -64,16 +64,16 @@ public class ConfigUtils {
         config.setExtName(usr.getStr("extname", SELECTION_1, "epub").toLowerCase());
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
         config.setInteractiveMode(usr.getInt("interactive-mode", SELECTION_1, 1));
-        config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(1, SourceUtils.getCount() + 1)));
+        config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomEle(SourceUtils.ALL_IDS)));
         config.setSearchLimit(usr.getInt("search-limit", SELECTION_1, 0));
 
         config.setThreads(usr.getInt("threads", SELECTION_2, -1));
-        config.setMinInterval(usr.getInt("min", SELECTION_2, 50));
-        config.setMaxInterval(usr.getInt("max", SELECTION_2, 100));
+        config.setMinInterval(usr.getInt("min", SELECTION_2, 200));
+        config.setMaxInterval(usr.getInt("max", SELECTION_2, 400));
 
-        config.setMaxRetryAttempts(usr.getInt("max-attempts", SELECTION_3, 3));
-        config.setRetryMinInterval(usr.getInt("min", SELECTION_3, 500));
-        config.setRetryMaxInterval(usr.getInt("max", SELECTION_3, 2000));
+        config.setMaxRetryAttempts(usr.getInt("max-attempts", SELECTION_3, 5));
+        config.setRetryMinInterval(usr.getInt("min", SELECTION_3, 2000));
+        config.setRetryMaxInterval(usr.getInt("max", SELECTION_3, 4000));
 
         config.setProxyEnabled(usr.getInt("enabled", SELECTION_4, 0));
         config.setProxyHost(usr.getStr("host", SELECTION_4, "127.0.0.1"));
