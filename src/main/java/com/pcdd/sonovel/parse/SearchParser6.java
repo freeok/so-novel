@@ -13,7 +13,7 @@ import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.util.JsCaller;
 import com.pcdd.sonovel.util.JsoupUtils;
 import okhttp3.OkHttpClient;

@@ -13,7 +13,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
