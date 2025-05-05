@@ -11,9 +11,11 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.HttpClientContext;
 import com.pcdd.sonovel.util.JsoupUtils;
 import com.pcdd.sonovel.util.TocList;
 import lombok.SneakyThrows;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +30,8 @@ import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
 
 public class TocParser extends Source {
+
+    public final OkHttpClient client = HttpClientContext.get();
 
     public TocParser(AppConfig config) {
         super(config);
@@ -65,7 +69,7 @@ public class TocParser extends Source {
         urls.add(url);
 
         Document document;
-        try (Response resp = request(url)) {
+        try (Response resp = CrawlUtils.request(client, url, ruleBook.getTimeout())) {
             document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
         }
 
@@ -102,7 +106,7 @@ public class TocParser extends Source {
             if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
-            try (Response resp = request(nextUrl)) {
+            try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
                 document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
@@ -120,7 +124,7 @@ public class TocParser extends Source {
 
         for (String url : urls) {
             Document document;
-            try (Response resp = request(url)) {
+            try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
                 document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
