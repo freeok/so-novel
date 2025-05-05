@@ -71,7 +71,8 @@ public class SearchParser extends Source {
             document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
 
         } catch (Exception e) {
-            Console.error(render("<== 书源 {} 搜索解析出错: {}", "red"), this.rule.getId(), e.getMessage());
+            Console.error(render("<== 书源 {} ({}) 搜索解析出错: {}", "red"),
+                    this.rule.getId(), this.rule.getName(), e.getMessage());
             return Collections.emptyList();
         }
 
