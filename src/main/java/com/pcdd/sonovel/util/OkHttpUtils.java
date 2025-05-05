@@ -4,12 +4,12 @@ import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import okhttp3.*;
+import okhttp3.ConnectionSpec;
+import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.security.cert.X509Certificate;
@@ -23,13 +23,7 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class OkHttpUtils {
 
-    public final int TIMEOUT = 30;
-    private final OkHttpClient client;
-
-    // 全局共享的单例模式
-    static {
-        client = createClient();
-    }
+    public final int TIMEOUT = 10;
 
     public OkHttpClient createClient() {
         return createClient(null, false);
@@ -45,15 +39,18 @@ public class OkHttpUtils {
             Console.log("com.pcdd.sonovel.util.OkHttpUtils # " + "createClient");
         }
 
-        ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                .tlsVersions(TlsVersion.TLS_1_2) // 强制使用 TLS 1.2
-                .allEnabledCipherSuites() // 启用所有密码套件
-                .build();
-
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .connectionSpecs(List.of(spec, ConnectionSpec.CLEARTEXT)) // 兼容 HTTP
-                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)  // 设置连接超时时间
-                .readTimeout(TIMEOUT, TimeUnit.SECONDS);    // 设置读取超时时间
+                .retryOnConnectionFailure(true)
+                .connectionSpecs(List.of(
+                        ConnectionSpec.MODERN_TLS,
+                        ConnectionSpec.COMPATIBLE_TLS, // 兼容老 TLS 网站
+                        ConnectionSpec.CLEARTEXT       // 支持 HTTP 明文
+                ))
+                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .followRedirects(true)  // 自动跟随 301/302 跳转
+                .followSslRedirects(true);
 
         // 启用配置文件代理
         if (config != null && config.getProxyEnabled() == 1) {
@@ -82,51 +79,6 @@ public class OkHttpUtils {
         }
 
         return builder.build();
-    }
-
-    // 发送 GET 请求
-    public String get(String url) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-            return response.body() != null ? response.body().string() : null;
-        }
-    }
-
-    // 发送 POST 请求 (JSON 数据)
-    public String post(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-            return response.body() != null ? response.body().string() : null;
-        }
-    }
-
-    // 发送 POST 请求 (表单数据)
-    public String post(String url, FormBody formBody) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .post(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-            return response.body() != null ? response.body().string() : null;
-        }
     }
 
 }
