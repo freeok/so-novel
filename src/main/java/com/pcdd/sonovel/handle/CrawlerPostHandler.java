@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.util.BookContext;
+import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.util.EnvUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;

@@ -14,7 +14,7 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
-import com.pcdd.sonovel.util.BookContext;
+import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.SneakyThrows;
 
