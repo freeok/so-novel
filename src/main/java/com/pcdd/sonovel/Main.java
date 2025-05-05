@@ -15,7 +15,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
-import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.util.OkHttpUtils;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
