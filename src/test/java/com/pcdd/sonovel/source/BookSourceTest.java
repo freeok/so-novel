@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.source;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
@@ -16,6 +17,8 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.HttpClientContext;
+import com.pcdd.sonovel.util.OkHttpUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -42,6 +45,7 @@ class BookSourceTest {
     private List<Chapter> chapters;
 
     static {
+        HttpClientContext.set(OkHttpUtils.createClient(config, false));
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
         config.setLanguage("zh_CN");
@@ -154,6 +158,10 @@ class BookSourceTest {
     @SneakyThrows
     public void chapterBatchParse(int start, int end) {
         Console.log("\n{} START chapterBatchParse {}", DIVIDER, DIVIDER);
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         ExecutorService threadPool = Executors.newFixedThreadPool(RuntimeUtil.getProcessorCount() * 5);
         CountDownLatch latch = new CountDownLatch(end - start);
         Source source = new Source(config.getSourceId());
@@ -183,6 +191,9 @@ class BookSourceTest {
 
         latch.await();
         threadPool.shutdown();
+
+        stopWatch.stop();
+        Console.log("总耗时 {} s", stopWatch.getTotalTimeSeconds());
         Console.log("{} END chapterBatchParse {}\n", DIVIDER, DIVIDER);
     }
 

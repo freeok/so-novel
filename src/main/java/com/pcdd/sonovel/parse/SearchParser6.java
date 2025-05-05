@@ -13,7 +13,10 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.HttpClientContext;
 import com.pcdd.sonovel.util.JsoupUtils;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
@@ -33,6 +36,8 @@ import java.util.List;
  */
 public class SearchParser6 extends Source {
 
+    public final OkHttpClient client = HttpClientContext.get();
+
     public SearchParser6(AppConfig config) {
         super(config);
     }
@@ -42,9 +47,9 @@ public class SearchParser6 extends Source {
         String js = ResourceUtil.readUtf8Str("js/rule-6.js");
         Object key = ScriptUtil.invoke(js, "getParamB", keyword);
 
-        try (Response resp = request(new Request.Builder()
+        try (Response resp = CrawlUtils.request(client, new Request.Builder()
                 .url(this.rule.getUrl().formatted(keyword, key.toString()))
-                .addHeader("Referer", r.getUrl()))) {
+                .addHeader("Referer", r.getUrl()), r.getTimeout())) {
             String body = resp.body().string();
             String s = UnicodeUtil.toString(body);
             String s2 = HtmlUtil.unescape(s)
