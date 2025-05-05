@@ -3,11 +3,12 @@ package com.pcdd.sonovel.util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import okhttp3.FormBody;
-import okhttp3.RequestBody;
+import okhttp3.*;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -50,6 +51,30 @@ public class CrawlUtils {
     public String cleanInvisibleChars(String text) {
         // 过滤：控制字符、格式控制符、私有区 PUA 字符 (导致中文乱码的根源)
         return StrUtil.isEmpty(text) ? null : text.replaceAll("[\\p{C}\\p{Cf}\\p{Co}\\p{Zl}\\p{Zp}\\u200B\\uFEFF]", "");
+    }
+
+    @SneakyThrows
+    public Response request(OkHttpClient client, String url, int timeout) {
+        Call call = client.newCall(
+                new Request.Builder()
+                        .url(url)
+                        .addHeader("User-Agent", RandomUA.generate())
+                        .build()
+        );
+        call.timeout().timeout(timeout, TimeUnit.SECONDS);
+
+        return call.execute();
+    }
+
+    @SneakyThrows
+    public Response request(OkHttpClient client, Request.Builder builder, int timeout) {
+        Call call = client.newCall(builder
+                .addHeader("User-Agent", RandomUA.generate())
+                .build()
+        );
+        call.timeout().timeout(timeout, TimeUnit.SECONDS);
+
+        return call.execute();
     }
 
 }

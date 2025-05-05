@@ -7,16 +7,14 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
 import com.pcdd.sonovel.util.*;
 import lombok.SneakyThrows;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static org.jline.jansi.AnsiRenderer.render;
 
@@ -27,6 +25,8 @@ import static org.jline.jansi.AnsiRenderer.render;
  * Created at 2025/1/9
  */
 public class ShowSourcesAction {
+
+    public static final int TIMEOUT = 10;
 
     public void execute() {
         Console.log("<== 测试延迟中 ...");
@@ -64,14 +64,16 @@ public class ShowSourcesAction {
                         .url(r.getUrl())
                         .build();
                 try {
-                    Request req = new Request.Builder()
+                    Call call = client.newCall(new Request.Builder()
                             .url(r.getUrl())
                             .header("User-Agent", RandomUA.generate())
                             .head() // 只发 HEAD 请求，不获取 body，更快！
-                            .build();
+                            .build());
+                    call.timeout().timeout(TIMEOUT, TimeUnit.SECONDS);
+
                     // 放这里才最准确
                     long startTime = System.currentTimeMillis();
-                    try (Response resp = client.newCall(req).execute()) {
+                    try (Response resp = call.execute()) {
                         source.setDelay((int) (System.currentTimeMillis() - startTime));
                         source.setCode(resp.code());
                     }
