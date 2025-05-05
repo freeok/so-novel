@@ -58,7 +58,7 @@ public class ConfigUtils {
         AppConfig config = new AppConfig();
         config.setVersion(sys.getStr("version"));
 
-        config.setLanguage(usr.getStr("language", SELECTION_1, "zh_CN"));
+        config.setLanguage(usr.getStr("language", SELECTION_1, LangUtil.getCurrentLang()));
         config.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
         // 扩展名一律转为小写
         config.setExtName(usr.getStr("extname", SELECTION_1, "epub").toLowerCase());

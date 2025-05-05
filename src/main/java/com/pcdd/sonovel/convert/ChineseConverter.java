@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.Language;
+import com.pcdd.sonovel.util.LangType;
 import lombok.experimental.UtilityClass;
 
 import java.util.function.Function;
@@ -31,10 +31,10 @@ public class ChineseConverter {
 
     private Function<String, String> getConversionFunction(String sourceLang, String targetLang) {
         return switch (sourceLang + ">" + targetLang) {
-            case Language.ZH_HANT + ">" + Language.ZH_CN -> HanLP::t2s;
-            case Language.ZH_CN + ">" + Language.ZH_HANT -> HanLP::s2t;
-            case Language.ZH_CN + ">" + Language.ZH_TW -> HanLP::s2tw;
-            case Language.ZH_HANT + ">" + Language.ZH_TW -> HanLP::t2tw;
+            case LangType.ZH_HANT + ">" + LangType.ZH_CN -> HanLP::t2s;
+            case LangType.ZH_CN + ">" + LangType.ZH_HANT -> HanLP::s2t;
+            case LangType.ZH_CN + ">" + LangType.ZH_TW -> HanLP::s2tw;
+            case LangType.ZH_HANT + ">" + LangType.ZH_TW -> HanLP::t2tw;
             default -> null;
         };
     }
