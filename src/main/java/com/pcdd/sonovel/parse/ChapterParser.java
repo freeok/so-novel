@@ -10,8 +10,10 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.BookContext;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.HttpClientContext;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,13 +45,15 @@ public class ChapterParser extends Source {
     // 用于测试
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
+        Rule.Chapter r = this.rule.getChapter();
         Document document;
+        OkHttpClient client = HttpClientContext.get();
 
-        try (Response resp = request(chapter.getUrl())) {
-            document = Jsoup.parse(resp.body().string(), this.rule.getChapter().getBaseUri());
+        try (Response resp = CrawlUtils.request(client, chapter.getUrl(), r.getTimeout())) {
+            document = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
 
-        chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, this.rule.getChapter().getTitle()));
+        chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
         String content = fetchContent(chapter.getUrl(), RandomUtil.randomInt(100, 200));
         chapter.setContent(content);
 
@@ -132,7 +136,9 @@ public class ChapterParser extends Source {
 
     @SneakyThrows
     private String fetchSinglePageContent(String url, long interval, Rule.Chapter r) {
-        try (Response resp = request(url)) {
+        OkHttpClient client = HttpClientContext.get();
+
+        try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
             Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
 
             // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
@@ -140,6 +146,8 @@ public class ChapterParser extends Source {
             for (Element el : contentEl.select("*")) {
                 el.clearAttributes();
             }
+
+            Thread.sleep(interval);
 
             return JsoupUtils.invokeJs(r.getContent(), contentEl.html());
         }
@@ -149,10 +157,11 @@ public class ChapterParser extends Source {
     private String fetchPaginatedContent(String startUrl, long interval, Rule.Chapter r) {
         String nextUrl = startUrl;
         StringBuilder contentBuilder = new StringBuilder();
+        OkHttpClient client = HttpClientContext.get();
 
         while (true) {
             Document doc;
-            try (Response resp = request(nextUrl)) {
+            try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
