@@ -1,6 +1,6 @@
 var qsbs = {
   _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-  bb: function(a) {
+  bb: function (a) {
     var b = "",
       d, c, i, e, f, h, j, g = 0;
     a = a.replace(/[^A-Za-z0-9+\/=]/g, "");
@@ -18,7 +18,7 @@ var qsbs = {
     }
     return this._utf8_decode(b)
   },
-  _utf8_encode: function(a) {
+  _utf8_encode: function (a) {
     a = a.replace(/\r\n/g, "\n");
     var b = "";
     for (var d = 0; d < a.length; d++) {
@@ -36,7 +36,7 @@ var qsbs = {
     }
     return b
   },
-  _utf8_decode: function(a) {
+  _utf8_decode: function (a) {
     var b = "",
       d = 0,
       c = 0,
@@ -62,8 +62,8 @@ var qsbs = {
     return b
   }
 };
-r=''
-r = r.replace(/<script>\s*document\.writeln\(qsbs\.bb\('([^']+)'\)\);\s*<\/script>/g, function(a, b) {
+r = ''
+r = r.replace(/<script>\s*document\.writeln\(qsbs\.bb\('([^']+)'\)\);\s*<\/script>/g, function (a, b) {
   return qsbs.bb(b)
 });
 r = r.replace(/<p>相邻推荐:[\s\S]*$/, '');

@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -14,7 +15,6 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
-import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.util.FileUtils;
 import lombok.SneakyThrows;
 

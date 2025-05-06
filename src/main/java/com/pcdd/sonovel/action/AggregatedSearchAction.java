@@ -57,7 +57,7 @@ public class AggregatedSearchAction {
             threadPool.execute(() -> {
                 List<SearchResult> res = new SearchParser(source.config).parse(kw);
 
-                if (CollUtil.isNotEmpty(res)){
+                if (CollUtil.isNotEmpty(res)) {
                     Rule rule = source.rule;
                     Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
                     results.add(res);
