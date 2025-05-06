@@ -96,7 +96,7 @@ public class BatchDownloadAction {
                 totalTime += res;
             }
 
-            Console.log("<== 批量下载完成！总耗时 {}\n", DateUtil.formatBetween(Convert.toLong(totalTime * 1000)));
+            Console.log(render("<== 批量下载完成！总耗时 {}\n", "green"), DateUtil.formatBetween(Convert.toLong(totalTime * 1000)));
         }
     }
 

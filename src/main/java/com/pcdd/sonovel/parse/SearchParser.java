@@ -76,7 +76,6 @@ public class SearchParser extends Source {
         } catch (Exception e) {
             Console.error(render("<== 书源 {} ({}) 搜索解析出错: {}", "red"),
                     this.rule.getId(), this.rule.getName(), e.getMessage());
-            Console.error(e);
             return Collections.emptyList();
         }
 
