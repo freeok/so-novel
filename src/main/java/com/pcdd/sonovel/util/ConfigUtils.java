@@ -91,7 +91,7 @@ public class ConfigUtils {
     }
 
     public String resolveConfigFileName() {
-        return EnvUtils.isDev() ? "config-dev123.ini" : "config.ini";
+        return EnvUtils.isDev() ? "config-dev.ini" : "config.ini";
     }
 
 }
