@@ -101,7 +101,7 @@ public class DownloadAction {
         }
 
         double res = new Crawler(config).crawl(sr.getUrl(), toc);
-        Console.log("<== 完成！总耗时 {} s", NumberUtil.round(res, 2));
+        Console.log(render("<== 完成！总耗时 {} s", "green"), NumberUtil.round(res, 2));
     }
 
 }
