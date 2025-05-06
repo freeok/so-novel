@@ -2,6 +2,7 @@ package com.pcdd.sonovel.util;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.AppConfig;
@@ -58,10 +59,11 @@ public class ConfigUtils {
         AppConfig config = new AppConfig();
         config.setVersion(sys.getStr("version"));
 
-        config.setLanguage(usr.getStr("language", SELECTION_1, LangUtil.getCurrentLang()));
-        config.setDownloadPath(usr.getStr("download-path", SELECTION_1, "downloads"));
+        config.setLanguage(getStrOrDefault(usr, "language", SELECTION_1, LangUtil.getCurrentLang()));
+        config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_1, "downloads"));
         // 扩展名一律转为小写
-        config.setExtName(usr.getStr("extname", SELECTION_1, "epub").toLowerCase());
+        config.setExtName(getStrOrDefault(usr, "extname", SELECTION_1, "epub").toLowerCase());
+
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
         config.setInteractiveMode(usr.getInt("interactive-mode", SELECTION_1, 1));
         config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomEle(SourceUtils.ALL_IDS)));
@@ -76,14 +78,20 @@ public class ConfigUtils {
         config.setRetryMaxInterval(usr.getInt("max", SELECTION_3, 4000));
 
         config.setProxyEnabled(usr.getInt("enabled", SELECTION_4, 0));
-        config.setProxyHost(usr.getStr("host", SELECTION_4, "127.0.0.1"));
+        config.setProxyHost(getStrOrDefault(usr, "host", SELECTION_4, "127.0.0.1"));
         config.setProxyPort(usr.getInt("port", SELECTION_4, 7890));
 
         return config;
     }
 
+    // 修复 hutool 的 bug：空串不能触发默认值
+    private String getStrOrDefault(Setting setting, String key, String group, String defaultValue) {
+        String value = setting.getByGroup(key, group);
+        return StrUtil.isEmpty(value) ? defaultValue : value;
+    }
+
     public String resolveConfigFileName() {
-        return EnvUtils.isDev() ? "config-dev.ini" : "config.ini";
+        return EnvUtils.isDev() ? "config-dev123.ini" : "config.ini";
     }
 
 }
