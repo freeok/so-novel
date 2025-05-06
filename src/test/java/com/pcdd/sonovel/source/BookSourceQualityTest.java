@@ -10,6 +10,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -50,12 +51,13 @@ class BookSourceQualityTest {
 
     static final AppConfig config = ConfigUtils.config();
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
-    // 测试排行榜前几名 (0,20]
+    // 测试排行榜前几名 (0, 20]
     static final int TOP_NUM = 20;
-    // 1：封IP，6：老书，12、16：限流
-    static final String RE_SKIP_IDS = "1|6|12|16";
+    // 1：封IP，6：老书，12,16：限流
+    static final String RE_SKIP_IDS = "6|12|13|16";
 
     static {
+        HttpClientContext.set(OkHttpUtils.createClient(config, true));
         ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }
@@ -111,7 +113,6 @@ class BookSourceQualityTest {
      */
     @Test
     void test() {
-        int count = SourceUtils.getCount();
         // 生成的 markdown 文件
         Map<String, String> map = Map.of(
                 "1-起点月票榜", "https://www.qidian.com/rank/yuepiao/",
@@ -134,7 +135,7 @@ class BookSourceQualityTest {
                     Map<Integer, List<SourceQuality>> sourceQualityListMap = new HashMap<>();
 
                     // 遍历书源
-                    for (int id = 1; id <= count; id++) {
+                    for (Integer id : SourceUtils.ALL_IDS) {
                         Rule rule = new Source(id).rule;
                         // 跳过书源：不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的
                         if (rule.getSearch() != null && !String.valueOf(rule.getId()).matches(RE_SKIP_IDS)) {
@@ -192,7 +193,7 @@ class BookSourceQualityTest {
             boolean found = false;
             for (SearchResult r : results) {
                 if (Objects.equals(r.getBookName(), b.getBookName()) && Objects.equals(r.getAuthor(), b.getAuthor())) {
-                    Console.log("书源 {} 已找到《{}》（{}）{}\t{}\t{}",
+                    Console.log("书源 {} 已找到《{}》({}) {}\t{}\t{}",
                             id, r.getBookName(), r.getAuthor(), rank.getKey(), r.getUrl(), b.getUrl());
                     sq.setUrl(r.getUrl());
                     found = true;
