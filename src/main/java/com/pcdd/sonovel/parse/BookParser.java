@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
@@ -9,7 +10,6 @@ import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
