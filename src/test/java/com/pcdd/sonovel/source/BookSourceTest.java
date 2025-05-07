@@ -18,7 +18,7 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.OkHttpUtils;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -45,7 +45,7 @@ class BookSourceTest {
     private List<Chapter> chapters;
 
     static {
-        HttpClientContext.set(OkHttpUtils.createClient(config, true));
+        HttpClientContext.set(OkHttpClientFactory.create(config, true));
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
         config.setLanguage("zh_CN");
