@@ -2,10 +2,10 @@ Windows 用户
 运行 SoNovel.exe
 
 macOS 用户
-运行 macos-run.sh
+运行 run-macos.sh
 
 Linux 用户
-运行 linux-run.sh
+运行 run-linux.sh
 
 
 必看！书源信息
