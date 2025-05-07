@@ -2,6 +2,7 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
@@ -54,7 +55,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
-        OkHttpClient client = OkHttpUtils.createClient(ConfigUtils.config(), true);
+        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.config(), true);
 
         for (Rule r : rules) {
             completionService.submit(() -> {
