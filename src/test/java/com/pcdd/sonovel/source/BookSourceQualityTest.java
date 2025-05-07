@@ -19,7 +19,7 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.OkHttpUtils;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.Data;
@@ -57,7 +57,7 @@ class BookSourceQualityTest {
     static final String RE_SKIP_IDS = "6|12|13|16";
 
     static {
-        HttpClientContext.set(OkHttpUtils.createClient(config, true));
+        HttpClientContext.set(OkHttpClientFactory.create(config, true));
         ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }
@@ -72,7 +72,7 @@ class BookSourceQualityTest {
         Console.log("getQiDianRanks: {}", rankUrl);
         List<Book> rank = new ArrayList<>();
         Document document = null;
-        try (Response resp = OkHttpUtils.createClient()
+        try (Response resp = OkHttpClientFactory.create()
                 .newCall(new Request.Builder()
                         .url(rankUrl)
                         .addHeader(Header.USER_AGENT.getValue(), RandomUA.generate())

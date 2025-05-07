@@ -1,7 +1,8 @@
-package com.pcdd.sonovel.util;
+package com.pcdd.sonovel.core;
 
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.util.EnvUtils;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import okhttp3.ConnectionSpec;
@@ -21,12 +22,12 @@ import java.util.concurrent.TimeUnit;
  * Created at 2025/4/20
  */
 @UtilityClass
-public class OkHttpUtils {
+public class OkHttpClientFactory {
 
     public final int TIMEOUT = 10;
 
-    public OkHttpClient createClient() {
-        return createClient(null, false);
+    public OkHttpClient create() {
+        return create(null, false);
     }
 
     /**
@@ -34,13 +35,12 @@ public class OkHttpUtils {
      * @param unsafe 是否跳过 SSL 验证
      */
     @SneakyThrows
-    public OkHttpClient createClient(AppConfig config, boolean unsafe) {
+    public OkHttpClient create(AppConfig config, boolean unsafe) {
         if (EnvUtils.isDev()) {
-            Console.log("com.pcdd.sonovel.util.OkHttpUtils # " + "createClient");
+            Console.log("com.pcdd.sonovel.core.OkHttpClientFactory # " + "create");
         }
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
                 .connectionSpecs(List.of(
                         ConnectionSpec.MODERN_TLS,
                         ConnectionSpec.COMPATIBLE_TLS, // 兼容老 TLS 网站
@@ -49,6 +49,7 @@ public class OkHttpUtils {
                 .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .followRedirects(true)  // 自动跟随 301/302 跳转
                 .followSslRedirects(true);
 
