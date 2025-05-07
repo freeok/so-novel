@@ -1,5 +1,6 @@
 package com.pcdd.sonovel;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
@@ -27,6 +28,7 @@ import org.jline.terminal.TerminalBuilder;
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Paths;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -198,7 +200,13 @@ public class Main {
     }
 
     private static void watchConfig() {
-        String path = System.getProperty("user.dir") + File.separator + ConfigUtils.resolveConfigFileName();
+        String path;
+        String configFilePath = System.getProperty("config.file");
+        if (!FileUtil.exist(configFilePath)) {
+            path = System.getProperty("user.dir") + File.separator + ConfigUtils.resolveConfigFileName();
+        } else {
+            path = Paths.get(configFilePath).toAbsolutePath().toString();
+        }
         Setting setting = new Setting(path);
         // 监听配置文件
         setting.autoLoad(true, aBoolean -> {
