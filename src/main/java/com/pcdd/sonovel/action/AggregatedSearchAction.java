@@ -49,10 +49,11 @@ public class AggregatedSearchAction {
 
     @SneakyThrows
     public static List<SearchResult> getSearchResults(String kw) {
+        List<List<SearchResult>> results = new ArrayList<>();
         List<Source> searchableSources = SourceUtils.getSearchableSources();
         ExecutorService threadPool = Executors.newFixedThreadPool(searchableSources.size());
-        List<List<SearchResult>> results = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(searchableSources.size());
+
         for (Source source : searchableSources) {
             threadPool.execute(() -> {
                 List<SearchResult> res = new SearchParser(source.config).parse(kw);
@@ -66,6 +67,7 @@ public class AggregatedSearchAction {
                 latch.countDown();
             });
         }
+
         latch.await();
         List<SearchResult> flatList = new ArrayList<>();
         results.forEach(flatList::addAll);

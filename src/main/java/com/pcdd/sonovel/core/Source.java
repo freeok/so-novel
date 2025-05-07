@@ -45,7 +45,6 @@ public class Source {
         this.rule = applyDefaultRule(JSONUtil.toBean(jsonStr, Rule.class));
         // 使用配置文件中的配置，若为空则使用默认配置
         this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
-        // this.client = OkHttpUtils.createClient(config, this.rule.isIgnoreSsl());
     }
 
     private Rule applyDefaultRule(Rule rule) {
