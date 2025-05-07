@@ -25,9 +25,10 @@ jobs:
       - name: Build executable
         shell: powershell
         run: |
-          sh bin/deploy-windows.sh
-          sh bin/deploy-macos.sh
-          sh bin/deploy-linux.sh
+          bash bin/release-windows.sh
+          bash bin/release-linux.sh
+          bash bin/release-macos.sh
+          bash bin/release-macos.sh x64
 
       - name: Create Release
         uses: ncipollo/release-action@v1
