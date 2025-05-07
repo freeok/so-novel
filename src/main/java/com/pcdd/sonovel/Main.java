@@ -12,12 +12,12 @@ import cn.hutool.setting.Setting;
 import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
-import com.pcdd.sonovel.core.OkHttpClientFactory;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -26,9 +26,9 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
-import java.nio.file.Paths;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -202,11 +202,13 @@ public class Main {
     private static void watchConfig() {
         String path;
         String configFilePath = System.getProperty("config.file");
+
         if (!FileUtil.exist(configFilePath)) {
             path = System.getProperty("user.dir") + File.separator + ConfigUtils.resolveConfigFileName();
         } else {
             path = Paths.get(configFilePath).toAbsolutePath().toString();
         }
+
         Setting setting = new Setting(path);
         // 监听配置文件
         setting.autoLoad(true, aBoolean -> {
