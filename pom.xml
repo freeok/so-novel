@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -22,7 +22,6 @@
         <java.version>17</java.version>
         <jline.version>3.27.1</jline.version>
         <javet.version>4.1.3</javet.version>
-        <!-- <maven.compiler.release>${java.version}</maven.compiler.release> -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
