@@ -7,7 +7,7 @@
 set -e  # 出错即退出
 set -o pipefail  # 管道中的任何命令失败都会导致脚本退出
 
-VERSION="v1.8.1"
+VERSION="v1.8.2"
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux.tar.gz"
 DIR_NAME="SoNovel-Linux"
