@@ -45,6 +45,8 @@ public class EpubMergeHandler implements PostProcessingHandler {
             Console.log("<== 正在下载封面：{}", b.getCoverUrl());
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
             book.setCoverImage(new Resource(bytes, "cover.jpg"));
+            // 添加封面页
+            book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME));
         } catch (Exception e) {
             Console.error(render("封面下载失败：{}", "red"), e.getMessage());
         }
@@ -57,8 +59,6 @@ public class EpubMergeHandler implements PostProcessingHandler {
         // content.opf > manifest
         List<File> files = FileUtils.sortFilesByName(saveDir);
         int len = String.valueOf(files.size()).length();
-        // 添加封面页
-        book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME));
         // 添加正文页
         for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
