@@ -24,6 +24,7 @@ public class AppConfig {
     private Integer threads;
     private Integer minInterval;
     private Integer maxInterval;
+    private Integer preserveChapterCache;
 
     // [retry]
     private Integer maxRetryAttempts;
