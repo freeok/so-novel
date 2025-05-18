@@ -22,7 +22,7 @@
     "author": "meta[property=\"og:novel:author\"]",
     "intro": "meta[name=\"description\"]",
     "category": "meta[property=\"og:novel:category\"]",
-    "coverUrl": "meta[property=\"og:image\"]",
+    "coverUrl": ".imgbox > img",
     "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
     "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
     "status": "meta[property=\"og:novel:status\"]"
