@@ -6,11 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.util.EnvUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author pcdd
@@ -20,6 +20,7 @@ import java.io.File;
 public class CrawlerPostHandler {
 
     private final AppConfig config;
+    private final List<String> extNames = List.of("txt", "epub", "pdf");
 
     @SneakyThrows
     public void handle(File saveDir) {
@@ -27,7 +28,7 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
-        if (extName.matches("(?i)^(txt|epub|pdf)$")) {
+        if (extNames.contains(extName)) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
         if ("html".equals(extName)) {
@@ -44,7 +45,7 @@ public class CrawlerPostHandler {
 
         PostHandlerFactory.getHandler(extName, config).handle(book, saveDir);
 
-        if (EnvUtils.isProd()) {
+        if (extNames.contains(extName) && config.getPreserveChapterCache() == 0) {
             FileUtil.del(saveDir);
         }
     }
