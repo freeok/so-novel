@@ -7,6 +7,8 @@ import lombok.experimental.UtilityClass;
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +72,21 @@ public class FileUtils {
             return fileName.replace("/", "");
         }
 
+    }
+
+    /**
+     * 解析路径字符串 s，如果是绝对路径，则直接返回；
+     * 如果是相对路径，则基于当前工作目录拼接并返回完整路径。
+     *
+     * @param s 路径字符串，可以是相对路径或绝对路径
+     * @return 解析后的路径字符串
+     */
+    public String resolvePath(String s) {
+        String basePath = System.getProperty("user.dir");
+        Path path = Paths.get(s);
+        return path.isAbsolute()
+                ? path.toString()
+                : Paths.get(basePath, s).toString();
     }
 
 }
