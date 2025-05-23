@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.util.FileUtils;
 
 import java.io.File;
 
@@ -23,7 +24,7 @@ public interface PostProcessingHandler {
     default void downloadCover(Book book, File saveDir) {
         try {
             Console.log("<== 正在下载封面：{}", book.getCoverUrl());
-            File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), System.getProperty("user.dir") + File.separator + saveDir);
+            File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), FileUtils.resolvePath(saveDir.toString()));
             FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
         } catch (Exception e) {
             Console.error(render("封面下载失败：{}", "red"), e.getMessage());
