@@ -58,17 +58,19 @@ public class FileUtils {
         if (osName.contains("win")) {
             return fileName
                     .replace(':', '：')
-                    .replace('*', '※')
+                    .replace('*', '＊')
                     .replace('?', '？')
                     .replace('"', '\'')
-                    .replace('<', '《')
-                    .replace('>', '》')
+                    .replace('<', '＜')
+                    .replace('>', '＞')
                     .replaceAll("[/\\\\|]", "_");
-        } else if (osName.contains("mac")) {
+        } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("mac")) {
             return fileName
                     .replace('.', '。')
-                    .replace(':', '：');
-        } else { // linux & others
+                    .replace(':', '：')
+                    .replace('/', '／')
+                    .replace('\000', '_');
+        } else { // others
             return fileName.replace("/", "");
         }
 
