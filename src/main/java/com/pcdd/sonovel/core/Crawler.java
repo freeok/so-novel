@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -37,6 +38,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class Crawler {
 
     private final AppConfig config;
+    private int digitCount;
     private String bookDir;
 
     public Crawler(AppConfig config) {
@@ -76,6 +78,7 @@ public class Crawler {
      */
     @SneakyThrows
     public double crawl(String bookUrl, List<Chapter> toc) {
+        digitCount = String.valueOf(toc.size()).length();
         Book book = new BookParser(config).parse(bookUrl);
         BookContext.set(book);
 
@@ -136,8 +139,9 @@ public class Crawler {
 
     private String generateChapterPath(Chapter chapter) {
         String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
+        String order = StrUtil.padPre(chapter.getOrder() + "", digitCount, '0');
 
-        return parentPath + chapter.getOrder() + switch (config.getExtName()) {
+        return parentPath + order + switch (config.getExtName()) {
             case "html" -> "_.html";
             case "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".txt";
             // 转换前的格式为 html
