@@ -58,11 +58,11 @@ public class FileUtils {
         if (osName.contains("win")) {
             return fileName
                     .replace(':', '：')
-                    .replace('*', '※')
+                    .replace('*', '＊')
                     .replace('?', '？')
                     .replace('"', '\'')
-                    .replace('<', '《')
-                    .replace('>', '》')
+                    .replace('<', '＜')
+                    .replace('>', '＞')
                     .replaceAll("[/\\\\|]", "_");
         } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("mac")) {
             return fileName
