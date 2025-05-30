@@ -38,7 +38,7 @@ fi
 echo "👉 打包 macOS [$arch]..."
 
 # Maven 打包
-mvn clean package -Dmaven.test.skip=true -P$profile -DjrePath=runtime
+mvn clean package -P$profile '-Dmaven.test.skip=true' '-DjrePath=runtime'
 
 # 准备目录
 mkdir -p dist

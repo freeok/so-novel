@@ -21,7 +21,7 @@ project_path=$(
 cd "$project_path" || exit
 
 # Maven 打包
-mvn clean package -Plinux-x86_64 -Dmaven.test.skip=true -DjrePath=runtime
+mvn clean package -Plinux-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
 
 # 创建产物目录
 mkdir -p dist
