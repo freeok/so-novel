@@ -142,6 +142,7 @@ public class Crawler {
         String order = StrUtil.padPre(chapter.getOrder() + "", digitCount, '0');
 
         return parentPath + order + switch (config.getExtName()) {
+            // 下划线用于兼容，不要删除，见 com/pcdd/sonovel/handle/HtmlTocHandler.java:28
             case "html" -> "_.html";
             case "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".txt";
             // 转换前的格式为 html
