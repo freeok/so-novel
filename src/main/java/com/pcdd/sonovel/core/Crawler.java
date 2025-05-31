@@ -139,7 +139,10 @@ public class Crawler {
 
     private String generateChapterPath(Chapter chapter) {
         String parentPath = config.getDownloadPath() + File.separator + bookDir + File.separator;
-        String order = StrUtil.padPre(chapter.getOrder() + "", digitCount, '0');
+        // 文件名下划线前的数字前补零
+        String order = digitCount >= String.valueOf(chapter.getOrder()).length()
+                ? StrUtil.padPre(chapter.getOrder() + "", digitCount, '0') // 全本下载
+                : String.valueOf(chapter.getOrder()); // 非全本下载
 
         return parentPath + order + switch (config.getExtName()) {
             // 下划线用于兼容，不要删除，见 com/pcdd/sonovel/handle/HtmlTocHandler.java:28

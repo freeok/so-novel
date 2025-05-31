@@ -118,7 +118,6 @@ public class TocParser extends Source {
         }
     }
 
-    // TODO 优化，改为多线程
     @SneakyThrows
     private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new TocList();
@@ -126,6 +125,7 @@ public class TocParser extends Source {
         int orderNumber = 1;
         int offset = r.getOffset() != null ? r.getOffset() : 0;
 
+        // TODO 多线程优化
         for (String url : urls) {
             Document document;
             try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
