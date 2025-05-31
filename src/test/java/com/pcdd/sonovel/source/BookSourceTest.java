@@ -67,7 +67,6 @@ class BookSourceTest {
             "11, https://www.0xs.net/txt/68398.html",
             "13, https://www.xbqg06.com/1582/",
             "14, https://www.luegeng.com/book186856/",
-            "15, https://www.96dushu.com/book/344921/",
             "17, http://www.81zwwww.com/90_90170/",
             "18, http://www.ujxsw.org/book/107612/",
             "19, http://www.yeudusk.com/book/1322535/",

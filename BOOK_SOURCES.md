@@ -18,7 +18,6 @@
 | 12     | [得奇小说网](https://www.deqixs.com/)     | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
 | ~~13~~ | ~~[新笔趣阁6](https://www.xbqg06.com/)~~ | ✅     | ✅      | ✅    | 暂时禁用                                                                               |
 | 14     | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    | 暂无                                                                                 |
-| 15     | [96读书](https://www.96dushu.com/)     | ✅     | ❌      | ✅    | 晋江的书多，非大陆IP会跳CF，章节限流，推荐线程数2                                                        |
 | 16     | [速读谷](https://www.sudugu.com/)       | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
 | 17     | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    | 暂无                                                                                 |
 | 18     | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      | ✅    | 暂无                                                                                 |
