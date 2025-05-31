@@ -84,7 +84,7 @@ public class ChapterParser extends Source {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
-                Console.log(render("<== : 章节【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}", "red"),
+                Console.log(render("<== 【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}", "red"),
                         chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, errMsg);
 
                 String content = fetchContent(chapter.getUrl(), interval);
