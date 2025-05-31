@@ -5,6 +5,7 @@
   "comment": "基本只能搜老书，搜索需逆向加密参数b，搜索限流",
   "type": "html",
   "language": "zh_CN",
+  "needProxy": true,
   "search": {
     "url": "https://quanben5.com/search.html/?keywords=%s&a=search.json&b=%s&c=book&callback=search",
     "method": "get",
