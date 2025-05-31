@@ -22,9 +22,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
@@ -64,8 +64,8 @@ public class TocParser extends Source {
             String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
             ruleToc.setBaseUri(ruleToc.getBaseUri().formatted(id));
         }
-        // 目录分页 url，需要对 url 进行排序，原因是首个页面不一定是 select 的第一个 option
-        Set<String> urls = new TreeSet<>();
+        // 目录分页 url
+        Set<String> urls = new LinkedHashSet<>();
         urls.add(url);
 
         Document document;
@@ -93,7 +93,11 @@ public class TocParser extends Source {
                     .map(el -> el.absUrl(attrKey))
                     .toList();
 
-            urls.addAll(list);
+            // 不能用 addAll，这里要保证后加入元素覆盖前面已存在的元素并保持顺序，因为 toc.url 不一定是 select 的首个 option (见书源20)
+            for (String s : list) {
+                urls.remove(s);
+                urls.add(s);
+            }
 
             return;
         }

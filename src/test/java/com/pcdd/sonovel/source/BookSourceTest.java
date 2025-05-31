@@ -3,6 +3,7 @@ package com.pcdd.sonovel.source;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -11,6 +12,7 @@ import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -18,7 +20,6 @@ import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.core.OkHttpClientFactory;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -67,6 +68,7 @@ class BookSourceTest {
             "11, https://www.0xs.net/txt/68398.html",
             "13, https://www.xbqg06.com/1582/",
             "14, https://www.luegeng.com/book186856/",
+            "15, http://www.shu009.com/book/111616/",
             "17, http://www.81zwwww.com/90_90170/",
             "18, http://www.ujxsw.org/book/107612/",
             "19, http://www.yeudusk.com/book/1322535/",
@@ -76,7 +78,7 @@ class BookSourceTest {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("耳根");
+        searchParse("恐怖");
         bookParse();
         tocParse();
         chapterParse();
@@ -190,9 +192,9 @@ class BookSourceTest {
 
         latch.await();
         threadPool.shutdown();
-
         stopWatch.stop();
-        Console.log("总耗时 {} s", stopWatch.getTotalTimeSeconds());
+
+        Console.log("总耗时 {} s", NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
         Console.log("{} END chapterBatchParse {}\n", DIVIDER, DIVIDER);
     }
 
