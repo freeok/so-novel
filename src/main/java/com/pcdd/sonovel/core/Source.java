@@ -69,13 +69,13 @@ public class Source {
 
         // timeout
         if (ruleSearch != null && ruleSearch.getTimeout() == null) {
-            ruleSearch.setTimeout(10);
+            ruleSearch.setTimeout(15);
         }
         if (ruleBook != null && ruleBook.getTimeout() == null) {
-            ruleBook.setTimeout(10);
+            ruleBook.setTimeout(15);
         }
         if (ruleToc != null && ruleToc.getTimeout() == null) {
-            ruleToc.setTimeout(15);
+            ruleToc.setTimeout(30);
         }
         if (ruleChapter != null && ruleChapter.getTimeout() == null) {
             ruleChapter.setTimeout(10);
