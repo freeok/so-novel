@@ -197,6 +197,49 @@
     }
   },
   {
+    "id": 13,
+    "url": "https://www.11bqg.com/",
+    "name": "新笔趣阁",
+    "comment": "https://github.com/freeok/so-novel/issues/148，即便修复，获取目录的速度也很慢：第 (10n - 5) 章的链接一定要通过上一章页面提取。且该书源非优质书源，修复弊大于利。",
+    "type": "html",
+    "language": "zh_CN",
+    "search": {
+      "url": "https://www.11bqg.com/search/",
+      "method": "post",
+      "data": "{type: articlename, searchkey: %s}",
+      "result": ".container > div > div > ul > li",
+      "bookName": "span.s2 > a@js:r=r.length>15?r.substring(0,15)+\"...\":r;",
+      "author": "span.s4@js:r=r.length>10?r.substring(0,10)+\"...\":r;",
+      "latestChapter": "span.s3 > a",
+      "lastUpdateTime": "span.s5"
+    },
+    "book": {
+      "url": "https://www.11bqg.com/(.*?)/",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": ".desc.m-desc",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": ".imgbox > img",
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "item": ".row.row-section > div > div:nth-child(4) > ul > li > a",
+      "pagination": true,
+      "nextPage": "#indexselect > option"
+    },
+    "chapter": {
+      "title": ".reader-main > h1@js:r=r.replace(/（\\d+\\s*\\/\\s*\\d+）/, '');",
+      "content": "#content",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "a script",
+      "pagination": true,
+      "nextPage": "(//*[@id='next_url'])[1]"
+    }
+  },
+  {
     "id": 15,
     "url": "https://www.96dushu.com/",
     "name": "96读书",

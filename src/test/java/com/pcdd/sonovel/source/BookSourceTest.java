@@ -66,7 +66,6 @@ class BookSourceTest {
             "9, https://www.22biqu.com/biqu79148/",
             "10, http://www.xbiquzw.net/10_10233/",
             "11, https://www.0xs.net/txt/68398.html",
-            "13, https://www.xbqg06.com/1582/",
             "14, https://www.luegeng.com/book186856/",
             "15, http://www.shu009.com/book/111616/",
             "17, http://www.81zwwww.com/90_90170/",
@@ -78,7 +77,7 @@ class BookSourceTest {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("恐怖");
+        searchParse("耳根");
         bookParse();
         tocParse();
         chapterParse();
