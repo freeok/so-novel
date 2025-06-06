@@ -45,7 +45,7 @@ public class Main {
 
     static {
         if (EnvUtils.isDev()) {
-            Console.log(render("当前环境为开发环境！", "red"));
+            Console.log(render("当前为开发环境！", "red"));
         }
         // 关闭 hutool 日志
         ConsoleLog.setLevel(Level.OFF);
