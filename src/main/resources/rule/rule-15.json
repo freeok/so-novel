@@ -3,7 +3,6 @@
   "url": "http://www.shu009.com/",
   "name": "书林文学",
   "comment": "源站目录有重复、缺章的情况，章节限流",
-  "type": "",
   "search": {
     "url": "http://www.shu009.com/search/",
     "method": "post",

@@ -13,11 +13,9 @@ public class Rule {
     private String url;
     private String name;
     private String comment;
-    private String type;
     private String language;
     private boolean needProxy;
     private boolean disabled;
-    private boolean ignoreSsl;
 
     private Search search;
     private Book book;
@@ -43,7 +41,6 @@ public class Rule {
         // 搜索结果是否分页
         private boolean pagination;
         private String nextPage;
-        private Integer limitPage;
     }
 
     @Data
