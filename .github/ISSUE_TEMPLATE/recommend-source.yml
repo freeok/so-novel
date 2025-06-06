@@ -15,11 +15,11 @@ body:
     attributes:
       value: |
         > [!Tip]
-        > 仅接收均满足以下条件的书源
-        > 1. 免费
-        > 2. 支持搜索（优质书源除外）
-        > 3. 无 [Cloudflare Turnstile](https://www.cloudflare.com/zh-cn/application-services/products/turnstile/)（真人验证）
-        > 4. 国内网络可直连访问（优质书源可忽略）
+        > 仅接收满足以下条件的书源
+        > 1. 非正版
+        > 2. 无 [Cloudflare Turnstile](https://www.cloudflare.com/zh-cn/application-services/products/turnstile/)（真人验证）
+        > 3. 支持搜索（优质书源除外）
+        > 4. 国内网络可直连访问（优质书源除外）
 
   - type: checkboxes
     attributes:
