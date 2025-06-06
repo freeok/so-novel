@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
@@ -49,29 +50,31 @@ public class AggregatedSearchAction {
 
     @SneakyThrows
     public static List<SearchResult> getSearchResults(String kw) {
-        List<List<SearchResult>> results = new ArrayList<>();
+        List<SearchResult> results = Collections.synchronizedList(new ArrayList<>());
         List<Source> searchableSources = SourceUtils.getSearchableSources();
         ExecutorService threadPool = Executors.newFixedThreadPool(searchableSources.size());
         CountDownLatch latch = new CountDownLatch(searchableSources.size());
 
         for (Source source : searchableSources) {
             threadPool.execute(() -> {
-                List<SearchResult> res = new SearchParser(source.config).parse(kw);
-
-                if (CollUtil.isNotEmpty(res)) {
-                    Rule rule = source.rule;
-                    Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
-                    results.add(res);
+                try {
+                    List<SearchResult> res = new SearchParser(source.config).parse(kw);
+                    if (CollUtil.isNotEmpty(res)) {
+                        Rule rule = source.rule;
+                        Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
+                        results.addAll(res);
+                    }
+                } catch (Exception e) {
+                    Console.error("搜索源 {} 异常：{}", source.rule.getName(), e.getMessage());
+                } finally {
+                    latch.countDown();
                 }
-
-                latch.countDown();
             });
         }
 
         latch.await();
-        List<SearchResult> flatList = new ArrayList<>();
-        results.forEach(flatList::addAll);
-        return SearchResultsHandler.aggregateSort(flatList, kw);
+        threadPool.shutdown();
+        return SearchResultsHandler.aggregateSort(results, kw);
     }
 
 }
