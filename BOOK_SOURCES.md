@@ -16,7 +16,6 @@
 | 10     | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      | ✅    |                                                                                    |
 | 11     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP且获取不到正文                                                        |
 | 12     | [得奇小说网](https://www.deqixs.com/)     | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
-| ~~13~~ | ~~[新笔趣阁6](https://www.xbqg06.com/)~~ | ✅     | ✅      | ✅    | 暂时禁用                                                                               |
 | 14     | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    |                                                                                    |
 | 15     | [书林文学](http://www.shu009.com/)       | ✅     | ✅      | ✅    | 源站目录有重复、缺章的情况，章节限流                                                                 |
 | 16     | [速读谷](https://www.sudugu.com/)       | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |

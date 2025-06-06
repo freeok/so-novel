@@ -118,6 +118,9 @@ public class TocParser extends Source {
         }
     }
 
+    /**
+     * @param urls 分页目录的 url
+     */
     @SneakyThrows
     private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new TocList();
