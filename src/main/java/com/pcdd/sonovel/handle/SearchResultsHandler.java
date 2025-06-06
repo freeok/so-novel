@@ -42,22 +42,36 @@ public class SearchResultsHandler {
         double authorScore = getSimilarity(data, kw, "author");
         boolean isAuthorSearch = bookNameScore < authorScore;
 
-        return data.stream()
-                // 筛选相似度大于 0.3 的记录
-                .filter(sr -> StrUtil.similar(kw, isAuthorSearch ? sr.getAuthor() : sr.getBookName()) > 0.3)
-                .sorted((o1, o2) -> {
-                    double score1 = StrUtil.similar(kw, isAuthorSearch ? o1.getAuthor() : o1.getBookName());
-                    double score2 = StrUtil.similar(kw, isAuthorSearch ? o2.getAuthor() : o2.getBookName());
+        // 缓存相似度
+        Map<SearchResult, Double> similarityMap = new HashMap<>();
+        for (SearchResult sr : data) {
+            String target = isAuthorSearch ? sr.getAuthor() : sr.getBookName();
+            double score = StrUtil.similar(kw, target);
+            similarityMap.put(sr, score);
+        }
 
-                    if (score1 != score2) {
-                        return Double.compare(score2, score1); // 按相似度降序
-                    }
+        // 排序器统一封装，复用
+        Comparator<SearchResult> comparator = (o1, o2) -> {
+            double score1 = similarityMap.get(o1);
+            double score2 = similarityMap.get(o2);
+            if (score1 != score2) {
+                return Double.compare(score2, score1); // 按相似度降序
+            }
+            return isAuthorSearch
+                    ? o1.getBookName().compareTo(o2.getBookName())
+                    : o1.getAuthor().compareTo(o2.getAuthor());
+        };
 
-                    return isAuthorSearch
-                            ? o1.getBookName().compareTo(o2.getBookName()) // 按书名升序
-                            : o1.getAuthor().compareTo(o2.getAuthor());  // 按作者升序
-                })
+        // 筛选相似度高的
+        List<SearchResult> filtered = data.stream()
+                .filter(sr -> similarityMap.get(sr) > 0.3)
+                .sorted(comparator)
                 .toList();
+
+        // 如果筛选后为空，则排序原始 data 返回
+        return filtered.isEmpty()
+                ? data.stream().filter(sr -> similarityMap.get(sr) > 0).sorted(comparator).toList()
+                : filtered;
     }
 
     // 计算权重，用于判断关键字是书名还是作者
