@@ -3,7 +3,6 @@
   "url": "https://www.shuhaige.net/",
   "name": "书海阁小说网",
   "comment": "搜索爬取过快会丢包(Unexpected end of file from server)",
-  "type": "html",
   "language": "zh_CN",
   "search": {
     "url": "https://www.shuhaige.net/search.html",
@@ -19,8 +18,7 @@
     "wordCount": "dd:nth-child(3) > span:nth-child(4)",
     "status": "dd:nth-child(3) > span:nth-child(2)",
     "pagination": true,
-    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)",
-    "limitPage": 3
+    "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)"
   },
   "book": {
     "bookName": "meta[property=\"og:novel:book_name\"]",

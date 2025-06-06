@@ -85,7 +85,7 @@ public class SearchParser extends Source {
             return firstPageResults;
         }
 
-        // 注意，css 或 xpath 的查询结果必须为多个 a 元素，且 1 <= limitPage < searchPages.size()，否则 limitPage 无效
+        // 注意，css 或 xpath 的查询结果必须为多个 a 元素
         Elements nextPageUrls = JsoupUtils.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
         if (nextPageUrls.isEmpty()) {
