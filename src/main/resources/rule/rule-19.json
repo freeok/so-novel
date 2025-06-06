@@ -3,7 +3,6 @@
   "url": "http://www.yeudusk.com/",
   "name": "阅读库",
   "comment": "",
-  "type": "html",
   "language": "zh_CN",
   "search": {
     "url": "http://www.yeudusk.com/modules/article/search.php?q=%s",

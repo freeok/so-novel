@@ -3,7 +3,6 @@
   "url": "https://www.dxmwx.org/",
   "name": "大熊猫文学",
   "comment": "搜索无限流",
-  "type": "html",
   "language": "zh_CN",
   "search": {
     "url": "https://www.dxmwx.org/list/topall_%s.html",
@@ -14,8 +13,7 @@
     "latestChapter": ".right_wid > div:nth-child(4) > a@js:r=r.replaceAll('最新章节','');",
     "lastUpdateTime": ".right_wid > div:nth-child(4) > span",
     "pagination": true,
-    "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]",
-    "limitPage": 3
+    "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]"
   },
   "book": {
     "url": "https://www.dxmwx.org/book/(.*?).html",

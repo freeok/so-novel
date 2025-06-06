@@ -3,7 +3,6 @@
   "url": "https://www.0xs.net/",
   "name": "零点小说",
   "comment": "章节限流，爬取过快会封IP，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”，发布页：https://www.cxysb.com/",
-  "type": "html",
   "language": "zh_CN",
   "ignoreSsl": true,
   "search": {
@@ -16,8 +15,7 @@
     "wordCount": ".count",
     "category": ".type",
     "pagination": true,
-    "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)",
-    "limitPage": 3
+    "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)"
   },
   "book": {
     "url": "https://www.0xs.net/txt/(.*?).html",
