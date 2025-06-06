@@ -17,7 +17,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -141,15 +140,12 @@ public class ChapterParser extends Source {
         try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
             Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
 
-            // 删除每个元素的所有属性，防止标签和属性间的空格被后续清理，导致标签错误
-            Elements contentEl = JsoupUtils.select(doc, r.getContent());
-            for (Element el : contentEl.select("*")) {
-                el.clearAttributes();
-            }
+            Elements contentEls = JsoupUtils.select(doc, r.getContent());
+            JsoupUtils.clearAllAttributes(contentEls);
 
             Thread.sleep(interval);
 
-            return JsoupUtils.invokeJs(r.getContent(), contentEl.html());
+            return JsoupUtils.invokeJs(r.getContent(), contentEls.html());
         }
     }
 
@@ -164,7 +160,13 @@ public class ChapterParser extends Source {
             try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
-            contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
+
+            String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+            // String ==> Elements
+            Elements contentEls = Jsoup.parse(content).children();
+            JsoupUtils.clearAllAttributes(contentEls);
+            contentBuilder.append(contentEls.html());
+
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
             String candidateNext = resolveNextUrl(doc, nextEls, r);

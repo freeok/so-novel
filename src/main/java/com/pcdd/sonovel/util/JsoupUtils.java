@@ -115,4 +115,14 @@ public class JsoupUtils {
         return "";
     }
 
+    /**
+     * 清除所有元素及其子元素的属性，防止标签与属性间的空格干扰解析。
+     */
+    public static void clearAllAttributes(Elements elements) {
+        for (Element el : elements.select("*")) {
+            el.clearAttributes();
+        }
+    }
+
+
 }
