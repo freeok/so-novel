@@ -3,7 +3,6 @@
   "url": "",
   "name": "",
   "comment": "",
-  "type": "",
   "language": "zh_CN",
   "search": {
     "url": "",
@@ -19,8 +18,7 @@
     "latestChapter": "",
     "lastUpdateTime": "",
     "pagination": false,
-    "nextPage": "",
-    "limitPage": 0
+    "nextPage": ""
   },
   "book": {
     "url": "",

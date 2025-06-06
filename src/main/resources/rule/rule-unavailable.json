@@ -4,7 +4,6 @@
     "url": "https://69shux.co/",
     "name": "69書吧",
     "comment": "新加了CF，已无法使用。需要梯子，章节有限流，数量5w+",
-    "type": "html",
     "language": "zh_Hant",
     "needProxy": true,
     "search": {
@@ -18,8 +17,7 @@
       "latestChapter": "div.zxzj > p > a",
       "status": "div.labelbox > label:nth-child(3)",
       "pagination": true,
-      "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)",
-      "limitPage": 3
+      "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)"
     },
     "book": {
       "url": "https://69shux.co/book/(.*?).html",
@@ -59,7 +57,6 @@
     "url": "https://69shuba.cx/",
     "name": "69书吧",
     "comment": "需要梯子、正文内容纯净、搜索有CF、章节限流",
-    "type": "html",
     "language": "zh_CN",
     "needProxy": true,
     "book": {
@@ -92,7 +89,6 @@
     "url": "https://www.69yuedu.net/",
     "name": "69阅读",
     "comment": "需要梯子，搜索有CF、章节无限流",
-    "type": "html",
     "language": "zh_CN",
     "needProxy": true,
     "book": {
@@ -123,7 +119,6 @@
     "url": "https://www.369book.cc/",
     "name": "369小说网",
     "comment": "网站被攻击导致数据丢失，搜索暂不可用。搜索(Read timed out)、章节有限流，章节爬取过快会封IP，章节页、目录页都有分页和反爬，搜索结果固定10条，以javascript:开头的href需要特殊处理，书籍数量57w+",
-    "type": "html",
     "language": "zh_CN",
     "search": {
       "url": "https://www.369book.cc/search/?searchkey=%s",
@@ -166,7 +161,6 @@
     "url": "https://cn.ttkan.co/",
     "name": "天天看小说",
     "comment": "老书全，搜索有限流(Read timed out)",
-    "type": "html",
     "language": "zh_CN",
     "search": {
       "url": "https://cn.ttkan.co/novel/search?q=%s",
@@ -201,7 +195,6 @@
     "url": "https://www.11bqg.com/",
     "name": "新笔趣阁",
     "comment": "https://github.com/freeok/so-novel/issues/148，即便修复，获取目录的速度也很慢：第 (10n - 5) 章的链接一定要通过上一章页面提取。且该书源非优质书源，修复弊大于利。",
-    "type": "html",
     "language": "zh_CN",
     "search": {
       "url": "https://www.11bqg.com/search/",
@@ -244,7 +237,6 @@
     "url": "https://www.96dushu.com/",
     "name": "96读书",
     "comment": "晋江的书多，非大陆IP会跳CF，搜索、章节限流，章节翻页需要额外代码适配（下一页的url在js代码中），暂时搁置",
-    "type": "html",
     "language": "zh_CN",
     "search": {
       "url": "https://www.96dushu.com/modules/article/search.php",
@@ -258,8 +250,7 @@
       "lastUpdateTime": "dd:nth-child(2) > h3 > span",
       "status": "dd:nth-child(3) > span:nth-child(2)",
       "pagination": true,
-      "nextPage": "#pagelink > a:not(.first):not(.last)",
-      "limitPage": 2
+      "nextPage": "#pagelink > a:not(.first):not(.last)"
     },
     "book": {
       "url": "https://www.96dushu.com/book/(.*?)/",
