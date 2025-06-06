@@ -11,6 +11,7 @@ import cn.hutool.http.Header;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -19,7 +20,6 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParser6;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.Data;
@@ -53,8 +53,6 @@ class BookSourceQualityTest {
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
     // 测试排行榜前几名 (0, 20]
     static final int TOP_NUM = 20;
-    // 1：封IP，6：老书，12,16：限流
-    static final String RE_SKIP_IDS = "6|12|13|16";
 
     static {
         HttpClientContext.set(OkHttpClientFactory.create(config, true));
@@ -135,11 +133,11 @@ class BookSourceQualityTest {
                     Map<Integer, List<SourceQuality>> sourceQualityListMap = new HashMap<>();
 
                     // 遍历书源
-                    for (Integer id : SourceUtils.ALL_IDS) {
-                        Rule rule = new Source(id).rule;
+                    for (Source source : SourceUtils.getSearchableSources()) {
+                        Rule rule = source.rule;
                         // 跳过书源：不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的
-                        if (rule.getSearch() != null && !String.valueOf(rule.getId()).matches(RE_SKIP_IDS)) {
-                            sourceQualityListMap.put(id, getSourceQualityList(id, kv));
+                        if (rule.getSearch() != null) {
+                            sourceQualityListMap.put(rule.getId(), getSourceQualityList(rule.getId(), kv));
                         }
                     }
 
@@ -248,8 +246,8 @@ class BookSourceQualityTest {
                 "# " + title,
                 TOP_NUM,
                 DateTime.now().toString(DatePattern.NORM_DATE_PATTERN)));
-        md.append(StrUtil.format("| 排名 | 书名 | 作者 {} 起点链接 |\n", sourceNameCol));
-        md.append(StrUtil.format("| ---- | ---- | ---- {} ---- |\n", dividerCol));
+        md.append(StrUtil.format("| 排名 | 书名 | 作者 {}\n", sourceNameCol));
+        md.append(StrUtil.format("| ---- | ---- | ---- {}\n", dividerCol));
 
         // 获取 map 任意非空元素的 value
         List<SourceQuality> list = CollUtil.getFirst(CollUtil.filter(map.values(), Objects::nonNull));
@@ -262,12 +260,11 @@ class BookSourceQualityTest {
                 foundBuilder.append(StrUtil.format("{} |", sq.getFound() ? "✅" : "❌"));
             }
 
-            md.append(StrUtil.format("| {} | {} | {} | {} {} |\n",
+            md.append(StrUtil.format("| {} | {} | {} | {}\n",
                     i + 1,
                     o.getBookName(),
                     o.getAuthor(),
-                    foundBuilder,
-                    o.getQiDianUrl()));
+                    foundBuilder));
         }
 
         try {
