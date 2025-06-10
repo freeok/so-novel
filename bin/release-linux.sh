@@ -28,7 +28,7 @@ mkdir -p dist
 mkdir -p "target/$dist_dirname"
 
 # 复制配置、说明、字体、JRE
-cp config.ini bundle/readme.txt bundle/run-linux.sh "bundle/$jre_filename" "target/$dist_dirname"
+cp config.ini bundle/readme.txt bundle/CHANGELOG_ALL.md bundle/run-linux.sh "bundle/$jre_filename" "target/$dist_dirname"
 cp -r bundle/fonts "target/$dist_dirname"
 
 cd target
