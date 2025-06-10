@@ -45,7 +45,7 @@ mkdir -p dist
 mkdir -p "target/$dist_dirname"
 
 # 复制配置文件、说明、脚本、字体
-cp config.ini bundle/readme.txt bundle/run-macos.sh "bundle/$jre_filename" "target/$dist_dirname"
+cp config.ini bundle/readme.txt bundle/CHANGELOG_ALL.md bundle/run-macos.sh "bundle/$jre_filename" "target/$dist_dirname"
 cp -r bundle/fonts "target/$dist_dirname"
 
 # 复制 jar
