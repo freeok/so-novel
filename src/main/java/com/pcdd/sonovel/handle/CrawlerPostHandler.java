@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author pcdd
@@ -19,8 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CrawlerPostHandler {
 
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("txt", "epub", "pdf");
     private final AppConfig config;
-    private final List<String> extNames = List.of("txt", "epub", "pdf");
 
     @SneakyThrows
     public void handle(File saveDir) {
@@ -28,7 +28,7 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
 
-        if (extNames.contains(extName)) {
+        if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase())) {
             s.append("正在合并为 ").append(extName.toUpperCase());
         }
         if ("html".equals(extName)) {
@@ -45,7 +45,7 @@ public class CrawlerPostHandler {
 
         PostHandlerFactory.getHandler(extName, config).handle(book, saveDir);
 
-        if (extNames.contains(extName) && config.getPreserveChapterCache() == 0) {
+        if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase()) && config.getPreserveChapterCache() == 0) {
             FileUtil.del(saveDir);
         }
     }
