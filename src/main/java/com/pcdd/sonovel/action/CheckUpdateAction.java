@@ -95,7 +95,7 @@ public class CheckUpdateAction {
         long fileSize = FileUtils.fileSize(url);
         // 设置进度条
         ProgressBar bar = ProgressBar.builder()
-                .setTaskName("Downloading new version")
+                .setTaskName("Downloading...")
                 .setInitialMax(fileSize)
                 .setStyle(ProgressBarStyle.ASCII)
                 .setMaxRenderedLength(100)
@@ -108,7 +108,6 @@ public class CheckUpdateAction {
         HttpUtil.downloadFile(url, file, new StreamProgress() {
             @Override
             public void start() {
-                bar.setExtraMessage("Downloading ...");
             }
 
             @Override
