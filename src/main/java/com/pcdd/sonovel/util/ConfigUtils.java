@@ -73,6 +73,7 @@ public class ConfigUtils {
         config.setMinInterval(usr.getInt("min", SELECTION_2, 200));
         config.setMaxInterval(usr.getInt("max", SELECTION_2, 400));
         config.setPreserveChapterCache(usr.getInt("preserve_chapter_cache", SELECTION_2, 0));
+        config.setShowDownloadLog(usr.getInt("show_download_log", SELECTION_2, 1));
 
         config.setMaxRetryAttempts(usr.getInt("max-attempts", SELECTION_3, 5));
         config.setRetryMinInterval(usr.getInt("min", SELECTION_3, 2000));
