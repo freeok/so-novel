@@ -69,7 +69,7 @@ public class SingleSearchAction {
         new SearchParser(config).printSearchResult(searchResults);
 
         // 3. 下载
-        new DownloadAction(config).execute(searchResults);
+        new DownloadAction().execute(searchResults);
     }
 
     @SneakyThrows

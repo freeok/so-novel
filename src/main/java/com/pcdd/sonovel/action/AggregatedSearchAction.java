@@ -45,7 +45,7 @@ public class AggregatedSearchAction {
 
         SearchParser.printAggregateSearchResult(results);
 
-        new DownloadAction(null).execute(results);
+        new DownloadAction().execute(results);
     }
 
     @SneakyThrows
