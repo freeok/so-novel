@@ -62,7 +62,9 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter, CountDownLatch latch) {
         try {
             long interval = CrawlUtils.randomInterval(config);
-            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
+            if (config.getShowDownloadLog() == 1) {
+                Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
+            }
 
             String content = fetchContent(chapter.getUrl(), interval);
             Assert.notEmpty(content, "正文内容为空");

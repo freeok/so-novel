@@ -34,7 +34,7 @@ public class CrawlerPostHandler {
         if ("html".equals(extName)) {
             s.append("正在生成 HTML 目录文件");
         }
-        Console.log(s.append(" ..."));
+        Console.log(s.append("..."));
 
         // 等待文件系统更新索引
         int attempts = 10;

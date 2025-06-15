@@ -30,7 +30,7 @@ public class ShowSourcesAction {
     public static final int TIMEOUT = 5;
 
     public void execute() {
-        Console.log("<== 测试延迟中 ...");
+        Console.log("<== 测试延迟中...");
 
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
