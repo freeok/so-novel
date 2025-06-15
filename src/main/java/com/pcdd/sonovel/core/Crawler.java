@@ -103,6 +103,9 @@ public class Crawler {
         CountDownLatch latch = new CountDownLatch(toc.size());
 
         Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+        if (config.getShowDownloadLog() == 0) {
+            Console.log("<== 下载日志已关闭，请耐心等待...");
+        }
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
@@ -110,7 +113,9 @@ public class Crawler {
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch));
-            Console.log("<== 待下载章节数：{}", latch.getCount());
+            if (config.getShowDownloadLog() == 1) {
+                Console.log("<== 待下载章节数：{}", latch.getCount());
+            }
         }));
 
         // 阻塞主线程，等待全部章节下载完毕
