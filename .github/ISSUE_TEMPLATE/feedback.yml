@@ -20,13 +20,14 @@ body:
         - Windows
         - macOS
         - Linux
+        - Others
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     attributes:
-      label: 操作系统版本（Windows、Linux、macOS 用命令查看分别为：systeminfo、lsb_release -a、sw_vers）
-      placeholder: Windows 11 专业版 26120.2705
+      label: 操作系统版本（Windows：运行 winver，Linux：运行 lsb_release -a，macOS：运行 sw_vers 查看）
+      placeholder: 结果粘贴到此处
     validations:
       required: true
 
@@ -37,20 +38,23 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     attributes:
-      label: 书源 ID
+      label: 配置信息
+      placeholder: 选择功能d.配置信息，结果粘贴到此处
+    validations:
+      required: true
 
   - type: textarea
     attributes:
       label: 问题描述
-      description: 清晰地描述你遇到的问题，并提供完整的输入&输出信息，尽量用截图
+      description: 简要地描述你遇到的问题，并提供完整的输入&输出信息，尽量用截图
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 复现步骤
-      description: 请提供复现问题的完整步骤
+      description: 请提供复现该问题的完整步骤
     validations:
       required: true
