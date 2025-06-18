@@ -13,7 +13,8 @@ echo "🔖 最新版本：$LATEST_VERSION"
 
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux.tar.gz"
-DIR_NAME="SoNovel"
+# v1.8.3 之后的版本发布前，务必将此处修改为 DIR_NAME="SoNovel"
+DIR_NAME="SoNovel-linux"
 IMAGE_NAME="sonovel:${LATEST_VERSION}"
 
 # 函数：下载文件
@@ -39,11 +40,11 @@ mv Dockerfile "${DIR_NAME}"
 cd "${DIR_NAME}"
 
 echo "📁 准备宿主机挂载目录..."
-mkdir -p /sonovel/downloads
+sudo mkdir -p /sonovel/downloads
 
 # 如果宿主机 config.ini 不存在，就复制它；否则保留用户已有配置
 if [ ! -f /sonovel/config.ini ]; then
-  cp config.ini /sonovel/config.ini
+  sudo cp config.ini /sonovel/config.ini
 else
   echo "⚠️ /sonovel/config.ini 已存在，跳过复制。"
 fi
@@ -55,9 +56,8 @@ if ! docker build -t "${IMAGE_NAME}" .; then
   exit 1
 fi
 
-echo "🚀 启动容器..."
-# 运行容器
-docker run -it --rm \
-  -v /sonovel/config.ini:/sonovel/config.ini \
-  -v /sonovel/downloads:/sonovel/downloads \
-  "${IMAGE_NAME}" bash
+echo "🚀 手动执行以下命令启动容器."
+echo "docker run -it --rm \
+-v /sonovel/config.ini:/sonovel/config.ini \
+-v /sonovel/downloads:/sonovel/downloads \
+${IMAGE_NAME} bash"
