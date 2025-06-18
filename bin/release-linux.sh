@@ -10,7 +10,7 @@ jre_dirname="jdk-17.0.12+7-jre"
 
 # 最终产物
 dist_filename="sonovel-linux.tar.gz"
-dist_dirname="SoNovel-linux"
+dist_dirname="SoNovel"
 
 # 项目根路径
 project_path=$(

@@ -10,7 +10,7 @@ set -o pipefail  # 管道中的任何命令失败都会导致脚本退出
 VERSION="v1.8.3"
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux.tar.gz"
-DIR_NAME="SoNovel-Linux"
+DIR_NAME="SoNovel"
 IMAGE_NAME="sonovel:${VERSION}"
 
 # 函数：下载文件
