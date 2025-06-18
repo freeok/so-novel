@@ -1,17 +1,20 @@
 #!/bin/bash
 # ====================================================
-# 于 Ubuntu 24 测试成功
+# 于 Ubuntu 24 测试通过
 # 执行前请确保下载链接的可访问性！建议开启 🪜 或使用 GitHub、Docker 镜像加速
 # ====================================================
 
 set -e  # 出错即退出
 set -o pipefail  # 管道中的任何命令失败都会导致脚本退出
 
-VERSION="v1.8.3"
+# 获取最新版本号
+LATEST_VERSION=$(curl -s https://api.github.com/repos/freeok/so-novel/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
+echo "🔖 最新版本：$LATEST_VERSION"
+
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux.tar.gz"
 DIR_NAME="SoNovel"
-IMAGE_NAME="sonovel:${VERSION}"
+IMAGE_NAME="sonovel:${LATEST_VERSION}"
 
 # 函数：下载文件
 download_file() {
@@ -25,7 +28,7 @@ download_file() {
 }
 
 # 下载 release 文件
-download_file "https://github.com/freeok/so-novel/releases/download/${VERSION}/${TAR_NAME}" "$TAR_NAME"
+download_file "https://github.com/freeok/so-novel/releases/download/${LATEST_VERSION}/${TAR_NAME}" "$TAR_NAME"
 download_file "https://raw.githubusercontent.com/freeok/so-novel/main/Dockerfile" "Dockerfile"
 
 echo "📦 解压文件..."
