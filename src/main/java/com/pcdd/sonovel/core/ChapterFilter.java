@@ -24,8 +24,8 @@ public class ChapterFilter extends Source {
     public String filter(Chapter chapter) {
         return new FilterBuilder(chapter)
                 .filterInvisibleChars(true)
-                .filterEscape(true)
                 .filterAds(true)
+                .filterEscape(true)
                 .filterDuplicateTitle(true)
                 .build();
     }
@@ -55,18 +55,18 @@ public class ChapterFilter extends Source {
         }
 
         /**
-         * 是否启用 HTML 实体字符过滤
-         */
-        public FilterBuilder filterEscape(boolean apply) {
-            this.applyEscapeFilter = apply;
-            return this;
-        }
-
-        /**
          * 是否启用广告过滤
          */
         public FilterBuilder filterAds(boolean apply) {
             this.applyAdsFilter = apply;
+            return this;
+        }
+
+        /**
+         * 是否启用 HTML 实体字符过滤
+         */
+        public FilterBuilder filterEscape(boolean apply) {
+            this.applyEscapeFilter = apply;
             return this;
         }
 
@@ -86,14 +86,14 @@ public class ChapterFilter extends Source {
                 this.content = CrawlUtils.cleanInvisibleChars(this.content);
             }
 
-            if (applyEscapeFilter) {
-                // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
-                this.content = this.content.replaceAll("&[^;]+;", "");
-            }
-
             if (applyAdsFilter) {
                 String filteredContent = this.content.replaceAll(rule.getChapter().getFilterTxt(), "");
                 this.content = HtmlUtil.removeHtmlTag(filteredContent, StrUtil.splitToArray(rule.getChapter().getFilterTag(), " "));
+            }
+
+            if (applyEscapeFilter) {
+                // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
+                this.content = this.content.replaceAll("&[^;]+;", "");
             }
 
             // 确保在 EscapeFilter、AdsFilter 之后
