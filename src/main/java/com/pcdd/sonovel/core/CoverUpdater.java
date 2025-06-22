@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static org.jline.jansi.AnsiRenderer.render;
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
