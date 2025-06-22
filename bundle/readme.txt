@@ -30,12 +30,5 @@ https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md
 常见问题基本都是用户使用不当导致的！如果都没有，再进行反馈！反馈时请按照要求填写，否则不予处理
 
 
-交互模式 2 (interactive-mode = 2) 使用方法
-1. 先按 Tab 键显示选项
-2. 再按 Tab 键切换选项
-3. 然后按 Enter 键选中
-4. 最后按 Enter 键执行
-
-
 项目主页：https://github.com/freeok/so-novel
 下载页面：https://github.com/freeok/so-novel/releases
