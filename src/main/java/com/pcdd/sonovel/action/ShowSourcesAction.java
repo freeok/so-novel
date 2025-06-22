@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static org.jline.jansi.AnsiRenderer.render;
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * 书源一览
