@@ -20,7 +20,6 @@
 
     <properties>
         <java.version>17</java.version>
-        <jline.version>3.27.1</jline.version>
         <javet.version>4.1.3</javet.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -70,18 +69,6 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>2.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>${jline.version}</version>
-        </dependency>
-        <!-- https://github.com/jline/jline3?tab=readme-ov-file#ffm-vs-jni-vs-jansi-vs-jna-vs-exec -->
-        <!-- 不加运行 exe 报错 -->
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline-terminal-jni</artifactId>
-            <version>${jline.version}</version>
         </dependency>
         <dependency>
             <groupId>me.tongfei</groupId>
@@ -185,7 +172,7 @@
 
     <build>
         <plugins>
-            <!-- IDEA 的终端无法开发 jline 程序，因此在 wt 中运行 -->
+            <!-- 在终端运行项目 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -194,7 +181,6 @@
                     <mainClass>com.pcdd.sonovel.Main</mainClass>
                 </configuration>
             </plugin>
-
             <!--
                 maven-jar-plugin 打包生成的 jar，只包含该工程下源码编译结果，不包含依赖内容
                 使用以下插件将所有外部库打包进 jar
@@ -254,7 +240,7 @@
                             <icon>assets/logo-1.ico</icon>
                             <errTitle>SoNovel</errTitle>
                             <!-- 崩溃时重新启动 -->
-                            <restartOnCrash>true</restartOnCrash>
+                            <restartOnCrash>false</restartOnCrash>
                             <classPath>
                                 <mainClass>com.pcdd.sonovel.Main</mainClass>
                                 <addDependencies>true</addDependencies>

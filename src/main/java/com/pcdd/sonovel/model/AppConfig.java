@@ -16,7 +16,6 @@ public class AppConfig {
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
-    private Integer interactiveMode;
     private Integer sourceId;
     private Integer searchLimit;
 
