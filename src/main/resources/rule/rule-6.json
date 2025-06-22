@@ -23,8 +23,7 @@
   },
   "toc": {
     "url": "https://quanben5.com/n/%s/xiaoshuo.html",
-    "item": "ul > li > a",
-    "offset": 0
+    "item": "ul > li > a"
   },
   "chapter": {
     "title": ".content > h1",
