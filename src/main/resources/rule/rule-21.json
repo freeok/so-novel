@@ -1,0 +1,36 @@
+{
+  "id": 21,
+  "url": "http://www.xhytd.com/",
+  "name": "黄易天地",
+  "comment": "仅限大陆IP",
+  "language": "zh_CN",
+  "search": {
+    "url": "http://www.xhytd.com/search.html?name=%s",
+    "method": "get",
+    "result": "#main > div.novelslist2 > ul > li",
+    "bookName": "span.s2.wid > a",
+    "author": "span.s4.wid > a",
+    "latestChapter": "span.s3.wid3 > a",
+    "lastUpdateTime": "span.s6.wid6"
+  },
+  "book": {
+    "bookName": "meta[property=\"og:novel:book_name\"]",
+    "author": "meta[property=\"og:novel:author\"]",
+    "intro": "meta[name=\"description\"]",
+    "category": "meta[property=\"og:novel:category\"]",
+    "coverUrl": "meta[property=\"og:image\"]",
+    "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+    "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+  },
+  "toc": {
+    "item": "#list > dl > dt:nth-of-type(2) ~ dd > a"
+  },
+  "chapter": {
+    "title": "h1",
+    "content": "#content",
+    "paragraphTagClosed": false,
+    "paragraphTag": "<br>+",
+    "filterTxt": "",
+    "filterTag": "p div"
+  }
+}
