@@ -73,6 +73,7 @@ class BookSourceTest {
             "18, http://www.ujxsw.org/book/107612/",
             "19, http://www.yeudusk.com/book/1322535/",
             "20, https://www.wxsy.net/novel/1803/",
+            "21, http://www.xhytd.com/32/32957/"
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -82,7 +83,7 @@ class BookSourceTest {
         bookParse();
         tocParse();
         chapterParse();
-        // chapterBatchParse(0, 100);
+        chapterBatchParse(0, 50);
     }
 
     @DisplayName("测试代理书源")
@@ -156,6 +157,9 @@ class BookSourceTest {
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
     }
 
+    /**
+     * 测试章节是否限流
+     */
     @SneakyThrows
     public void chapterBatchParse(int start, int end) {
         Console.log("\n{} START chapterBatchParse {}", DIVIDER, DIVIDER);
