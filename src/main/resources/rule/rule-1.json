@@ -22,8 +22,7 @@
     "coverUrl": "meta[property=\"og:image\"]"
   },
   "toc": {
-    "item": "#list > dl > dd > a",
-    "offset": 0
+    "item": "#list > dl > dd > a"
   },
   "chapter": {
     "title": ".bookname > h1",

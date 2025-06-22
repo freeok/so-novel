@@ -24,8 +24,7 @@
     "status": "meta[property=\"og:novel:status\"]"
   },
   "toc": {
-    "item": "div.listmain > dl > dd > a",
-    "offset": 12
+    "item": "dl > dt:nth-of-type(2) ~ dd > a"
   },
   "chapter": {
     "title": ".content > h1",

@@ -126,7 +126,6 @@ public class TocParser extends Source {
         List<Chapter> toc = new TocList();
         boolean isDesc = r.isDesc();
         int orderNumber = 1;
-        int offset = r.getOffset() != null ? r.getOffset() : 0;
 
         // TODO 多线程优化
         for (String url : urls) {
@@ -146,9 +145,6 @@ public class TocParser extends Source {
                 elements = JsoupUtils.select(document, r.getItem());
             }
 
-            if (offset != 0) {
-                elements = adjustElementsByOffset(elements, offset);
-            }
             int minIndex = Math.min(end, elements.size());
             if (isDesc) {
                 for (int i = minIndex - 1; i >= start - 1; i--) {
@@ -164,19 +160,6 @@ public class TocParser extends Source {
         // 不要根据章节名中的小写数字或大写数字对 urls 进行排序（此方法仍不可靠，因为某些章节名的数字不按顺序，例如番外 1）
 
         return toc;
-    }
-
-    private List<Element> adjustElementsByOffset(List<Element> elements, int offset) {
-        if (elements.size() < offset) {
-            return elements;
-        }
-        if (offset > 0) {
-            return elements.subList(offset, elements.size());
-        }
-        if (offset < 0) {
-            return elements.subList(0, elements.size() + offset);
-        }
-        return elements;
     }
 
     private void addChapter(Element el, List<Chapter> toc, int order, Rule.Toc r) {
