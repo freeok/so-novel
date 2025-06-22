@@ -16,7 +16,7 @@ import java.util.List;
 public class SourceUtils {
 
     // 全部书源
-    public final List<Integer> ALL_IDS = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+    public final List<Integer> ALL_IDS = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
     // 不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的书源
     public final List<Integer> SKIP_IDS = CollUtil.newArrayList(6, 7, 12, 16);
     // 纳入聚合搜索的书源
