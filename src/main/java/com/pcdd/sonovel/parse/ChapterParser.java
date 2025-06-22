@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 
-import static org.jline.jansi.AnsiRenderer.render;
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd

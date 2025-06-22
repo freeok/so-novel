@@ -19,15 +19,9 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
 import lombok.SneakyThrows;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Scanner;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
@@ -64,13 +58,7 @@ public class Main {
         if (config.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
-        if (config.getInteractiveMode() == 1) {
-            inputMode();
-        } else if (config.getInteractiveMode() == 2) {
-            selectMode();
-        } else {
-            inputMode();
-        }
+        inputMode();
 
         HttpClientContext.clear();
     }
@@ -123,66 +111,6 @@ public class Main {
                     break;
             }
         }
-    }
-
-    @SneakyThrows
-    private static void selectMode() {
-        List<String> options = List.of(
-                "a.结束程序",
-                "b.聚合搜索",
-                "c.检查更新",
-                "d.书源一览",
-                "e.版本信息",
-                "f.配置信息",
-                "g.批量下载",
-                "h.搜索指定书源"
-        );
-
-        Terminal terminal = TerminalBuilder.builder()
-                .system(true)
-                .build();
-        LineReader reader = LineReaderBuilder.builder()
-                .terminal(terminal)
-                .completer(new StringsCompleter(options))
-                .build();
-
-        printHint();
-
-        while (true) {
-            String cmd = reader.readLine("按 Tab 键选择功能: ").strip();
-
-            if (!options.contains(cmd)) {
-                Console.error("无效的选项，请重新选择");
-            }
-            if (options.get(0).equals(cmd)) {
-                Console.log("<== Bye :)");
-                System.exit(0);
-                break;
-            }
-            if (options.get(1).equals(cmd)) {
-                new AggregatedSearchAction().execute();
-            }
-            if (options.get(2).equals(cmd)) {
-                new CheckUpdateAction().execute();
-            }
-            if (options.get(3).equals(cmd)) {
-                new ShowSourcesAction().execute();
-            }
-            if (options.get(4).equals(cmd)) {
-                printHint();
-            }
-            if (options.get(5).equals(cmd)) {
-                Console.log(JSONUtil.toJsonPrettyStr(config));
-            }
-            if (options.get(6).equals(cmd)) {
-                new BatchDownloadAction(config).execute();
-            }
-            if (options.get(7).equals(cmd)) {
-                new SingleSearchAction(config).execute();
-            }
-        }
-
-        terminal.close();
     }
 
     private static void printHint() {
