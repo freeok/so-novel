@@ -66,7 +66,6 @@ public class Rule {
         private String url;
         private String list;
         private String item;
-        private Integer offset;
         private boolean isDesc;
         // 目录是否分页
         private boolean pagination;
