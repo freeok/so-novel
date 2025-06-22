@@ -24,9 +24,10 @@ run_maven() {
 }
 
 copy_files() {
-    cp config.ini bundle/SoNovel.l4j.ini bundle/readme.txt bundle/CHANGELOG_ALL.md "$target_dir"
-    cp -r bundle/fonts "$target_dir/"
     cp "bundle/$jre_filename" "$target_dir"
+    cp -r bundle/rules "$target_dir/"
+    cp -r bundle/fonts "$target_dir/"
+    cp config.ini bundle/SoNovel.l4j.ini bundle/readme.txt bundle/CHANGELOG_ALL.md "$target_dir"
 }
 
 extract_jre() {

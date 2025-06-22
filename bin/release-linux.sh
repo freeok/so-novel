@@ -27,9 +27,10 @@ mvn clean package -Plinux-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
 mkdir -p dist
 mkdir -p "target/$dist_dirname"
 
-# 复制配置、说明、字体、JRE
-cp config.ini bundle/readme.txt bundle/CHANGELOG_ALL.md bundle/run-linux.sh "bundle/$jre_filename" "target/$dist_dirname"
+cp "bundle/$jre_filename" "target/$dist_dirname"
+cp -r bundle/rules "target/$dist_dirname"
 cp -r bundle/fonts "target/$dist_dirname"
+cp config.ini bundle/readme.txt bundle/CHANGELOG_ALL.md bundle/run-linux.sh "target/$dist_dirname"
 
 cd target
 mv app-jar-with-dependencies.jar app.jar
