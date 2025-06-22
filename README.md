@@ -114,7 +114,7 @@ curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-inst
 
 ## 常见问题
 
-[点击查看](https://github.com/freeok/so-novel/issues?q=is:issue%20state:closed%20label:%22user%20error%22)
+[点击查看](https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22)
 
 ## 支持
 

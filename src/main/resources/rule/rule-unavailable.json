@@ -32,8 +32,7 @@
     },
     "toc": {
       "url": "https://69shux.co/ajax_novels/chapterlist/%s.html",
-      "item": "ul > li > a",
-      "offset": 0
+      "item": "ul > li > a"
     },
     "chapter": {
       "title": ".txtnav > h1",
@@ -73,7 +72,6 @@
     "toc": {
       "url": "https://69shuba.cx/book/%s",
       "item": "#catalog > ul > li > a",
-      "offset": 0,
       "isDesc": true
     },
     "chapter": {
