@@ -24,6 +24,8 @@ public class Rule {
 
     @Data
     public static class Search {
+        // 是否纳入聚合搜索
+        private boolean disabled;
         private String baseUri;
         private Integer timeout;
         private String url;
