@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 public class BookContext {
 
     // 子线程会自动继承父线程的值
-    private static final InheritableThreadLocal<Book> currentBook = new InheritableThreadLocal<>();
+    private final InheritableThreadLocal<Book> currentBook = new InheritableThreadLocal<>();
 
     public void set(Book book) {
         book.setBookName(FileUtils.sanitizeFileName(book.getBookName()));

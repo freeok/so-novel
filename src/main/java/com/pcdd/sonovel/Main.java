@@ -68,7 +68,7 @@ public class Main {
 
         while (true) {
             Console.log("\n" + """
-                    q.聚合搜索\tw.指定搜索\te.批量下载
+                    q.聚合搜索\tw.独立搜索\te.批量下载
                     a.书源一览\ts.版本信息\td.配置信息
                     z.结束程序\tx.检查更新
                     """);
@@ -117,6 +117,7 @@ public class Main {
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format(" version {} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_MAGENTA", "BOLD"))
+                .addHeader("激活规则: " + config.getActiveRules())
                 .addHeader("导出格式: " + config.getExtName().toLowerCase())
                 .addHeader("下载路径: " + new File(config.getDownloadPath()).getAbsolutePath())
                 .addBody(render("使用前请务必阅读 readme.txt", "yellow"))
