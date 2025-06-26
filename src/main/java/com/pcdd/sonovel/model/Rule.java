@@ -21,6 +21,7 @@ public class Rule {
     private Book book;
     private Toc toc;
     private Chapter chapter;
+    private Crawl crawl;
 
     @Data
     public static class Search {
@@ -93,6 +94,16 @@ public class Rule {
         private String nextPageInJs;
         // 下一章链接的正则
         private String nextChapterLink;
+    }
+
+    @Data
+    public static class Crawl {
+        private Integer threads;
+        private Integer minInterval;
+        private Integer maxInterval;
+        private Integer maxAttempts;
+        private Integer retryMinInterval;
+        private Integer retryMaxInterval;
     }
 
 }
