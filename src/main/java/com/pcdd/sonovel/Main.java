@@ -107,7 +107,7 @@ public class Main {
                     break;
 
                 default:
-                    Console.error("无效的序号，请重新输入");
+                    Console.log(render("无效的功能序号，请重新输入", "yellow"));
                     break;
             }
         }
