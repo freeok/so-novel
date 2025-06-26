@@ -75,6 +75,7 @@ public class SingleSearchAction {
     @SneakyThrows
     public void execute() {
         Source source = new Source(config.getSourceId());
+
         if (source.rule.getSearch() == null) {
             downloadFromUrl();
         } else {
