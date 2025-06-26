@@ -13,9 +13,7 @@ import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
-import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
 import lombok.SneakyThrows;
@@ -49,7 +47,7 @@ public class Main {
         }
     }
 
-    private static AppConfig config = ConfigUtils.config();
+    private static AppConfig config = ConfigUtils.defaultConfig();
 
     public static void main(String[] args) {
         watchConfig();
@@ -70,7 +68,7 @@ public class Main {
 
         while (true) {
             Console.log("\n" + """
-                    q.聚合搜索\tw.搜索指定书源\te.批量下载
+                    q.聚合搜索\tw.指定搜索\te.批量下载
                     a.书源一览\ts.版本信息\td.配置信息
                     z.结束程序\tx.检查更新
                     """);
@@ -115,14 +113,12 @@ public class Main {
 
     private static void printHint() {
         Console.log(ResourceUtil.readUtf8Str("ascii-logo.txt"));
-        Rule r = new Source(config).rule;
         ConsoleTable.create()
                 // 是否转为全角
                 .setSBCMode(false)
                 .addHeader(render(StrUtil.format(" version {} ", config.getVersion()), "BG_BLUE", "ITALIC", "BOLD") + render(" 本项目开源且免费 ", "BG_MAGENTA", "BOLD"))
                 .addHeader("导出格式: " + config.getExtName().toLowerCase())
                 .addHeader("下载路径: " + new File(config.getDownloadPath()).getAbsolutePath())
-                .addHeader(StrUtil.format("指定书源: {} (ID: {})", r.getName(), r.getId()))
                 .addBody(render("使用前请务必阅读 readme.txt", "yellow"))
                 .print();
     }
@@ -140,7 +136,7 @@ public class Main {
         Setting setting = new Setting(path);
         // 监听配置文件
         setting.autoLoad(true, aBoolean -> {
-            config = ConfigUtils.config();
+            config = ConfigUtils.defaultConfig();
             Console.log("<== 配置文件修改成功！");
             printHint();
         });

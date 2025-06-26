@@ -26,7 +26,7 @@ public class SourceUtils {
 
     private static final String RULES_DIR_DEV = "bundle/rules/";
     private static final String RULES_DIR_PROD = "rules/";
-    private static final String RULE_FILE_NAME = "official.json";
+    private static final String RULE_FILE_NAME = "master.json";
 
     private final Cache<String, List<Rule>> cache_rules;
 
@@ -112,7 +112,7 @@ public class SourceUtils {
         return getAllRules().stream()
                 .filter(r -> r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
-                    AppConfig config = ConfigUtils.config();
+                    AppConfig config = ConfigUtils.defaultConfig();
                     config.setSourceId(r.getId());
                     return new Source(config);
                 })

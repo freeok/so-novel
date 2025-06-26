@@ -52,7 +52,7 @@ public class ConfigUtils {
         return new Setting(absolutePath.toString());
     }
 
-    public AppConfig config() {
+    public AppConfig defaultConfig() {
         Props sys = sys();
         Setting usr = usr();
 

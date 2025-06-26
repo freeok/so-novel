@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  */
 class BookSourceQualityTest {
 
-    static final AppConfig config = ConfigUtils.config();
+    static final AppConfig config = ConfigUtils.defaultConfig();
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
     // 测试排行榜前几名 (0, 20]
     static final int TOP_NUM = 20;

@@ -24,7 +24,7 @@ import java.util.Map;
  */
 class Rule6Test {
 
-    public static final AppConfig config = ConfigUtils.config();
+    public static final AppConfig config = ConfigUtils.defaultConfig();
 
     @Test
     @SneakyThrows

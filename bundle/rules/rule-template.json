@@ -51,10 +51,10 @@
   },
   "crawl": {
     "threads": 0,
-    "min": 0,
-    "max": 0,
+    "minInterval": 0,
+    "maxInterval": 0,
     "maxAttempts": 0,
-    "retryMin": 0,
-    "retryMax": 0
+    "retryMinInterval": 0,
+    "retryMaxInterval": 0
   }
 }
