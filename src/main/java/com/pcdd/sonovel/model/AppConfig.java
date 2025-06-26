@@ -13,6 +13,7 @@ public class AppConfig {
 
     // [base]
     private String language;
+    private String activeRules;
     private String downloadPath;
     private String extName;
     private Integer autoUpdate;
