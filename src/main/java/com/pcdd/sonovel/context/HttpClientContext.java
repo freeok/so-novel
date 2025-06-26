@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient;
 @UtilityClass
 public class HttpClientContext {
 
-    private static final InheritableThreadLocal<OkHttpClient> current = new InheritableThreadLocal<>();
+    private final InheritableThreadLocal<OkHttpClient> current = new InheritableThreadLocal<>();
 
     public void set(OkHttpClient client) {
         current.set(client);

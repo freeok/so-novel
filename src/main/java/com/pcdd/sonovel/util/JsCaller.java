@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 public class JsCaller {
 
     // 每个线程绑定一个 V8Runtime（线程安全）
-    private static final ThreadLocal<V8Runtime> THREAD_LOCAL_RUNTIME = ThreadLocal.withInitial(() -> {
+    private final ThreadLocal<V8Runtime> THREAD_LOCAL_RUNTIME = ThreadLocal.withInitial(() -> {
         try {
             return V8Host.getV8Instance().createV8Runtime();
         } catch (JavetException e) {
@@ -20,7 +20,7 @@ public class JsCaller {
         }
     });
 
-    public static final String JS_TEMPLATE = """
+    public final String JS_TEMPLATE = """
             function func(r) {
                 %s
                 return r;
@@ -45,14 +45,14 @@ public class JsCaller {
 
     // 执行 JS_TEMPLATE 表达式，返回结果字符串
     @SneakyThrows
-    public static String eval(String jsCode) {
+    public String eval(String jsCode) {
         V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
         return v8Runtime.getExecutor(jsCode).executeString();
     }
 
     // 调用 JS_TEMPLATE 函数
     @SneakyThrows
-    public static Object callFunction(String jsFunctionCode, String functionName, Object... args) {
+    public Object callFunction(String jsFunctionCode, String functionName, Object... args) {
         V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
         // 先加载函数
         v8Runtime.getExecutor(jsFunctionCode).executeVoid();
@@ -61,7 +61,7 @@ public class JsCaller {
     }
 
     // 释放当前线程的 V8Runtime（可选，看线程池策略）
-    public static void close() {
+    public void close() {
         V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
         JavetResourceUtils.safeClose(v8Runtime);
         THREAD_LOCAL_RUNTIME.remove();
