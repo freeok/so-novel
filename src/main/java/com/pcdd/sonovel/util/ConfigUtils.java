@@ -1,7 +1,6 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
@@ -60,12 +59,13 @@ public class ConfigUtils {
         config.setVersion(sys.getStr("version"));
 
         config.setLanguage(getStrOrDefault(usr, "language", SELECTION_1, LangUtil.getCurrentLang()));
+        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_1, "master.json"));
         config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_1, "downloads"));
         // 扩展名一律转为小写
         config.setExtName(getStrOrDefault(usr, "extname", SELECTION_1, "epub").toLowerCase());
 
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_1, 0));
-        config.setSourceId(usr.getInt("source-id", SELECTION_1, RandomUtil.randomInt(SourceUtils.getCount() + 1)));
+        config.setSourceId(usr.getInt("source-id", SELECTION_1, -1));
         config.setSearchLimit(usr.getInt("search-limit", SELECTION_1, 0));
 
         config.setThreads(usr.getInt("threads", SELECTION_2, -1));

@@ -24,20 +24,20 @@ import java.util.List;
 @UtilityClass
 public class SourceUtils {
 
-    private static final String RULES_DIR_DEV = "bundle/rules/";
-    private static final String RULES_DIR_PROD = "rules/";
-    private static final String RULE_FILE_NAME = "master.json";
-
     private final Cache<String, List<Rule>> cache_rules;
+    private final String RULES_DIR_DEV = "bundle/rules/";
+    private final String RULES_DIR_PROD = "rules/";
+    private final String RULE_FILE_NAME;
 
     static {
         cache_rules = CacheUtil.newFIFOCache(1);
+        RULE_FILE_NAME = ConfigUtils.defaultConfig().getActiveRules();
     }
 
     /**
      * 获取规则文件路径
      */
-    private static String getRuleFilePath() {
+    private String getRuleFilePath() {
         return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + RULE_FILE_NAME;
     }
 
@@ -45,12 +45,12 @@ public class SourceUtils {
      * 根据 sourceId 获取指定规则对象
      */
     public Rule getRule(int sourceId) {
-        List<Rule> allRules = getAllRules();
-        if (sourceId <= 0 || sourceId > allRules.size()) {
-            Console.error("无效的 sourceId：{}，规则列表大小：{}", sourceId, allRules.size());
-            return null;
-        }
-        return applyDefaultRule(allRules.get(sourceId - 1));
+        Rule rule = getAllRules().stream()
+                .filter(r -> r.getId() == sourceId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", RULE_FILE_NAME, sourceId)));
+
+        return applyDefaultRule(rule);
     }
 
     /**
@@ -88,20 +88,7 @@ public class SourceUtils {
      * 根据 sourceId 获取指定规则的 JSON 字符串
      */
     public String getRuleStr(int sourceId) {
-        List<Rule> allRules = getAllRules();
-        if (sourceId <= 0 || sourceId > allRules.size()) {
-            Console.error("无效的 sourceId：{}，规则列表大小：{}", sourceId, allRules.size());
-            return StrUtil.EMPTY_JSON;
-        }
-        // 直接从缓存的 List<Rule> 中获取，然后转回 JSON 字符串
-        return JSONUtil.toJsonStr(allRules.get(sourceId - 1));
-    }
-
-    /**
-     * 获取书源总数
-     */
-    public int getCount() {
-        return getAllRules().size();
+        return JSONUtil.toJsonStr(getRule(sourceId));
     }
 
     /**

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CrawlUtils {
 
     // 构建 POST Body
-    public static RequestBody buildData(String jsonStr, String... args) {
+    public RequestBody buildData(String jsonStr, String... args) {
         FormBody.Builder from = new FormBody.Builder();
         AtomicInteger i = new AtomicInteger(0);
 
