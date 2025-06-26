@@ -188,7 +188,6 @@ public class ChapterParser extends Source {
         if (r.getNextPageInJs() != null) {
             return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
         }
-        // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
         if (nextEls.isEmpty()) {
             Console.error("分页章节正文获取为空，可能被限流！\n出错链接：{}\n链接内容：{}", doc.baseUri(), doc.body().text());
             return null;

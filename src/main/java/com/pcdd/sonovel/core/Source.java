@@ -24,11 +24,33 @@ public class Source {
         this(SourceUtils.getRule(sourceId), null);
     }
 
-    // 自定义书源 id，用于测试
     public Source(Rule rule, AppConfig config) {
         this.rule = rule;
         // 使用配置文件中的配置，若为空则使用默认配置
-        this.config = Opt.ofNullable(config).orElse(ConfigUtils.config());
+        this.config = Opt.ofNullable(config).orElse(ConfigUtils.defaultConfig());
+
+        // 规则爬取配置覆盖默认配置
+        Rule.Crawl crawl = rule.getCrawl();
+        if (crawl != null) {
+            if (crawl.getThreads() != null) {
+                this.config.setThreads(crawl.getThreads());
+            }
+            if (crawl.getMinInterval() != null) {
+                this.config.setMinInterval(crawl.getMinInterval());
+            }
+            if (crawl.getMaxInterval() != null) {
+                this.config.setMaxInterval(crawl.getMaxInterval());
+            }
+            if (crawl.getMaxAttempts() != null) {
+                this.config.setMaxRetryAttempts(crawl.getMaxAttempts());
+            }
+            if (crawl.getRetryMinInterval() != null) {
+                this.config.setRetryMinInterval(crawl.getRetryMinInterval());
+            }
+            if (crawl.getRetryMaxInterval() != null) {
+                this.config.setRetryMaxInterval(crawl.getRetryMaxInterval());
+            }
+        }
     }
 
 }
