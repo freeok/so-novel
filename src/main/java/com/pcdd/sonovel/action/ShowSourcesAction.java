@@ -55,7 +55,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
-        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.config(), true);
+        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.defaultConfig(), true);
 
         for (Rule r : rules) {
             completionService.submit(() -> {

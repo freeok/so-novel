@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BookSourceTest {
 
-    private static final AppConfig config = ConfigUtils.config();
+    private static final AppConfig config = ConfigUtils.defaultConfig();
     public static final String DIVIDER = "=".repeat(50);
     private String bookUrl;
     private String chapterUrl;
