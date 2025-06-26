@@ -22,7 +22,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class DownloadAction {
 
-    private final AppConfig config = ConfigUtils.config();
+    private final AppConfig config = ConfigUtils.defaultConfig();
     public static final Scanner sc = Console.scanner();
 
     public void execute(List<SearchResult> results) {
