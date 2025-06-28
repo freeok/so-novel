@@ -13,6 +13,7 @@ import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
+import com.pcdd.sonovel.repository.ClientReportRepository;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
@@ -53,11 +54,12 @@ public class Main {
         watchConfig();
         HttpClientContext.set(OkHttpClientFactory.create(config, true));
 
+        new Thread(ClientReportRepository::report).start();
         if (config.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
-        inputMode();
 
+        inputMode();
         HttpClientContext.clear();
     }
 
