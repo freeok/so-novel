@@ -107,8 +107,8 @@ class BookSourceTest {
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
         List<SearchResult> list;
-        if (config.getSourceId() == 6) {
-            list = new SearchParser6(config).parse(keyword);
+        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
+            list = new SearchParserQuanben5(config).parse(keyword);
         } else {
             list = new SearchParser(config).parse(keyword, true);
         }
