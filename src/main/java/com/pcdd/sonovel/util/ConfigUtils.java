@@ -59,7 +59,7 @@ public class ConfigUtils {
         config.setVersion(sys.getStr("version"));
 
         config.setLanguage(getStrOrDefault(usr, "language", SELECTION_1, LangUtil.getCurrentLang()));
-        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_1, "master.json"));
+        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_1, "main-rules.json"));
         config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_1, "downloads"));
         // 扩展名一律转为小写
         config.setExtName(getStrOrDefault(usr, "extname", SELECTION_1, "epub").toLowerCase());
