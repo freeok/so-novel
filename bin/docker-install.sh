@@ -12,9 +12,8 @@ LATEST_VERSION=$(curl -s https://api.github.com/repos/freeok/so-novel/releases/l
 echo "🔖 最新版本：$LATEST_VERSION"
 
 APP_NAME="sonovel"
-TAR_NAME="${APP_NAME}-linux.tar.gz"
-# v1.8.3 之后的版本发布前，务必将此处修改为 DIR_NAME="SoNovel"
-DIR_NAME="SoNovel-linux"
+TAR_NAME="${APP_NAME}-linux_x64.tar.gz"
+DIR_NAME="SoNovel-Linux_x64"
 IMAGE_NAME="sonovel:${LATEST_VERSION}"
 
 # 函数：下载文件

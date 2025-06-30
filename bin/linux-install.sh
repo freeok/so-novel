@@ -6,7 +6,7 @@ set -e
 LATEST=$(curl -s https://api.github.com/repos/freeok/so-novel/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
 echo "🔖 最新版本：$LATEST"
 
-URL="https://github.com/freeok/so-novel/releases/download/${LATEST}/sonovel-linux.tar.gz"
+URL="https://github.com/freeok/so-novel/releases/download/${LATEST}/sonovel-linux_x64.tar.gz"
 TMP_FILE="/tmp/sonovel.tar.gz"
 INSTALL_DIR="$HOME/SoNovel"
 
@@ -18,7 +18,7 @@ curl -L "$URL" -o "$TMP_FILE"
 rm -rf "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR"
 
-# 解压时去掉第一层目录（SoNovel-linux）
+# 解压时去掉第一层目录（SoNovel-Linux_x64）
 tar -xzf "$TMP_FILE" -C "$INSTALL_DIR" --strip-components=1
 
 echo "✅ 安装完成！"
