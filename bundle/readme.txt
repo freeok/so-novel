@@ -20,8 +20,9 @@ Linux 用户
 - 希望增加某个新功能
 上述情况请在此反馈：https://github.com/freeok/so-novel/issues/new/choose
 非上述情况在此反馈：https://github.com/so-novel/discussions/new/choose
-反馈前请务必查看常见问题：https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22
-如果都没有，再进行反馈！反馈时请按照要求填写，否则不予处理
+在提供反馈之前，请务必先查阅常见问题：https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22
+如果常见问题中没有您的情况，欢迎提交反馈！提交前请务必按照要求填写，否则将不予处理。
 
 
+书源一栏：https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md
 最新版下载地址：https://github.com/freeok/so-novel/releases
