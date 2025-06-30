@@ -1,32 +1,32 @@
-## v1.8.3 (2025-06-10)
+## v1.8.4 (2025-06-30)
 
 ### ✨ 新特性
 
-- 新增书源: 书林文学 https://github.com/freeok/so-novel/issues/166
-- 新增书源: 小说虎
-- 新增章节缓存目录保留配置项 https://github.com/freeok/so-novel/issues/172
-- 临时章节文件名添加前导零 https://github.com/freeok/so-novel/issues/165
+- 开放自定义书源功能
+- 搜索支持多书连续下载 [https://github.com/freeok/so-novel/issues/192](https://github.com/freeok/so-novel/issues/192)
+- 新增书源: 黄易天地 [https://github.com/freeok/so-novel/issues/187](https://github.com/freeok/so-novel/issues/187)
+- 新增配置项: `active-rules`, `show_download_log`
+- 新增规则字段: `crawl`
+- 新增 Linux 一键安装脚本
 
 ### 🐛 修复
 
-- 修复模糊文本的聚合搜索结果为空（相似度过低被忽略）
-- 修复分页章节标签解析错误
-- 修复非全本下载后，文件名下划线前的序号错误
-- 修复自定义下载路径时，封面下载出错 https://github.com/freeok/so-novel/discussions/177
-- 修复书源 20 封面下载失败
-- 修复 epub 空封面页
+- 修复失效书源：全本小说网
+- 修复封面下载失败时触发 `ansi` 渲染参数异常 [https://github.com/freeok/so-novel/issues/198](https://github.com/freeok/so-novel/issues/198)
+- 修复合并产物文件名包含系统非法字符时大小为零且名称被截断 [https://github.com/freeok/so-novel/issues/190](https://github.com/freeok/so-novel/issues/190)
+- 修复 `docker-install.sh` 在 WSL Ubuntu 安装失败
 
 ### ♻️ 重构
 
-- 替换章节文件名中的非法字符 https://github.com/freeok/so-novel/pull/179
-- 重构 `BookSourceQualityTest.java`
-- 更新 timeout 默认值
+- 拆分书源规则
+- 优化目录爬取规则
 
 ### 🛠️ 其他
 
-- 移除书源: 新笔趣阁 https://github.com/freeok/so-novel/issues/148
-- 移除书源: 96读书（章节页 CF）
-- 优化书源 20 过滤规则
-- 更新发布脚本
-- 更新起点榜单
-- 更新推荐书源模板
+- 升级依赖
+- 更新 CI 脚本
+- 添加 `D1Workers`
+- 添加 `DISCLAIMER.md`
+- 优化 `feedback.yml`
+- 优化 `docker-install.sh`
+- 移除 `jline`
