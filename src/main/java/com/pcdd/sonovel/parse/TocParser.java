@@ -124,7 +124,6 @@ public class TocParser extends Source {
     @SneakyThrows
     private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
         List<Chapter> toc = new TocList();
-        boolean isDesc = r.isDesc();
         int orderNumber = 1;
 
         // TODO 多线程优化
@@ -146,7 +145,7 @@ public class TocParser extends Source {
             }
 
             int minIndex = Math.min(end, elements.size());
-            if (isDesc) {
+            if (r.isDesc()) {
                 for (int i = minIndex - 1; i >= start - 1; i--) {
                     addChapter(elements.get(i), toc, orderNumber++, r);
                 }
