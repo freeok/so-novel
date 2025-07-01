@@ -85,6 +85,11 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.38</version>
         </dependency>
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+            <version>3.19.2.RELEASE</version>
+        </dependency>
         <!-- JS Runtime -->
         <dependency>
             <groupId>com.caoccao.javet</groupId>
