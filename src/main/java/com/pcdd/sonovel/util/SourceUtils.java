@@ -16,6 +16,7 @@ import lombok.experimental.UtilityClass;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.nio.file.Paths;
 
 /**
  * @author pcdd
@@ -38,6 +39,8 @@ public class SourceUtils {
      * 获取规则文件路径
      */
     private String getRuleFilePath() {
+        if (Paths.get(RULE_FILE_NAME).isAbsolute())
+            return RULE_FILE_NAME;
         return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + RULE_FILE_NAME;
     }
 
