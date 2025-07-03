@@ -39,8 +39,8 @@ public class SourceUtils {
      * 获取规则文件路径
      */
     private String getRuleFilePath() {
-        if (Paths.get(RULE_FILE_NAME).isAbsolute())
-            return RULE_FILE_NAME;
+        Path path = Paths.get(RULE_FILE_NAME);
+        if (path.isAbsolute()) return path.toString();
         return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + RULE_FILE_NAME;
     }
 
