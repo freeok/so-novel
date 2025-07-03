@@ -30,7 +30,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
-    public static final String GHP = "https://ghproxy.net/";
+    public static final String GHP = "https://ghfast.top/";
     public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
     private final int timeoutMills;
@@ -74,16 +74,16 @@ public class CheckUpdateAction {
 
     private String getDownloadUrl(String version) {
         OsInfo osInfo = SystemUtil.getOsInfo();
-        String osName = osInfo.getName();
+        String osName = osInfo.getName().toLowerCase();
         String arch = osInfo.getArch();
         String fileName = "windows";
 
-        if (osName.contains("Windows")) {
+        if (osName.contains("windows")) {
             fileName = "windows";
-        } else if (osName.contains("Mac")) {
+        } else if (osName.contains("mac")) {
             // 根据架构进一步细分
             fileName = "aarch64".equals(arch) ? "macos_arm64" : "macos_x64";
-        } else if (osName.contains("Linux")) {
+        } else if (osName.contains("linux")) {
             fileName = "linux";
         }
 
