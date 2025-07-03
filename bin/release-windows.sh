@@ -20,7 +20,7 @@ prepare_dist_dir() {
 }
 
 run_maven() {
-    mvn clean package -Pwindows-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime' '-Denv=prod'
+    mvn clean package -Pwindows-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
 }
 
 copy_files() {
