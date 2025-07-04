@@ -10,6 +10,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 *.iml
-.idea
+.idea/
 downloads/
 dist/
+logs/

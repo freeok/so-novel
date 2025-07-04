@@ -17,7 +17,9 @@ import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.FileUtils;
+import com.pcdd.sonovel.util.LogUtils;
 import lombok.SneakyThrows;
+import me.tongfei.progressbar.ProgressBar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -58,7 +60,7 @@ public class Crawler {
 
         List<SearchResult> searchResults;
 
-        if (config.getSourceId() == 6) {
+        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
             searchResults = new SearchParserQuanben5(config).parse(keyword);
         } else {
             searchResults = new SearchParser(config).parse(keyword, true);
@@ -82,8 +84,8 @@ public class Crawler {
         Book book = new BookParser(config).parse(bookUrl);
         BookContext.set(book);
 
-        // 下载临时目录名格式：书名(作者) EXT
-        bookDir = FileUtils.sanitizeFileName("%s(%s) %s".formatted(book.getBookName(), book.getAuthor(), config.getExtName().toUpperCase()));
+        // 下载临时目录名格式：书名 (作者) EXT
+        bookDir = FileUtils.sanitizeFileName("%s (%s) %s".formatted(book.getBookName(), book.getAuthor(), config.getExtName().toUpperCase()));
         // 必须 new File()，否则无法使用 . 和 ..
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
@@ -102,28 +104,35 @@ public class Crawler {
         // 阻塞主线程，用于计时
         CountDownLatch latch = new CountDownLatch(toc.size());
 
-        Console.log("<== 开始下载《{}》（{}） 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
-        if (config.getShowDownloadLog() == 0) {
-            Console.log("<== 下载日志已关闭，请耐心等待...");
-        }
+        Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+        LogUtils.info("开始下载:《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
+        ProgressBar progressBar = ProgressBar.builder()
+                .setTaskName("Downloading...")
+                .setInitialMax(toc.size())
+                .setMaxRenderedLength(100)
+                .setUpdateIntervalMillis(100)
+                .showSpeed()
+                .build();
 
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch));
-            if (config.getShowDownloadLog() == 1) {
-                Console.log("<== 待下载章节数：{}", latch.getCount());
-            }
+            progressBar.stepTo(toc.size() - latch.getCount());
         }));
 
-        // 阻塞主线程，等待全部章节下载完毕
+        // 阻塞 main 线程，等待全部章节下载完毕
         latch.await();
+        executor.shutdown();
+        progressBar.close();
+        LogUtils.info("-".repeat(100));
+        Console.log("<== 章节下载日志已保存至 {}，请检查是否有 [ERROR] 级别的日志。", LogUtils.getLogFile().getAbsolutePath());
+
         new CrawlerPostHandler(config).handle(dir);
         stopWatch.stop();
-
-        executor.shutdown();
         BookContext.clear();
 
         return stopWatch.getTotalTimeSeconds();

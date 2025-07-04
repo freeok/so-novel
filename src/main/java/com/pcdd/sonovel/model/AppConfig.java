@@ -25,7 +25,6 @@ public class AppConfig {
     private Integer minInterval;
     private Integer maxInterval;
     private Integer preserveChapterCache;
-    private Integer showDownloadLog;
 
     // [retry]
     private Integer maxRetryAttempts;
