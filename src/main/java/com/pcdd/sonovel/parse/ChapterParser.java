@@ -1,17 +1,18 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.*;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ContentType;
+import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.util.LogUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -19,14 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
-
-import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -62,9 +56,7 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter, CountDownLatch latch) {
         try {
             long interval = CrawlUtils.randomInterval(config);
-            if (config.getShowDownloadLog() == 1) {
-                Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
-            }
+            LogUtils.info("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
 
             String content = fetchContent(chapter.getUrl(), interval);
             Assert.notEmpty(content, "正文内容为空");
@@ -74,51 +66,37 @@ public class ChapterParser extends Source {
             return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
-            Chapter retryChapter = retry(chapter, e.getMessage());
+            Chapter retryChapter = retry(chapter, e);
             return retryChapter == null ? null : ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
         } finally {
             latch.countDown();
         }
     }
 
-    private Chapter retry(Chapter chapter, String errMsg) {
+    private Chapter retry(Chapter chapter, Exception ex) {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
-                Console.log(render("<== 【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}", "red"),
-                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, errMsg);
+                LogUtils.warn("【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
+                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, ex.getMessage());
 
                 String content = fetchContent(chapter.getUrl(), interval);
                 Assert.notEmpty(content, "正文内容为空");
                 chapter.setContent(content);
 
-                Console.log(render("<== 重试成功: 【{}】", "green"), chapter.getTitle());
+                LogUtils.info("重试成功: 【{}】", chapter.getTitle());
                 return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
-                Console.error(render("<== 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
+                LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
+                // 最终失败时记录日志
                 if (attempt == config.getMaxRetryAttempts()) {
-                    // 最终失败时记录日志
-                    saveDownloadErrorLog(chapter, e.getMessage());
+                    LogUtils.error(e, "下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
                 }
             }
         }
 
         return null;
-    }
-
-    private void saveDownloadErrorLog(Chapter chapter, String errMsg) {
-        Book book = BookContext.get();
-        String line = StrUtil.format("下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), errMsg);
-        String path = StrUtil.format("{}{}《{}》({}) 下载失败章节.log",
-                config.getDownloadPath(), File.separator, book.getBookName(), book.getAuthor());
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(path, StandardCharsets.UTF_8, true))) {
-            pw.println(line);
-
-        } catch (IOException e) {
-            Console.error(e);
-        }
     }
 
     /**
@@ -189,7 +167,7 @@ public class ChapterParser extends Source {
             return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
         }
         if (nextEls.isEmpty()) {
-            Console.error("分页章节正文获取为空，可能被限流！\n出错链接：{}\n链接内容：{}", doc.baseUri(), doc.body().text());
+            LogUtils.error("分页章节正文获取为空，可能被限流！出错链接：{} 链接内容：{}", doc.baseUri(), doc.body().text());
             return null;
         }
         // 从按钮获取下一页链接
