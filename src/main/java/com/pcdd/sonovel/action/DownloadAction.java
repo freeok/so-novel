@@ -95,7 +95,7 @@ public class DownloadAction {
             if (action == 4) continue;
 
             double res = new Crawler(config).crawl(sr.getUrl(), toc);
-            Console.log(render("<== 完成！总耗时 {} s", "green"), NumberUtil.round(res, 2));
+            Console.log(render("<== 完成！总耗时 {} s\n", "green"), NumberUtil.round(res, 2));
         }
     }
 
