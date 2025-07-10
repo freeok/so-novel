@@ -11,13 +11,15 @@ import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
 import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.*;
+import com.pcdd.sonovel.cli.BookDownloaderCli;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
-import com.pcdd.sonovel.repository.ClientReportRepository;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.repository.ClientReportRepository;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
 import lombok.SneakyThrows;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -59,7 +61,14 @@ public class Main {
             new CheckUpdateAction(5000).execute();
         }
 
-        inputMode();
+        if (args.length == 0) {
+            inputMode();
+        } else {
+            CommandLine commandLine = new CommandLine(new BookDownloaderCli());
+            commandLine.execute(args);
+            System.exit(0);
+        }
+
         HttpClientContext.clear();
     }
 
