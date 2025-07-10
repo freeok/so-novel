@@ -15,9 +15,9 @@ import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.nio.file.Paths;
 
 /**
  * @author pcdd
@@ -145,6 +145,16 @@ public class SourceUtils {
         }
 
         return rule;
+    }
+
+    /**
+     * 根据书籍详情页 url 匹配书源规则
+     */
+    public Rule getSource(String bookUrl) {
+        return getAllRules().stream()
+                .filter(r -> bookUrl.startsWith(r.getUrl()))
+                .findFirst()
+                .orElse(null);
     }
 
 }
