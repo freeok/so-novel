@@ -112,6 +112,11 @@
       "filterTag": "",
       "pagination": true,
       "nextPage": ".prenext > span:nth-child(3) > a"
+    },
+    "crawl": {
+      "threads": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
     }
   },
   {
@@ -154,6 +159,11 @@
       "filterTag": "",
       "pagination": true,
       "nextPage": ".prenext > span:nth-child(3) > a"
+    },
+    "crawl": {
+      "threads": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
     }
   }
 ]
