@@ -1,6 +1,6 @@
 #!/bin/bash
 # ====================================================
-# 于 Ubuntu 24 测试通过
+# Ubuntu 24, Debian 12 通过测试
 # 执行前请确保下载链接的可访问性！建议开启 🪜 或使用 GitHub、Docker 镜像加速
 # ====================================================
 
@@ -40,6 +40,7 @@ cd "${DIR_NAME}"
 
 echo "📁 准备宿主机挂载目录..."
 sudo mkdir -p /sonovel/downloads
+sudo cp -r ./rules /sonovel/
 
 # 如果宿主机 config.ini 不存在，就复制它；否则保留用户已有配置
 if [ ! -f /sonovel/config.ini ]; then
@@ -59,4 +60,5 @@ echo "🚀 手动执行以下命令启动容器."
 echo "docker run -it --rm \
 -v /sonovel/config.ini:/sonovel/config.ini \
 -v /sonovel/downloads:/sonovel/downloads \
+-v /sonovel/rules:/sonovel/rules \
 ${IMAGE_NAME} bash"
