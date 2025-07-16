@@ -1,5 +1,3 @@
-// https://big5.quanben5.com/search.html
-
 function base64(_str) {
   var staticchars = "PXhw7UT1B0a9kQDKZsjIASmOezxYG4CHo5Jyfg2b8FLpEvRr3WtVnlqMidu6cN";
   var encodechars = "";

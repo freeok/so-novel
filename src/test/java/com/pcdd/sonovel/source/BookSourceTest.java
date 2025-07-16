@@ -89,10 +89,10 @@ class BookSourceTest {
     @DisplayName("测试代理书源")
     @ParameterizedTest
     @CsvSource({
-            "6, https://quanben5.com/n/yishixiejun/",
-            "7, https://www.69shuba.com/book/48273.htm",
-            "12, https://www.deqixs.com/xiaoshuo/106/",
-            "16, https://www.sudugu.com/1012/",
+            "1, https://www.69shuba.com/book/48273.htm",
+            "2, https://quanben5.com/n/henchunhenaimei/",
+            "3, https://www.deqixs.com/xiaoshuo/106/",
+            "4, https://www.sudugu.com/1012/",
     })
     void testProxySources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
