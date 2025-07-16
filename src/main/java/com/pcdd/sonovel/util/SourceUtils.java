@@ -148,7 +148,7 @@ public class SourceUtils {
     }
 
     /**
-     * 根据书籍详情页 url 匹配书源规则
+     * 根据书籍详情页 url 匹配当前激活的书源规则
      */
     public Rule getSource(String bookUrl) {
         return getAllRules().stream()
