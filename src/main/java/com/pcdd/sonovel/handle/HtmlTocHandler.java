@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.handle;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.file.FileWriter;
@@ -10,7 +11,6 @@ import com.pcdd.sonovel.util.FileUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,22 +21,19 @@ public class HtmlTocHandler implements PostProcessingHandler {
 
     @Override
     public void handle(Book book, File saveDir) {
-        List<String> strings = new ArrayList<>();
         String regex = "<title>(.*?)</title>";
+        List<String> lines = CollUtil.newArrayList("文件名\t\t\t\t章节名");
 
-        strings.add("文件名\t\t章节名");
-        List<File> files = FileUtils.sortFilesByName(saveDir);
-        int i = Integer.parseInt(StrUtil.subBefore(files.get(0).getName(), "_", false));
-        for (File file : files) {
+        for (File file : FileUtils.sortFilesByName(saveDir)) {
             FileReader fr = FileReader.create(file, StandardCharsets.UTF_8);
-            // 获取 <title> 内容
+            String index = StrUtil.subBefore(file.getName(), "_", false);
             String title = ReUtil.getGroup1(regex, fr.readString());
-            strings.add(StrUtil.format("{}_.html\t\t{}", i++, title));
+            lines.add(StrUtil.format("{}_.html\t\t{}", index, title));
         }
 
         File file = FileUtil.touch(saveDir + File.separator, "0_目录.txt");
         FileWriter fw = FileWriter.create(file, StandardCharsets.UTF_8);
-        fw.writeLines(strings);
+        fw.writeLines(lines);
 
         downloadCover(book, saveDir);
     }
