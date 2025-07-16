@@ -27,7 +27,7 @@
 | 书源 ID | 书源名称                              | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要额外注意                                                                          |
 |-------|-----------------------------------|-------|--------|------|------------------------------------------------------------------------------------|
 | 1     | [69书吧1](https://www.69shuba.com/) | ❌     | ✅      | ❌    | 需要梯子，搜索有CF，章节限流，推荐线程数1                                                             |
-| 2     | [全本小说网](https://quanben5.com/)    | ❌     | ✅      | ✅    | 需要梯子，完本很全，连载基本搜不到，同 quanben5.io, quanben-xiaoshuo.com                              |
+| 2     | [全本小说网](https://quanben5.com/)    | ❌     | ✅      | ✅    | 需要梯子，完本很全，连载基本搜不到，同 quanben5.io, big5.quanben5.com, quanben-xiaoshuo.com           |
 | 3     | [得奇小说网](https://www.deqixs.com/)  | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
 | 4     | [速读谷](https://www.sudugu.com/)    | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
 
