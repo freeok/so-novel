@@ -29,7 +29,7 @@ public class ChapterConverter {
 
     public Chapter convert(Chapter chapter) {
         String extName = config.getExtName();
-        // 转换前过滤
+        // 先过滤，后格式化
         String filteredContent = new ChapterFilter(config).filter(chapter);
         String content = new ChapterFormatter(config).format(filteredContent);
 
