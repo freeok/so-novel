@@ -119,7 +119,6 @@ public class ChapterParser extends Source {
 
         try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
             Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
-
             Elements contentEls = JsoupUtils.select(doc, r.getContent());
             JsoupUtils.clearAllAttributes(contentEls);
 
@@ -141,9 +140,7 @@ public class ChapterParser extends Source {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
 
-            String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
-            // String ==> Elements
-            Elements contentEls = Jsoup.parse(content).children();
+            Elements contentEls = JsoupUtils.select(doc, r.getContent());
             JsoupUtils.clearAllAttributes(contentEls);
             contentBuilder.append(contentEls.html());
 
