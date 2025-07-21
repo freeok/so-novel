@@ -61,4 +61,4 @@ echo "docker run -it --rm \
 -v /sonovel/config.ini:/sonovel/config.ini \
 -v /sonovel/downloads:/sonovel/downloads \
 -v /sonovel/rules:/sonovel/rules \
-${IMAGE_NAME} bash"
+${IMAGE_NAME}"
