@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.cli;
+package com.pcdd.sonovel.launch;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
@@ -15,23 +15,23 @@ import java.util.List;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
+ * 命令行界面 (Command Line Interface)
+ *
  * @author pcdd
  * Created at 2025/7/10
  */
 @CommandLine.Command(
-        name = "SoNovel.exe",
+        name = "SoNovel",
         description = "小说下载器",
         mixinStandardHelpOptions = true,
-        versionProvider = BookDownloaderCli.VersionProvider.class
+        versionProvider = CliLauncher.VersionProvider.class
 )
-public class BookDownloaderCli implements Runnable {
+public class CliLauncher implements Runnable {
 
-    @CommandLine.Option(names = "-u", description = "书籍详情页链接")
+    @CommandLine.Option(names = {"--url", "-u"}, description = "书籍详情页链接")
     String bookUrl;
-    @CommandLine.Option(names = "-e", description = "下载格式，默认 epub", defaultValue = "epub")
+    @CommandLine.Option(names = {"--ext", "-e"}, description = "下载格式，默认 epub", defaultValue = "epub")
     String extName;
-    /* @CommandLine.Option(names = "-o", description = "下载方式，默认下载全本", defaultValue = "1")
-    String downloadOption; */
 
     private static final AppConfig config = ConfigUtils.defaultConfig();
 
@@ -67,7 +67,7 @@ public class BookDownloaderCli implements Runnable {
     static class VersionProvider implements CommandLine.IVersionProvider {
         @Override
         public String[] getVersion() {
-            return new String[]{config.getVersion()};
+            return new String[]{render(config.getVersion(), "green")};
         }
     }
 
