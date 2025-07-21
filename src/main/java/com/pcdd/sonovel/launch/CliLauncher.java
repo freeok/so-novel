@@ -22,7 +22,6 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 @CommandLine.Command(
         name = "SoNovel",
-        description = "小说下载器",
         mixinStandardHelpOptions = true,
         versionProvider = CliLauncher.VersionProvider.class
 )

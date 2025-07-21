@@ -32,8 +32,7 @@ public class SingleSearchAction {
     public final Scanner sc = Console.scanner();
     public static final String GREEN = "green";
 
-    public void downloadFromUrl(int sourceId) {
-        config.setSourceId(sourceId);
+    public void downloadFromUrl(AppConfig config) {
         Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
         String bookUrl = sc.nextLine().strip();
         Rule rule = new Source(config).rule;
@@ -55,8 +54,7 @@ public class SingleSearchAction {
         Console.log(render("<== 完成！总耗时 {} s", GREEN), NumberUtil.round(res, 2));
     }
 
-    public void downloadByKeyword(int sourceId) {
-        config.setSourceId(sourceId);
+    public void downloadByKeyword(AppConfig config) {
         // 1. 查询
         Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", GREEN));
         String kw = sc.nextLine().strip();
@@ -75,14 +73,17 @@ public class SingleSearchAction {
 
     @SneakyThrows
     public void execute() {
-        Console.print(render("==> 请输入书源 ID: ", GREEN));
-        int sourceId = Integer.parseInt(sc.nextLine());
-        Source source = new Source(sourceId);
+        if (config.getSourceId() == -1) {
+            Console.print(render("==> 请指定书源 ID: ", GREEN));
+            config.setSourceId(Integer.parseInt(sc.nextLine()));
+        }
+
+        Source source = new Source(config);
 
         if (source.rule.getSearch() == null) {
-            downloadFromUrl(sourceId);
+            downloadFromUrl(config);
         } else {
-            downloadByKeyword(sourceId);
+            downloadByKeyword(config);
         }
     }
 
