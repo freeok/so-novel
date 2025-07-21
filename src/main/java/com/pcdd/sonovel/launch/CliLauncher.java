@@ -27,7 +27,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 )
 public class CliLauncher implements Runnable {
 
-    @CommandLine.Option(names = {"--url", "-u"}, description = "书籍详情页链接")
+    @CommandLine.Option(names = {"--url", "-u"}, description = "书籍详情页链接 (非目录页)")
     String bookUrl;
     @CommandLine.Option(names = {"--ext", "-e"}, description = "下载格式，默认 epub", defaultValue = "epub")
     String extName;
