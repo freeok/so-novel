@@ -15,7 +15,7 @@ import java.util.Scanner;
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
- * 终端用户界面 (Terminal User Interface) or 基于文本的用户界面 (Text-based User Interface)
+ * 基于文本的用户界面 (Text-based User Interface)
  *
  * @author pcdd
  * Created at 2025/7/10
