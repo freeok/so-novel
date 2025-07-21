@@ -3,8 +3,8 @@
 ### ✨ 新特性
 
 - 开放自定义书源功能
-- 搜索支持多书连续下载 [https://github.com/freeok/so-novel/issues/192](https://github.com/freeok/so-novel/issues/192)
-- 新增书源: 黄易天地 [https://github.com/freeok/so-novel/issues/187](https://github.com/freeok/so-novel/issues/187)
+- 搜索支持多书连续下载 #192
+- 新增书源: 黄易天地 #187
 - 新增配置项: `active-rules`, `show_download_log`
 - 新增规则字段: `crawl`
 - 新增 Linux 一键安装脚本
@@ -13,9 +13,8 @@
 
 - 修复失效书源：全本小说网
 - 修复封面下载失败时触发 `ansi`
-  渲染参数异常 [https://github.com/freeok/so-novel/issues/198](https://github.com/freeok/so-novel/issues/198)
--
-修复合并产物文件名包含系统非法字符时大小为零且名称被截断 [https://github.com/freeok/so-novel/issues/190](https://github.com/freeok/so-novel/issues/190)
+- 渲染参数异常 #198
+- 修复合并产物文件名包含系统非法字符时大小为零且名称被截断 #190
 - 修复 `docker-install.sh` 在 WSL Ubuntu 安装失败
 
 ### ♻️ 重构
@@ -39,29 +38,29 @@
 
 ### ✨ 新特性
 
-- 新增书源: 书林文学 https://github.com/freeok/so-novel/issues/166
+- 新增书源: 书林文学 #166
 - 新增书源: 小说虎
-- 新增章节缓存目录保留配置项 https://github.com/freeok/so-novel/issues/172
-- 临时章节文件名添加前导零 https://github.com/freeok/so-novel/issues/165
+- 新增章节缓存目录保留配置项 #172
+- 临时章节文件名添加前导零 #165
 
 ### 🐛 修复
 
 - 修复模糊文本的聚合搜索结果为空（相似度过低被忽略）
 - 修复分页章节标签解析错误
 - 修复非全本下载后，文件名下划线前的序号错误
-- 修复自定义下载路径时，封面下载出错 https://github.com/freeok/so-novel/discussions/177
+- 修复自定义下载路径时，封面下载出错 #177
 - 修复书源 20 封面下载失败
 - 修复 epub 空封面页
 
 ### ♻️ 重构
 
-- 替换章节文件名中的非法字符 https://github.com/freeok/so-novel/pull/179
+- 替换章节文件名中的非法字符 #179
 - 重构 `BookSourceQualityTest.java`
 - 更新 timeout 默认值
 
 ### 🛠️ 其他
 
-- 移除书源: 新笔趣阁 https://github.com/freeok/so-novel/issues/148
+- 移除书源: 新笔趣阁 #148
 - 移除书源: 96读书（章节页 CF）
 - 优化书源 20 过滤规则
 - 更新发布脚本
@@ -75,7 +74,7 @@
 ### 更新内容
 
 :ambulance: 修复 macOS 和 Linux 运行出错
-:bug: fix watchConfig NoResourceException (#170)
+:bug: fix watchConfig NoResourceException #170
 
 > [!Note]
 > 若 Linux 版运行报错：libjavet-v8-linux-x86_64.v.4.1.3.so: libatomic.so.1: cannot open shared object file: No such file
@@ -95,7 +94,7 @@
 
 - :boom: 重构 `HttpURLConnection` 为 `OkHttp`
 - :boom: `JS Runtime` 由 `Nashorn` 升级为 `Javet` (V8 嵌入)
-- :sparkles: 新增书源：阅读库 [#155](https://github.com/freeok/so-novel/issues/155)
+- :sparkles: 新增书源：阅读库 #155
 - :sparkles: 新增书源：顶点小说（JS 逆向、反爬破解）
 - :sparkles: 自动设置 `language` 配置项
 - :sparkles: 过滤正文不可见字符
@@ -131,7 +130,7 @@
 ### 🐛 修复
 
 - 修复书源 3 搜索失效（更换域名）
-- 暂时禁用书源 13 https://github.com/freeok/so-novel/issues/148
+- 暂时禁用书源 13 #148
 
 ### ♻️ 重构
 
@@ -152,15 +151,15 @@
 
 ### ✨ 新特性
 
-- 新增书源：八一中文网 https://github.com/freeok/so-novel/issues/140
-- 新增书源：悠久小说网 https://github.com/freeok/so-novel/issues/154
-- 新增 Docker 安装脚本 https://github.com/freeok/so-novel/issues/144
+- 新增书源：八一中文网 #140
+- 新增书源：悠久小说网 #154
+- 新增 Docker 安装脚本 #144
 
 ### 🐛 修复
 
 - 修复封面获取 NPE
-- 修复 https://github.com/freeok/so-novel/issues/157
-- corrected full-width period in chapter filenames (#158)
+- 修复 #157
+- corrected full-width period in chapter filenames #158
 
 ### ♻️ 重构
 
@@ -178,11 +177,11 @@
 
 ### ✨ 新特性
 
-- 新增聚合搜索功能（显著提升用户体验） https://github.com/freeok/so-novel/issues/106
-- 新增书源 16：96读书 https://github.com/freeok/so-novel/issues/102
-- 新增书源 17：速读谷 https://github.com/freeok/so-novel/issues/115
-- 书源 5 替换为：新天禧小说 https://github.com/freeok/so-novel/issues/112
-- 书源 9 替换为笔趣阁 https://github.com/freeok/so-novel/issues/129
+- 新增聚合搜索功能（显著提升用户体验） #106
+- 新增书源 16：96读书 #102
+- 新增书源 17：速读谷 #115
+- 书源 5 替换为：新天禧小说 #112
+- 书源 9 替换为笔趣阁 #129
 - 新增配置项 search-limit
 - 书籍详情抓取更多信息
 
@@ -220,7 +219,7 @@
 
 ### 🐛 Bug 修复
 
-- 修复 https://github.com/freeok/so-novel/issues/116
+- 修复 #116
 - 修复书源一览显示过长
 - 修复非小写扩展名导致下载失败
 
@@ -234,7 +233,7 @@
 
 ### 📝 其它
 
-- 更新 Scoop 安装命令 https://github.com/freeok/so-novel/issues/117
+- 更新 Scoop 安装命令 #117
 - 更新 ISSUE_TEMPLATE
 - 升级依赖
 
@@ -244,13 +243,13 @@
 
 ### ✨ 新特性
 
-- 新增书源 13：得奇小说网 https://github.com/freeok/so-novel/issues/98
+- 新增书源 13：得奇小说网 #98
 - 新增书源 14：新笔趣阁
-- 新增书源 15：略更网 https://github.com/freeok/so-novel/issues/100
+- 新增书源 15：略更网 #100
 
 ### 🐛 Bug 修复
 
-- 修复 https://github.com/freeok/so-novel/issues/101
+- 修复 #101
 - 修复短目录范围下载失败
 - 修复部分书源封面下载失败
 - 修复分页正则
@@ -276,13 +275,13 @@
 ### ✨ 新特性
 
 - 新增书源 11：笔尖中文
-- 新增书源 12：零点小说 [#96](https://github.com/freeok/so-novel/issues/96)
-- 新增批量下载功能 [#76](https://github.com/freeok/so-novel/issues/76)
+- 新增书源 12：零点小说 #96
+- 新增批量下载功能 #76
 
 ### 🐛 Bug 修复
 
-- 修复 [#97](https://github.com/freeok/so-novel/issues/97)
-- 修复 [#91](https://github.com/freeok/so-novel/issues/91)
+- 修复 #97
+- 修复 #91
 - 修复分页搜索单页异常
 - 修复 NPE 错误
 
@@ -297,8 +296,8 @@
 
 ### ✨ 新特性
 
-- 新增书源 8：大熊猫文学 (https://github.com/freeok/so-novel/issues/86)
-- 新增书源 9：369小说网 (https://github.com/freeok/so-novel/issues/90)
+- 新增书源 8：大熊猫文学 #86
+- 新增书源 9：369小说网 #90
 - 新增书源 10：天天看小说
 - 新增封面获取途径：纵横中文网
 - 书源规则支持 JS
@@ -329,7 +328,7 @@
 
 > [!NOTE]
 >
-> 最新书源信息见：https://github.com/freeok/so-novel/issues/50
+> 最新书源信息见：#50
 
 ---
 
@@ -337,8 +336,8 @@
 
 ### ✨ 新特性
 
-- 新增书源 7: [69书吧(官方)](https://69shuba.cx/) (https://github.com/freeok/so-novel/issues/40)
-- 支持详情页 URL 下载 (https://github.com/freeok/so-novel/issues/78)
+- 新增书源 7: [69书吧(官方)](https://69shuba.cx/) #40
+- 支持详情页 URL 下载 #78
 - rule.json 新增 timeout 属性
 
 ### ♻️ 重构优化
@@ -362,8 +361,6 @@
 > 这一版新增的 ``69书吧(官方)`` 有限流，使用前必须修改默认配置，否则会被该网站封禁 IP（至少几个小时无法使用）
 >
 > 且搜索页有 CF，故暂不支持搜索，只能通过输入书籍详情页网址下载
->
-> [推荐配置参见此处](https://github.com/freeok/so-novel/releases/tag/v1.7.3)
 
 ---
 
@@ -372,7 +369,7 @@
 ### ✨ 新特性
 
 - 支持繁体中文(台湾)  、简体中文互转
-- 新增书源 6：[全本小说网](https://quanben5.com/) (https://github.com/freeok/so-novel/issues/82)
+- 新增书源 6：[全本小说网](https://quanben5.com/) #82
 
 ### 🐛 Bug 修复
 
@@ -397,11 +394,11 @@
 
 ### :sparkles: 新特性
 
-- 新增下载最新章节功能 (https://github.com/freeok/so-novel/issues/77)
+- 新增下载最新章节功能 #77
 
 ### :bug: Bug 修复
 
-- 重复标题 2 次修复 (https://github.com/freeok/so-novel/discussions/83)
+- 重复标题 2 次修复 #83
 - 修复书源 5 搜素结果异常
 
 ### :recycle: 重构
@@ -424,12 +421,12 @@
 ### :sparkles: 新特性
 
 - 支持两种交互模式 (见 config.ini)
-- ​兼容目录分页的书源
-- 新增书源一览功能 (https://github.com/freeok/so-novel/issues/52)
+- 兼容目录分页的书源
+- 新增书源一览功能 #52
 
 ### :bug: Bug 修复
 
-- 修复代理配置问题 (https://github.com/freeok/so-novel/issues/69)
+- 修复代理配置问题 #69
 - 修复进度条显示异常
 - 修复下载失败日志文件编码问题
 
@@ -451,10 +448,7 @@
 
 ### :sparkles: 新特性
 
--
-
-新增书源：[69書吧](https://69shux.co/) (https://github.com/freeok/so-novel/issues/65, https://github.com/freeok/so-novel/issues/61, https://github.com/freeok/so-novel/issues/41, https://github.com/freeok/so-novel/issues/40, https://github.com/freeok/so-novel/issues/13)
-
+- 新增书源：[69書吧](https://69shux.co/) #65, #61, #41, #40, #13
 - 不指定配置项 `source-id` 时，使用随机书源
 
 ### :bug: Bug 修复
@@ -522,9 +516,9 @@
 
 ✨ epub 内容首页增加封面；txt、html 目录增加封面
 
-🐛 修复正文包含重复标题 (https://github.com/freeok/so-novel/issues/57)
+🐛 修复正文包含重复标题 #57
 
-🚸 默认不启用自动更新 (https://github.com/freeok/so-novel/pull/53)
+🚸 默认不启用自动更新 #53
 
 ♻️ 重构 txt 合并代码
 
@@ -538,9 +532,9 @@
 
 ✨ TXT 开头添加书籍信息
 
-✨ 新增书源质量检测 (https://github.com/freeok/so-novel/issues/50)
+✨ 新增书源质量检测 #50
 
-🚸 改善交互体验 (https://github.com/freeok/so-novel/issues/46)
+🚸 改善交互体验 #46
 
 🚸 启动时校验 source-id 合法性
 
@@ -552,7 +546,7 @@
 
 🐛 修复某些情况下搜索失败
 
-📝 更新使用说明 [readme.txt](https://github.com/freeok/so-novel/blob/main/input/readme.txt)
+📝 更新使用说明 readme.txt
 
 ---
 
@@ -588,7 +582,7 @@
 
 更新内容
 
-- :sparkles: 新增书源 (https://github.com/freeok/so-novel/issues/33)
+- :sparkles: 新增书源 #33
 - :bug: 修复下载章数即使不为 0，epub 也不生成的问题
 - :children_crossing: 优化交互体验，可重选下载序号
 
@@ -674,7 +668,7 @@ scoop install so-novel
 
 更新内容
 
-- 移除 epub 默认样式 https://github.com/freeok/so-novel/issues/11
+- 移除 epub 默认样式 #11
 
 ---
 
@@ -684,7 +678,7 @@ scoop install so-novel
 
 - 新增章节下载失败时提示原因
 - 修复 Apple Books 部分章节报错
-- 修复 Apple Books 无法使用中文字体 https://github.com/freeok/so-novel/pull/9
+- 修复 Apple Books 无法使用中文字体 #9
 
 ---
 
