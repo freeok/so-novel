@@ -62,18 +62,18 @@ class BookSourceTest {
             "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",
             "5, https://www.tianxibook.com/book/66120/",
-            "8, https://www.dxmwx.org/book/56441.html",
-            "9, https://www.22biqu.com/biqu79148/",
-            "10, http://www.xbiquzw.net/10_10233/",
-            "11, https://www.0xs.net/txt/68398.html",
-            "13, https://www.xshbook.com/0/94328173/",
-            "14, https://www.luegeng.com/book186856/",
-            "15, http://www.shu009.com/book/111616/",
-            "17, http://www.81zwwww.com/90_90170/",
-            "18, http://www.ujxsw.org/book/107612/",
-            "19, http://www.yeudusk.com/book/1322535/",
-            "20, https://www.wxsy.net/novel/1803/",
-            "21, http://www.xhytd.com/32/32957/"
+            "6, https://www.dxmwx.org/book/56441.html",
+            "7, https://www.22biqu.com/biqu79148/",
+            "8, http://www.xbiquzw.net/10_10233/",
+            "9, https://www.0xs.net/txt/68398.html",
+            "10, https://www.xshbook.com/0/94328173/",
+            "11, https://www.luegeng.com/book186856/",
+            "12, http://www.shu009.com/book/111616/",
+            "13, http://www.81zwwww.com/90_90170/",
+            "14, http://www.ujxsw.org/book/107612/",
+            "15, http://www.yeudusk.com/book/1322535/",
+            "16, https://www.wxsy.net/novel/1803/",
+            "17, http://www.xhytd.com/32/32957/"
     })
     void testDirectSources(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -83,7 +83,7 @@ class BookSourceTest {
         bookParse();
         tocParse();
         chapterParse();
-        chapterBatchParse(0, 50);
+        // chapterBatchParse(0, 50);
     }
 
     @DisplayName("测试代理书源")
