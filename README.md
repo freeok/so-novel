@@ -9,11 +9,11 @@
 **So Novel** 是一款通用的网页内容处理与导出工具，它致力于帮助用户高效地从网页中提取结构化信息，并将其灵活导出为
 EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格式转换、电子书制作等场景。
 
-## TUI 预览
+## TUI 预览 (Text-based User Interface)
 
 ![preview-tui.png](assets/preview-tui.png)
 
-## CLI 预览
+## CLI 预览 (Command Line Interface)
 
 ![preview-cli.png](assets/preview-cli.png)
 
@@ -64,10 +64,6 @@ curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-inst
 
 [点击查看](https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22)
 
-## 免责声明
-
-在使用本工具前，请务必仔细阅读我们的[法律免责声明](bundle/DISCLAIMER.md)。使用本工具即表示您已阅读、理解并同意遵守所有条款。
-
 ## 支持
 
 如果觉得有所帮助，欢迎扫码赞赏☕，或点击顶部的⭐Star
@@ -76,6 +72,10 @@ curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-inst
 | 支付宝赞赏                                                           | 微信赞赏                                                           |
 |-----------------------------------------------------------------|----------------------------------------------------------------|
 | <img src="assets/donation-alipay.png" alt="支付宝收款码" width="197"> | <img src="assets/donation-wechat.jpg" alt="微信赞赏码" width="197"> |
+
+## 免责声明
+
+在使用本工具前，请务必仔细阅读我们的[法律免责声明](bundle/DISCLAIMER.md)。使用本工具即表示您已阅读、理解并同意遵守所有条款。
 
 ## Star History
 
