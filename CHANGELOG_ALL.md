@@ -27,7 +27,23 @@
 - 优化 `CHANGELOG_ALL.md`
 - 移除无效的系统属性
 
-
+> [!NOTE]
+>
+> CLI 用法
+>
+> ```bash
+> # Windows
+> .\SoNovel.exe -h
+> 
+> # Linux
+> ./runtime/bin/java -jar app.jar -h
+> 
+> # macOS
+> ./runtime/Contents/Home/bin/java -jar app.jar -h
+> 
+> # Docker
+> docker run -it --rm -v /sonovel/config.ini:/sonovel/config.ini -v /sonovel/downloads:/sonovel/downloads -v /sonovel/rules:/sonovel/rules sonovel:v1.8.5 -h
+> ```
 
 ---
 
