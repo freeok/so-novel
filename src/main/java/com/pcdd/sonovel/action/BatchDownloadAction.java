@@ -33,6 +33,12 @@ public class BatchDownloadAction {
 
     public void execute() {
         Scanner sc = Console.scanner();
+
+        if (config.getSourceId() == -1) {
+            Console.print(render("==> 请指定书源 ID: ", "green"));
+            config.setSourceId(Integer.parseInt(sc.nextLine()));
+        }
+
         List<String> lines = new ArrayList<>();
         Console.log(render("==> 每行输入一组书名和作者，以空格分隔；每输入一组按回车，输入 # 结束: ", "green"));
         while (true) {
