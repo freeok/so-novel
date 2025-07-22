@@ -40,18 +40,17 @@ import java.util.concurrent.Executors;
 class BookSourceTest {
 
     private static final AppConfig config = ConfigUtils.defaultConfig();
-    public static final String DIVIDER = "=".repeat(50);
+    private static final String DIVIDER = "=".repeat(50);
     private String bookUrl;
-    private String chapterUrl;
+    private String firstChapterUrl;
     private List<Chapter> chapters;
 
     static {
         HttpClientContext.set(OkHttpClientFactory.create(config, true));
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
-        config.setLanguage("zh_CN");
         config.setExtName("txt");
-        config.setThreads(-1);
+        config.setLanguage("zh_TW");
     }
 
     @DisplayName("测试直连书源")
@@ -82,9 +81,9 @@ class BookSourceTest {
 
         searchParse("耳根");
         bookParse();
-        tocParse();
+        tocParse(1, Integer.MAX_VALUE);
         chapterParse();
-        // chapterBatchParse(0, 50);
+        // chapterBatchParse(0, 100);
     }
 
     @DisplayName("测试代理书源")
@@ -101,7 +100,7 @@ class BookSourceTest {
 
         searchParse("耳根");
         bookParse();
-        tocParse();
+        tocParse(1, Integer.MAX_VALUE);
         chapterParse();
     }
 
@@ -130,15 +129,15 @@ class BookSourceTest {
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
 
-    public void tocParse() {
+    public void tocParse(int start, int end) {
         Console.log("\n{} START tocParse {}", DIVIDER, DIVIDER);
         TocParser tocParser = new TocParser(config);
-        List<Chapter> toc = tocParser.parse(bookUrl);
+        List<Chapter> toc = tocParser.parse(bookUrl, start, end);
         chapters = toc;
         toc.forEach(System.out::println);
         if (CollUtil.isNotEmpty(toc)) {
             // 测试目录首章
-            chapterUrl = toc.get(0).getUrl();
+            firstChapterUrl = toc.get(0).getUrl();
         } else {
             Console.log("目录为空");
         }
@@ -148,13 +147,10 @@ class BookSourceTest {
     public void chapterParse() {
         Console.log("\n{} START chapterParse {}", DIVIDER, DIVIDER);
 
-        Chapter chapter = Chapter.builder().url(chapterUrl).build();
-        Chapter beforeFiltration = new ChapterParser(config).parse(chapter);
-        Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
+        Chapter build = Chapter.builder().url(firstChapterUrl).build();
+        Chapter chapter = new ChapterParser(config).parse(build);
 
-        // Source source = new Source(config.getSourceId());
-        // Chapter converted = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
-        Console.log(afterFiltration.getContent());
+        Console.log(chapter.getContent());
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
     }
 
