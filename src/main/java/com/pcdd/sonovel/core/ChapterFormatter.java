@@ -2,6 +2,7 @@ package com.pcdd.sonovel.core;
 
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.AllArgsConstructor;
 
 /**
@@ -18,6 +19,7 @@ public class ChapterFormatter {
      */
     public String format(String content) {
         Rule.Chapter r = new Source(config).rule.getChapter();
+        content = JsoupUtils.clearAllAttributes(content);
 
         // <tag>段落内容</tag>
         if (r.isParagraphTagClosed()) {

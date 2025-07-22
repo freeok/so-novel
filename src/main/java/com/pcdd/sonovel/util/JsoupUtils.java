@@ -3,6 +3,7 @@ package com.pcdd.sonovel.util;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.ContentType;
 import lombok.experimental.UtilityClass;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -118,11 +119,12 @@ public class JsoupUtils {
     /**
      * 清除所有元素及其子元素的属性，防止标签与属性间的空格干扰解析。
      */
-    public static void clearAllAttributes(Elements elements) {
-        for (Element el : elements.select("*")) {
+    public String clearAllAttributes(String html) {
+        Element body = Jsoup.parse(html).body();
+        for (Element el : body.select("*")) {
             el.clearAttributes();
         }
+        return body.html();
     }
-
 
 }
