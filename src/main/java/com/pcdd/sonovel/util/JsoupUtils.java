@@ -124,7 +124,8 @@ public class JsoupUtils {
         for (Element el : body.select("*")) {
             el.clearAttributes();
         }
-        return body.html();
+        // 删除 Element#html 产生的 \n
+        return  StrUtil.cleanBlank(body.html());
     }
 
 }
