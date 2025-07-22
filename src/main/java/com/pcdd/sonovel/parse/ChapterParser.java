@@ -1,7 +1,6 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.RandomUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -39,18 +38,17 @@ public class ChapterParser extends Source {
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
         Rule.Chapter r = this.rule.getChapter();
-        Document document;
         OkHttpClient client = HttpClientContext.get();
 
+        // 获取章节名
         try (Response resp = CrawlUtils.request(client, chapter.getUrl(), r.getTimeout())) {
-            document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+            Document document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+            chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
         }
 
-        chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
-        String content = fetchContent(chapter.getUrl(), RandomUtil.randomInt(100, 200));
-        chapter.setContent(content);
+        chapter.setContent(fetchContent(chapter.getUrl(), CrawlUtils.randomInterval(config)));
 
-        return chapter;
+        return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch) {
