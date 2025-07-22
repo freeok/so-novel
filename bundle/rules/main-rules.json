@@ -323,7 +323,7 @@
     "id": 9,
     "url": "https://www.0xs.net/",
     "name": "零点小说",
-    "comment": "章节限流，爬取过快会封IP，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”，发布页：https://www.cxysb.com/",
+    "comment": "章节限流严重，即便线程数为1也会被限流，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”。发布页：https://www.cxysb.com/",
     "language": "zh_CN",
     "ignoreSsl": true,
     "search": {
@@ -366,7 +366,7 @@
     "crawl": {
       "threads": 1,
       "minInterval": 1000,
-      "maxInterval": 2000
+      "maxInterval": 3000
     }
   },
   {
@@ -680,6 +680,52 @@
       "paragraphTag": "<br>+",
       "filterTxt": "",
       "filterTag": "p div"
+    }
+  },
+  {
+    "id": 18,
+    "url": "https://www.laoyaoxs.org/",
+    "name": "老幺小说网，章节限流，正文段落会乱序",
+    "comment": "",
+    "language": "zh_CN",
+    "search": {
+      "url": "https://www.laoyaoxs.org/search.php?key=%s",
+      "method": "get",
+      "result": ".result > ul > li",
+      "bookName": ".book_inf > h3 > a",
+      "author": ".book_inf > p.tags > span:nth-child(1) > a",
+      "wordCount": ".book_inf > p.tags > span:nth-child(4)@js:r=r.replaceAll('总字数：', '');",
+      "latestChapter": ".book_inf > p:nth-child(3) > a",
+      "lastUpdateTime": ".right > span@js:r=r.replaceAll('更新时间：', '');",
+      "pagination": true,
+      "nextPage": ".result > div > span > a:not(.sl)"
+    },
+    "book": {
+      "url": "https://www.laoyaoxs.org/info/(.*?).html",
+      "bookName": "body > div.main > div > div.left.w_860 > div:nth-child(1) > div.detail > h1",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[name=\"description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+    },
+    "toc": {
+      "baseUri": "https://www.laoyaoxs.org/list/%s/",
+      "url": "https://www.laoyaoxs.org/list/%s/",
+      "item": "#chapters > a"
+    },
+    "chapter": {
+      "title": "#chapter-name > h2",
+      "content": "#txt@js:const ddMatches=[...r.matchAll(/<dd\\s+data-id=\"(\\d+)\">([\\s\\S]*?)<\\/dd>/g)];const ddList=ddMatches.map(match=>({id:Number(match[1]),content:match[2]}));ddList.sort((a,b)=>a.id-b.id);let result='';for(const dd of ddList){const pMatches=[...dd.content.matchAll(/<p>[\\s\\S]*?<\\/p>/g)];pMatches.forEach(p=>{result+=p[0]})}r=result;",
+      "paragraphTagClosed": true,
+      "filterTxt": "",
+      "filterTag": ""
+    },
+    "crawl": {
+      "threads": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
     }
   }
 ]
