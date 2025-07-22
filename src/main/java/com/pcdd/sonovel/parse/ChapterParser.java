@@ -122,9 +122,8 @@ public class ChapterParser extends Source {
             doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
 
-        Elements contentEls = JsoupUtils.select(doc, r.getContent());
         Thread.sleep(interval);
-        return JsoupUtils.invokeJs(r.getContent(), contentEls.html());
+        return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
     }
 
     @SneakyThrows
@@ -138,9 +137,7 @@ public class ChapterParser extends Source {
             try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
-
-            Elements contentEls = JsoupUtils.select(doc, r.getContent());
-            contentBuilder.append(contentEls.html());
+            contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
 
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
