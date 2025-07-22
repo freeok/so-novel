@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -51,7 +52,14 @@ public class OkHttpClientFactory {
                 .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .followRedirects(true)  // 自动跟随 301/302 跳转
-                .followSslRedirects(true);
+                .followSslRedirects(true)
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request requestWithLanguage = original.newBuilder()
+                            .header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+                            .build();
+                    return chain.proceed(requestWithLanguage);
+                });
 
         // 启用配置文件代理
         if (config != null && config.getProxyEnabled() == 1) {
