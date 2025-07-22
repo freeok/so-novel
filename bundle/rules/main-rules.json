@@ -605,7 +605,7 @@
     "id": 16,
     "url": "https://www.wxsy.net/",
     "name": "顶点小说",
-    "comment": "搜索、详情、章节限流、目录反爬、正文段落js加密",
+    "comment": "搜索、详情、章节限流。目录乱序、正文段落js加密",
     "language": "zh_CN",
     "search": {
       "url": "https://www.wxsy.net/search.html",
