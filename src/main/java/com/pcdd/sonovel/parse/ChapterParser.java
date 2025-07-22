@@ -116,16 +116,15 @@ public class ChapterParser extends Source {
     @SneakyThrows
     private String fetchSinglePageContent(String url, long interval, Rule.Chapter r) {
         OkHttpClient client = HttpClientContext.get();
+        Document doc;
 
         try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
-            Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
-            Elements contentEls = JsoupUtils.select(doc, r.getContent());
-            JsoupUtils.clearAllAttributes(contentEls);
-
-            Thread.sleep(interval);
-
-            return JsoupUtils.invokeJs(r.getContent(), contentEls.html());
+            doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
+
+        Elements contentEls = JsoupUtils.select(doc, r.getContent());
+        Thread.sleep(interval);
+        return JsoupUtils.invokeJs(r.getContent(), contentEls.html());
     }
 
     @SneakyThrows
@@ -141,7 +140,6 @@ public class ChapterParser extends Source {
             }
 
             Elements contentEls = JsoupUtils.select(doc, r.getContent());
-            JsoupUtils.clearAllAttributes(contentEls);
             contentBuilder.append(contentEls.html());
 
             // 获取下一页按钮元素
