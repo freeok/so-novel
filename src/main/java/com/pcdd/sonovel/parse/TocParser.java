@@ -22,7 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,27 +52,26 @@ public class TocParser extends Source {
     public List<Chapter> parse(String url, int start, int end) {
         Rule.Toc ruleToc = this.rule.getToc();
         Rule.Book ruleBook = this.rule.getBook();
+        // 详情页书籍 ID
+        String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
 
-        // 目录和详情不在同一页面
-        if (StrUtil.isNotEmpty(ruleToc.getUrl())) {
-            String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
-            url = ruleToc.getUrl().formatted(id);
-        }
-        // 非 / 开头的 path 需设置 baseUri
-        if (StrUtil.isNotEmpty(ruleToc.getBaseUri())) {
-            String id = ReUtil.getGroup1(StrUtil.subBefore(ruleBook.getUrl(), "@js:", false), url);
+        // 相对路径 (href 开头不是 /) 需设置 toc.baseUri
+        if (id != null) {
             ruleToc.setBaseUri(ruleToc.getBaseUri().formatted(id));
         }
-        // 目录分页 url
-        Set<String> urls = new LinkedHashSet<>();
-        urls.add(url);
-
-        Document document;
-        try (Response resp = CrawlUtils.request(client, url, ruleBook.getTimeout())) {
-            document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
+        // 目录和详情不在同一页面需设置 toc.url
+        if (StrUtil.isNotEmpty(ruleToc.getUrl())) {
+            url = ruleToc.getUrl().formatted(id);
         }
 
+        // 目录分页 url
+        Set<String> urls = CollUtil.newLinkedHashSet(url);
+
         if (ruleToc.isPagination()) {
+            Document document;
+            try (Response resp = CrawlUtils.request(client, url, ruleBook.getTimeout())) {
+                document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
+            }
             extractPaginationUrls(urls, document, ruleToc);
         }
 
@@ -83,7 +81,7 @@ public class TocParser extends Source {
     @SneakyThrows
     private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
         Elements elements = JsoupUtils.select(document, r.getNextPage());
-        // 一次性获取分页 URL（下拉菜单）
+        // 一次性获取分页 URL (下拉菜单)
         if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
             String attrKey = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
                     ? ATTR_VALUE.getValue()
@@ -101,8 +99,7 @@ public class TocParser extends Source {
 
             return;
         }
-        // 以下代码覆盖率可能为 0，因为分页的目录基本全都是通过下拉菜单一次性获取的
-        // 递归获取分页 URL（模拟点击下一页）
+        // 递归获取分页 URL (下一页按钮)。以下代码覆盖率可能为 0，因为分页目录的链接基本全都是通过下拉菜单一次性获取的
         while (true) {
             String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
@@ -162,10 +159,9 @@ public class TocParser extends Source {
     }
 
     private void addChapter(Element el, List<Chapter> toc, int order, Rule.Toc r) {
-        String url = JsoupUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF);
         toc.add(Chapter.builder()
                 .title(el.text())
-                .url(url)
+                .url(JsoupUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF))
                 .order(order)
                 .build());
     }
