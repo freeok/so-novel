@@ -27,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ChapterParser extends Source {
 
+    private final OkHttpClient httpClient = HttpClientContext.get();
     private final ChapterConverter chapterConverter;
 
     public ChapterParser(AppConfig config) {
@@ -38,10 +39,9 @@ public class ChapterParser extends Source {
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
         Rule.Chapter r = this.rule.getChapter();
-        OkHttpClient client = HttpClientContext.get();
 
         // 获取章节名
-        try (Response resp = CrawlUtils.request(client, chapter.getUrl(), r.getTimeout())) {
+        try (Response resp = CrawlUtils.request(httpClient, chapter.getUrl(), r.getTimeout())) {
             Document document = Jsoup.parse(resp.body().string(), r.getBaseUri());
             chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
         }
@@ -106,21 +106,21 @@ public class ChapterParser extends Source {
     @SneakyThrows
     public String fetchContent(String url, long interval) {
         Rule.Chapter r = rule.getChapter();
+        // 获取下一章的间隔
+        Thread.sleep(interval);
         return r.isPagination()
                 ? fetchPaginatedContent(url, interval, r)
-                : fetchSinglePageContent(url, interval, r);
+                : fetchSinglePageContent(url, r);
     }
 
     @SneakyThrows
-    private String fetchSinglePageContent(String url, long interval, Rule.Chapter r) {
-        OkHttpClient client = HttpClientContext.get();
+    private String fetchSinglePageContent(String url, Rule.Chapter r) {
         Document doc;
 
-        try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
             doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
 
-        Thread.sleep(interval);
         return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
     }
 
@@ -128,11 +128,10 @@ public class ChapterParser extends Source {
     private String fetchPaginatedContent(String startUrl, long interval, Rule.Chapter r) {
         String nextUrl = startUrl;
         StringBuilder contentBuilder = new StringBuilder();
-        OkHttpClient client = HttpClientContext.get();
 
         while (true) {
             Document doc;
-            try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
+            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout())) {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
@@ -145,6 +144,7 @@ public class ChapterParser extends Source {
             }
 
             nextUrl = candidateNext;
+            // 获取下一分页章节的间隔
             Thread.sleep(interval);
         }
 
