@@ -30,7 +30,7 @@ import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
 
 public class TocParser extends Source {
 
-    public final OkHttpClient client = HttpClientContext.get();
+    public final OkHttpClient httpClient = HttpClientContext.get();
 
     public TocParser(AppConfig config) {
         super(config);
@@ -69,7 +69,7 @@ public class TocParser extends Source {
 
         if (ruleToc.isPagination()) {
             Document document;
-            try (Response resp = CrawlUtils.request(client, url, ruleBook.getTimeout())) {
+            try (Response resp = CrawlUtils.request(httpClient, url, ruleBook.getTimeout())) {
                 document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
             }
             extractPaginationUrls(urls, document, ruleToc);
@@ -107,7 +107,7 @@ public class TocParser extends Source {
             if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
-            try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
+            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout())) {
                 document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 
@@ -126,7 +126,7 @@ public class TocParser extends Source {
         // TODO 多线程优化
         for (String url : urls) {
             Document document;
-            try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
+            try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
                 document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
             }
 

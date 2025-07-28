@@ -23,7 +23,7 @@ import org.jsoup.nodes.Document;
  */
 public class BookParser extends Source {
 
-    public final OkHttpClient client = HttpClientContext.get();
+    private final OkHttpClient httpClient = HttpClientContext.get();
 
     public BookParser(AppConfig config) {
         super(config);
@@ -34,7 +34,7 @@ public class BookParser extends Source {
         Rule.Book r = this.rule.getBook();
 
         Document document;
-        try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
             document = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
 
