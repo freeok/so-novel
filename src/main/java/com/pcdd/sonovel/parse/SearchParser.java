@@ -34,8 +34,8 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class SearchParser extends Source {
 
-    public static final int TEXT_LIMIT_LENGTH = 30;
-    public final OkHttpClient client = HttpClientContext.get();
+    private static final int TEXT_LIMIT_LENGTH = 30;
+    private final OkHttpClient httpClient = HttpClientContext.get();
 
     public SearchParser(AppConfig config) {
         super(config);
@@ -70,7 +70,7 @@ public class SearchParser extends Source {
                 builder = builder.post(CrawlUtils.buildData(r.getData(), keyword));
             }
 
-            resp = CrawlUtils.request(client, builder, r.getTimeout());
+            resp = CrawlUtils.request(httpClient, builder, r.getTimeout());
             document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
 
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class SearchParser extends Source {
             // 搜索结果页 DOM
             Document document;
             if (resp == null) {
-                try (Response resp2 = CrawlUtils.request(client, url, r.getTimeout())) {
+                try (Response resp2 = CrawlUtils.request(httpClient, url, r.getTimeout())) {
                     // peekBody 不会关闭原body流，可以拿一份副本出来
                     document = Jsoup.parse(resp2.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
                 }

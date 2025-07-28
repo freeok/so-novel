@@ -29,14 +29,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 书源 6 搜索特殊处理 TODO 写进规则
+ * 全本小说网，搜索特殊处理 TODO 写进规则
  *
  * @author pcdd
  * Created at 2024/3/23
  */
 public class SearchParserQuanben5 extends Source {
 
-    public final OkHttpClient client = HttpClientContext.get();
+    private final OkHttpClient httpClient = HttpClientContext.get();
 
     public SearchParserQuanben5(AppConfig config) {
         super(config);
@@ -54,7 +54,7 @@ public class SearchParserQuanben5 extends Source {
                     .addHeader("Referer", "https://quanben5.com/search.html")
                     .build();
 
-            try (Response resp = client.newCall(request).execute()) { // 使用client.newCall(request).execute()
+            try (Response resp = httpClient.newCall(request).execute()) { // 使用client.newCall(request).execute()
                 String body = resp.body().string();
                 String processedBody = HtmlUtil.unescape(UnicodeUtil.toString(body))
                         .replace("\\r", "")
