@@ -27,7 +27,7 @@ copy_files() {
     cp "bundle/$jre_filename" "$target_dir"
     cp -r bundle/rules "$target_dir/"
     cp -r bundle/fonts "$target_dir/"
-    cp config.ini bundle/SoNovel.l4j.ini bundle/readme.txt "$target_dir"
+    cp bundle/config.ini bundle/SoNovel.l4j.ini bundle/readme.txt "$target_dir"
 }
 
 extract_jre() {
