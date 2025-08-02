@@ -16,6 +16,7 @@
         .wrap-container{
             height: 100vh;
             display: flex;
+            padding: 32px;
         }
         .wrap-container > * {
             flex: 1;
@@ -29,7 +30,10 @@
 </head>
 <body>
 <div class="wrap-container">
-    <div id="terminal"></div>
+    <div style="display: flex;flex-direction: column;">
+        <div id="terminal"></div>
+        <input id="commandInput" placeholder="请输入指令，按回车键下发" />
+    </div>
     <div class="result-container">
         <div style="margin-bottom: 12px">
             <input placeholder="请输入书名" />
@@ -40,11 +44,72 @@
     </div>
 </div>
 <script>
-    const terminal = new Terminal();
+    const terminal = new Terminal({
+        disableStdin: true,
+    });
     const fitAddon = new FitAddon.FitAddon();
     terminal.loadAddon(fitAddon);
     terminal.open(document.getElementById('terminal'));
     fitAddon.fit();
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const protocol = window.location.protocol.startsWith('https') ? 'wss' : 'ws';
+    let ws;
+    const commandEle = document.getElementById('commandInput')
+
+    const disableCommand = () => {
+        commandEle.setAttribute('disabled', 'disabled');
+    }
+    const enableCommand = () => {
+        commandEle.removeAttribute('disabled');
+    }
+    disableCommand()
+    const initWebsocket = () => {
+        terminal.clear()
+        ws = new WebSocket(`${protocol}://${hostname}:${port}/ws`);
+        ws.onopen = () => {
+            console.log('WebSocket Open!');
+        }
+        ws.onmessage = (e) => {
+
+            if(e.data.includes('==>')) {
+                const splitArray = e.data.split('[m');
+                if(splitArray.length > 1) {
+                    if(splitArray[1].trim() === '') {
+                        terminal.write(e.data)
+                    }else{
+                        terminal.writeln(e.data)
+                    }
+                }else{
+                    terminal.write(e.data)
+                }
+                enableCommand()
+            }else{
+                terminal.writeln(e.data)
+                disableCommand()
+            }
+        }
+        ws.onerror = (e) => {
+            setTimeout(() => {
+                initWebsocket()
+            }, 1000)
+        }
+    }
+    initWebsocket()
+
+    document.getElementById('commandInput').addEventListener('keydown', e => {
+        if(e.key === 'Enter') {
+            sendMessage()
+        }
+    })
+    const sendMessage = () => {
+        const value = document.getElementById('commandInput').value.trim();
+        if(value && ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(value)
+            document.getElementById('commandInput').value = ''
+            terminal.writeln(value)
+        }
+    }
 </script>
 </body>
 </html>
