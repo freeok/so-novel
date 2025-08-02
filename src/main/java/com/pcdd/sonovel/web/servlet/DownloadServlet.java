@@ -2,7 +2,6 @@ package com.pcdd.sonovel.web.servlet;
 
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.web.DownloadFile;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +11,7 @@ import java.io.PrintWriter;
 
 public class DownloadServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String bookName = req.getParameter("bookName");
         Integer sourceId = Integer.parseInt(req.getParameter("sourceId"));
         String url = req.getParameter("url");

@@ -5,13 +5,9 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/ws")
 public class MyJavaxWebSocketEndPoint {
-
-    Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     @OnOpen
     public void onOpen(Session session) {

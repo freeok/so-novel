@@ -3,7 +3,6 @@ package com.pcdd.sonovel.web.servlet;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.action.AggregatedSearchAction;
 import com.pcdd.sonovel.model.SearchResult;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class SearchServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("name");
         List<SearchResult> searchResults = AggregatedSearchAction.getSearchResults(name);
         resp.setContentType("text/json;charset=UTF-8");

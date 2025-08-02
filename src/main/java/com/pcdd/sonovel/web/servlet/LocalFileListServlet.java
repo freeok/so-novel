@@ -4,7 +4,6 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.ConfigWatcher;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +14,7 @@ import java.io.PrintWriter;
 
 public class LocalFileListServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         AppConfig config = ConfigWatcher.getConfig();
         File file = new File(config.getDownloadPath());
         File[] files = file.listFiles();

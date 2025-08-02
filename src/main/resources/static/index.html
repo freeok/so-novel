@@ -3,27 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Web</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/js/xterm/css/xterm.css" />
-    <link rel="stylesheet" href="/css/normalize.css" />
-    <link rel="stylesheet" href="/css/index.css" />
-    <script src="/js/xterm/lib/xterm.js"></script>
-    <script src="/js/addon-fit/lib/addon-fit.js"></script>
-    <script src="/js/addon-attach/lib/addon-attach.js"></script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="/css/normalize.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
 </head>
 <body>
 <div class="wrap-container">
-    <!--<div class="terminal-container">
-        <div id="terminal"></div>
-        <div class="command-container">
-            <input id="commandInput" placeholder="请输入指令，按回车键下发" />
-            <button id="sendBtn" onclick="sendMessage()">发送</button>
-        </div>
-    </div>-->
     <div class="container download-container">
         <div class="title">下载</div>
         <div class="search-container">
-            <input id="downloadSearchName" placeholder="请输入书名或作者（尽量输完整）" />
+            <input id="downloadSearchName" placeholder="请输入书名或作者（尽量输完整）"/>
             <button onclick="searchFile()">搜索</button>
         </div>
         <div class="body-container">
@@ -52,12 +41,12 @@
         <div class="body-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>文件名</th>
-                        <th>文件大小</th>
-                        <th>下载时间</th>
-                        <th>操作</th>
-                    </tr>
+                <tr>
+                    <th>文件名</th>
+                    <th>文件大小</th>
+                    <th>下载时间</th>
+                    <th>操作</th>
+                </tr>
                 </thead>
                 <tbody id="tableBody">
                 </tbody>
@@ -67,7 +56,11 @@
 </div>
 <div class="loading-container" id="tipEle">
     <div class="content">
-        <svg t="1754132474424" class="icon" viewBox="0 0 1105 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4590" width="256" height="256"><path d="M990.723072 342.87616a115.0976 115.0976 0 0 0-99.75808 57.91744 116.38784 116.38784 0 0 0 0 115.83488 115.0976 115.0976 0 0 0 99.75808 57.91744c63.63136 0 115.2-51.85536 115.2-115.83488 0-63.97952-51.56864-115.83488-115.2-115.83488zM566.787072 18.5344a13.86496 13.86496 0 0 0-13.824 13.90592 13.80352 13.80352 0 1 0 25.8048 6.9632 13.96736 13.96736 0 0 0 0-13.9264 13.80352 13.80352 0 0 0-11.9808-6.94272zM354.819072 0c-15.2576 0-27.648 12.45184-27.648 27.79136 0 15.36 12.3904 27.81184 27.648 27.81184 15.27808 0 27.648-12.45184 27.648-27.81184 0-15.36-12.36992-27.79136-27.648-27.79136zM188.931072 101.92896A41.5744 41.5744 0 0 0 147.459072 143.64672 41.5744 41.5744 0 0 0 188.931072 185.344a41.5744 41.5744 0 0 0 41.472-41.69728 41.5744 41.5744 0 0 0-41.472-41.71776zM59.907072 417.01376c-21.4016 0-41.1648 11.4688-51.87584 30.1056a60.5184 60.5184 0 0 0 0 60.25216 59.84256 59.84256 0 0 0 51.87584 30.1056c21.4016 0 41.18528-11.4688 51.89632-30.1056a60.5184 60.5184 0 0 0 0-60.25216 59.84256 59.84256 0 0 0-51.89632-30.1056zM202.755072 732.09856c-40.71424 0-73.728 33.1776-73.728 74.1376 0 40.93952 33.01376 74.1376 73.728 74.1376 40.73472 0 73.728-33.19808 73.728-74.1376 0-40.96-32.99328-74.1376-73.728-74.1376zM534.531072 847.93344a87.4496 87.4496 0 0 0-75.81696 44.01152 88.4736 88.4736 0 0 0 0 88.04352A87.4496 87.4496 0 0 0 534.531072 1024a87.4496 87.4496 0 0 0 75.83744-44.032 88.4736 88.4736 0 0 0 0-88.02304 87.4496 87.4496 0 0 0-75.83744-44.032zM861.699072 690.3808c-55.99232 0-101.376 45.64992-101.376 101.94944 0 56.29952 45.38368 101.92896 101.376 101.92896s101.376-45.62944 101.376-101.92896c0-56.32-45.38368-101.94944-101.376-101.94944z" p-id="4591"></path></svg>
+        <svg t="1754132474424" class="icon" viewBox="0 0 1105 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="4590" width="256" height="256">
+            <path d="M990.723072 342.87616a115.0976 115.0976 0 0 0-99.75808 57.91744 116.38784 116.38784 0 0 0 0 115.83488 115.0976 115.0976 0 0 0 99.75808 57.91744c63.63136 0 115.2-51.85536 115.2-115.83488 0-63.97952-51.56864-115.83488-115.2-115.83488zM566.787072 18.5344a13.86496 13.86496 0 0 0-13.824 13.90592 13.80352 13.80352 0 1 0 25.8048 6.9632 13.96736 13.96736 0 0 0 0-13.9264 13.80352 13.80352 0 0 0-11.9808-6.94272zM354.819072 0c-15.2576 0-27.648 12.45184-27.648 27.79136 0 15.36 12.3904 27.81184 27.648 27.81184 15.27808 0 27.648-12.45184 27.648-27.81184 0-15.36-12.36992-27.79136-27.648-27.79136zM188.931072 101.92896A41.5744 41.5744 0 0 0 147.459072 143.64672 41.5744 41.5744 0 0 0 188.931072 185.344a41.5744 41.5744 0 0 0 41.472-41.69728 41.5744 41.5744 0 0 0-41.472-41.71776zM59.907072 417.01376c-21.4016 0-41.1648 11.4688-51.87584 30.1056a60.5184 60.5184 0 0 0 0 60.25216 59.84256 59.84256 0 0 0 51.87584 30.1056c21.4016 0 41.18528-11.4688 51.89632-30.1056a60.5184 60.5184 0 0 0 0-60.25216 59.84256 59.84256 0 0 0-51.89632-30.1056zM202.755072 732.09856c-40.71424 0-73.728 33.1776-73.728 74.1376 0 40.93952 33.01376 74.1376 73.728 74.1376 40.73472 0 73.728-33.19808 73.728-74.1376 0-40.96-32.99328-74.1376-73.728-74.1376zM534.531072 847.93344a87.4496 87.4496 0 0 0-75.81696 44.01152 88.4736 88.4736 0 0 0 0 88.04352A87.4496 87.4496 0 0 0 534.531072 1024a87.4496 87.4496 0 0 0 75.83744-44.032 88.4736 88.4736 0 0 0 0-88.02304 87.4496 87.4496 0 0 0-75.83744-44.032zM861.699072 690.3808c-55.99232 0-101.376 45.64992-101.376 101.94944 0 56.29952 45.38368 101.92896 101.376 101.92896s101.376-45.62944 101.376-101.92896c0-56.32-45.38368-101.94944-101.376-101.94944z"
+                  p-id="4591"></path>
+        </svg>
         <span class="text" id="tipText">正在下载</span>
     </div>
 </div>
@@ -84,8 +77,8 @@
         }
         ws.onmessage = (e) => {
             const json = JSON.parse(e.data);
-            if(json.type === 'download'){
-                updateTip('当前进度：'+json.index+' / '+json.count);
+            if (json.type === 'download') {
+                updateTip('当前进度：' + json.index + ' / ' + json.count);
             }
         }
         ws.onerror = (e) => {
@@ -101,14 +94,13 @@
     }
     initWebsocket()
 
-    let serverFileList = []
     const searchList = () => {
         fetch('/file/list').then(res => res.json()).then((data) => {
             console.log('data: ', data)
-            serverFileList = data
+            data = data.sort((a, b) => b.time - a.time);
             const array = []
             data.forEach(item => {
-                const  liStr = `
+                const liStr = `
                     <tr>
                         <td>${item.name}</td>
                         <td>${formatSize(item.size)}</td>
@@ -146,14 +138,14 @@
         const second = date.getSeconds().toString().padStart(2, '0');
         return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     }
-    const  downloadFile = (name) => {
-        console.log('下载:' , name)
-        window.open(window.location.origin + '/file/download?filename='+ name, '_blank');
+    const downloadFile = (name) => {
+        console.log('下载:', name)
+        window.open(window.location.origin + '/file/download?filename=' + name, '_blank');
     }
     let bookCache = []
     const searchFile = () => {
         const value = document.getElementById('downloadSearchName').value.trim();
-        if(!value){
+        if (!value) {
             return;
         }
         showTip('正在搜索。。。')
@@ -162,7 +154,7 @@
             bookCache = data
             const array = []
             data.forEach((item, index) => {
-                const  liStr = `
+                const liStr = `
                     <tr>
                         <td>${index + 1}</td>
                         <td>${item.bookName}</td>
@@ -176,14 +168,14 @@
                 array.push(liStr)
             })
             document.getElementById('downloadTableBody').innerHTML = array.join('')
-        }).finally(()=>{
+        }).finally(() => {
             hideTip()
         })
     }
 
     const downloadFileToSever = (index) => {
         const item = bookCache[index];
-        if(!item){
+        if (!item) {
             alert("参数错误，请重新搜索")
             return;
         }
@@ -193,7 +185,7 @@
             query.push(key + '=' + item[key])
         })
         showTip('正在下载：' + item.bookName)
-        fetch('/download?'+query.join('&')).then((data) => {
+        fetch('/download?' + query.join('&')).then((data) => {
             searchList()
         }).finally(() => {
             hideTip()
@@ -204,7 +196,7 @@
     const tipText = document.getElementById('tipText');
     const showTip = (text) => {
         tipEle.style.display = 'flex';
-        if(text){
+        if (text) {
             updateTip(text)
         }
     }
