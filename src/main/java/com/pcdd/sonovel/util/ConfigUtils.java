@@ -23,6 +23,7 @@ public class ConfigUtils {
     private final String SELECTION_CRAWL = "crawl";
     private final String SELECTION_RETRY = "retry";
     private final String SELECTION_PROXY = "proxy";
+    private final String SELECTION_WEB = "web";
 
     /**
      * 加载系统属性
@@ -79,6 +80,9 @@ public class ConfigUtils {
         config.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
         config.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
         config.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
+
+        config.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+        config.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
 
         return config;
     }
