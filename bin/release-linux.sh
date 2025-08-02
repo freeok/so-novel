@@ -9,8 +9,8 @@ jre_filename="jre-17.0.12+7_linux.tar.gz"
 jre_dirname="jdk-17.0.12+7-jre"
 
 # 最终产物
-dist_filename="sonovel-linux.tar.gz"
-dist_dirname="SoNovel-linux"
+dist_filename="sonovel-linux_x64.tar.gz"
+dist_dirname="SoNovel-Linux_x64"
 
 # 项目根路径
 project_path=$(
@@ -27,9 +27,10 @@ mvn clean package -Plinux-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
 mkdir -p dist
 mkdir -p "target/$dist_dirname"
 
-# 复制配置、说明、字体、JRE
-cp config.ini bundle/readme.txt bundle/CHANGELOG_ALL.md bundle/run-linux.sh "bundle/$jre_filename" "target/$dist_dirname"
+cp "bundle/$jre_filename" "target/$dist_dirname"
+cp -r bundle/rules "target/$dist_dirname"
 cp -r bundle/fonts "target/$dist_dirname"
+cp bundle/config.ini bundle/readme.txt bundle/run-linux.sh "target/$dist_dirname"
 
 cd target
 mv app-jar-with-dependencies.jar app.jar

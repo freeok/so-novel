@@ -1,17 +1,17 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.*;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.ContentType;
+import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.util.LogUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -19,14 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
-
-import static org.jline.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -34,6 +27,7 @@ import static org.jline.jansi.AnsiRenderer.render;
  */
 public class ChapterParser extends Source {
 
+    private final OkHttpClient httpClient = HttpClientContext.get();
     private final ChapterConverter chapterConverter;
 
     public ChapterParser(AppConfig config) {
@@ -45,24 +39,22 @@ public class ChapterParser extends Source {
     @SneakyThrows
     public Chapter parse(Chapter chapter) {
         Rule.Chapter r = this.rule.getChapter();
-        Document document;
-        OkHttpClient client = HttpClientContext.get();
 
-        try (Response resp = CrawlUtils.request(client, chapter.getUrl(), r.getTimeout())) {
-            document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+        // 获取章节名
+        try (Response resp = CrawlUtils.request(httpClient, chapter.getUrl(), r.getTimeout())) {
+            Document document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+            chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
         }
 
-        chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
-        String content = fetchContent(chapter.getUrl(), RandomUtil.randomInt(100, 200));
-        chapter.setContent(content);
+        chapter.setContent(fetchContent(chapter.getUrl(), CrawlUtils.randomInterval(config)));
 
-        return chapter;
+        return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
     }
 
     public Chapter parse(Chapter chapter, CountDownLatch latch) {
         try {
             long interval = CrawlUtils.randomInterval(config);
-            Console.log("<== 正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
+            LogUtils.info("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
 
             String content = fetchContent(chapter.getUrl(), interval);
             Assert.notEmpty(content, "正文内容为空");
@@ -72,51 +64,37 @@ public class ChapterParser extends Source {
             return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
-            Chapter retryChapter = retry(chapter, e.getMessage());
+            Chapter retryChapter = retry(chapter, e);
             return retryChapter == null ? null : ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
         } finally {
             latch.countDown();
         }
     }
 
-    private Chapter retry(Chapter chapter, String errMsg) {
+    private Chapter retry(Chapter chapter, Exception ex) {
         for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
-                Console.log(render("<== 【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}", "red"),
-                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, errMsg);
+                LogUtils.warn("【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
+                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, ex.getMessage());
 
                 String content = fetchContent(chapter.getUrl(), interval);
                 Assert.notEmpty(content, "正文内容为空");
                 chapter.setContent(content);
 
-                Console.log(render("<== 重试成功: 【{}】", "green"), chapter.getTitle());
+                LogUtils.info("重试成功: 【{}】", chapter.getTitle());
                 return chapterConverter.convert(chapter);
 
             } catch (Exception e) {
-                Console.error(render("<== 第 {} 次重试失败: 【{}】 原因: {}", "red"), attempt, chapter.getTitle(), e.getMessage());
+                LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
+                // 最终失败时记录日志
                 if (attempt == config.getMaxRetryAttempts()) {
-                    // 最终失败时记录日志
-                    saveDownloadErrorLog(chapter, e.getMessage());
+                    LogUtils.error(e, "下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
                 }
             }
         }
 
         return null;
-    }
-
-    private void saveDownloadErrorLog(Chapter chapter, String errMsg) {
-        Book book = BookContext.get();
-        String line = StrUtil.format("下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), errMsg);
-        String path = StrUtil.format("{}{}《{}》({}) 下载失败章节.log",
-                config.getDownloadPath(), File.separator, book.getBookName(), book.getAuthor());
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(path, StandardCharsets.UTF_8, true))) {
-            pw.println(line);
-
-        } catch (IOException e) {
-            Console.error(e);
-        }
     }
 
     /**
@@ -128,44 +106,35 @@ public class ChapterParser extends Source {
     @SneakyThrows
     public String fetchContent(String url, long interval) {
         Rule.Chapter r = rule.getChapter();
+        // 获取下一章的间隔
+        Thread.sleep(interval);
         return r.isPagination()
                 ? fetchPaginatedContent(url, interval, r)
-                : fetchSinglePageContent(url, interval, r);
+                : fetchSinglePageContent(url, r);
     }
 
     @SneakyThrows
-    private String fetchSinglePageContent(String url, long interval, Rule.Chapter r) {
-        OkHttpClient client = HttpClientContext.get();
+    private String fetchSinglePageContent(String url, Rule.Chapter r) {
+        Document doc;
 
-        try (Response resp = CrawlUtils.request(client, url, r.getTimeout())) {
-            Document doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
-
-            Elements contentEls = JsoupUtils.select(doc, r.getContent());
-            JsoupUtils.clearAllAttributes(contentEls);
-
-            Thread.sleep(interval);
-
-            return JsoupUtils.invokeJs(r.getContent(), contentEls.html());
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
+            doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
         }
+
+        return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
     }
 
     @SneakyThrows
     private String fetchPaginatedContent(String startUrl, long interval, Rule.Chapter r) {
         String nextUrl = startUrl;
         StringBuilder contentBuilder = new StringBuilder();
-        OkHttpClient client = HttpClientContext.get();
 
         while (true) {
             Document doc;
-            try (Response resp = CrawlUtils.request(client, nextUrl, r.getTimeout())) {
+            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout())) {
                 doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
             }
-
-            String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
-            // String ==> Elements
-            Elements contentEls = Jsoup.parse(content).children();
-            JsoupUtils.clearAllAttributes(contentEls);
-            contentBuilder.append(contentEls.html());
+            contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
 
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
@@ -175,6 +144,7 @@ public class ChapterParser extends Source {
             }
 
             nextUrl = candidateNext;
+            // 获取下一分页章节的间隔
             Thread.sleep(interval);
         }
 
@@ -186,9 +156,8 @@ public class ChapterParser extends Source {
         if (r.getNextPageInJs() != null) {
             return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
         }
-        // FIXME nextEls NPE https://github.com/freeok/so-novel/issues/148#issuecomment-2826226097
         if (nextEls.isEmpty()) {
-            Console.error("分页章节正文获取为空，可能被限流！\n出错链接：{}\n链接内容：{}", doc.baseUri(), doc.body().text());
+            LogUtils.error("分页章节正文获取为空，可能被限流！出错链接：{} 链接内容：{}", doc.baseUri(), doc.body().text());
             return null;
         }
         // 从按钮获取下一页链接

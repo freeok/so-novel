@@ -21,9 +21,12 @@ public class Rule {
     private Book book;
     private Toc toc;
     private Chapter chapter;
+    private Crawl crawl;
 
     @Data
     public static class Search {
+        // 是否纳入聚合搜索
+        private boolean disabled;
         private String baseUri;
         private Integer timeout;
         private String url;
@@ -66,7 +69,6 @@ public class Rule {
         private String url;
         private String list;
         private String item;
-        private Integer offset;
         private boolean isDesc;
         // 目录是否分页
         private boolean pagination;
@@ -92,6 +94,16 @@ public class Rule {
         private String nextPageInJs;
         // 下一章链接的正则
         private String nextChapterLink;
+    }
+
+    @Data
+    public static class Crawl {
+        private Integer threads;
+        private Integer minInterval;
+        private Integer maxInterval;
+        private Integer maxAttempts;
+        private Integer retryMinInterval;
+        private Integer retryMaxInterval;
     }
 
 }

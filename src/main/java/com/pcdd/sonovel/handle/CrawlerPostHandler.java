@@ -26,7 +26,7 @@ public class CrawlerPostHandler {
     public void handle(File saveDir) {
         Book book = BookContext.get();
         String extName = config.getExtName();
-        StringBuilder s = new StringBuilder(StrUtil.format("\n<== 《{}》（{}）下载完毕，", book.getBookName(), book.getAuthor()));
+        StringBuilder s = new StringBuilder(StrUtil.format("<== 《{}》({}) 下载完毕，", book.getBookName(), book.getAuthor()));
 
         if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase())) {
             s.append("正在合并为 ").append(extName.toUpperCase());
@@ -34,7 +34,7 @@ public class CrawlerPostHandler {
         if ("html".equals(extName)) {
             s.append("正在生成 HTML 目录文件");
         }
-        Console.log(s.append(" ..."));
+        Console.log(s.append("..."));
 
         // 等待文件系统更新索引
         int attempts = 10;

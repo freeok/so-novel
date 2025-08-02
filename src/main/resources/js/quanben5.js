@@ -1,5 +1,3 @@
-// https://big5.quanben5.com/search.html
-
 function base64(_str) {
   var staticchars = "PXhw7UT1B0a9kQDKZsjIASmOezxYG4CHo5Jyfg2b8FLpEvRr3WtVnlqMidu6cN";
   var encodechars = "";
@@ -19,5 +17,5 @@ function base64(_str) {
 
 // 计算加密参数 b 的值
 function getParamB(keywords) {
-  return encodeURI(base64(encodeURI(keywords)))
+  return encodeURI(base64(encodeURI(keywords)));
 }

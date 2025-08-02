@@ -1,32 +1,46 @@
-## v1.8.3 (2025-06-10)
+## v1.8.5 (2025-07-21)
 
 ### ✨ 新特性
 
-- 新增书源: 书林文学 https://github.com/freeok/so-novel/issues/166
-- 新增书源: 小说虎
-- 新增章节缓存目录保留配置项 https://github.com/freeok/so-novel/issues/172
-- 临时章节文件名添加前导零 https://github.com/freeok/so-novel/issues/165
+- 支持 CLI #104
+- 新增章节下载进度条功能
+- 支持 `active-rules` 绝对路径 #203
 
 ### 🐛 修复
 
-- 修复模糊文本的聚合搜索结果为空（相似度过低被忽略）
-- 修复分页章节标签解析错误
-- 修复非全本下载后，文件名下划线前的序号错误
-- 修复自定义下载路径时，封面下载出错 https://github.com/freeok/so-novel/discussions/177
-- 修复书源 20 封面下载失败
-- 修复 epub 空封面页
+- 修复分页章节内容包含多余的 `<p>` #195
+- 修复 HTML 文件名前导零导致无法翻页
 
 ### ♻️ 重构
 
-- 替换章节文件名中的非法字符 https://github.com/freeok/so-novel/pull/179
-- 重构 `BookSourceQualityTest.java`
-- 更新 timeout 默认值
+- 优化 Docker 安装脚本 #206
+- 优化 HTML 目录文件内容格式
+- 改进指定搜索, 批量下载体验
+- 解耦 Main.java
 
 ### 🛠️ 其他
 
-- 移除书源: 新笔趣阁 https://github.com/freeok/so-novel/issues/148
-- 移除书源: 96读书（章节页 CF）
-- 优化书源 20 过滤规则
-- 更新发布脚本
-- 更新起点榜单
-- 更新推荐书源模板
+- 更新 GHP 链接
+- 更新 `proxy-rules.json`
+- 更新 `BookSourceTest.java`
+- 更新 `README.md`
+- 优化 `CHANGELOG_ALL.md`
+- 移除无效的系统属性
+
+> [!NOTE]
+>
+> CLI 用法
+>
+> ```bash
+> # Windows
+> .\SoNovel.exe -h
+> 
+> # Linux
+> ./runtime/bin/java -jar app.jar -h
+> 
+> # macOS
+> ./runtime/Contents/Home/bin/java -jar app.jar -h
+> 
+> # Docker
+> docker run -it --rm -v /sonovel/config.ini:/sonovel/config.ini -v /sonovel/downloads:/sonovel/downloads -v /sonovel/rules:/sonovel/rules sonovel:v1.8.5 -h
+> ```

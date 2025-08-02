@@ -3,10 +3,12 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
-import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
-import com.pcdd.sonovel.util.*;
+import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.EnvUtils;
+import com.pcdd.sonovel.util.RandomUA;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static org.jline.jansi.AnsiRenderer.render;
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * 书源一览
@@ -30,22 +32,20 @@ public class ShowSourcesAction {
     public static final int TIMEOUT = 5;
 
     public void execute() {
-        Console.log("<== 测试延迟中 ...");
+        Console.log("<== 测试延迟中...");
 
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "延迟", "状态码", "URL");
-        List<Rule> rules = SourceUtils.ALL_IDS.stream()
-                .map(id -> new Source(id).rule)
-                .toList();
 
-        testWebsiteDelays(rules).forEach(e -> asciiTables.addBody(
-                e.getId() + "",
-                e.getName(),
-                e.getDelay() + " ms",
-                e.getCode() + "",
-                e.getUrl())
-        );
+        testWebsiteDelays(SourceUtils.getAllRules())
+                .forEach(e -> asciiTables.addBody(
+                        e.getId() + "",
+                        e.getName(),
+                        e.getDelay() + " ms",
+                        e.getCode() + "",
+                        e.getUrl())
+                );
 
         Console.table(asciiTables);
     }
@@ -55,7 +55,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
-        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.config(), true);
+        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.defaultConfig(), true);
 
         for (Rule r : rules) {
             completionService.submit(() -> {
