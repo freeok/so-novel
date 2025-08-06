@@ -45,8 +45,7 @@ public class SearchResultsHandler {
         // 缓存相似度
         Map<SearchResult, Double> similarityMap = new HashMap<>();
         for (SearchResult sr : data) {
-            String target = isAuthorSearch ? sr.getAuthor() : sr.getBookName();
-            double score = StrUtil.similar(kw, target);
+            double score = StrUtil.similar(kw, isAuthorSearch ? sr.getAuthor() : sr.getBookName());
             similarityMap.put(sr, score);
         }
 
@@ -62,7 +61,7 @@ public class SearchResultsHandler {
                     : o1.getAuthor().compareTo(o2.getAuthor());
         };
 
-        // 筛选相似度高的
+        // 忽略低相似度
         List<SearchResult> filtered = data.stream()
                 .filter(sr -> similarityMap.get(sr) > 0.3)
                 .sorted(comparator)
@@ -74,14 +73,15 @@ public class SearchResultsHandler {
                 : filtered;
     }
 
-    // 计算权重，用于判断关键字是书名还是作者
+    /**
+     * 计算权重，用于判断关键字是书名还是作者
+     */
     private static double getSimilarity(List<SearchResult> data, String kw, String type) {
         boolean isShortQuery = kw.length() <= 4; // 关键词很短，可能是作者
         boolean isLongQuery = kw.length() >= 10; // 关键词很长，可能是书名
 
         return data.stream().mapToDouble(sr -> {
-            String text = "bookName".equals(type) ? sr.getBookName() : sr.getAuthor();
-            double similar = StrUtil.similar(kw, text);
+            double similar = StrUtil.similar(kw, "bookName".equals(type) ? sr.getBookName() : sr.getAuthor());
 
             // 短关键词匹配更严格
             if (isShortQuery) {

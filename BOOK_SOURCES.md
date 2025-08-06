@@ -21,6 +21,7 @@
 | 15    | [阅读库](http://www.yeudusk.com/)       | ✅     | ✅      | ✅    |                                           |
 | 16    | [顶点小说](https://www.wxsy.net/)        | ✅     | ✅      | ✅    | 搜索、详情、章节限流                                |
 | 17    | [黄易天地](http://www.xhytd.com/)        | ✅     | ❌      | ✅    |                                           |
+| 18    | [老幺小说网](https://www.laoyaoxs.org/)   | ✅     | ✅      | ✅    | 章节限流，正文段落会乱序                              |
 
 `proxy-rules.json`
 

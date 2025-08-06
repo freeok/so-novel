@@ -685,8 +685,8 @@
   {
     "id": 18,
     "url": "https://www.laoyaoxs.org/",
-    "name": "老幺小说网，章节限流，正文段落会乱序",
-    "comment": "",
+    "name": "老幺小说网",
+    "comment": "章节限流，正文段落会乱序",
     "language": "zh_CN",
     "search": {
       "url": "https://www.laoyaoxs.org/search.php?key=%s",
