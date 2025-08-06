@@ -14,3 +14,5 @@ buildNumber.properties
 downloads/
 dist/
 logs/
+
+config-dev.ini
