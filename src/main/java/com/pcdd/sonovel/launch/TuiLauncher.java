@@ -27,7 +27,7 @@ public class TuiLauncher {
 
     public void launch(AppConfig config) {
         if(config.getWebEnabled() == 1){
-            new WebServer().init();
+            new WebServer().start();
         }
         Scanner sc = Console.scanner();
         printHint(config);

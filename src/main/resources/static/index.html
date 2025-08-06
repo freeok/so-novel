@@ -71,40 +71,41 @@
     let ws;
 
     const initWebsocket = () => {
-        ws = new WebSocket(`${protocol}://${hostname}:${port}/ws`);
+        ws = new WebSocket(`${protocol}://${hostname}:${port}/ws/book/progress`);
         ws.onopen = () => {
             console.log('WebSocket Open!');
         }
         ws.onmessage = (e) => {
             const json = JSON.parse(e.data);
-            if (json.type === 'download') {
-                updateTip('当前进度：' + json.index + ' / ' + json.count);
+            if (json.type === 'book-download') {
+                updateTip('下载进度：' + json.index + ' / ' + json.total);
             }
         }
         ws.onerror = (e) => {
             setTimeout(() => {
                 initWebsocket()
-            }, 1000)
+            }, 3000)
         }
         ws.onclose = (e) => {
+          console.log(e)
             setTimeout(() => {
                 initWebsocket()
-            }, 1000)
+            }, 3000)
         }
     }
     initWebsocket()
 
     const searchList = () => {
-        fetch('/file/list').then(res => res.json()).then((data) => {
-            console.log('data: ', data)
-            data = data.sort((a, b) => b.time - a.time);
+        fetch('local-books').then(res => res.json()).then((data) => {
+            console.log('local-books: ', data)
+            data = data.data.sort((a, b) => b.timestamp - a.timestamp);
             const array = []
             data.forEach(item => {
                 const liStr = `
                     <tr>
                         <td>${item.name}</td>
                         <td>${formatSize(item.size)}</td>
-                        <td>${formatDate(item.time)}</td>
+                        <td>${formatDate(item.timestamp)}</td>
                         <td><button onclick="downloadFile('${item.name}')">下载</button></td>
                     </tr>
                 `
@@ -140,7 +141,7 @@
     }
     const downloadFile = (name) => {
         console.log('下载:', name)
-        window.open(window.location.origin + '/file/download?filename=' + name, '_blank');
+        window.open(window.location.origin + '/local-book-download?filename=' + name, '_blank');
     }
     let bookCache = []
     const searchFile = () => {
@@ -149,11 +150,11 @@
             return;
         }
         showTip('正在搜索。。。')
-        fetch('/search?name=' + value).then(res => res.json()).then((data) => {
+        fetch('/search/aggregated?name=' + value).then(res => res.json()).then((data) => {
             console.log(data);
-            bookCache = data
+            bookCache = data.data
             const array = []
-            data.forEach((item, index) => {
+            data.data.forEach((item, index) => {
                 const liStr = `
                     <tr>
                         <td>${index + 1}</td>
@@ -185,7 +186,7 @@
             query.push(key + '=' + item[key])
         })
         showTip('正在下载：' + item.bookName)
-        fetch('/download?' + query.join('&')).then((data) => {
+        fetch('/book-download?' + query.join('&')).then((data) => {
             searchList()
         }).finally(() => {
             hideTip()

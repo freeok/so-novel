@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -18,6 +19,8 @@ import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LogUtils;
+import com.pcdd.sonovel.web.model.DownloadProgressInfo;
+import com.pcdd.sonovel.web.util.MessageUtils;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 
@@ -30,7 +33,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.pcdd.sonovel.web.MessageUtil;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -122,8 +124,15 @@ public class Crawler {
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch));
-            MessageUtil.pushMessageToAll("{\"type\":\"download\",\"index\":"+(toc.size() - latch.getCount())+",\"count\":"+toc.size()+"}");
             progressBar.stepTo(toc.size() - latch.getCount());
+            if (config.getWebEnabled() == 1) {
+                DownloadProgressInfo downloadProgressInfo = DownloadProgressInfo.builder()
+                        .type("book-download")
+                        .index(toc.size() - latch.getCount())
+                        .total(toc.size())
+                        .build();
+                MessageUtils.pushMessageToAll(JSONUtil.toJsonStr(downloadProgressInfo));
+            }
         }));
 
         // 阻塞 main 线程，等待全部章节下载完毕
