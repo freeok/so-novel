@@ -12,6 +12,8 @@ import lombok.experimental.UtilityClass;
 import java.io.File;
 import java.util.Scanner;
 
+import com.pcdd.sonovel.web.WebServer;
+
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -24,6 +26,9 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class TuiLauncher {
 
     public void launch(AppConfig config) {
+        if(config.getWebEnabled() == 1){
+            new WebServer().init();
+        }
         Scanner sc = Console.scanner();
         printHint(config);
 
