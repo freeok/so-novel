@@ -36,4 +36,7 @@ public class AppConfig {
     private String proxyHost;
     private Integer proxyPort;
 
+    // [web]
+    private Integer webEnabled;
+    private Integer webPort;
 }
