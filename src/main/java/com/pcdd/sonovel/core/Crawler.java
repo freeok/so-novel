@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.pcdd.sonovel.web.MessageUtil;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -121,6 +122,7 @@ public class Crawler {
         // 爬取&下载章节
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch));
+            MessageUtil.pushMessageToAll("{\"type\":\"download\",\"index\":"+(toc.size() - latch.getCount())+",\"count\":"+toc.size()+"}");
             progressBar.stepTo(toc.size() - latch.getCount());
         }));
 
