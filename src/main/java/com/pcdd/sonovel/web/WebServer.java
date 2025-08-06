@@ -1,11 +1,13 @@
 package com.pcdd.sonovel.web;
 
+
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.util.ConfigWatcher;
-import com.pcdd.sonovel.web.servlet.DownloadServlet;
-import com.pcdd.sonovel.web.servlet.LocalFileDownloadServlet;
-import com.pcdd.sonovel.web.servlet.LocalFileListServlet;
-import com.pcdd.sonovel.web.servlet.SearchServlet;
+import com.pcdd.sonovel.web.servlet.AggregatedSearchServlet;
+import com.pcdd.sonovel.web.servlet.BookDownloadServlet;
+import com.pcdd.sonovel.web.servlet.LocalBookDownloadServlet;
+import com.pcdd.sonovel.web.servlet.LocalBookListServlet;
+import com.pcdd.sonovel.web.socket.ChapterDownloadProgressWS;
 import jakarta.websocket.server.ServerEndpointConfig;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
@@ -17,59 +19,53 @@ import org.eclipse.jetty.util.resource.ResourceFactory;
 import java.util.List;
 
 public class WebServer {
-    Server server;
 
-    public void init() {
+    public void start() {
         int port = ConfigWatcher.getConfig().getWebPort();
-        server = new Server(port);
+        Server server = new Server(port);
+        ServletContextHandler context = createServletContext();
 
+        registerServlets(context);
+        registerWebSocketEndpoints(context);
 
-        ServletContextHandler handler = new ServletContextHandler("/");
-
-        ServletHolder fileListHolder = new ServletHolder("FileList", LocalFileListServlet.class);
-        handler.addServlet(fileListHolder, "/file/list");
-
-        ServletHolder fileDownloadHolder = new ServletHolder("FileDownload", LocalFileDownloadServlet.class);
-        handler.addServlet(fileDownloadHolder, "/file/download");
-
-        ServletHolder searchHolder = new ServletHolder("Search", SearchServlet.class);
-        handler.addServlet(searchHolder, "/search");
-
-        ServletHolder downloadHolder = new ServletHolder("Download", DownloadServlet.class);
-        handler.addServlet(downloadHolder, "/download");
-
-        handler.setBaseResource(ResourceFactory.of(handler).newResource(WebServer.class.getClassLoader().getResource("static")));
-        ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
-        staticHolder.setInitParameter("dirAllowed", "false"); // 禁止目录浏览
-        handler.addServlet(staticHolder, "/");
-
-
-        JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, container) ->
-        {
-            // Configure the ServerContainer.
-            container.setDefaultMaxTextMessageBufferSize(128 * 1024);
-
-            // Simple registration of your WebSocket endpoints.
-            container.addEndpoint(MyJavaxWebSocketEndPoint.class);
-
-            // Advanced registration of your WebSocket endpoints.
-            container.addEndpoint(
-                    ServerEndpointConfig.Builder.create(MyJavaxWebSocketEndPoint.class, "/ws")
-                            .subprotocols(List.of("ws"))
-                            .build()
-            );
-        });
-
-        server.setHandler(handler);
-        Console.print("Server start on port {} \n", port);
-        new Thread(() -> {
-            try {
-                server.start();
-                server.join();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
-
+        server.setHandler(context);
+        try {
+            server.start();
+            Console.log("✅ Web server started on port {}", port);
+            server.join();
+        } catch (Exception e) {
+            Console.error("❌ Failed to start Web server on port {}: {}", port, e.getMessage());
+            throw new IllegalStateException("Web server failed to start", e);
+        }
     }
+
+    private ServletContextHandler createServletContext() {
+        ServletContextHandler context = new ServletContextHandler("/");
+        context.setBaseResource(ResourceFactory.of(context)
+                .newResource(WebServer.class.getClassLoader().getResource("static")));
+        return context;
+    }
+
+    private void registerServlets(ServletContextHandler context) {
+        context.addServlet(BookDownloadServlet.class, "/book-download");
+        context.addServlet(LocalBookDownloadServlet.class, "/local-book-download");
+        context.addServlet(LocalBookListServlet.class, "/local-books");
+        context.addServlet(AggregatedSearchServlet.class, "/search/aggregated");
+
+        ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
+        // 不显示目录列表，但子文件依然可访问
+        staticHolder.setInitParameter("dirAllowed", "false");
+        context.addServlet(staticHolder, "/");
+    }
+
+    private void registerWebSocketEndpoints(ServletContextHandler context) {
+        JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
+            container.setDefaultMaxTextMessageBufferSize(128 * 1024);
+            container.addEndpoint(ServerEndpointConfig.Builder
+                    .create(ChapterDownloadProgressWS.class, "/ws/book/progress")
+                    .subprotocols(List.of("ws"))
+                    .build());
+        });
+    }
+
 }
