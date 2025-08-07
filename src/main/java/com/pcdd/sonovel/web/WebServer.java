@@ -16,6 +16,7 @@ import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketSe
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 
+import java.time.Duration;
 import java.util.List;
 
 public class WebServer {
@@ -60,7 +61,10 @@ public class WebServer {
 
     private void registerWebSocketEndpoints(ServletContextHandler context) {
         JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
-            container.setDefaultMaxTextMessageBufferSize(128 * 1024);
+            // 一个 ws 连接在多久没有任何通信后自动关闭
+            container.setDefaultMaxSessionIdleTimeout(Duration.ofMinutes(30).toMillis());
+            // 服务器允许接收的文本消息最大大小 (64KB)
+            container.setDefaultMaxTextMessageBufferSize(65536);
             container.addEndpoint(ServerEndpointConfig.Builder
                     .create(ChapterDownloadProgressWS.class, "/ws/book/progress")
                     .subprotocols(List.of("ws"))
