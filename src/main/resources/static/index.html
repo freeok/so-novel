@@ -1,212 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Web</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <link rel="stylesheet" href="/css/normalize.css"/>
-    <link rel="stylesheet" href="/css/index.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sonovel webui</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div class="wrap-container">
-    <div class="container download-container">
-        <div class="title">下载</div>
-        <div class="search-container">
-            <input id="downloadSearchName" placeholder="请输入书名或作者（尽量输完整）"/>
-            <button onclick="searchFile()">搜索</button>
+  <header class="header">
+    <h1 class="app-title">So Novel</h1>
+  </header>
+  <main class="main-content">
+    <section class="container download-container card" id="downloadContainer">
+      <h2 class="section-title">搜索 & 下载</h2>
+      <div class="search-container">
+        <input id="downloadSearchName" placeholder="请输入书名或作者，尽量输完整" aria-label="搜索书名或作者">
+        <button class="btn btn-primary" id="searchButton">搜索</button>
+      </div>
+      <div class="body-container">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+            <tr>
+              <th scope="col">序号</th>
+              <th scope="col">书名</th>
+              <th scope="col">作者</th>
+              <th scope="col">最新章节</th>
+              <th scope="col">最后更新时间</th>
+              <th scope="col">书源</th>
+              <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody id="downloadTableBody">
+            </tbody>
+          </table>
         </div>
-        <div class="body-container">
-            <table>
-                <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>书名</th>
-                    <th>作者</th>
-                    <th>最新章节</th>
-                    <th>最后更新时间</th>
-                    <th>书源</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody id="downloadTableBody">
-                </tbody>
-            </table>
+      </div>
+    </section>
+    <section class="container result-container card">
+      <h2 class="section-title">已下载书籍</h2>
+      <div class="search-container">
+        <button id="refreshList" class="btn btn-primary">刷新列表</button>
+      </div>
+      <div class="body-container">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+            <tr>
+              <th scope="col">文件名</th>
+              <th scope="col">文件大小</th>
+              <th scope="col">下载时间</th>
+              <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+          </table>
         </div>
-    </div>
-    <div class="container result-container">
-        <div class="title">已下载文件列表</div>
-        <div class="search-container">
-            <button id="refreshList" onclick="searchList()">刷新列表</button>
-        </div>
-        <div class="body-container">
-            <table>
-                <thead>
-                <tr>
-                    <th>文件名</th>
-                    <th>文件大小</th>
-                    <th>下载时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-        </div>
-    </div>
+      </div>
+    </section>
+  </main>
 </div>
 <div class="loading-container" id="tipEle">
-    <div class="content">
-        <svg t="1754132474424" class="icon" viewBox="0 0 1105 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-             p-id="4590" width="256" height="256">
-            <path d="M990.723072 342.87616a115.0976 115.0976 0 0 0-99.75808 57.91744 116.38784 116.38784 0 0 0 0 115.83488 115.0976 115.0976 0 0 0 99.75808 57.91744c63.63136 0 115.2-51.85536 115.2-115.83488 0-63.97952-51.56864-115.83488-115.2-115.83488zM566.787072 18.5344a13.86496 13.86496 0 0 0-13.824 13.90592 13.80352 13.80352 0 1 0 25.8048 6.9632 13.96736 13.96736 0 0 0 0-13.9264 13.80352 13.80352 0 0 0-11.9808-6.94272zM354.819072 0c-15.2576 0-27.648 12.45184-27.648 27.79136 0 15.36 12.3904 27.81184 27.648 27.81184 15.27808 0 27.648-12.45184 27.648-27.81184 0-15.36-12.36992-27.79136-27.648-27.79136zM188.931072 101.92896A41.5744 41.5744 0 0 0 147.459072 143.64672 41.5744 41.5744 0 0 0 188.931072 185.344a41.5744 41.5744 0 0 0 41.472-41.69728 41.5744 41.5744 0 0 0-41.472-41.71776zM59.907072 417.01376c-21.4016 0-41.1648 11.4688-51.87584 30.1056a60.5184 60.5184 0 0 0 0 60.25216 59.84256 59.84256 0 0 0 51.87584 30.1056c21.4016 0 41.18528-11.4688 51.89632-30.1056a60.5184 60.5184 0 0 0 0-60.25216 59.84256 59.84256 0 0 0-51.89632-30.1056zM202.755072 732.09856c-40.71424 0-73.728 33.1776-73.728 74.1376 0 40.93952 33.01376 74.1376 73.728 74.1376 40.73472 0 73.728-33.19808 73.728-74.1376 0-40.96-32.99328-74.1376-73.728-74.1376zM534.531072 847.93344a87.4496 87.4496 0 0 0-75.81696 44.01152 88.4736 88.4736 0 0 0 0 88.04352A87.4496 87.4496 0 0 0 534.531072 1024a87.4496 87.4496 0 0 0 75.83744-44.032 88.4736 88.4736 0 0 0 0-88.02304 87.4496 87.4496 0 0 0-75.83744-44.032zM861.699072 690.3808c-55.99232 0-101.376 45.64992-101.376 101.94944 0 56.29952 45.38368 101.92896 101.376 101.92896s101.376-45.62944 101.376-101.92896c0-56.32-45.38368-101.94944-101.376-101.94944z"
-                  p-id="4591"></path>
-        </svg>
-        <span class="text" id="tipText">正在下载</span>
-    </div>
+  <div class="content">
+    <svg class="loading-icon" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="#fff" stroke-width="8" stroke-dasharray="141.37 87.96"
+              stroke-linecap="round"></circle>
+    </svg>
+    <span class="text" id="tipText">正在下载</span>
+  </div>
 </div>
 <script>
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    const protocol = window.location.protocol.startsWith('https') ? 'wss' : 'ws';
-    let ws;
+  document.addEventListener('DOMContentLoaded', () => {
+    // DOM 元素引用
+    const downloadContainer = document.getElementById('downloadContainer')
+    const downloadSearchName = document.getElementById('downloadSearchName')
+    const searchButton = document.getElementById('searchButton')
+    const refreshListButton = document.getElementById('refreshList')
+    const downloadTableBody = document.getElementById('downloadTableBody')
+    const tableBody = document.getElementById('tableBody')
+    const tipEle = document.getElementById('tipEle')
+    const tipText = document.getElementById('tipText')
 
-    const initWebsocket = () => {
-        ws = new WebSocket(`${protocol}://${hostname}:${port}/ws/book/progress`);
-        ws.onopen = () => {
-            console.log('WebSocket Open!');
-        }
-        ws.onmessage = (e) => {
-            const json = JSON.parse(e.data);
-            if (json.type === 'book-download') {
-                updateTip('下载进度：' + json.index + ' / ' + json.total);
-            }
-        }
-        ws.onerror = (e) => {
-            setTimeout(() => {
-                initWebsocket()
-            }, 3000)
-        }
-        ws.onclose = (e) => {
-          console.log(e)
-            setTimeout(() => {
-                initWebsocket()
-            }, 3000)
-        }
-    }
-    initWebsocket()
-
-    const searchList = () => {
-        fetch('local-books').then(res => res.json()).then((data) => {
-            console.log('local-books: ', data)
-            data = data.data.sort((a, b) => b.timestamp - a.timestamp);
-            const array = []
-            data.forEach(item => {
-                const liStr = `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${formatSize(item.size)}</td>
-                        <td>${formatDate(item.timestamp)}</td>
-                        <td><button onclick="downloadFile('${item.name}')">下载</button></td>
-                    </tr>
-                `
-                array.push(liStr)
-            })
-            document.getElementById('tableBody').innerHTML = array.join('')
-        })
-    }
-    searchList()
-    const formatSize = (bytes) => {
-        if (bytes === 0) return '0.00 B';
-
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-
-        // 确定单位
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-        // 计算对应单位的大小并保留两位小数
-        const sizeValue = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
-
-        return sizeValue + sizes[i];
-    }
-    const formatDate = (time) => {
-        const date = new Date(time);
-        const year = date.getFullYear();
-        let month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const second = date.getSeconds().toString().padStart(2, '0');
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-    }
-    const downloadFile = (name) => {
-        console.log('下载:', name)
-        window.open(window.location.origin + '/local-book-download?filename=' + name, '_blank');
-    }
     let bookCache = []
-    const searchFile = () => {
-        const value = document.getElementById('downloadSearchName').value.trim();
-        if (!value) {
-            return;
-        }
-        showTip('正在搜索。。。')
-        fetch('/search/aggregated?name=' + value).then(res => res.json()).then((data) => {
-            console.log(data);
-            bookCache = data.data
-            const array = []
-            data.data.forEach((item, index) => {
-                const liStr = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.bookName}</td>
-                        <td>${item.author}</td>
-                        <td>${item.latestChapter || ''}</td>
-                        <td>${item.lastUpdateTime || ''}</td>
-                        <td>${item.sourceId}</td>
-                        <td><button onclick="downloadFileToSever(${index})">下载</button></td>
-                    </tr>
-                `
-                array.push(liStr)
-            })
-            document.getElementById('downloadTableBody').innerHTML = array.join('')
-        }).finally(() => {
-            hideTip()
-        })
+
+    // 工具函数
+    const showTip = (text = '正在加载...') => {
+      tipText.innerHTML = text
+      tipEle.style.display = 'flex'
     }
 
-    const downloadFileToSever = (index) => {
-        const item = bookCache[index];
-        if (!item) {
-            alert("参数错误，请重新搜索")
-            return;
-        }
-        console.log('item: ', item)
-        let query = []
-        Object.keys(item).forEach((key) => {
-            query.push(key + '=' + item[key])
-        })
-        showTip('正在下载：' + item.bookName)
-        fetch('/book-download?' + query.join('&')).then((data) => {
-            searchList()
-        }).finally(() => {
-            hideTip()
-        })
-    }
-
-    const tipEle = document.getElementById('tipEle');
-    const tipText = document.getElementById('tipText');
-    const showTip = (text) => {
-        tipEle.style.display = 'flex';
-        if (text) {
-            updateTip(text)
-        }
-    }
     const updateTip = (text) => {
-        tipText.innerHTML = text;
+      tipText.innerHTML = text
     }
+
     const hideTip = () => {
-        tipEle.style.display = 'none';
+      tipEle.style.display = 'none'
     }
+
+    const formatSize = (bytes) => {
+      if (bytes === 0) return '0.00 B'
+      const k = 1024
+      const sizes = ['B', 'KB', 'MB', 'GB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      const sizeValue = (bytes / Math.pow(k, i)).toFixed(2)
+      return `${sizeValue} ${sizes[i]}`
+    }
+
+    const formatDate = (timestamp) => {
+      const date = new Date(timestamp)
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })
+    }
+
+    // 事件处理函数
+    const handleDownloadFile = (name) => {
+      console.log(`下载《${name}》`)
+      window.open(`${window.location.origin}/local-book-download?filename=${encodeURIComponent(name)}`, '_blank')
+    }
+
+    const handleDownloadToServer = async (index) => {
+      const item = bookCache[index]
+      if (!item) {
+        alert('参数错误，请重新搜索')
+        return
+      }
+      console.log('item:', item)
+      // 在发起请求前，显示弹窗
+      showTip(`正在下载《${item.bookName}》`)
+      const query = new URLSearchParams(item).toString()
+      try {
+        await fetch(`/book-download?${query}`)
+        await fetchLocalBooks()
+      } catch (error) {
+        console.error('Error downloading file to server:', error)
+        updateTip('下载失败')
+      } finally {
+        hideTip()
+      }
+    }
+
+    const renderDownloadTable = (data) => {
+      bookCache = data
+      downloadTableBody.innerHTML = data.map((item, index) => `
+      <tr>
+        <td data-label="序号">${index + 1}</td>
+        <td data-label="书名">${item.bookName}</td>
+        <td data-label="作者">${item.author}</td>
+        <td data-label="最新章节">${item.latestChapter || ''}</td>
+        <td data-label="最后更新时间">${item.lastUpdateTime || ''}</td>
+        <td data-label="书源">${item.sourceId}</td>
+        <td data-label="操作"><button class="btn btn-secondary" data-index="${index}">下载</button></td>
+      </tr>
+    `).join('')
+    }
+
+    const renderLocalBooksTable = (data) => {
+      tableBody.innerHTML = data.map(item => `
+      <tr>
+        <td data-label="文件名">${item.name}</td>
+        <td data-label="文件大小">${formatSize(item.size)}</td>
+        <td data-label="下载时间">${formatDate(item.timestamp)}</td>
+        <td data-label="操作"><button class="btn btn-secondary" data-filename="${item.name}">下载</button></td>
+      </tr>
+    `).join('')
+    }
+
+    // 数据获取
+    const fetchLocalBooks = async () => {
+      showTip('正在刷新列表...')
+      try {
+        const response = await fetch('/local-books')
+        const data = await response.json()
+        console.log('local-books:', data)
+        if (data && data.data) {
+          data.data.sort((a, b) => b.timestamp - a.timestamp)
+          renderLocalBooksTable(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching file list:', error)
+        updateTip('刷新列表失败')
+      } finally {
+        hideTip()
+      }
+    }
+
+    const aggregatedSearch = async () => {
+      const value = downloadSearchName.value.trim()
+      if (!value) {
+        alert("请输入书名或作者！")
+        return
+      }
+      showTip('正在搜索...')
+      searchButton.disabled = true // 搜索时禁用按钮
+      downloadSearchName.disabled = true // 搜索时禁用输入框
+      try {
+        const response = await fetch(`/search/aggregated?name=${encodeURIComponent(value)}`)
+        const data = await response.json()
+        console.log('search results', data)
+        if (data && data.data) {
+          renderDownloadTable(data.data)
+        }
+      } catch (error) {
+        console.error('Error searching files:', error)
+        updateTip('搜索失败')
+      } finally {
+        hideTip()
+        downloadContainer.classList.add('expanded')
+        searchButton.disabled = false // 搜索完成后启用按钮
+        downloadSearchName.disabled = false // 搜索完成后启用输入框
+      }
+    }
+
+    // WebSocket
+    const initWebsocket = () => {
+      const {hostname, port, protocol} = window.location
+      const wsProtocol = protocol.startsWith('https') ? 'wss' : 'ws'
+      const ws = new WebSocket(`${wsProtocol}://${hostname}:${port}/ws/book/progress`)
+      ws.onopen = () => {
+        console.log('WebSocket Open!')
+      }
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data)
+        if (data.type === 'book-download') {
+          console.log('onmessage', data)
+          updateTip(`进度：${data.index} / ${data.total}`)
+        }
+      }
+      ws.onclose = () => {
+        console.log('WebSocket Close!')
+        initWebsocket()
+      }
+      ws.onerror = (error) => {
+        console.error('WebSocket Error:', error)
+        initWebsocket()
+      }
+    }
+
+    // 事件监听器
+    searchButton.addEventListener('click', aggregatedSearch)
+    refreshListButton.addEventListener('click', fetchLocalBooks)
+
+    // 按下 Enter 键触发搜索
+    downloadSearchName.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        aggregatedSearch()
+      }
+    })
+
+    // 使用事件委托处理下载按钮点击
+    downloadTableBody.addEventListener('click', (e) => {
+      const button = e.target.closest('button.btn-secondary')
+      if (button && button.dataset.index !== undefined) {
+        handleDownloadToServer(button.dataset.index)
+      }
+    })
+
+    tableBody.addEventListener('click', (e) => {
+      const button = e.target.closest('button.btn-secondary')
+      if (button && button.dataset.filename) {
+        handleDownloadFile(button.dataset.filename)
+      }
+    })
+
+    // 页面加载时执行
+    initWebsocket()
+    fetchLocalBooks()
+  })
 </script>
 </body>
 </html>
