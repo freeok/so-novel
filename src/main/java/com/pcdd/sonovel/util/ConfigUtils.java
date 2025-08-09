@@ -19,9 +19,10 @@ import java.nio.file.Paths;
 @UtilityClass
 public class ConfigUtils {
 
-    private final String SELECTION_BASE = "base";
+    private final String SELECTION_GLOBAL = "global";
+    private final String SELECTION_DOWNLOAD = "download";
+    private final String SELECTION_SOURCE = "source";
     private final String SELECTION_CRAWL = "crawl";
-    private final String SELECTION_RETRY = "retry";
     private final String SELECTION_PROXY = "proxy";
     private final String SELECTION_WEB = "web";
 
@@ -53,34 +54,38 @@ public class ConfigUtils {
     }
 
     public AppConfig defaultConfig() {
-        Props sys = sys();
+        AppConfig config = new AppConfig();
+        config.setVersion(sys().getStr("version"));
         Setting usr = usr();
 
-        AppConfig config = new AppConfig();
-        config.setVersion(sys.getStr("version"));
+        // [global]
+        config.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
 
-        config.setLanguage(getStrOrDefault(usr, "language", SELECTION_BASE, LangUtil.getCurrentLang()));
-        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_BASE, "main-rules.json"));
-        config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_BASE, "downloads"));
-        // 扩展名一律转为小写
-        config.setExtName(getStrOrDefault(usr, "extname", SELECTION_BASE, "epub").toLowerCase());
-        config.setAutoUpdate(usr.getInt("auto-update", SELECTION_BASE, 0));
-        config.setSourceId(usr.getInt("source-id", SELECTION_BASE, -1));
-        config.setSearchLimit(usr.getInt("search-limit", SELECTION_BASE, 0));
+        // [download]
+        config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));
+        config.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
+        config.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
 
+        // [source]
+        config.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
+        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
+        config.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
+        config.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, 0));
+
+        // [crawl]
         config.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
-        config.setMinInterval(usr.getInt("min", SELECTION_CRAWL, 200));
-        config.setMaxInterval(usr.getInt("max", SELECTION_CRAWL, 400));
-        config.setPreserveChapterCache(usr.getInt("preserve_chapter_cache", SELECTION_CRAWL, 0));
+        config.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
+        config.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
+        config.setMaxRetries(usr.getInt("max-retries", SELECTION_CRAWL, 5));
+        config.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
+        config.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
 
-        config.setMaxRetryAttempts(usr.getInt("max-attempts", SELECTION_RETRY, 5));
-        config.setRetryMinInterval(usr.getInt("min", SELECTION_RETRY, 2000));
-        config.setRetryMaxInterval(usr.getInt("max", SELECTION_RETRY, 4000));
-
+        // [proxy]
         config.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
         config.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
         config.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
 
+        // [web]
         config.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
         config.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
 
