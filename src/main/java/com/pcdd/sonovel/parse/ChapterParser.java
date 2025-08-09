@@ -72,11 +72,11 @@ public class ChapterParser extends Source {
     }
 
     private Chapter retry(Chapter chapter, Exception ex) {
-        for (int attempt = 1; attempt <= config.getMaxRetryAttempts(); attempt++) {
+        for (int attempt = 1; attempt <= config.getMaxRetries(); attempt++) {
             try {
                 long interval = CrawlUtils.randomInterval(config, true);
                 LogUtils.warn("【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
-                        chapter.getTitle(), attempt, config.getMaxRetryAttempts(), interval, ex.getMessage());
+                        chapter.getTitle(), attempt, config.getMaxRetries(), interval, ex.getMessage());
 
                 String content = fetchContent(chapter.getUrl(), interval);
                 Assert.notEmpty(content, "正文内容为空");
@@ -88,7 +88,7 @@ public class ChapterParser extends Source {
             } catch (Exception e) {
                 LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
                 // 最终失败时记录日志
-                if (attempt == config.getMaxRetryAttempts()) {
+                if (attempt == config.getMaxRetries()) {
                     LogUtils.error(e, "下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
                 }
             }

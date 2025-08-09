@@ -11,12 +11,17 @@ public class AppConfig {
 
     private String version;
 
-    // [base]
-    private String language;
-    private String activeRules;
+    // [global]
+    private Integer autoUpdate;
+
+    // [download]
     private String downloadPath;
     private String extName;
-    private Integer autoUpdate;
+    private Integer preserveChapterCache;
+
+    // [source]
+    private String language;
+    private String activeRules;
     private Integer sourceId;
     private Integer searchLimit;
 
@@ -24,10 +29,7 @@ public class AppConfig {
     private Integer threads;
     private Integer minInterval;
     private Integer maxInterval;
-    private Integer preserveChapterCache;
-
-    // [retry]
-    private Integer maxRetryAttempts;
+    private Integer maxRetries;
     private Integer retryMinInterval;
     private Integer retryMaxInterval;
 
@@ -39,4 +41,5 @@ public class AppConfig {
     // [web]
     private Integer webEnabled;
     private Integer webPort;
+
 }

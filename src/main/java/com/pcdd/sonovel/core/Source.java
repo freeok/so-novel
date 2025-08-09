@@ -42,7 +42,7 @@ public class Source {
                 this.config.setMaxInterval(crawl.getMaxInterval());
             }
             if (crawl.getMaxAttempts() != null) {
-                this.config.setMaxRetryAttempts(crawl.getMaxAttempts());
+                this.config.setMaxRetries(crawl.getMaxAttempts());
             }
             if (crawl.getRetryMinInterval() != null) {
                 this.config.setRetryMinInterval(crawl.getRetryMinInterval());
