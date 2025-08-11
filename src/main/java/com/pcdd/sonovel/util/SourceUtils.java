@@ -141,7 +141,7 @@ public class SourceUtils {
             ruleToc.setTimeout(30);
         }
         if (ruleChapter != null && ruleChapter.getTimeout() == null) {
-            ruleChapter.setTimeout(10);
+            ruleChapter.setTimeout(15);
         }
 
         return rule;
