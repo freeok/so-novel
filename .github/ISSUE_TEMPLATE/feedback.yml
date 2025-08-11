@@ -13,48 +13,30 @@ body:
         - label: 我已开启&关闭所有代理软件后测试，问题依然存在
         - label: 我已填写一个简洁明了的标题，以便他人快速检索
 
-  - type: dropdown
-    attributes:
-      label: 操作系统名称
-      options:
-        - Windows
-        - macOS
-        - Linux
-        - Others
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: 操作系统版本（Windows：运行 winver，Linux：运行 lsb_release -a，macOS：运行 sw_vers 查看）
-      placeholder: 结果粘贴到此处
-    validations:
-      required: true
-
   - type: input
     attributes:
-      label: so-novel 版本
-      placeholder: v1.0.0
+      label: 操作系统名称及版本号 (在终端执行命令以查看，Windows：winver，Linux：lsb_release -a，macOS：sw_vers)
+      placeholder: 格式要求：Windows 11 24H2 26100.4652、Ubuntu 24.04.2 LTS、macOS 15.0 24A335
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 配置信息
-      placeholder: 选择功能d.配置信息，结果粘贴到此处
+      placeholder: 选择功能 d.配置信息，结果粘贴到此处，不要粘贴 config.ini 内容！
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 问题描述
-      description: 简要地描述你遇到的问题，并提供完整的输入&输出信息，尽量用截图
+      description: 简要地描述你遇到的问题，尽量提供截图
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 复现步骤
-      description: 请提供复现该问题的完整步骤
+      description: 请提供复现该问题的完整步骤，尽量提供截图，必要时提供视频
     validations:
       required: true
