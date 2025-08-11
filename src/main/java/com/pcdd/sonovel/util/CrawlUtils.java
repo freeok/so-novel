@@ -57,7 +57,9 @@ public class CrawlUtils {
     public Response request(OkHttpClient client, String url, int timeout) {
         Call call = client.newCall(new Request.Builder()
                 .url(url)
-                .addHeader("User-Agent", RandomUA.generate()).build());
+                .addHeader("User-Agent", RandomUA.generate())
+                .build()
+        );
         call.timeout().timeout(timeout, TimeUnit.SECONDS);
 
         return call.execute();

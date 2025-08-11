@@ -143,6 +143,11 @@ input[disabled] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.btn-download {
+  padding: 5px 0 !important;
+  width: 50px;
+}
+
 .btn-secondary {
   border: 1px solid var(--border-color);
   color: var(--primary-color);
@@ -179,7 +184,7 @@ input[disabled] {
 }
 
 .data-table th, .data-table td {
-  padding: 16px 20px;
+  padding: 10px 10px;
   text-align: left;
   vertical-align: middle;
   border-bottom: 1px solid var(--border-color);
