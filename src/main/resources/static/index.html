@@ -135,7 +135,7 @@
         return
       }
       // 在发起请求前，显示弹窗
-      showTip(`正在下载《${item.bookName}》`)
+      showTip(`正在解析目录...`)
       const query = new URLSearchParams(item).toString()
       try {
         await fetch(`/book-download?${query}`)
