@@ -1,16 +1,15 @@
 package com.pcdd.sonovel.launch;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.NumberUtil;
 import com.pcdd.sonovel.core.Crawler;
-import com.pcdd.sonovel.model.*;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import picocli.CommandLine;
-
-import java.util.List;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -55,12 +54,8 @@ public class CliLauncher implements Runnable {
                 .latestChapter(book.getLatestChapter())
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
-        Console.log("<== 正在解析目录...");
-        TocParser tocParser = new TocParser(config);
-        List<Chapter> toc = tocParser.parse(sr.getUrl());
-        Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
-        double res = new Crawler(config).crawl(sr.getUrl(), toc);
-        Console.log(render("<== 完成！总耗时 {} s", "green"), NumberUtil.round(res, 2));
+        Console.log("<== {}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
+        new Crawler(config).crawl(sr.getUrl());
     }
 
     static class VersionProvider implements CommandLine.IVersionProvider {

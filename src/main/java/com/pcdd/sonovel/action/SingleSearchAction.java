@@ -2,14 +2,15 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.*;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -45,13 +46,9 @@ public class SingleSearchAction {
                 .latestChapter(book.getLatestChapter())
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
-
-        TocParser tocParser = new TocParser(config);
-        List<Chapter> toc = tocParser.parse(sr.getUrl());
-        Console.log("<== 《{}》({})，共计 {} 章", sr.getBookName(), sr.getAuthor(), toc.size());
+        Console.log("<== 《{}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
         // 重复请求详情页
-        double res = new Crawler(config).crawl(sr.getUrl(), toc);
-        Console.log(render("<== 完成！总耗时 {} s", GREEN), NumberUtil.round(res, 2));
+        new Crawler(config).crawl(sr.getUrl());
     }
 
     public void downloadByKeyword(AppConfig config) {

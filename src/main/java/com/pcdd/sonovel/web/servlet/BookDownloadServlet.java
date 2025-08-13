@@ -3,16 +3,12 @@ package com.pcdd.sonovel.web.servlet;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.List;
 
 public class BookDownloadServlet extends HttpServlet {
 
@@ -37,8 +33,7 @@ public class BookDownloadServlet extends HttpServlet {
         AppConfig config = ConfigUtils.defaultConfig();
         config.setSourceId(sr.getSourceId());
         Console.log("<== 正在获取章节目录...");
-        List<Chapter> toc = new TocParser(config).parse(sr.getUrl(), 1, Integer.MAX_VALUE);
-        new Crawler(config).crawl(sr.getUrl(), toc);
+        new Crawler(config).crawl(sr.getUrl());
     }
 
 }
