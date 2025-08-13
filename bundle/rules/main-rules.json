@@ -100,7 +100,7 @@
       "author": "meta[property=\"og:novel:author\"]",
       "intro": "meta[property=\"og:description\"]",
       "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
+      "coverUrl": "meta[property=\"og:image\"]@js:r='http://www.mcxs.info'+r",
       "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
       "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
     },
@@ -155,52 +155,6 @@
   },
   {
     "id": 5,
-    "url": "https://www.tianxibook.com/",
-    "name": "新天禧小说",
-    "comment": "仅限大陆IP访问，章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
-    "language": "zh_CN",
-    "search": {
-      "url": "https://www.sososhu.com/?q=%s&site=xtxxs",
-      "method": "get",
-      "result": "body > div.wrap > div > div > div",
-      "bookName": "dl > dt > a",
-      "author": "dl > dt > span",
-      "intro": "dl > dd"
-    },
-    "book": {
-      "url": "https://www.tianxibook.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
-    },
-    "toc": {
-      "url": "https://www.tianxibook.com/xiaoshuo/%s/",
-      "item": "#content_1 > a",
-      "pagination": true,
-      "nextPage": "#indexselect > option"
-    },
-    "chapter": {
-      "title": "#wrapper > article > h1",
-      "content": "#booktxt",
-      "paragraphTagClosed": true,
-      "filterTxt": "首发网址.+。|\\(本章完\\)|一秒记住【新天禧小说\\s*】手机用户输入地址：www\\s*\\.xtxxs\\s*\\.com|支持（新天禧小说\\s*）把本站分享那些需要的小伙伴！找不到书请留言！|搜.+免费看精品文学",
-      "filterTag": "",
-      "pagination": true,
-      "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
-    },
-    "crawl": {
-      "threads": 5,
-      "minInterval": 1000,
-      "maxInterval": 2000
-    }
-  },
-  {
-    "id": 6,
     "url": "https://www.dxmwx.org/",
     "name": "大熊猫文学",
     "comment": "",
@@ -240,7 +194,7 @@
     }
   },
   {
-    "id": 7,
+    "id": 6,
     "url": "https://www.22biqu.com/",
     "name": "笔趣阁22",
     "comment": "",
@@ -281,7 +235,7 @@
     }
   },
   {
-    "id": 8,
+    "id": 7,
     "url": "http://www.xbiquzw.net/",
     "name": "笔尖中文",
     "comment": "",
@@ -320,57 +274,7 @@
     }
   },
   {
-    "id": 9,
-    "url": "https://www.0xs.net/",
-    "name": "零点小说",
-    "comment": "章节限流严重，即便线程数为1也会被限流，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”。发布页：https://www.cxysb.com/",
-    "language": "zh_CN",
-    "ignoreSsl": true,
-    "search": {
-      "url": "https://www.0xs.net/search.html?kw=%s",
-      "method": "get",
-      "result": ".result_list > ul > li > .book",
-      "bookName": ".name > a",
-      "author": ".author",
-      "status": ".serial",
-      "wordCount": ".count",
-      "category": ".type",
-      "pagination": true,
-      "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)"
-    },
-    "book": {
-      "url": "https://www.0xs.net/txt/(.*?).html",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
-    },
-    "toc": {
-      "url": "https://www.0xs.net/list/%s.html",
-      "item": ".catalog > div > ul > ul > li > a"
-    },
-    "chapter": {
-      "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
-      "content": ".content",
-      "paragraphTagClosed": true,
-      "filterTxt": "【[^】]+】小说免费阅读，请收藏[^【】]*【[^】]+】|本章未完，点击\\[下一页]继续阅读--|\\(本章完\\)",
-      "filterTag": "",
-      "pagination": true,
-      "nextPage": "#next",
-      "nextChapterLink": "https://www\\.0xs\\.net/txt/\\d+/\\d+\\.html"
-    },
-    "crawl": {
-      "threads": 1,
-      "minInterval": 1000,
-      "maxInterval": 3000
-    }
-  },
-  {
-    "id": 10,
+    "id": 8,
     "url": "https://www.xshbook.com/",
     "name": "小说虎",
     "comment": "正文广告较多，需手动过滤",
@@ -406,10 +310,10 @@
     }
   },
   {
-    "id": 11,
+    "id": 9,
     "url": "https://www.luegeng.com/",
     "name": "略更网",
-    "comment": "搜索限流，不支持IPv6",
+    "comment": "疑似SSL证书过期，搜索限流，不支持IPv6",
     "language": "zh_CN",
     "search": {
       "url": "https://www.luegeng.com/search/?searchkey=%s",
@@ -445,10 +349,10 @@
     }
   },
   {
-    "id": 12,
+    "id": 10,
     "url": "http://www.shu009.com/",
     "name": "书林文学",
-    "comment": "源站目录有重复、缺章的情况，章节限流",
+    "comment": "源站目录有重复、缺章的情况",
     "search": {
       "url": "http://www.shu009.com/search/",
       "method": "post",
@@ -485,7 +389,7 @@
     }
   },
   {
-    "id": 13,
+    "id": 11,
     "url": "http://www.81zwwww.com/",
     "name": "八一中文网",
     "comment": "暂无",
@@ -522,7 +426,7 @@
     }
   },
   {
-    "id": 14,
+    "id": 12,
     "url": "http://www.ujxsw.org/",
     "name": "悠久小说网",
     "comment": "下载速度快",
@@ -563,7 +467,7 @@
     }
   },
   {
-    "id": 15,
+    "id": 13,
     "url": "http://www.yeudusk.com/",
     "name": "阅读库",
     "comment": "",
@@ -602,7 +506,7 @@
     }
   },
   {
-    "id": 16,
+    "id": 14,
     "url": "https://www.wxsy.net/",
     "name": "顶点小说",
     "comment": "搜索、详情、章节限流。目录乱序、正文段落js加密",
@@ -644,88 +548,6 @@
       "filterTag": "h3 div",
       "pagination": true,
       "nextPage": ".row.row-detail > div > div > div:nth-child(2) > a:nth-child(4)"
-    }
-  },
-  {
-    "id": 17,
-    "url": "http://www.xhytd.com/",
-    "name": "黄易天地",
-    "comment": "仅限大陆IP",
-    "language": "zh_CN",
-    "search": {
-      "url": "http://www.xhytd.com/search.html?name=%s",
-      "method": "get",
-      "result": "#main > div.novelslist2 > ul > li",
-      "bookName": "span.s2.wid > a",
-      "author": "span.s4.wid > a",
-      "latestChapter": "span.s3.wid3 > a",
-      "lastUpdateTime": "span.s6.wid6"
-    },
-    "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[name=\"description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
-    },
-    "toc": {
-      "item": "#list > dl > dt:nth-of-type(2) ~ dd > a"
-    },
-    "chapter": {
-      "title": "h1",
-      "content": "#content",
-      "paragraphTagClosed": false,
-      "paragraphTag": "<br>+",
-      "filterTxt": "",
-      "filterTag": "p div"
-    }
-  },
-  {
-    "id": 18,
-    "url": "https://www.laoyaoxs.org/",
-    "name": "老幺小说网",
-    "comment": "章节限流，正文段落会乱序",
-    "language": "zh_CN",
-    "search": {
-      "url": "https://www.laoyaoxs.org/search.php?key=%s",
-      "method": "get",
-      "result": ".result > ul > li",
-      "bookName": ".book_inf > h3 > a",
-      "author": ".book_inf > p.tags > span:nth-child(1) > a",
-      "wordCount": ".book_inf > p.tags > span:nth-child(4)@js:r=r.replaceAll('总字数：', '');",
-      "latestChapter": ".book_inf > p:nth-child(3) > a",
-      "lastUpdateTime": ".right > span@js:r=r.replaceAll('更新时间：', '');",
-      "pagination": true,
-      "nextPage": ".result > div > span > a:not(.sl)"
-    },
-    "book": {
-      "url": "https://www.laoyaoxs.org/info/(.*?).html",
-      "bookName": "body > div.main > div > div.left.w_860 > div:nth-child(1) > div.detail > h1",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[name=\"description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
-    },
-    "toc": {
-      "baseUri": "https://www.laoyaoxs.org/list/%s/",
-      "url": "https://www.laoyaoxs.org/list/%s/",
-      "item": "#chapters > a"
-    },
-    "chapter": {
-      "title": "#chapter-name > h2",
-      "content": "#txt@js:const ddMatches=[...r.matchAll(/<dd\\s+data-id=\"(\\d+)\">([\\s\\S]*?)<\\/dd>/g)];const ddList=ddMatches.map(match=>({id:Number(match[1]),content:match[2]}));ddList.sort((a,b)=>a.id-b.id);let result='';for(const dd of ddList){const pMatches=[...dd.content.matchAll(/<p>[\\s\\S]*?<\\/p>/g)];pMatches.forEach(p=>{result+=p[0]})}r=result;",
-      "paragraphTagClosed": true,
-      "filterTxt": "",
-      "filterTag": ""
-    },
-    "crawl": {
-      "threads": 1,
-      "minInterval": 1000,
-      "maxInterval": 2000
     }
   }
 ]
