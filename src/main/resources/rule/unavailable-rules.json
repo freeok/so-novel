@@ -1,6 +1,5 @@
 [
   {
-    "id": "5",
     "url": "https://69shux.co/",
     "name": "69書吧",
     "comment": "新加了CF，已无法使用。需要梯子，章节有限流，数量5w+",
@@ -52,7 +51,6 @@
     }
   },
   {
-    "id": 7,
     "url": "https://69shuba.cx/",
     "name": "69书吧",
     "comment": "需要梯子、正文内容纯净、搜索有CF、章节限流",
@@ -80,10 +78,17 @@
       "paragraphTagClosed": true,
       "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
       "filterTag": "h1 div br"
+    },
+    "crawl": {
+      "threads": 1,
+      "min": 1000,
+      "max": 2000,
+      "maxAttempts": 5,
+      "retryMin": 2000,
+      "retryMax": 5000
     }
   },
   {
-    "id": 7,
     "url": "https://www.69yuedu.net/",
     "name": "69阅读",
     "comment": "需要梯子，搜索有CF、章节无限流",
@@ -110,13 +115,20 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": "div br"
+    },
+    "crawl": {
+      "threads": 1,
+      "min": 1000,
+      "max": 2000,
+      "maxAttempts": 5,
+      "retryMin": 2000,
+      "retryMax": 5000
     }
   },
   {
-    "id": 9,
     "url": "https://www.369book.cc/",
     "name": "369小说网",
-    "comment": "网站被攻击导致数据丢失，搜索暂不可用。搜索(Read timed out)、章节有限流，章节爬取过快会封IP，章节页、目录页都有分页和反爬，搜索结果固定10条，以javascript:开头的href需要特殊处理，书籍数量57w+",
+    "comment": "已失效，网站被攻击导致数据丢失，搜索暂不可用。搜索(Read timed out)、章节有限流，章节爬取过快会封IP，章节页、目录页都有分页和反爬，搜索结果固定10条，以javascript:开头的href需要特殊处理，书籍数量57w+",
     "language": "zh_CN",
     "search": {
       "url": "https://www.369book.cc/search/?searchkey=%s",
@@ -155,44 +167,9 @@
     }
   },
   {
-    "id": 10,
-    "url": "https://cn.ttkan.co/",
-    "name": "天天看小说",
-    "comment": "老书全，搜索有限流(Read timed out)",
-    "language": "zh_CN",
-    "search": {
-      "url": "https://cn.ttkan.co/novel/search?q=%s",
-      "method": "get",
-      "result": ".frame_body > div.pure-g > div",
-      "bookName": "ul > li > a",
-      "author": "ul > li:nth-child(2)@js:r=r.replaceAll('作者：','');"
-    },
-    "book": {
-      "url": "https://cn.ttkan.co/novel/chapters/(.*?)",
-      "bookName": "meta[name=\"og:novel:book_name\"]",
-      "author": "meta[name=\"og:novel:author\"]",
-      "intro": "meta[name=\"og:description\"]@js:r=r.replaceAll('天天看小说：','');",
-      "category": "meta[name=\"og:novel:category\"]",
-      "coverUrl": "meta[name=\"og:image\"]",
-      "latestChapter": "meta[name=\"og:novel:latest_chapter_name\"]",
-      "status": "meta[name=\"og:novel:status\"]"
-    },
-    "toc": {
-      "item": ".full_chapters > div:nth-child(1) > a"
-    },
-    "chapter": {
-      "title": ".title > h1",
-      "content": "div.content",
-      "paragraphTagClosed": true,
-      "filterTxt": "\\(本章完\\)",
-      "filterTag": "a center div"
-    }
-  },
-  {
-    "id": 13,
     "url": "https://www.11bqg.com/",
     "name": "新笔趣阁",
-    "comment": "https://github.com/freeok/so-novel/issues/148，即便修复，获取目录的速度也很慢：第 (10n - 5) 章的链接一定要通过上一章页面提取。且该书源非优质书源，修复弊大于利。",
+    "comment": "域名失效，https://github.com/freeok/so-novel/issues/148，即便修复，获取目录的速度也很慢：第 (10n - 5) 章的链接一定要通过上一章页面提取。且该书源非优质书源，修复弊大于利。",
     "language": "zh_CN",
     "search": {
       "url": "https://www.11bqg.com/search/",
@@ -231,48 +208,95 @@
     }
   },
   {
-    "id": 15,
-    "url": "https://www.96dushu.com/",
-    "name": "96读书",
-    "comment": "晋江的书多，非大陆IP会跳CF，搜索、章节限流，章节翻页需要额外代码适配（下一页的url在js代码中），暂时搁置",
+    "url": "https://www.deqixs.com/",
+    "name": "得奇小说网",
+    "comment": "已失效。基本只有新书，爬取频率过快会长期封禁 IP (Remote host terminated the handshake)，搜索有限流 (Connection reset)",
     "language": "zh_CN",
+    "needProxy": true,
     "search": {
-      "url": "https://www.96dushu.com/modules/article/search.php",
-      "method": "post",
-      "data": "{searchkey: %s}",
-      "result": "#nr",
-      "bookName": "dd:nth-child(2) > h3 > a",
-      "author": "dd:nth-child(3) > span:nth-child(1)",
-      "category": "dt > span",
-      "latestChapter": "dd:nth-child(5) > a",
-      "lastUpdateTime": "dd:nth-child(2) > h3 > span",
-      "status": "dd:nth-child(3) > span:nth-child(2)",
-      "pagination": true,
-      "nextPage": "#pagelink > a:not(.first):not(.last)"
+      "url": "https://www.deqixs.com/tag/?key=%s",
+      "method": "get",
+      "result": ".container > div",
+      "bookName": "div > h3 > a",
+      "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",
+      "latestChapter": "div > ul > li:nth-child(1) > a",
+      "lastUpdateTime": "div > ul > li:nth-child(1) > i"
     },
     "book": {
-      "url": "https://www.96dushu.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.deqixs.com/xiaoshuo/(.*?)/",
+      "bookName": ".item > div > h1 > a",
+      "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
+      "intro": "//div[@class='des bb'][1]",
+      "category": ".item > div > p:nth-child(2) > span:nth-child(2)",
+      "coverUrl": ".item > a > img",
+      "latestChapter": ".item > div > ul > li:nth-child(1) > a",
+      "lastUpdateTime": ".item > div > ul > li:nth-child(1) > i",
+      "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
     },
     "toc": {
-      "item": "#chapterList > li > a"
+      "item": "#list > ul > li > a",
+      "pagination": true,
+      "nextPage": "#pages > .gr"
     },
     "chapter": {
-      "title": "#mlfy_main_text > h1",
-      "content": "#content",
+      "title": ".submenu > h1",
+      "content": ".con",
       "paragraphTagClosed": true,
-      "filterTxt": "\\((继续下一页|本章完)\\)",
-      "filterTag": "最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "",
       "pagination": true,
-      "nextPage": "#readbg > div.mlfy_page > a:nth-child(4)",
-      "nextPageInJs": "//*[@id=\"readbg\"]/script[5]@js:r=r.match(/nextpage = \"(.*?)\"/)[1];"
+      "nextPage": ".prenext > span:nth-child(3) > a"
+    },
+    "crawl": {
+      "threads": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
+    }
+  },
+  {
+    "url": "https://www.sudugu.com/",
+    "name": "速读谷",
+    "comment": "已失效。同得奇小说网",
+    "language": "zh_CN",
+    "needProxy": true,
+    "search": {
+      "url": "https://www.sudugu.com/i/sor.aspx?key=%s",
+      "method": "get",
+      "result": ".container > div",
+      "bookName": "div > h3 > a",
+      "author": "div > p:nth-child(3)@js:r=r.replaceAll('作者：', '');",
+      "latestChapter": "div > ul > li:nth-child(1) > a",
+      "lastUpdateTime": "div > ul > li:nth-child(1) > i"
+    },
+    "book": {
+      "url": "https://www.sudugu.com/(.*?)/",
+      "bookName": ".item > div > h1 > a",
+      "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
+      "intro": "//div[@class='des bb'][1]",
+      "category": ".item > div > p:nth-child(2) > span:nth-child(2)",
+      "coverUrl": ".item > a > img",
+      "latestChapter": ".item > div > ul > li:nth-child(1) > a",
+      "lastUpdateTime": ".item > div > ul > li:nth-child(1) > i",
+      "status": ".item > div > p:nth-child(2) > span:nth-child(1)"
+    },
+    "toc": {
+      "item": "#list > ul > li > a",
+      "pagination": true,
+      "nextPage": "#pages > .gr"
+    },
+    "chapter": {
+      "title": ".submenu > h1",
+      "content": ".con",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "",
+      "pagination": true,
+      "nextPage": ".prenext > span:nth-child(3) > a"
+    },
+    "crawl": {
+      "threads": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
     }
   }
 ]
