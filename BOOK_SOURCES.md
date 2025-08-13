@@ -78,6 +78,6 @@ port = 改为你的代理端口
 
 ## 自定义书源
 
-参考规则文件, 照葫芦画瓢
+参考规则文件，照猫画虎
 
 支持语法: css selector, xpath, javascript, regex
