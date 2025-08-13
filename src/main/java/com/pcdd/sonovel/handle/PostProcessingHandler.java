@@ -23,11 +23,10 @@ public interface PostProcessingHandler {
      */
     default void downloadCover(Book book, File saveDir) {
         try {
-            Console.log("<== 正在下载封面：{}", book.getCoverUrl());
             File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), FileUtils.resolvePath(saveDir.toString()));
             FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
         } catch (Exception e) {
-            Console.error(render("封面下载失败：{}", "red"), e.getMessage());
+            Console.error(render("封面 {} 下载失败：{}", "red"), book.getCoverUrl(), e.getMessage());
         }
     }
 
