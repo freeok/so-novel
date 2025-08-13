@@ -1,36 +1,38 @@
 ## 书源基本信息
 
-`main-rules.json`
+`main-rules.json`：均支持搜索的书源
 
-| 书源 ID | 书源名称                                 | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要额外注意                                 |
-|-------|--------------------------------------|-------|--------|------|-------------------------------------------|
-| 1     | [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      | ✅    |                                           |
-| 2     | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | ✅    | 搜索限流 (Unexpected end of file from server) |
-| 3     | [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | ✅    | 搜索限流 (Connect timed out)                  |
-| 4     | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | ✅    | 搜索限流 (Read timed out)，数量15w+              |
-| 5     | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 下载过快会导致章节内容为空，建议线程数不大于5                   |
-| 6     | [大熊猫文学](https://www.dxmwx.org/)      | ✅     | ✅      | ✅    |                                           |
-| 7     | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      | ✅    |                                           |
-| 8     | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      | ✅    |                                           |
-| 9     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和69书吧相似，爬取过快会封IP且获取不到正文               |
-| 10    | [小说虎](https://www.xshbook.com/)      | ✅     | ✅      | ✅    | 正文广告较多，需手动过滤                              |
-| 11    | [略更网](https://www.luegeng.com/)      | ✅     | ✅      | ✅    |                                           |
-| 12    | [书林文学](http://www.shu009.com/)       | ✅     | ✅      | ✅    | 源站目录有重复、缺章的情况，章节限流                        |
-| 13    | [八一中文网](http://www.81zwwww.com/)     | ✅     | ✅      | ✅    |                                           |
-| 14    | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      | ✅    |                                           |
-| 15    | [阅读库](http://www.yeudusk.com/)       | ✅     | ✅      | ✅    |                                           |
-| 16    | [顶点小说](https://www.wxsy.net/)        | ✅     | ✅      | ✅    | 搜索、详情、章节限流                                |
-| 17    | [黄易天地](http://www.xhytd.com/)        | ✅     | ❌      | ✅    |                                           |
-| 18    | [老幺小说网](https://www.laoyaoxs.org/)   | ✅     | ✅      | ✅    | 章节限流，正文段落会乱序                              |
+| 书源 ID | 书源名称                                | 大陆 IP | 非大陆 IP | ⚠️ 需要注意                                   |
+|-------|-------------------------------------|-------|--------|-------------------------------------------|
+| 1     | [香书小说](http://www.xbiqugu.la/)      | ✅     | ❌      |                                           |
+| 2     | [书海阁小说网](https://www.shuhaige.net/) | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
+| 3     | [梦书中文](http://www.mcxs.info/)       | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
+| 4     | [鸟书网](http://www.99xs.info/)        | ✅     | ❌      | 搜索限流 (Read timed out)                     |
+| 5     | [大熊猫文学](https://www.dxmwx.org/)     | ✅     | ✅      |                                           |
+| 6     | [笔趣阁22](https://www.22biqu.com/)    | ✅     | ✅      |                                           |
+| 7     | [笔尖中文](http://www.xbiquzw.net/)     | ✅     | ❌      |                                           | |
+| 8     | [小说虎](https://www.xshbook.com/)     | ✅     | ✅      | 正文广告较多，需手动过滤                              |
+| 9     | [略更网](https://www.luegeng.com/)     | ✅     | ✅      |
+| 10    | [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
+| 11    | [八一中文网](http://www.81zwwww.com/)    | ✅     | ✅      |                                           |
+| 12    | [悠久小说网](http://www.ujxsw.org/)      | ✅     | ❌      |                                           |
+| 13    | [阅读库](http://www.yeudusk.com/)      | ✅     | ✅      |                                           |
+| 14    | [顶点小说](https://www.wxsy.net/)       | ✅     | ✅      | 搜索、详情限流                                   |
 
-`proxy-rules.json`
+`flowlimit-rules.json`：下载限流的书源
 
-| 书源 ID | 书源名称                              | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要额外注意                                                                          |
-|-------|-----------------------------------|-------|--------|------|------------------------------------------------------------------------------------|
-| 1     | [69书吧1](https://www.69shuba.com/) | ❌     | ✅      | ❌    | 需要梯子，搜索有CF，章节限流，推荐线程数1                                                             |
-| 2     | [全本小说网](https://quanben5.com/)    | ❌     | ✅      | ✅    | 需要梯子，完本很全，连载基本搜不到，同 quanben5.io, big5.quanben5.com, quanben-xiaoshuo.com           |
-| 3     | [得奇小说网](https://www.deqixs.com/)  | ❌     | ✅      | ✅    | 基本只有新书，爬取频率过快会封禁IP (Remote host terminated the handshake)，搜索有限流 (Connection reset) |
-| 4     | [速读谷](https://www.sudugu.com/)    | ❌     | ✅      | ✅    | 同得奇小说网                                                                             |
+| 书源 ID | 书源名称                                 | 大陆 IP | 非大陆 IP | 支持搜索 | ⚠️ 需要注意                         |
+|-------|--------------------------------------|-------|--------|------|---------------------------------|
+| 1     | [新天禧小说](https://www.tianxibook.com/) | ✅     | ❌      | ✅    | 下载过快会导致章节内容为空，建议线程数不大于 5        |
+| 2     | [零点小说](https://www.0xs.net/)         | ✅     | ✅      | ✅    | 限流程度和 69 书吧相似，爬取过快会封 IP 且获取不到正文 |
+| 3     | [老幺小说网](https://www.laoyaoxs.org/)   | ✅     | ✅      | ✅    | 章节限流，正文段落会乱序                    |
+
+`proxy-rules.json`：需要代理的书源
+
+| 书源 ID | 书源名称                              | 支持搜索 | ⚠️ 需要注意                                                             |
+|-------|-----------------------------------|------|---------------------------------------------------------------------|
+| 1     | [69书吧1](https://www.69shuba.com/) | ❌    | 章节限流，推荐线程数1                                                         |
+| 2     | [全本小说网](https://quanben5.com/)    | ✅    | 完本很全，连载基本搜不到，同 quanben5.io, big5.quanben5.com, quanben-xiaoshuo.com |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）
@@ -48,7 +50,7 @@ host = 127.0.0.1
 port = 改为你的代理端口
 ```
 
-使用支持搜索为 ❌ 的书源时，**仅能输入书籍详情页的 URL 下载**。
+使用不支持搜索的书源时，**仅能输入书籍详情页的 URL 下载**。
 
 ## 若书源无法使用，请参考以下步骤排查
 
