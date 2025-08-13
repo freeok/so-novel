@@ -42,13 +42,12 @@ public class EpubMergeHandler implements PostProcessingHandler {
         meta.addDescription(b.getIntro());
         // 下载封面失败会导致生成 epub 中断
         try {
-            Console.log("<== 正在下载封面：{}", b.getCoverUrl());
             byte[] bytes = HttpUtil.downloadBytes(b.getCoverUrl());
             book.setCoverImage(new Resource(bytes, "cover.jpg"));
             // 添加封面页
             book.addSection("封面", new Resource(ResourceUtil.readBytes("templates/chapter_cover.html"), COVER_NAME));
         } catch (Exception e) {
-            Console.error(render("封面下载失败：{}", "red"), e.getMessage());
+            Console.error(render("封面 {} 下载失败：{}", "red"), b.getCoverUrl(), e.getMessage());
         }
         // 不设置会导致 Apple Books 无法使用苹方字体
         meta.setLanguage("zh");

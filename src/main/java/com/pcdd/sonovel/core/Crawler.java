@@ -13,10 +13,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.ChapterParser;
-import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.SearchParserQuanben5;
+import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LogUtils;
 import com.pcdd.sonovel.web.model.DownloadProgressInfo;
@@ -50,29 +47,11 @@ public class Crawler {
         this.config = config;
     }
 
-    /**
-     * 搜索小说
-     *
-     * @param keyword 关键字
-     * @return 匹配的小说列表
-     */
-    public List<SearchResult> search(String keyword) {
-        Console.log("<== 正在搜索...");
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        List<SearchResult> searchResults;
-
-        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
-            searchResults = new SearchParserQuanben5(config).parse(keyword);
-        } else {
-            searchResults = new SearchParser(config).parse(keyword, true);
-        }
-
-        stopWatch.stop();
-        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
-
-        return searchResults;
+    public double crawl(String bookUrl) {
+        TocParser tocParser = new TocParser(config);
+        List<Chapter> toc = tocParser.parse(bookUrl, 1, Integer.MAX_VALUE);
+        Console.log("<== 共计 {} 章", toc.size());
+        return crawl(bookUrl, toc);
     }
 
     /**
@@ -146,7 +125,9 @@ public class Crawler {
         stopWatch.stop();
         BookContext.clear();
 
-        return stopWatch.getTotalTimeSeconds();
+        double totalTimeSeconds = stopWatch.getTotalTimeSeconds();
+        Console.log(render("<== 完成！总耗时 {} s\n", "green"), NumberUtil.round(totalTimeSeconds, 2));
+        return totalTimeSeconds;
     }
 
     /**
@@ -177,6 +158,31 @@ public class Crawler {
             case "epub", "pdf" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".html";
             default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
         };
+    }
+
+    /**
+     * 搜索小说
+     *
+     * @param keyword 关键字
+     * @return 匹配的小说列表
+     */
+    public List<SearchResult> search(String keyword) {
+        Console.log("<== 正在搜索...");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        List<SearchResult> searchResults;
+
+        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
+            searchResults = new SearchParserQuanben5(config).parse(keyword);
+        } else {
+            searchResults = new SearchParser(config).parse(keyword, true);
+        }
+
+        stopWatch.stop();
+        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
+
+        return searchResults;
     }
 
 }
