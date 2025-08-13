@@ -4,14 +4,11 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.TocParser;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
@@ -88,18 +85,14 @@ public class BatchDownloadAction {
         Console.print(render("==> 输入 Y 以确认下载：", "green"));
         if ("Y".equalsIgnoreCase(sc.next().strip())) {
             double totalTime = 0;
-            TocParser tocParser = new TocParser(config);
 
             for (int i = 0; i < downloadList.size(); i++) {
                 SearchResult sr = downloadList.get(i);
                 String logTemplate = StrUtil.format(DIVIDER + " %s 《{}》({}) 进度: {}/{} " + DIVIDER,
                         sr.getBookName(), sr.getAuthor(), i + 1, downloadList.size());
                 Console.log("\n" + logTemplate.formatted("START"));
-                List<Chapter> toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
-                double res = new Crawler(config).crawl(sr.getUrl(), toc);
-                Console.log(render("<== 完成！总耗时 {} s", "green"), NumberUtil.round(res, 2));
+                totalTime += new Crawler(config).crawl(sr.getUrl());
                 Console.log(logTemplate.formatted("END") + "\n");
-                totalTime += res;
             }
 
             Console.log(render("<== 批量下载完成！总耗时 {}\n", "green"), DateUtil.formatBetween(Convert.toLong(totalTime * 1000)));

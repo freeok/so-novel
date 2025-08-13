@@ -2,7 +2,6 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -94,8 +93,7 @@ public class DownloadAction {
             }
             if (action == 4) continue;
 
-            double res = new Crawler(config).crawl(sr.getUrl(), toc);
-            Console.log(render("<== 完成！总耗时 {} s\n", "green"), NumberUtil.round(res, 2));
+            new Crawler(config).crawl(sr.getUrl(), toc);
         }
     }
 
