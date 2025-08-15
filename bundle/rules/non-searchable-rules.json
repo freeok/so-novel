@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "url": "http://www.xhytd.com/",
+    "name": "黄易天地",
+    "comment": "搜索新加了CF，仅限大陆IP",
+    "language": "zh_CN",
+    "search": {
+      "disabled": true,
+      "url": "http://www.xhytd.com/search.html?name=%s",
+      "method": "get",
+      "result": "#main > div.novelslist2 > ul > li",
+      "bookName": "span.s2.wid > a",
+      "author": "span.s4.wid > a",
+      "latestChapter": "span.s3.wid3 > a",
+      "lastUpdateTime": "span.s6.wid6"
+    },
+    "book": {
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[name=\"description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+    },
+    "toc": {
+      "item": "#list > dl > dt:nth-of-type(2) ~ dd > a"
+    },
+    "chapter": {
+      "title": "h1",
+      "content": "#content",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "",
+      "filterTag": "p div"
+    }
+  },
+  {
+    "id": 2,
+    "url": "https://cn.ttkan.co/",
+    "name": "天天看小说",
+    "comment": "现无法搜索，搜索有限流(Read timed out)",
+    "language": "zh_CN",
+    "book": {
+      "url": "https://cn.ttkan.co/novel/chapters/(.*?)",
+      "bookName": "meta[name=\"og:novel:book_name\"]",
+      "author": "meta[name=\"og:novel:author\"]",
+      "intro": "meta[name=\"og:description\"]@js:r=r.replaceAll('天天看小说：','');",
+      "category": "meta[name=\"og:novel:category\"]",
+      "coverUrl": "meta[name=\"og:image\"]",
+      "latestChapter": "meta[name=\"og:novel:latest_chapter_name\"]",
+      "status": "meta[name=\"og:novel:status\"]"
+    },
+    "toc": {
+      "item": ".full_chapters > div:nth-child(1) > a"
+    },
+    "chapter": {
+      "title": ".title > h1",
+      "content": "div.content",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "a center div"
+    }
+  },
+  {
+    "id": 3,
+    "url": "https://www.96dushu.com/",
+    "name": "96读书",
+    "comment": "搜索新加了CF，章节JS加密",
+    "language": "zh_CN",
+    "search": {
+      "disabled": true,
+      "url": "https://www.96dushu.com/modules/article/search.php",
+      "method": "post",
+      "data": "{searchkey: %s}",
+      "result": "#nr",
+      "bookName": "dd:nth-child(2) > h3 > a",
+      "author": "dd:nth-child(3) > span:nth-child(1)",
+      "category": "dt > span",
+      "latestChapter": "dd:nth-child(5) > a",
+      "lastUpdateTime": "dd:nth-child(2) > h3 > span",
+      "status": "dd:nth-child(3) > span:nth-child(2)",
+      "pagination": true,
+      "nextPage": "#pagelink > a:not(.first):not(.last)"
+    },
+    "book": {
+      "url": "https://www.96dushu.com/book/(.*?)/",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "item": "#chapterList > li > a"
+    },
+    "chapter": {
+      "title": "#mlfy_main_text > h1",
+      "content": "#content@js:var qsbs={_keyStr:\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\",bb:function(a){var b=\"\",d,c,i,e,f,h,j,g=0;a=a.replace(/[^A-Za-z0-9+\\/=]/g,\"\");while(g<a.length){e=this._keyStr.indexOf(a.charAt(g++));f=this._keyStr.indexOf(a.charAt(g++));h=this._keyStr.indexOf(a.charAt(g++));j=this._keyStr.indexOf(a.charAt(g++));d=(e<<2)|(f>>4);c=((f&15)<<4)|(h>>2);i=((h&3)<<6)|j;b+=String.fromCharCode(d);if(h!=64)b+=String.fromCharCode(c);if(j!=64)b+=String.fromCharCode(i)}return this._utf8_decode(b)},_utf8_encode:function(a){a=a.replace(/\\r\\n/g,\"\\n\");var b=\"\";for(var d=0;d<a.length;d++){var c=a.charCodeAt(d);if(c<128){b+=String.fromCharCode(c)}else if(c<2048){b+=String.fromCharCode((c>>6)|192);b+=String.fromCharCode((c&63)|128)}else{b+=String.fromCharCode((c>>12)|224);b+=String.fromCharCode(((c>>6)&63)|128);b+=String.fromCharCode((c&63)|128)}}return b},_utf8_decode:function(a){var b=\"\",d=0,c=0,i=0,e=0,f=0;while(d<a.length){c=a.charCodeAt(d);if(c<128){b+=String.fromCharCode(c);d++}else if(c<224){e=a.charCodeAt(d+1);b+=String.fromCharCode(((c&31)<<6)|(e&63));d+=2}else{e=a.charCodeAt(d+1);f=a.charCodeAt(d+2);b+=String.fromCharCode(((c&15)<<12)|((e&63)<<6)|(f&63));d+=3}}return b}};r=r.replace(/<script>\\s*document\\.writeln\\(qsbs\\.bb\\('([^']+)'\\)\\);\\s*<\\/script>/g,function(a,b){return qsbs.bb(b)});",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\((继续下一页|本章完)\\)",
+      "filterTag": "最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
+      "pagination": true,
+      "nextPage": "#readbg > div.mlfy_page > a:nth-child(4)",
+      "nextPageInJs": "//*[@id=\"readbg\"]/script[5]@js:r=r.match(/nextpage = \"(.*?)\"/)[1];"
+    }
+  }
+]
