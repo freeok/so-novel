@@ -32,10 +32,10 @@ public class WebServer {
         server.setHandler(context);
         try {
             server.start();
-            Console.log("🚀 Web server started on port {}", port);
+            Console.log("Web server started on port {}", port);
             server.join();
         } catch (Exception e) {
-            Console.error("❌ Failed to start Web server on port {}: {}", port, e.getMessage());
+            Console.error("Failed to start Web server on port {}: {}", port, e.getMessage());
             throw new IllegalStateException("Web server failed to start", e);
         }
     }

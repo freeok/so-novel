@@ -34,9 +34,9 @@ public class SingleSearchAction {
     public static final String GREEN = "green";
 
     public void downloadFromUrl(AppConfig config) {
+        Rule rule = new Source(config).rule;
         Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
         String bookUrl = sc.nextLine().strip();
-        Rule rule = new Source(config).rule;
         bookUrl = JsoupUtils.invokeJs(rule.getBook().getUrl(), bookUrl);
         Book book = new BookParser(config).parse(bookUrl);
         SearchResult sr = SearchResult.builder()
@@ -76,8 +76,9 @@ public class SingleSearchAction {
         }
 
         Source source = new Source(config);
+        Rule r = source.rule;
 
-        if (source.rule.getSearch() == null) {
+        if (r.getSearch() == null || r.getSearch().isDisabled()) {
             downloadFromUrl(config);
         } else {
             downloadByKeyword(config);

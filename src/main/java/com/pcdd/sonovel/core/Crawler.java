@@ -50,6 +50,10 @@ public class Crawler {
     public double crawl(String bookUrl) {
         TocParser tocParser = new TocParser(config);
         List<Chapter> toc = tocParser.parse(bookUrl, 1, Integer.MAX_VALUE);
+        if (toc.isEmpty()) {
+            Console.log("<== 目录为空，中止下载");
+            return 0;
+        }
         Console.log("<== 共计 {} 章", toc.size());
         return crawl(bookUrl, toc);
     }
