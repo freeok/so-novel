@@ -11,6 +11,7 @@
   "language": "zh_CN",
   // 提取搜索结果的信息，不支持搜索的书源可不填
   "search": {
+    "disabled": false,
     // 搜索链接，必填
     "url": "",
     // 请求方法（GET, POST），必填
