@@ -44,7 +44,6 @@
     "language": "zh_CN",
     "needProxy": true,
     "search": {
-      "disabled": true,
       "url": "https://quanben5.com/?c=book&a=search.json&callback=search&keywords=%s&b=%s",
       "method": "get",
       "result": ".pic_txt_list",
