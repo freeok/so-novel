@@ -13,7 +13,7 @@ public class AggregatedSearchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        String name = req.getParameter("name");
+        String name = req.getParameter("kw");
         List<SearchResult> results = AggregatedSearchAction.getSearchResults(name);
         RespUtils.writeJson(resp, results);
     }
