@@ -15,7 +15,7 @@
   </header>
   <main class="main-content">
     <section class="container download-container card" id="downloadContainer">
-      <h2 class="section-title">搜索 & 下载</h2>
+      <h2 class="section-title">搜索书籍</h2>
       <div class="search-container">
         <input id="downloadSearchName" placeholder="请输入书名或作者，尽量输完整" aria-label="搜索书名或作者">
         <button class="btn btn-primary btn-search" id="searchButton">搜索</button>
@@ -41,7 +41,7 @@
       </div>
     </section>
     <section class="container result-container card">
-      <h2 class="section-title">已下载书籍</h2>
+      <h2 class="section-title">已下书籍</h2>
       <div class="search-container">
         <button id="refreshList" class="btn btn-primary">刷新列表</button>
       </div>
@@ -203,7 +203,7 @@
       searchButton.disabled = true // 搜索时禁用按钮
       downloadSearchName.disabled = true // 搜索时禁用输入框
       try {
-        const response = await fetch(`/search/aggregated?name=${encodeURIComponent(value)}`)
+        const response = await fetch(`/search/aggregated?kw=${encodeURIComponent(value)}`)
         const data = await response.json()
         console.log('search results', data)
         if (data && data.data) {

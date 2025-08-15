@@ -7,12 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.web.WebServer;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.util.Scanner;
-
-import com.pcdd.sonovel.web.WebServer;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -26,7 +25,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class TuiLauncher {
 
     public void launch(AppConfig config) {
-        if(config.getWebEnabled() == 1){
+        if (config.getWebEnabled() == 1) {
             new WebServer().start();
         }
         Scanner sc = Console.scanner();
@@ -66,7 +65,7 @@ public class TuiLauncher {
                 .addHeader("激活规则: " + config.getActiveRules())
                 .addHeader("导出格式: " + config.getExtName().toLowerCase())
                 .addHeader("下载路径: " + new File(config.getDownloadPath()).getAbsolutePath())
-                .addBody(render("使用前请务必阅读 readme.txt", "yellow"))
+                .addBody(render("首次使用请务必阅读 readme.txt，配置文件是 config.ini", "yellow"))
                 .print();
     }
 
