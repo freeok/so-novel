@@ -4,21 +4,19 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.web.util.RespUtils;
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 从服务器下载文件到客户端
  */
 public class BookDownloadServlet extends HttpServlet {
-
-    private static final int BUFFER_SIZE = 1024;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -43,15 +41,9 @@ public class BookDownloadServlet extends HttpServlet {
 
         resp.setContentType("application/octet-stream");
         resp.setHeader("Content-Disposition", "attachment;filename=" + URLUtil.encode(filename));
+        resp.setHeader("Content-Length", String.valueOf(file.length()));
 
-        try (FileInputStream in = new FileInputStream(file);
-             ServletOutputStream out = resp.getOutputStream()) {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int len;
-            while ((len = in.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-        }
+        Files.copy(Paths.get(file.getAbsolutePath()), resp.getOutputStream());
     }
 
 }
