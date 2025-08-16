@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.web.servlet.AggregatedSearchServlet;
 import com.pcdd.sonovel.web.servlet.BookDownloadServlet;
-import com.pcdd.sonovel.web.servlet.LocalBookDownloadServlet;
+import com.pcdd.sonovel.web.servlet.BookFetchServlet;
 import com.pcdd.sonovel.web.servlet.LocalBookListServlet;
 import com.pcdd.sonovel.web.socket.ChapterDownloadProgressWS;
 import jakarta.websocket.server.ServerEndpointConfig;
@@ -48,8 +48,8 @@ public class WebServer {
     }
 
     private void registerServlets(ServletContextHandler context) {
+        context.addServlet(BookFetchServlet.class, "/book-fetch");
         context.addServlet(BookDownloadServlet.class, "/book-download");
-        context.addServlet(LocalBookDownloadServlet.class, "/local-book-download");
         context.addServlet(LocalBookListServlet.class, "/local-books");
         context.addServlet(AggregatedSearchServlet.class, "/search/aggregated");
 

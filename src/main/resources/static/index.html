@@ -86,6 +86,8 @@
     const tipText = document.getElementById('tipText')
 
     let bookCache = []
+    // 最新下载的书的文件名
+    let latestFileName = ''
 
     // 工具函数
     const showTip = (text = '正在加载...') => {
@@ -123,9 +125,9 @@
     }
 
     // 事件处理函数
-    const handleDownloadFile = (name) => {
+    const handleDownloadFileToLocal = (name) => {
       console.log('download to local', `《${name}》`)
-      window.open(`${window.location.origin}/local-book-download?filename=${encodeURIComponent(name)}`, '_blank')
+      window.open(`${window.location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
     }
 
     const handleDownloadToServer = async (index) => {
@@ -138,8 +140,10 @@
       showTip(`正在解析目录...`)
       const query = new URLSearchParams(item).toString()
       try {
-        await fetch(`/book-download?${query}`)
+        await fetch(`/book-fetch?${query}`)
         await fetchLocalBooks()
+        // fetch 会把响应当成 XHR 请求，返回一个 Response 对象，不会走浏览器默认的下载流程
+        window.location.href = `/book-download?filename=${latestFileName}`;
       } catch (error) {
         console.error('Error downloading file to server:', error)
         updateTip('下载失败')
@@ -183,6 +187,7 @@
         console.log('local-books:', data)
         if (data && data.data) {
           data.data.sort((a, b) => b.timestamp - a.timestamp)
+          latestFileName = data.data[0].name
           renderLocalBooksTable(data.data)
         }
       } catch (error) {
@@ -266,7 +271,7 @@
     tableBody.addEventListener('click', (e) => {
       const button = e.target.closest('button.btn-secondary')
       if (button && button.dataset.filename) {
-        handleDownloadFile(button.dataset.filename)
+        handleDownloadFileToLocal(button.dataset.filename)
       }
     })
 
