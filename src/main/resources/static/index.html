@@ -2,10 +2,20 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 移动端视口设置 -->
+  <!-- width=device-width → 宽度等于设备屏宽 -->
+  <!-- initial-scale=1.0 → 初始缩放比例为 1 -->
+  <!-- user-scalable=no → 禁止用户缩放 -->
+  <!-- maximum-scale=1 → 最大缩放比例为 1 -->
+  <meta content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" name="viewport">
+  <!-- 安卓/Chrome Web App 全屏显示 -->
+  <meta content="yes" name="mobile-web-app-capable">
+  <!-- iOS Safari 全屏显示（保留兼容） -->
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <!-- 禁止 iOS 自动识别电话号码 -->
+  <meta content="telephone=no" name="format-detection">
   <title>sonovel webui</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="/css/normalize.css">
+  <link href="favicon.ico" rel="icon" type="image/x-icon">
   <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
