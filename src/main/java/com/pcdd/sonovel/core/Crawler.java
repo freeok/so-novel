@@ -96,22 +96,34 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ChapterParser chapterParser = new ChapterParser(config);
-        ProgressBar progressBar = ProgressBar.builder()
-                .setTaskName("Downloading...")
-                .setInitialMax(toc.size())
-                .setMaxRenderedLength(100)
-                .setUpdateIntervalMillis(100)
-                .showSpeed()
-                .build();
+
+        ProgressBar progressBar = null;
+        try {
+            progressBar = ProgressBar.builder()
+                    .setTaskName("Downloading...")
+                    .setInitialMax(toc.size())
+                    .setMaxRenderedLength(100)
+                    .setUpdateIntervalMillis(100)
+                    .showSpeed()
+                    .build();
+        } catch (Exception e) {
+            Console.error("下载进度条初始化失败，已自动切换为简易模式");
+        }
 
         // 爬取&下载章节
+        ProgressBar finalProgressBar = progressBar;
         toc.forEach(item -> executor.execute(() -> {
             createChapterFile(chapterParser.parse(item, latch));
-            progressBar.stepTo(toc.size() - latch.getCount());
+            long currentIndex = toc.size() - latch.getCount();
+
+            if (finalProgressBar != null) {
+                finalProgressBar.stepTo(currentIndex);
+            }
+
             if (config.getWebEnabled() == 1) {
                 DownloadProgressInfo downloadProgressInfo = DownloadProgressInfo.builder()
                         .type("book-download")
-                        .index(toc.size() - latch.getCount())
+                        .index(currentIndex)
                         .total(toc.size())
                         .build();
                 MessageUtils.pushMessageToAll(JSONUtil.toJsonStr(downloadProgressInfo));
@@ -121,7 +133,9 @@ public class Crawler {
         // 阻塞 main 线程，等待全部章节下载完毕
         latch.await();
         executor.shutdown();
-        progressBar.close();
+        if (progressBar != null) {
+            progressBar.close();
+        }
         LogUtils.info("-".repeat(100));
         Console.log("<== 章节下载日志已保存至 {}，请检查是否有 [ERROR] 级别的日志。", LogUtils.getLogFile().getAbsolutePath());
 
