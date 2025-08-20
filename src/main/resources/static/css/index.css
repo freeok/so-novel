@@ -10,8 +10,22 @@
   --card-background-color: #fff;
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   --border-radius: 12px;
-  --font-family-sans: 'Roboto', 'Helvetica Neue', 'Helvetica', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Arial', sans-serif;
-  --font-family-serif: 'Noto Serif SC', serif;
+  /* 无衬线字体（适合移动端正文，清晰易读） */
+  --font-family-sans: 'Roboto',
+  'Helvetica Neue',
+  'Helvetica',
+  'PingFang SC',
+  'Hiragino Sans GB',
+  'Microsoft YaHei',
+  'Arial',
+  sans-serif;
+  /* 衬线字体（适合标题或正文强调，移动端可读性较好） */
+  --font-family-serif: 'Noto Serif SC',
+  'PingFang SC',
+  'Heiti SC',
+  'Microsoft YaHei',
+  'Times New Roman',
+  serif;
 }
 
 *, ::before, ::after {
