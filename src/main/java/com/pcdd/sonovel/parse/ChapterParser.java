@@ -1,6 +1,7 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -46,6 +47,11 @@ public class ChapterParser extends Source {
             return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
+            // 中断下载，不重试
+            if (config.getEnableRetry() == 0) {
+                Console.error(e, "【{}】章节下载出错。因未启用重试，故中断下载", chapter.getTitle());
+                System.exit(1);
+            }
             Chapter retryChapter = retry(chapter, e);
             return retryChapter == null ? null : ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
         }
