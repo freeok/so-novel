@@ -29,6 +29,7 @@ public class AppConfig {
     private Integer threads;
     private Integer minInterval;
     private Integer maxInterval;
+    private Integer enableRetry;
     private Integer maxRetries;
     private Integer retryMinInterval;
     private Integer retryMaxInterval;
