@@ -76,6 +76,7 @@ public class ConfigUtils {
         config.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
         config.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
         config.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
+        config.setEnableRetry(usr.getInt("enable-retry", SELECTION_CRAWL, 1));
         config.setMaxRetries(usr.getInt("max-retries", SELECTION_CRAWL, 5));
         config.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
         config.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
