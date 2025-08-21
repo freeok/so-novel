@@ -27,9 +27,10 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -85,10 +86,7 @@ public class Crawler {
         }
 
         int autoThreads = config.getThreads() == -1 ? RuntimeUtil.getProcessorCount() * 2 : config.getThreads();
-        // 创建线程池
         ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
-        // 阻塞主线程，用于计时
-        CountDownLatch latch = new CountDownLatch(toc.size());
 
         Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
         LogUtils.info("开始下载:《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
@@ -112,26 +110,32 @@ public class Crawler {
 
         // 爬取&下载章节
         ProgressBar finalProgressBar = progressBar;
-        toc.forEach(item -> executor.execute(() -> {
-            createChapterFile(chapterParser.parse(item, latch));
-            long currentIndex = toc.size() - latch.getCount();
+        AtomicInteger completed = new AtomicInteger(0);
 
-            if (finalProgressBar != null) {
-                finalProgressBar.stepTo(currentIndex);
-            }
+        // 提交所有任务并收集 CompletableFuture
+        var futures = toc.stream()
+                .map(item -> CompletableFuture.runAsync(() -> {
+                    createChapterFile(chapterParser.parse(item));
 
-            if (config.getWebEnabled() == 1) {
-                DownloadProgressInfo downloadProgressInfo = DownloadProgressInfo.builder()
-                        .type("book-download")
-                        .index(currentIndex)
-                        .total(toc.size())
-                        .build();
-                MessageUtils.pushMessageToAll(JSONUtil.toJsonStr(downloadProgressInfo));
-            }
-        }));
+                    long currentIndex = completed.incrementAndGet();
+                    if (finalProgressBar != null) {
+                        finalProgressBar.stepTo(currentIndex);
+                    }
 
-        // 阻塞 main 线程，等待全部章节下载完毕
-        latch.await();
+                    if (config.getWebEnabled() == 1) {
+                        DownloadProgressInfo downloadProgressInfo = DownloadProgressInfo.builder()
+                                .type("book-download")
+                                .index(currentIndex)
+                                .total(toc.size())
+                                .build();
+                        MessageUtils.pushMessageToAll(JSONUtil.toJsonStr(downloadProgressInfo));
+                    }
+                }, executor))
+                .toList();
+
+        // 阻塞 main 线程，等待所有任务完成
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
+
         executor.shutdown();
         if (progressBar != null) {
             progressBar.close();
@@ -189,17 +193,12 @@ public class Crawler {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        List<SearchResult> searchResults;
-
-        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
-            searchResults = new SearchParserQuanben5(config).parse(keyword);
-        } else {
-            searchResults = new SearchParser(config).parse(keyword, true);
-        }
+        List<SearchResult> searchResults = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
+                ? new SearchParserQuanben5(config).parse(keyword)
+                : new SearchParser(config).parse(keyword, true);
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
-
         return searchResults;
     }
 
