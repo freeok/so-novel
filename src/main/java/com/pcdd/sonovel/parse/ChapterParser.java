@@ -19,8 +19,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * @author pcdd
  * Created at 2024/3/27
@@ -35,23 +33,7 @@ public class ChapterParser extends Source {
         this.chapterConverter = new ChapterConverter(config);
     }
 
-    // 用于测试
-    @SneakyThrows
     public Chapter parse(Chapter chapter) {
-        Rule.Chapter r = this.rule.getChapter();
-
-        // 获取章节名
-        try (Response resp = CrawlUtils.request(httpClient, chapter.getUrl(), r.getTimeout())) {
-            Document document = Jsoup.parse(resp.body().string(), r.getBaseUri());
-            chapter.setTitle(JsoupUtils.selectAndInvokeJs(document, r.getTitle()));
-        }
-
-        chapter.setContent(fetchContent(chapter.getUrl(), CrawlUtils.randomInterval(config)));
-
-        return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
-    }
-
-    public Chapter parse(Chapter chapter, CountDownLatch latch) {
         try {
             long interval = CrawlUtils.randomInterval(config);
             LogUtils.info("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
@@ -66,8 +48,6 @@ public class ChapterParser extends Source {
         } catch (Exception e) {
             Chapter retryChapter = retry(chapter, e);
             return retryChapter == null ? null : ChineseConverter.convert(retryChapter, this.rule.getLanguage(), config.getLanguage());
-        } finally {
-            latch.countDown();
         }
     }
 
