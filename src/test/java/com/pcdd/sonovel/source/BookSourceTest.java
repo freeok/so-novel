@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
+import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
@@ -21,7 +22,6 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -43,6 +43,7 @@ class BookSourceTest {
     private static final String DIVIDER = "=".repeat(50);
     private String bookUrl;
     private String firstChapterUrl;
+    private String firstChapterTitle;
     private List<Chapter> chapters;
 
     static {
@@ -53,40 +54,51 @@ class BookSourceTest {
         config.setLanguage("zh_TW");
     }
 
-    @DisplayName("测试直连书源")
     @ParameterizedTest
     @CsvSource({
             "1, http://www.xbiqugu.la/130/130509/",
             "2, https://www.shuhaige.net/199178/",
             "3, http://www.mcxs.info/145_145199/",
             "4, http://www.99xs.info/tag/129_129843/",
-            "5, https://www.tianxibook.com/book/66120/",
-            "6, https://www.dxmwx.org/book/56441.html",
-            "7, https://www.22biqu.com/biqu79148/",
-            "8, http://www.xbiquzw.net/10_10233/",
-            "9, https://www.0xs.net/txt/68398.html",
-            "10, https://www.xshbook.com/0/94328173/",
-            "11, https://www.luegeng.com/book186856/",
-            "12, http://www.shu009.com/book/111616/",
-            "13, http://www.81zwwww.com/90_90170/",
-            "14, http://www.ujxsw.org/book/107612/",
-            "15, http://www.yeudusk.com/book/1322535/",
-            "16, https://www.wxsy.net/novel/1803/",
-            "17, http://www.xhytd.com/32/32957/",
-            "18, https://www.laoyaoxs.org/info/281469.html"
+            "5, https://www.dxmwx.org/book/56441.html",
+            "6, https://www.22biqu.com/biqu79148/",
+            "7, http://www.xbiquzw.net/10_10233/",
+            "8, https://www.xshbook.com/0/94328173/",
+            "9, https://www.luegeng.com/book186856/",
+            "10, http://www.shu009.com/book/111616/",
+            "11, http://www.81zwwww.com/90_90170/",
+            "12, http://www.ujxsw.org/book/107612/",
+            "13, http://www.yeudusk.com/book/1322535/",
+            "14, https://www.wxsy.net/novel/1803/",
     })
-    void testDirectSources(int sourceId, String bookUrl) {
+    void testMainRules(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("耳根");
+        searchParse("斗罗大陆");
         bookParse();
         tocParse(1, Integer.MAX_VALUE);
         chapterParse();
         // chapterBatchParse(0, 100);
     }
 
-    @DisplayName("测试代理书源")
+    @ParameterizedTest
+    @CsvSource({
+            "1, https://www.tianxibook.com/book/66120/",
+            "2, https://www.0xs.net/txt/68398.html",
+            "3, https://www.laoyaoxs.org/info/281469.html"
+    })
+    void testNonSearchableRules(int sourceId, String bookUrl) {
+        this.bookUrl = bookUrl;
+        config.setSourceId(sourceId);
+
+        bookParse();
+        tocParse(1, Integer.MAX_VALUE);
+        chapterParse();
+        // chapterBatchParse(0, 100);
+    }
+
+
     @ParameterizedTest
     @CsvSource({
             "1, https://www.69shuba.com/book/48273.htm",
@@ -94,11 +106,11 @@ class BookSourceTest {
             "3, https://www.deqixs.com/xiaoshuo/106/",
             "4, https://www.sudugu.com/1012/",
     })
-    void testProxySources(int sourceId, String bookUrl) {
+    void testProxyRules(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
         config.setSourceId(sourceId);
 
-        searchParse("耳根");
+        searchParse("斗罗大陆");
         bookParse();
         tocParse(1, Integer.MAX_VALUE);
         chapterParse();
@@ -125,6 +137,7 @@ class BookSourceTest {
     public void bookParse() {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
         Book book = new BookParser(config).parse(bookUrl);
+        BookContext.set(book);
         Console.log(JSONUtil.toJsonPrettyStr(book));
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
@@ -136,18 +149,25 @@ class BookSourceTest {
         chapters = toc;
         toc.forEach(System.out::println);
         if (CollUtil.isNotEmpty(toc)) {
-            // 测试目录首章
+            // 用于 chapterParse()
             firstChapterUrl = toc.get(0).getUrl();
+            firstChapterTitle = toc.get(0).getTitle();
         } else {
             Console.log("目录为空");
         }
         Console.log("{} END tocParse {}\n", DIVIDER, DIVIDER);
     }
 
+    /**
+     * 必须在 tocParse 之后执行，因为需要 firstChapterUrl
+     */
     public void chapterParse() {
         Console.log("\n{} START chapterParse {}", DIVIDER, DIVIDER);
 
-        Chapter build = Chapter.builder().url(firstChapterUrl).build();
+        Chapter build = Chapter.builder()
+                .title(firstChapterTitle)
+                .url(firstChapterUrl)
+                .build();
         Chapter chapter = new ChapterParser(config).parse(build);
 
         Console.log(chapter.getContent());
