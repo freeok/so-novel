@@ -13,6 +13,7 @@ public class AppConfig {
 
     // [global]
     private Integer autoUpdate;
+    private String ghProxy;
 
     // [download]
     private String downloadPath;
