@@ -277,7 +277,7 @@
     "id": 8,
     "url": "https://www.xshbook.com/",
     "name": "小说虎",
-    "comment": "正文广告较多，需手动过滤",
+    "comment": "搜索有人机验证，正文广告较多，需手动过滤",
     "language": "zh_CN",
     "search": {
       "url": "https://www.sososhu.com/?q=%s&site=xshbook",
@@ -311,45 +311,6 @@
   },
   {
     "id": 9,
-    "url": "https://www.luegeng.com/",
-    "name": "略更网",
-    "comment": "疑似SSL证书过期，搜索限流，不支持IPv6",
-    "language": "zh_CN",
-    "search": {
-      "url": "https://www.luegeng.com/search/?searchkey=%s",
-      "method": "get",
-      "result": ".content > dl",
-      "bookName": "dt > a",
-      "author": "dd > a",
-      "status": "dd:nth-child(4) > span:nth-child(2)",
-      "wordCount": "dd:nth-child(4) > span:nth-child(3)"
-    },
-    "book": {
-      "url": "https://www.luegeng.com/book(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": ".left > div > a > img",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
-    },
-    "toc": {
-      "item": ".all > ul > li > a"
-    },
-    "chapter": {
-      "title": ".active",
-      "content": "#booktxt",
-      "paragraphTagClosed": true,
-      "filterTxt": "\\(本章完\\)",
-      "filterTag": "",
-      "pagination": true,
-      "nextPage": "#next_url"
-    }
-  },
-  {
-    "id": 10,
     "url": "http://www.shu009.com/",
     "name": "书林文学",
     "comment": "源站目录有重复、缺章的情况",
@@ -389,44 +350,7 @@
     }
   },
   {
-    "id": 11,
-    "url": "http://www.81zwwww.com/",
-    "name": "八一中文网",
-    "comment": "暂无",
-    "language": "zh_CN",
-    "search": {
-      "url": "http://www.81zwwww.com/search/",
-      "method": "post",
-      "data": "{searchkey: %s, Submit: ''}",
-      "result": ".mb20 > div > div",
-      "bookName": ".commend-title > a",
-      "author": ".commend-title > span"
-    },
-    "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": ".info-main-intro > p",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": ".info-main-wap > a > p@js:r=r.replaceAll('最新章节：','');",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
-    },
-    "toc": {
-      "item": "body > div.container.border3-2.mt8.mb20 > div.info-chapters.flex.flex-wrap > a"
-    },
-    "chapter": {
-      "title": ".reader-main > h1@js:r=r.replace(/（\\d+ \\/ \\d+）/, '');",
-      "content": "#article",
-      "paragraphTagClosed": true,
-      "paragraphTag": "p",
-      "filterTxt": "\\(本章完\\)|最近转码严重，让我们更有动力，更新更快，麻烦你动动小手退出阅读模式。谢谢",
-      "filterTag": "",
-      "pagination": true,
-      "nextPage": "(//*[@id='next_url'])[1]"
-    }
-  },
-  {
-    "id": 12,
+    "id": 10,
     "url": "http://www.ujxsw.org/",
     "name": "悠久小说网",
     "comment": "下载速度快",
@@ -467,7 +391,7 @@
     }
   },
   {
-    "id": 13,
+    "id": 11,
     "url": "http://www.yeudusk.com/",
     "name": "阅读库",
     "comment": "",
@@ -506,7 +430,7 @@
     }
   },
   {
-    "id": 14,
+    "id": 12,
     "url": "https://www.wxsy.net/",
     "name": "顶点小说",
     "comment": "搜索、详情、章节限流。目录乱序、正文段落js加密",
