@@ -64,12 +64,10 @@ class BookSourceTest {
             "6, https://www.22biqu.com/biqu79148/",
             "7, http://www.xbiquzw.net/10_10233/",
             "8, https://www.xshbook.com/0/94328173/",
-            "9, https://www.luegeng.com/book186856/",
-            "10, http://www.shu009.com/book/111616/",
-            "11, http://www.81zwwww.com/90_90170/",
-            "12, http://www.ujxsw.org/book/107612/",
-            "13, http://www.yeudusk.com/book/1322535/",
-            "14, https://www.wxsy.net/novel/1803/",
+            "9, http://www.shu009.com/book/111616/",
+            "10, http://www.ujxsw.org/book/107612/",
+            "11, http://www.yeudusk.com/book/1322535/",
+            "12, https://www.wxsy.net/novel/1803/",
     })
     void testMainRules(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
@@ -95,7 +93,7 @@ class BookSourceTest {
         bookParse();
         tocParse(1, Integer.MAX_VALUE);
         chapterParse();
-        // chapterBatchParse(0, 100);
+        chapterBatchParse(0, 100);
     }
 
 
