@@ -60,6 +60,7 @@ public class ConfigUtils {
 
         // [global]
         config.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
+        config.setGhProxy(usr.getStr("gh-proxy", SELECTION_GLOBAL, ""));
 
         // [download]
         config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));

@@ -105,7 +105,7 @@ public class Crawler {
                     .showSpeed()
                     .build();
         } catch (Exception e) {
-            Console.error("下载进度条初始化失败，已自动切换为简易模式");
+            Console.error("下载进度条初始化失败，已自动切换为静默下载");
         }
 
         // 爬取&下载章节
