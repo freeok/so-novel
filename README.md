@@ -13,6 +13,10 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 
 ![preview-tui.png](assets/preview-tui.png)
 
+## WebUI 预览 (网页版)
+
+![preview-webui.png](assets/preview-webui.png)
+
 ## CLI 预览 (Command Line Interface)
 
 ![preview-cli.png](assets/preview-cli.png)
@@ -62,7 +66,11 @@ curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-inst
 
 ## 常见问题
 
-[点击查看](https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22)
+https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22
+
+## 讨论
+
+https://github.com/freeok/so-novel/discussions?discussions_q=
 
 ## 支持
 
