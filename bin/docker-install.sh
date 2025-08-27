@@ -56,7 +56,16 @@ if ! docker build -t "${IMAGE_NAME}" .; then
   exit 1
 fi
 
-echo "🚀 手动执行以下命令启动容器."
+echo "🚀 Web 模式请手动执行以下命令启动容器."
+echo "docker run -d \
+--name sonovel-web \
+-v /sonovel/config.ini:/sonovel/config.ini \
+-v /sonovel/downloads:/sonovel/downloads \
+-v /sonovel/rules:/sonovel/rules \
+-p 7765:7765 \
+${IMAGE_NAME}"
+
+echo "🚀 TUI 模式请手动执行以下命令启动容器."
 echo "docker run -it --rm \
 -v /sonovel/config.ini:/sonovel/config.ini \
 -v /sonovel/downloads:/sonovel/downloads \
