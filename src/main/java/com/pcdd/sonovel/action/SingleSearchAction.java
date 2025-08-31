@@ -38,6 +38,10 @@ public class SingleSearchAction {
 
     public void downloadFromUrl(String url) {
         Rule rule = new Source(config).rule;
+        if (rule.isDisabled()) {
+            Console.print(render("<== 书源 {} ({}) 已被禁用\n", "yellow"), rule.getId(), rule.getName());
+            return;
+        }
         url = JsoupUtils.invokeJs(rule.getBook().getUrl(), url);
         Book book = new BookParser(config).parse(url);
         SearchResult sr = SearchResult.builder()
