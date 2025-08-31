@@ -18,7 +18,7 @@ import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LogUtils;
 import com.pcdd.sonovel.web.model.DownloadProgressInfo;
-import com.pcdd.sonovel.web.util.MessageUtils;
+import com.pcdd.sonovel.web.servlet.DownloadProgressSseServlet;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
 
@@ -124,12 +124,11 @@ public class Crawler {
                     }
 
                     if (config.getWebEnabled() == 1) {
-                        DownloadProgressInfo downloadProgressInfo = DownloadProgressInfo.builder()
-                                .type("book-download")
+                        DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
+                                .type("download-progress")
                                 .index(currentIndex)
                                 .total(toc.size())
-                                .build();
-                        MessageUtils.pushMessageToAll(JSONUtil.toJsonStr(downloadProgressInfo));
+                                .build()));
                     }
                 }, executor))
                 .toList();
