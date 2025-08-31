@@ -2,10 +2,11 @@
   {
     "id": 1,
     "url": "https://www.69shuba.com/",
-    "name": "69书吧1",
-    "comment": "搜索有CF，可能启用的其他域名：69shuba.me，69shuba.cx",
+    "name": "69书吧",
+    "comment": "搜索有CF，可能启用的其他域名：69shuba.me，69shuba.cx，目前章节页也加了CF盾",
     "language": "zh_CN",
     "needProxy": true,
+    "disabled": true,
     "book": {
       "url": "https://www.69shuba.com/book/(.*?).htm",
       "bookName": "meta[property=\"og:novel:book_name\"]",
