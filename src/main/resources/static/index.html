@@ -153,7 +153,7 @@
         await fetch(`/book-fetch?${query}`)
         await fetchLocalBooks()
         // fetch 会把响应当成 XHR 请求，返回一个 Response 对象，不会走浏览器默认的下载流程
-        window.location.href = `/book-download?filename=${latestFileName}`;
+        window.location.href = `/book-download?filename=${latestFileName}`
       } catch (error) {
         console.error('Error downloading file to server:', error)
         updateTip('下载失败')
@@ -197,7 +197,9 @@
         console.log('local-books:', data)
         if (data && data.data) {
           data.data.sort((a, b) => b.timestamp - a.timestamp)
-          latestFileName = data.data[0].name
+          if (data.data[0]) {
+            latestFileName = data.data[0].name
+          }
           renderLocalBooksTable(data.data)
         }
       } catch (error) {
@@ -235,27 +237,27 @@
       }
     }
 
-    // WebSocket
-    const initWebsocket = () => {
-      const {hostname, port, protocol} = window.location
-      const wsProtocol = protocol.startsWith('https') ? 'wss' : 'ws'
-      const ws = new WebSocket(`${wsProtocol}://${hostname}:${port}/ws/book/progress`)
-      ws.onopen = () => {
-        console.log('WebSocket Open!')
+    const initSSE = () => {
+      // 相对路径更稳健，自动适配 http/https、端口和域名
+      const evtSource = new EventSource("/download-progress")
+
+      evtSource.onopen = (event) => {
+        console.log("✅ SSE 连接已打开")
       }
-      ws.onmessage = (e) => {
-        const data = JSON.parse(e.data)
-        if (data.type === 'book-download') {
-          updateTip(`${data.index} / ${data.total}`)
+
+      evtSource.onerror = (event) => {
+        console.warn("⚠️ SSE 连接异常，浏览器将自动重连", event)
+      }
+
+      evtSource.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data)
+          if (data.type === "download-progress") {
+            updateTip(`${data.index} / ${data.total}`)
+          }
+        } catch (err) {
+          console.error("❌ SSE 数据解析失败:", err, e.data)
         }
-      }
-      ws.onclose = () => {
-        console.log('WebSocket Close!')
-        initWebsocket()
-      }
-      ws.onerror = (error) => {
-        console.error('WebSocket Error:', error)
-        initWebsocket()
       }
     }
 
@@ -286,7 +288,7 @@
     })
 
     // 页面加载时执行
-    initWebsocket()
+    initSSE()
     fetchLocalBooks()
   })
 </script>
