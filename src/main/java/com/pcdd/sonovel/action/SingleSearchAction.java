@@ -1,11 +1,11 @@
 package com.pcdd.sonovel.action;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
@@ -33,22 +33,22 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class SingleSearchAction {
 
     private final AppConfig config;
-    private static final String GREEN = "green";
     private final Scanner sc = Console.scanner();
+    private static final String GREEN = "green";
 
     public void downloadFromUrl(String url) {
         Rule rule = new Source(config).rule;
         url = JsoupUtils.invokeJs(rule.getBook().getUrl(), url);
         Book book = new BookParser(config).parse(url);
         SearchResult sr = SearchResult.builder()
+                .sourceId(config.getSourceId())
                 .url(url)
                 .bookName(book.getBookName())
                 .author(book.getAuthor())
                 .latestChapter(book.getLatestChapter())
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
-        Console.log("<== 《{}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
-        new Crawler(config).crawl(sr.getUrl());
+        new DownloadAction().execute(ListUtil.toList(sr));
     }
 
     public void downloadByKeyword(String keyword) {

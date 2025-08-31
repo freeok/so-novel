@@ -21,6 +21,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class DownloadAction {
 
+    private static final String GREEN = "green";
     private final AppConfig config = ConfigUtils.defaultConfig();
     private final Scanner sc = Console.scanner();
 
@@ -31,11 +32,15 @@ public class DownloadAction {
         List<Chapter> toc;
         // 3. 选择下载章节
         while (true) {
-            Console.print(render("==> 请输入下载序号（或输入 0 结束）：", "green"));
-            String input = sc.nextLine().strip();
+            String number = "1";
+            if (results.size() > 1) {
+                Console.print(render("==> 请输入下载序号（或输入 0 结束）：", GREEN));
+                number = sc.nextLine().strip();
+            }
+
             // 健壮性判断：必须为数字
             try {
-                num = Integer.parseInt(input);
+                num = Integer.parseInt(number);
             } catch (NumberFormatException e) {
                 continue;
             }
@@ -60,7 +65,7 @@ public class DownloadAction {
                     4: 重新输入序号""");
 
             try {
-                Console.print(render("==> 请选择下载方式：", "green"));
+                Console.print(render("==> 请选择下载方式：", GREEN));
                 action = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
                 continue;
@@ -69,7 +74,7 @@ public class DownloadAction {
             if (action == 0) return;
             if (action == 2) {
                 try {
-                    Console.print(render("==> 请输起始章(最小为1)和结束章，用空格隔开：", "green"));
+                    Console.print(render("==> 请输起始章(最小为1)和结束章，用空格隔开：", GREEN));
                     String[] split = sc.nextLine().strip().split("\\s+");
                     int start = Integer.parseInt(split[0]) - 1;
                     int end = Integer.parseInt(split[1]);
@@ -84,7 +89,7 @@ public class DownloadAction {
             }
             if (action == 3) {
                 try {
-                    Console.print(render("==> 请输入要下载最新章节的数量：", "green"));
+                    Console.print(render("==> 请输入要下载最新章节的数量：", GREEN));
                     int i = Integer.parseInt(sc.nextLine());
                     toc = CollUtil.sub(toc, toc.size() - i, toc.size());
                 } catch (Exception e) {
