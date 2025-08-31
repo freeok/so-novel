@@ -116,12 +116,9 @@ class BookSourceTest {
 
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
-        List<SearchResult> list;
-        if ("proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2) {
-            list = new SearchParserQuanben5(config).parse(keyword);
-        } else {
-            list = new SearchParser(config).parse(keyword, true);
-        }
+        List<SearchResult> list = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
+                ? new SearchParserQuanben5(config).parse(keyword)
+                : new SearchParser(config).parse(keyword, true);
         if (CollUtil.isEmpty(list)) {
             Console.log("\"{}\"搜索结果为空", keyword);
         }
