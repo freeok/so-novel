@@ -12,8 +12,9 @@ import com.pcdd.sonovel.handle.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.parse.*;
+import com.pcdd.sonovel.parse.BookParser;
+import com.pcdd.sonovel.parse.ChapterParser;
+import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LogUtils;
 import com.pcdd.sonovel.web.model.DownloadProgressInfo;
@@ -180,26 +181,6 @@ public class Crawler {
             case "epub", "pdf" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".html";
             default -> throw new IllegalStateException("暂不支持的下载格式: " + config.getExtName());
         };
-    }
-
-    /**
-     * 搜索小说
-     *
-     * @param keyword 关键字
-     * @return 匹配的小说列表
-     */
-    public List<SearchResult> search(String keyword) {
-        Console.log("<== 正在搜索...");
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        List<SearchResult> searchResults = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
-                ? new SearchParserQuanben5(config).parse(keyword)
-                : new SearchParser(config).parse(keyword, true);
-
-        stopWatch.stop();
-        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
-        return searchResults;
     }
 
 }
