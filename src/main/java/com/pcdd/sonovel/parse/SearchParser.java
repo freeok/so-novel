@@ -54,7 +54,7 @@ public class SearchParser extends Source {
             return Collections.emptyList();
         }
         if (this.rule.isDisabled()) {
-            // Console.error(render("<== 书源 {} 已禁用", "yellow"), this.rule.getId());
+            Console.error(render("<== 书源 {} ({}) 已被禁用", "yellow"), this.rule.getId(), this.rule.getName());
             return Collections.emptyList();
         }
 
