@@ -33,41 +33,31 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class SingleSearchAction {
 
     private final AppConfig config;
-    public final Scanner sc = Console.scanner();
-    public static final String GREEN = "green";
+    private static final String GREEN = "green";
+    private final Scanner sc = Console.scanner();
 
-    public void downloadFromUrl(AppConfig config) {
+    public void downloadFromUrl(String url) {
         Rule rule = new Source(config).rule;
-        Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
-        String bookUrl = sc.nextLine().strip();
-        bookUrl = JsoupUtils.invokeJs(rule.getBook().getUrl(), bookUrl);
-        Book book = new BookParser(config).parse(bookUrl);
+        url = JsoupUtils.invokeJs(rule.getBook().getUrl(), url);
+        Book book = new BookParser(config).parse(url);
         SearchResult sr = SearchResult.builder()
-                .url(bookUrl)
+                .url(url)
                 .bookName(book.getBookName())
                 .author(book.getAuthor())
                 .latestChapter(book.getLatestChapter())
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
         Console.log("<== 《{}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
-        // 重复请求详情页
         new Crawler(config).crawl(sr.getUrl());
     }
 
-    public void downloadByKeyword(AppConfig config) {
-        // 1. 查询
-        Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", GREEN));
-        String kw = sc.nextLine().strip();
-        if (StrUtil.isEmpty(kw)) return;
-        List<SearchResult> searchResults = search(kw);
+    public void downloadByKeyword(String keyword) {
+        if (StrUtil.isEmpty(keyword)) return;
+        List<SearchResult> searchResults = search(keyword);
         if (CollUtil.isEmpty(searchResults)) {
             return;
         }
-
-        // 2. 打印搜索结果
         new SearchParser(config).printSearchResult(searchResults);
-
-        // 3. 下载
         new DownloadAction().execute(searchResults);
     }
 
@@ -96,9 +86,11 @@ public class SingleSearchAction {
         Rule r = source.rule;
 
         if (r.getSearch() == null || r.getSearch().isDisabled()) {
-            downloadFromUrl(config);
+            Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
+            downloadFromUrl(sc.nextLine().strip());
         } else {
-            downloadByKeyword(config);
+            Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", GREEN));
+            downloadByKeyword(sc.nextLine().strip());
         }
     }
 
