@@ -63,11 +63,10 @@ class BookSourceTest {
             "5, https://www.dxmwx.org/book/56441.html",
             "6, https://www.22biqu.com/biqu79148/",
             "7, http://www.xbiquzw.net/10_10233/",
-            "8, https://www.xshbook.com/0/94328173/",
-            "9, http://www.shu009.com/book/111616/",
-            "10, http://www.ujxsw.org/book/107612/",
-            "11, http://www.yeudusk.com/book/1322535/",
-            "12, https://www.wxsy.net/novel/1803/",
+            "8, http://www.shu009.com/book/111616/",
+            "9, http://www.ujxsw.org/book/107612/",
+            "10, http://www.yeudusk.com/book/1322535/",
+            "11, https://www.wxsy.net/novel/1803/",
     })
     void testMainRules(int sourceId, String bookUrl) {
         this.bookUrl = bookUrl;
