@@ -4,9 +4,9 @@ package com.pcdd.sonovel.web;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.web.servlet.*;
-import org.eclipse.jetty.ee10.servlet.DefaultServlet;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee11.servlet.DefaultServlet;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 
