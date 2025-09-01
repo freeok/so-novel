@@ -11,11 +11,10 @@
 | 5     | [大熊猫文学](https://www.dxmwx.org/)     | ✅     | ✅      |                                           |
 | 6     | [笔趣阁22](https://www.22biqu.com/)    | ✅     | ✅      |                                           |
 | 7     | [笔尖中文](http://www.xbiquzw.net/)     | ✅     | ❌      |                                           | |
-| 8     | [小说虎](https://www.xshbook.com/)     | ✅     | ✅      | 正文广告较多，需手动过滤                              |
-| 9     | [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
-| 10    | [悠久小说网](http://www.ujxsw.org/)      | ✅     | ❌      |                                           |
-| 11    | [阅读库](http://www.yeudusk.com/)      | ✅     | ✅      |                                           |
-| 12    | [顶点小说](https://www.wxsy.net/)       | ✅     | ✅      | 搜索、详情限流                                   |
+| 8     | [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
+| 9     | [悠久小说网](http://www.ujxsw.org/)      | ✅     | ❌      |                                           |
+| 10    | [阅读库](http://www.yeudusk.com/)      | ✅     | ✅      |                                           |
+| 11    | [顶点小说](https://www.wxsy.net/)       | ✅     | ✅      | 搜索、详情限流                                   |
 
 `proxy-rules.json`：需要代理（非大陆 IP）的书源
 
@@ -39,6 +38,7 @@
 | 1     | [黄易天地](http://www.xhytd.com/)    | ✅     | ❌      | 搜索新加了CF，仅限大陆IP              |
 | 1     | [天天看小说](https://cn.ttkan.co/)    | ✅     | ✅      | 现无法搜索，搜索有限流(Read timed out) |
 | 1     | [96读书](https://www.96dushu.com/) | ✅     | ✅      | 搜索新加了CF，章节JS加密              |
+| 4     | [小说虎](https://www.xshbook.com/)  | ✅     | ✅      | 正文广告较多，需手动过滤                |
 
 > [!IMPORTANT]
 > 使用大陆 IP 为 ❌ 的书源时，国内用户（可能）需要梯子（需要非大陆 IP）

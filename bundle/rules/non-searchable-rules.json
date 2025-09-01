@@ -108,5 +108,42 @@
       "nextPage": "#readbg > div.mlfy_page > a:nth-child(4)",
       "nextPageInJs": "//*[@id=\"readbg\"]/script[5]@js:r=r.match(/nextpage = \"(.*?)\"/)[1];"
     }
+  },
+  {
+    "id": 4,
+    "url": "https://www.xshbook.com/",
+    "name": "小说虎",
+    "comment": "搜索有人机验证，正文广告较多，需手动过滤",
+    "language": "zh_CN",
+    "search": {
+      "disabled": true,
+      "url": "https://www.sososhu.com/?q=%s&site=xshbook",
+      "method": "get",
+      "result": "body > div.wrap > div > div > div",
+      "bookName": "dl > dt > a",
+      "author": "dl > dt > span",
+      "intro": "dl > dd"
+    },
+    "book": {
+      "url": "https://www.xshbook.com/0/(.*?)/",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "item": "#list > dl > dd > a"
+    },
+    "chapter": {
+      "title": ".bookname > h1",
+      "content": "#content",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)|一秒记住.↘小说虎首^发↘.手机用户输入地址：m.xshbook.com| 支持.^完*本*神*站*^.把本站分享那些需要的小伙伴！找不到书请留言！|（记住本站网址，，方便下次或且百度输入“”，就能进入本站）|手机直接访问:m.xshbook .com|记不住网址，可以百度搜索:【小说虎 】|↘完♂本♂神♂立占↙手机用户输入地址：m.xshbook.com|支持：↘完♂本♂神♂立占↙喜欢本站的朋友可以多多推荐给更多爱看书伙伴们！|⾸发免费看书搜：看书群kanshuqun.com",
+      "filterTag": ""
+    }
   }
 ]
