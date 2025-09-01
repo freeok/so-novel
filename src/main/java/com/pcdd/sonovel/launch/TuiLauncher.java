@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.action.*;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.web.WebServer;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -25,9 +24,6 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class TuiLauncher {
 
     public void launch(AppConfig config) {
-        if (config.getWebEnabled() == 1) {
-            new WebServer().start();
-        }
         Scanner sc = Console.scanner();
         printHint(config);
 

@@ -35,7 +35,6 @@ echo "📦 解压文件..."
 tar -zxf "${TAR_NAME}"
 
 echo "📂 准备构建目录..."
-mv Dockerfile "${DIR_NAME}"
 cd "${DIR_NAME}"
 
 echo "📁 准备宿主机挂载目录..."
@@ -51,7 +50,7 @@ fi
 
 echo "🐳 构建 Docker 镜像: ${IMAGE_NAME} ..."
 # 构建 Docker 镜像
-if ! docker build -t "${IMAGE_NAME}" .; then
+if ! docker build -f ../Dockerfile -t "${IMAGE_NAME}" .; then
   echo "❌ Docker 镜像构建失败！"
   exit 1
 fi
@@ -63,6 +62,7 @@ echo "docker run -d \
 -v /sonovel/downloads:/sonovel/downloads \
 -v /sonovel/rules:/sonovel/rules \
 -p 7765:7765 \
+-e JAVA_OPTS='-Dmode=web' \
 ${IMAGE_NAME}"
 
 echo "🚀 TUI 模式请手动执行以下命令启动容器."
@@ -70,4 +70,5 @@ echo "docker run -it --rm \
 -v /sonovel/config.ini:/sonovel/config.ini \
 -v /sonovel/downloads:/sonovel/downloads \
 -v /sonovel/rules:/sonovel/rules \
+-e JAVA_OPTS='-Dmode=tui' \
 ${IMAGE_NAME}"
