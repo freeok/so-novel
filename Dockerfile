@@ -7,4 +7,4 @@ WORKDIR /sonovel
 
 COPY app.jar /sonovel/
 
-ENTRYPOINT ["java","-Dfile.encoding=UTF-8","-Duser.timezone=GMT+08","-jar","app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dfile.encoding=UTF-8 -Duser.timezone=GMT+08 -jar app.jar"]
