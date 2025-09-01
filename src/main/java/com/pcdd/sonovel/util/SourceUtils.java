@@ -101,7 +101,7 @@ public class SourceUtils {
      */
     public List<Source> getSearchableSources() {
         return getAllRules().stream()
-                .filter(r -> r.getSearch() != null && !r.getSearch().isDisabled())
+                .filter(r -> !r.isDisabled() && r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
                     AppConfig config = ConfigUtils.defaultConfig();
                     config.setSourceId(r.getId());
