@@ -14,7 +14,7 @@ echo "🔖 最新版本：$LATEST_VERSION"
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux_x64.tar.gz"
 DIR_NAME="SoNovel-Linux_x64"
-IMAGE_NAME="sonovel:${LATEST_VERSION}"
+IMAGE_NAME="sonovel:${LATEST_VERSION#v}"
 
 # 函数：下载文件
 download_file() {
