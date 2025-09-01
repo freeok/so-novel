@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.20.1</version>
+            <version>1.21.2</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>io.github.openhtmltopdf</groupId>
             <artifactId>openhtmltopdf-pdfbox</artifactId>
-            <version>1.1.28</version>
+            <version>1.1.30</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.38</version>
+            <version>5.8.40</version>
         </dependency>
         <!-- JS Runtime -->
         <dependency>
@@ -106,12 +106,12 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>12.0.22</version>
+            <version>12.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty.ee10</groupId>
-            <artifactId>jetty-ee10-servlet</artifactId>
-            <version>12.0.22</version>
+            <groupId>org.eclipse.jetty.ee11</groupId>
+            <artifactId>jetty-ee11-servlet</artifactId>
+            <version>12.1.0</version>
         </dependency>
     </dependencies>
 

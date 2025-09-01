@@ -125,7 +125,7 @@ public class JsoupUtils {
             el.clearAttributes();
         }
         // 删除 Element#html 产生的 \n
-        return  StrUtil.cleanBlank(body.html());
+        return StrUtil.cleanBlank(body.html());
     }
 
 }
