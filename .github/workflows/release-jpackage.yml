@@ -1,4 +1,4 @@
-name: Releases
+name: Releases Jpackage
 
 on: workflow_dispatch
 
