@@ -54,6 +54,24 @@ bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linu
 curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install.sh | bash
 ```
 
+### 🐳 Docker Compose
+```yaml
+services:
+  sonovel:
+    image: ghcr.io/freeok/sonovel:latest
+    container_name: sonovel
+    ports:
+      - "7765:7765"
+    environment:
+      JAVA_OPTS: "-Dmode=web"
+    volumes:
+      - data:/sonovel
+    restart: unless-stopped
+
+volumes:
+  data:
+```
+
 > [!TIP]
 >
 > 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
