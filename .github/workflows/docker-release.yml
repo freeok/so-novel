@@ -1,0 +1,48 @@
+name: Docker Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build app.jar
+        run: |
+          bash bin/release-linux.sh
+          cp target/app.jar .
+          cp -r target/SoNovel-Linux_x64/{config.ini,rules,fonts} .
+
+      # 登录 GHCR
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # 构建并推送 Docker 镜像
+      - name: Build and Push Docker image
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/sonovel
+          echo "Building Docker image $IMAGE_NAME:$VERSION ..."
+          docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest  
+
+      # 输出镜像地址
+      - name: Output image info
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/sonovel
+          echo "Docker image published: ${IMAGE_NAME}:$VERSION"
