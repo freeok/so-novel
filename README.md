@@ -65,11 +65,11 @@ services:
     environment:
       JAVA_OPTS: "-Dmode=web"
     volumes:
-      - data:/sonovel
+      - sonovel_data:/sonovel
     restart: unless-stopped
 
 volumes:
-  data:
+  sonovel_data:
 ```
 
 > [!TIP]
