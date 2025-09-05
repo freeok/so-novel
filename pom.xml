@@ -252,7 +252,7 @@
                         <configuration>
                             <!-- 运行方式 gui|console|jniGui32|jniConsole32 -->
                             <headerType>console</headerType>
-                            <outfile>target/SoNovel/SoNovel.exe</outfile>
+                            <outfile>target/SoNovel/sonovel.exe</outfile>
                             <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
                             <icon>assets/logo.ico</icon>
                             <errTitle>SoNovel</errTitle>
@@ -271,13 +271,13 @@
                             <!-- Windows 资源管理器显示的可选版本信息 -->
                             <versionInfo>
                                 <!-- 中文会乱码，待解决 -->
-                                <fileDescription>Chinese Web Novel Downloader</fileDescription>
+                                <fileDescription>SoNovel</fileDescription>
                                 <copyright>Copyright (C) 2021-2025 SoNovel. All rights reserved.</copyright>
                                 <!-- 中文会乱码，待解决 -->
                                 <productName>SoNovel</productName>
                                 <companyName>github.com/freeok</companyName>
                                 <internalName>SoNovel</internalName>
-                                <originalFilename>SoNovel.exe</originalFilename>
+                                <originalFilename>sonovel.exe</originalFilename>
                                 <trademarks>SoNovel</trademarks>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
