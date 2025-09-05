@@ -28,27 +28,27 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](bundle%2Freadme.txt) 使用
 
-### 🍨 Scoop 安装
+### 🍨 Scoop
 
 ```bash
 scoop bucket add freeok https://github.com/freeok/scoop-bucket
 scoop install freeok/so-novel
 ```
 
-### 🍺 Homebrew 安装
+### 🍺 Homebrew
 
 ```bash
 brew tap ownia/homebrew-ownia
 brew install so-novel
 ```
 
-### 🐧 Linux 安装
+### 🐧 Linux
 
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linux-install.sh)
 ```
 
-### 🐳 Docker 安装
+### 🐳 Docker
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install.sh | bash
