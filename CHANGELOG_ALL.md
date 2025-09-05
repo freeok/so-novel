@@ -96,7 +96,7 @@
 >
 > ```bash
 > # Windows
-> .\SoNovel.exe -h
+> .\sonovel.exe -h
 > 
 > # Linux
 > ./runtime/bin/java -jar app.jar -h
