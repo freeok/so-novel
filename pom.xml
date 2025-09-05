@@ -213,7 +213,7 @@
                         </manifest>
                     </archive>
                     <descriptorRefs>
-                        <!-- 必须加，固定写法，表示将项目的编译结果和依赖库打包到一个 JAR 文件中 -->
+                        <!-- 表示将项目的编译结果和依赖库打包到一个 JAR 文件中 -->
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <finalName>app</finalName>
@@ -252,12 +252,14 @@
                         <configuration>
                             <!-- 运行方式 gui|console|jniGui32|jniConsole32 -->
                             <headerType>console</headerType>
+                            <!-- 可选，默认为 false。Launch4j 默认将 jar 文件打包到原生可执行文件中，您可以通过将<dontWrapJar>设置为 true 来禁用此功能。该 exe 文件将充当启动器，并启动 <jar>或<classPath><mainClass>中指定的应用程序。 -->
+                            <dontWrapJar>true</dontWrapJar>
+                            <jar>app.jar</jar>
                             <outfile>target/SoNovel/sonovel.exe</outfile>
-                            <jar>${project.build.directory}/app-jar-with-dependencies.jar</jar>
                             <icon>assets/logo.ico</icon>
                             <errTitle>SoNovel</errTitle>
                             <!-- 崩溃时重新启动 -->
-                            <restartOnCrash>false</restartOnCrash>
+                            <restartOnCrash>true</restartOnCrash>
                             <classPath>
                                 <mainClass>com.pcdd.sonovel.Main</mainClass>
                                 <addDependencies>true</addDependencies>

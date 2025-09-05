@@ -25,6 +25,7 @@ run_maven() {
 
 copy_files() {
     cp "bundle/$jre_filename" "$target_dir"
+    cp "target/app-jar-with-dependencies.jar" "$target_dir/app.jar"
     cp -r bundle/rules "$target_dir/"
     cp bundle/config.ini bundle/sonovel.l4j.ini bundle/readme.txt "$target_dir"
 }
