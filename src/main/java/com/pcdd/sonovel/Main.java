@@ -1,7 +1,7 @@
 package com.pcdd.sonovel;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.openhtmltopdf.util.XRLog;
@@ -51,18 +51,17 @@ public class Main {
         }
 
         String mode = System.getProperty("mode", "tui");
-        if (StrUtil.isEmpty(mode)) {
-            Console.error("❌ 启动失败，请通过 -Dmode=web|tui|cli 指定模式");
-            System.exit(1);
-        }
 
-        if (ConfigWatcher.getConfig().getWebEnabled() == 1 || "web".equalsIgnoreCase(mode)) {
+        if ("web".equalsIgnoreCase(mode) || ConfigWatcher.getConfig().getWebEnabled() == 1) {
             new WebServer().start();
-        } else if (args.length == 0 || "tui".equalsIgnoreCase(mode)) {
+        } else if (args.length == 0 && "tui".equalsIgnoreCase(mode)) {
             TuiLauncher.launch(ConfigWatcher.getConfig());
-        } else {
-            new CommandLine(new CliLauncher()).execute(args);
+        } else if (args.length > 0 || "cli".equalsIgnoreCase(mode)) {
+            new CommandLine(new CliLauncher()).execute(ArrayUtil.isEmpty(args) ? new String[]{"-h"} : args);
             System.exit(0);
+        } else {
+            Console.error("❌ 启动失败，请通过 -Dmode=web|tui|cli 指定启动模式");
+            System.exit(1);
         }
 
         HttpClientContext.clear();
