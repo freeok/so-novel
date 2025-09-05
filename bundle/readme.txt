@@ -1,5 +1,5 @@
 Windows 用户
-运行 SoNovel.exe
+运行 sonovel.exe
 
 macOS 用户
 运行 run-macos.sh
@@ -22,7 +22,7 @@ WebUI 模式用法
 
 CLI 模式用法
 # Windows
-.\SoNovel.exe -h
+.\sonovel.exe -h
 # Linux
 ./runtime/bin/java -jar app.jar -h
 # macOS
