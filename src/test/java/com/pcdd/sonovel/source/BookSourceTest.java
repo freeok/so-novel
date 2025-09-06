@@ -15,13 +15,12 @@ import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.SearchResult;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -41,7 +40,6 @@ class BookSourceTest {
 
     private static final AppConfig config = ConfigUtils.defaultConfig();
     private static final String DIVIDER = "=".repeat(50);
-    private String bookUrl;
     private String firstChapterUrl;
     private String firstChapterTitle;
     private List<Chapter> chapters;
@@ -54,63 +52,63 @@ class BookSourceTest {
         config.setLanguage("zh_TW");
     }
 
+    @DisplayName("main-rules.json")
     @ParameterizedTest
     @CsvSource({
-            "1, http://www.xbiqugu.la/130/130509/",
-            "2, https://www.shuhaige.net/199178/",
-            "3, http://www.mcxs.info/145_145199/",
-            "4, http://www.99xs.info/tag/129_129843/",
-            "5, https://www.dxmwx.org/book/56441.html",
-            "6, https://www.22biqu.com/biqu79148/",
-            "7, http://www.xbiquzw.net/10_10233/",
-            "8, http://www.shu009.com/book/111616/",
-            "9, http://www.ujxsw.org/book/107612/",
-            "10, http://www.yeudusk.com/book/1322535/",
-            "11, https://www.wxsy.net/novel/1803/",
+            "http://www.xbiqugu.la/130/130509/",
+            "https://www.shuhaige.net/199178/",
+            "http://www.mcxs.info/145_145199/",
+            "http://www.99xs.info/tag/129_129843/",
+            "https://www.dxmwx.org/book/56441.html",
+            "https://www.22biqu.com/biqu79148/",
+            "http://www.xbiquzw.net/10_10233/",
+            "http://www.shu009.com/book/111616/",
+            "http://www.ujxsw.org/book/107612/",
+            "http://www.yeudusk.com/book/1322535/",
+            "https://www.wxsy.net/novel/1803/",
     })
-    void testMainRules(int sourceId, String bookUrl) {
-        this.bookUrl = bookUrl;
-        config.setSourceId(sourceId);
+    void test01(String bookUrl) {
+        Rule rule = SourceUtils.getSource(bookUrl);
+        config.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");
-        bookParse();
-        tocParse(1, Integer.MAX_VALUE);
+        bookParse(bookUrl);
+        tocParse(bookUrl);
         chapterParse();
         // chapterBatchParse(0, 100);
     }
 
+    @DisplayName("proxy-rules.json")
     @ParameterizedTest
     @CsvSource({
-            "1, https://www.tianxibook.com/book/66120/",
-            "2, https://www.0xs.net/txt/68398.html",
-            "3, https://www.laoyaoxs.org/info/281469.html"
+            "https://www.69shuba.com/book/48273.htm",
+            "https://quanben5.com/n/henchunhenaimei/",
     })
-    void testNonSearchableRules(int sourceId, String bookUrl) {
-        this.bookUrl = bookUrl;
-        config.setSourceId(sourceId);
-
-        bookParse();
-        tocParse(1, Integer.MAX_VALUE);
-        chapterParse();
-        chapterBatchParse(0, 100);
-    }
-
-
-    @ParameterizedTest
-    @CsvSource({
-            "1, https://www.69shuba.com/book/48273.htm",
-            "2, https://quanben5.com/n/henchunhenaimei/",
-            "3, https://www.deqixs.com/xiaoshuo/106/",
-            "4, https://www.sudugu.com/1012/",
-    })
-    void testProxyRules(int sourceId, String bookUrl) {
-        this.bookUrl = bookUrl;
-        config.setSourceId(sourceId);
+    void test03(String bookUrl) {
+        Rule rule = SourceUtils.getSource(bookUrl);
+        config.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");
-        bookParse();
-        tocParse(1, Integer.MAX_VALUE);
+        bookParse(bookUrl);
+        tocParse(bookUrl);
         chapterParse();
+    }
+
+    @DisplayName("non-searchable-rules.json")
+    @ParameterizedTest
+    @CsvSource({
+            "https://www.tianxibook.com/book/66120/",
+            "https://www.0xs.net/txt/68398.html",
+            "https://www.laoyaoxs.org/info/281469.html"
+    })
+    void test02(String bookUrl) {
+        Rule rule = SourceUtils.getSource(bookUrl);
+        config.setSourceId(rule.getId());
+
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+        chapterBatchParse(0, 100);
     }
 
     public void searchParse(String keyword) {
@@ -128,7 +126,7 @@ class BookSourceTest {
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
-    public void bookParse() {
+    public void bookParse(String bookUrl) {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
         Book book = new BookParser(config).parse(bookUrl);
         BookContext.set(book);
@@ -136,10 +134,10 @@ class BookSourceTest {
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
     }
 
-    public void tocParse(int start, int end) {
+    public void tocParse(String bookUrl) {
         Console.log("\n{} START tocParse {}", DIVIDER, DIVIDER);
         TocParser tocParser = new TocParser(config);
-        List<Chapter> toc = tocParser.parse(bookUrl, start, end);
+        List<Chapter> toc = tocParser.parse(bookUrl, 1, Short.MAX_VALUE);
         chapters = toc;
         toc.forEach(System.out::println);
         if (CollUtil.isNotEmpty(toc)) {

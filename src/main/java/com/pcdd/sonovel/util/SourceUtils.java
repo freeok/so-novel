@@ -5,7 +5,6 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.Source;
@@ -18,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author pcdd
@@ -74,8 +74,9 @@ public class SourceUtils {
         }
 
         try {
-            JSONArray arr = JSONUtil.readJSONArray(file, CharsetUtil.CHARSET_UTF_8);
-            List<Rule> rules = arr.toList(Rule.class);
+            List<Rule> rules = JSONUtil.readJSONArray(file, CharsetUtil.CHARSET_UTF_8).toList(Rule.class);
+            // 填充自增 ID
+            IntStream.range(0, rules.size()).forEach(i -> rules.get(i).setId(i + 1));
             // 缓存读取到的规则列表
             cache_rules.put("rules", rules);
             return rules;
@@ -149,6 +150,7 @@ public class SourceUtils {
 
     /**
      * 根据书籍详情页 url 匹配当前激活的书源规则
+     * TODO 改为从 rules 下的全部书源获取
      */
     public Rule getSource(String bookUrl) {
         return getAllRules().stream()
