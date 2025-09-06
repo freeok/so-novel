@@ -1,6 +1,5 @@
 [
   {
-    "id": 9,
     "url": "https://www.luegeng.com/",
     "name": "略更网",
     "comment": "疑似SSL证书过期，搜索限流，不支持IPv6",
@@ -39,7 +38,6 @@
     }
   },
   {
-    "id": 11,
     "url": "http://www.81zwwww.com/",
     "name": "八一中文网",
     "comment": "请求需要携带响应的Cookie，否则403。章节限流",
