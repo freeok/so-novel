@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "url": "https://www.tianxibook.com/",
     "name": "新天禧小说",
     "comment": "仅限大陆IP访问，章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
@@ -46,7 +45,6 @@
     }
   },
   {
-    "id": 2,
     "url": "https://www.0xs.net/",
     "name": "零点小说",
     "comment": "章节限流严重，即便线程数为1也会被限流，正文内容会被替换为“访问太频繁了，奴家受不了啦，请30秒过后刷新重试！！！”。发布页：https://www.cxysb.com/",
@@ -96,7 +94,6 @@
     }
   },
   {
-    "id": 3,
     "url": "https://www.laoyaoxs.org/",
     "name": "老幺小说网",
     "comment": "章节限流，正文段落会乱序",
