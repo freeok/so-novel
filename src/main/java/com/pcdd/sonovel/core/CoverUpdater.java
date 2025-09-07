@@ -11,7 +11,9 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
@@ -34,6 +36,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class CoverUpdater {
 
+    private final AppConfig config = ConfigUtils.defaultConfig();
     private static final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
 
     /**
@@ -61,9 +64,11 @@ public class CoverUpdater {
      * 起点中文网
      */
     public String fetchQidian(Book book) {
+        if (StrUtil.isEmpty(config.getQidianCookie())) return "";
+
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put(Header.USER_AGENT.getValue(), RandomUA.generate());
-        headers.put(Header.COOKIE.getValue(), "your_cookie_here");
+        headers.put(Header.COOKIE.getValue(), config.getQidianCookie());
 
         String url = StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName());
 
@@ -91,17 +96,13 @@ public class CoverUpdater {
      * 纵横中文网
      */
     public String fetchZongheng(Book book) {
-        String url = "https://search.zongheng.com/search/book";
-
-        Map<String, Object> params = Map.of(
-                "keyword", book.getBookName(),
-                "pageNo", 1,
-                "pageNum", 20,
-                "isFromHuayu", 0
-        );
-
-        try (HttpResponse resp = HttpRequest.get(url)
-                .form(params)
+        try (HttpResponse resp = HttpRequest.get("https://search.zongheng.com/search/book")
+                .form(Map.of(
+                        "keyword", book.getBookName(),
+                        "pageNo", 1,
+                        "pageNum", 20,
+                        "isFromHuayu", 0
+                ))
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
