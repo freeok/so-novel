@@ -20,7 +20,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -52,7 +51,7 @@ public class CoverUpdater {
         return Stream.<Supplier<String>>of(
                         () -> fetchQidian(book),
                         () -> fetchZongheng(book),
-                        () -> fetchChuangshi(book)
+                        () -> fetchQimao(book)
                 )
                 .map(Supplier::get)
                 .filter(CoverUpdater::isValidCover)
@@ -65,14 +64,12 @@ public class CoverUpdater {
      */
     public String fetchQidian(Book book) {
         if (StrUtil.isEmpty(config.getQidianCookie())) return "";
-
-        Map<String, String> headers = new LinkedHashMap<>();
-        headers.put(Header.USER_AGENT.getValue(), RandomUA.generate());
-        headers.put(Header.COOKIE.getValue(), config.getQidianCookie());
-
         String url = StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName());
-
-        try (HttpResponse resp = HttpRequest.get(url).headerMap(headers, true).execute()) {
+        try (HttpResponse resp = HttpRequest.get(url).
+                headerMap(Map.of(
+                        Header.USER_AGENT.getValue(), RandomUA.generate(),
+                        Header.COOKIE.getValue(), config.getQidianCookie()
+                ), true).execute()) {
             Document document = Jsoup.parse(resp.body());
 
             for (Element e : document.select(".res-book-item")) {
@@ -127,9 +124,33 @@ public class CoverUpdater {
     }
 
     /**
-     * TODO 创世中文网
+     * 七猫小说网
      */
-    public String fetchChuangshi(Book book) {
+    public String fetchQimao(Book book) {
+        try (HttpResponse resp = HttpRequest.get("https://www.qimao.com/qimaoapi/api/search/result")
+                .form(Map.of(
+                        "keyword", book.getBookName(),
+                        "count", 0,
+                        "page", 1,
+                        "page_size", 15
+                ))
+                .header(Header.USER_AGENT, RandomUA.generate())
+                .execute()) {
+
+            JSONObject datasField = JSONUtil.parseObj(resp.body()).getJSONObject("data");
+            if (datasField == null) {
+                return "";
+            }
+
+            for (Object o : datasField.getJSONArray("search_list")) {
+                JSONObject bookObj = (JSONObject) o;
+                if (matchBook(book, bookObj.getStr("title"), bookObj.getStr("author"))) {
+                    return bookObj.getStr("image_link");
+                }
+            }
+        } catch (Exception e) {
+            Console.error(e, render("获取七猫封面失败：{}", "red"));
+        }
         return "";
     }
 
