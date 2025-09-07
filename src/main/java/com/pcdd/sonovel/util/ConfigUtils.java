@@ -23,11 +23,12 @@ public class ConfigUtils {
     private final String SELECTION_DOWNLOAD = "download";
     private final String SELECTION_SOURCE = "source";
     private final String SELECTION_CRAWL = "crawl";
-    private final String SELECTION_PROXY = "proxy";
     private final String SELECTION_WEB = "web";
+    private final String SELECTION_COOKIE = "cookie";
+    private final String SELECTION_PROXY = "proxy";
 
     /**
-     * 加载系统属性
+     * 加载应用属性
      */
     public Props sys() {
         return Props.getProp("application.properties", StandardCharsets.UTF_8);
@@ -82,19 +83,22 @@ public class ConfigUtils {
         config.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
         config.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
 
+        // [web]
+        config.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+        config.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
+
+        // [cookie]
+        config.setQidianCookie(usr.getStr("qidian", SELECTION_COOKIE, ""));
+
         // [proxy]
         config.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
         config.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
         config.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
 
-        // [web]
-        config.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
-        config.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
-
         return config;
     }
 
-    // 修复 hutool 的 bug：空串不能触发默认值
+    // 修复 hutool 空串不能触发默认值的 bug
     private String getStrOrDefault(Setting setting, String key, String group, String defaultValue) {
         String value = setting.getByGroup(key, group);
         return StrUtil.isEmpty(value) ? defaultValue : value;
