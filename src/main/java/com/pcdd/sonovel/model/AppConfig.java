@@ -35,13 +35,16 @@ public class AppConfig {
     private Integer retryMinInterval;
     private Integer retryMaxInterval;
 
+    // [web]
+    private Integer webEnabled;
+    private Integer webPort;
+
+    // [cookie]
+    private String qidianCookie;
+
     // [proxy]
     private Integer proxyEnabled;
     private String proxyHost;
     private Integer proxyPort;
-
-    // [web]
-    private Integer webEnabled;
-    private Integer webPort;
 
 }
