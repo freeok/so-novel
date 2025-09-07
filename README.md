@@ -50,11 +50,14 @@ bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linu
 
 ### 🐳 Docker
 
+**方式 1：脚本一键安装**
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install.sh | bash
 ```
 
-### 🐳 Docker Compose
+**方式 2：Docker Compose**
+
 ```yaml
 services:
   sonovel:
@@ -70,6 +73,20 @@ services:
 
 volumes:
   sonovel_data:
+```
+
+**方式 3：直接运行容器**
+
+```bash
+# 如需挂载，请提前准备好 config.ini 文件、rules 目录
+docker run -d \
+  --name sonovel \
+  -v /sonovel/config.ini:/sonovel/config.ini \
+  -v /sonovel/rules:/sonovel/rules \
+  -v /sonovel/downloads:/sonovel/downloads \
+  -p 7765:7765 \
+  -e JAVA_OPTS='-Dmode=web' \
+  ghcr.io/freeok/sonovel:latest
 ```
 
 > [!TIP]
