@@ -107,12 +107,13 @@ https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22
 
 https://github.com/freeok/so-novel/discussions?discussions_q=
 
-## 支持
+## 支持 & 赞助
 
-如果觉得有所帮助，欢迎扫码赞赏☕，或点击顶部的⭐Star
-按钮支持！🚀这将是我们持续更新的动力源泉！同时，你也能第一时间获取到最新的更新动态。💡❤️
+如果觉得有所帮助，欢迎扫码赞助☕、点击项目主页顶部的⭐Star 按钮支持！ 
 
-| 支付宝赞赏                                                           | 微信赞赏                                                           |
+🚀这将是我们持续更新的动力源泉！同时，你也能第一时间获取到最新的更新动态。💡❤️
+
+| 支付宝赞助                                                           | 微信赞助                                                           |
 |-----------------------------------------------------------------|----------------------------------------------------------------|
 | <img src="assets/donation-alipay.png" alt="支付宝收款码" width="197"> | <img src="assets/donation-wechat.jpg" alt="微信赞赏码" width="197"> |
 
