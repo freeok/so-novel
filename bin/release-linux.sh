@@ -2,12 +2,9 @@
 set -e
 
 # Linux 发布脚本 (x86_64)
-# JDK 升级后需要修改下面 2 个版本号
 
-# JRE 文件
-jre_filename="jre-17.0.12+7_linux.tar.gz"
-jre_dirname="jdk-17.0.12+7-jre"
-
+# 最小 JRE，JDK 升级后要修改文件名版本号
+jre_filename="jre-17.0.16+8-x64_linux.tar.gz"
 # 最终产物
 dist_filename="sonovel-linux_x64.tar.gz"
 dist_dirname="SoNovel-Linux_x64"
@@ -35,10 +32,9 @@ cd target
 mv app-jar-with-dependencies.jar app.jar
 cp app.jar "$dist_dirname"
 
-# 解压 JRE 并改名
+# 解压 JRE
 cd "$dist_dirname"
 tar zxf "$jre_filename" && rm "$jre_filename"
-mv "$jre_dirname" runtime
 cd ..
 
 # 打包压缩
