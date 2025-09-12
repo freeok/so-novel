@@ -1,22 +1,26 @@
-## v1.9.1 (2025-09-02)
+## v1.9.2 (2025-09-12)
 
 ### ✨ 新特性
 
-- 增加输入详情页 URL 下载方式的可选项
-- 新增 JVM 参数 mode 以设置启动模式
+- WebUI 增加源站链接 #243
+- 新增七猫封面获取
+- 自动填充 `sourceId`
+- 可选是否从 qidian 获取最新封面
 
 ### 🐛 修复
 
-- 修复 Javet libatomic Linux 的链接问题 #207
+- 修复 CLI 模式无法触发
 
 ### ♻️ 重构
 
-- 重构 `Crawler.java`、`SingleSearchAction.java`
-- 下载进度推送改用 SSE 实现
+- 移除 fonts 目录，从系统字体获取，优化体积
+- 更新章节重试策略
+- 重构 `CoverUpdater.java`
 
 ### 🛠️ 其他
 
-- Docker 默认以 Web 模式启动 #239
-- 优化 Docker 部署
-- 禁用书源「69书吧」#250
-- 升级依赖
+- 升级 JRE 并优化体积（Windows, Linux）
+- 支持 Docker Compose 部署 #252
+- 补充 Docker 版安装说明 #253
+- 取消包装 jar，降低误报概率
+- 重命名 exe 文件
