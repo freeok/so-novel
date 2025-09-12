@@ -1,9 +1,6 @@
 name: Docker Release
 
-on:
-  push:
-    tags:
-      - 'v*'
+on: workflow_dispatch
 
 jobs:
   docker:
@@ -27,7 +24,7 @@ jobs:
         run: |
           bash bin/release-linux.sh
           cp target/app.jar .
-          cp -r target/SoNovel-Linux_x64/{config.ini,rules,fonts} .
+          cp -r target/SoNovel-Linux_x64/{config.ini,rules} .
 
       # 登录 GHCR
       - name: Log in to GitHub Container Registry
