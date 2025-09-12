@@ -47,6 +47,7 @@ mkdir -p "target/$dist_dirname"
 cp "bundle/$jre_filename" "target/$dist_dirname"
 cp -r bundle/rules "target/$dist_dirname"
 cp bundle/config.ini bundle/readme.txt bundle/run-macos.sh "target/$dist_dirname"
+cp "bundle/支持 & 赞助.png" "target/$dist_dirname"
 
 # 复制 jar
 cd target
