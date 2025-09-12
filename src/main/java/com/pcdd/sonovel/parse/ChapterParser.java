@@ -60,7 +60,8 @@ public class ChapterParser extends Source {
     private Chapter retry(Chapter chapter, Exception ex) {
         for (int attempt = 1; attempt <= config.getMaxRetries(); attempt++) {
             try {
-                long interval = CrawlUtils.randomInterval(config, true);
+                // 重试间隔递增
+                long interval = CrawlUtils.randomInterval(config, true) * attempt;
                 LogUtils.warn("【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
                         chapter.getTitle(), attempt, config.getMaxRetries(), interval, ex.getMessage());
 
