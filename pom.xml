@@ -189,19 +189,10 @@
 
     <build>
         <plugins>
-            <!-- 在终端运行项目 -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <mainClass>com.pcdd.sonovel.Main</mainClass>
-                </configuration>
-            </plugin>
             <!--
-                maven-jar-plugin 打包生成的 jar，只包含该工程下源码编译结果，不包含依赖内容
-                使用以下插件将所有外部库打包进 jar
-             -->
+               maven-jar-plugin: 打包生成的 jar，只包含该工程下源码编译结果，不包含依赖内容
+               maven-assembly-plugin: 将所有外部库打包进 jar
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -220,21 +211,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
-                <configuration>
-                    <propertiesEncoding>UTF-8</propertiesEncoding>
-                </configuration>
             </plugin>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
@@ -286,6 +269,23 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- 在终端运行项目 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>com.pcdd.sonovel.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <propertiesEncoding>UTF-8</propertiesEncoding>
+                </configuration>
             </plugin>
         </plugins>
 
