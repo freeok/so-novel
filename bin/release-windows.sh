@@ -3,11 +3,9 @@ set -e  # 出现错误立即退出
 
 # launch4j-maven-plugin 仅支持 windows，mvn package 触发
 # Windows 发布脚本 (x86_64)
-# JDK 升级后需要修改下面 2 个版本号
 
-# 配置部分
-jre_filename="jre-17.0.11+9-x64_windows.tar.gz"
-jre_dirname="jdk-17.0.11+9-jre"
+# 最小 JRE，JDK 升级后要修改文件名版本号
+jre_filename="jre-17.0.16+8-x64_windows.tar.gz"
 dist_filename="sonovel-windows.tar.gz"
 
 # 获取项目根目录
@@ -34,7 +32,6 @@ extract_jre() {
     cd "$target_dir"
     tar zxf "$jre_filename"
     rm "$jre_filename"
-    mv "$jre_dirname" runtime
 }
 
 package_artifacts() {
