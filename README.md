@@ -88,16 +88,29 @@ docker run -d \
   -e JAVA_OPTS='-Dmode=web' \
   ghcr.io/freeok/sonovel:latest
 ```
+**方式 4：从源码构建镜像**
+
+```bash
+# 确保已安装 git、maven
+
+# 构建项目
+git clone https://github.com/freeok/so-novel.git && cd so-novel
+sh bin/release-linux.sh
+
+# 构建 docker 镜像
+cp target/app.jar . && cp -r target/SoNovel-Linux_x64/{config.ini,rules} .
+docker build -t sonovel .
+```
 
 > [!TIP]
->
-> 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
 >
 > 推荐使用以下阅读器
 >
 > 桌面端：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)、[Calibre](https://calibre-ebook.com/)、[Neat Reader (网页版)](https://www.neat-reader.cn/webapp)
 >
 > 移动端：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader (静读天下)](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)
+>
+> 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
 
 ## 常见问题
 
