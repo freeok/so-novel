@@ -195,13 +195,20 @@
             - 启动速度极快（几乎瞬间启动）。
             - 内存占用低。
             - 适合微服务、命令行工具、短生命周期程序。
+
             插件文档：https://graalvm.github.io/native-build-tools/latest/end-to-end-maven-guide.html
             native image 坑比较多，需要配置许多 buildArgs 才可正常使用可执行文件
+
             使用步骤：
             1. 安装较新版本的 GraalVM 并设置 JAVA_HOME
             2. 安装 Visual Studio Build Tools，选择“使用C++的桌面开发”，只勾选 MSVC v143 和 Windows 11 SDK
             3. 解决反射/动态代理问题：java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar target/app-jar-with-dependencies.jar
             4. mvn clean package "-Dmaven.test.skip=true"
+
+            注意：第 4 步默认只能在 x64 Native Tools Command Prompt 下执行，因为要调用 native-image.cmd。若要在其它终端运行，需修改 native-image.cmd
+            @echo off 下一行加上 call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" > nul
+
+            目前无法解决的库：Javet，依赖 JNI / 本地动态库
             -->
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
@@ -219,19 +226,23 @@
                 </executions>
                 <configuration>
                     <mainClass>com.pcdd.sonovel.Main</mainClass>
-                    <imageName>app</imageName>
-                    <verbose>true</verbose>
+                    <imageName>sonovel</imageName>
                     <buildArgs>
-                        <buildArg>-H:IncludeResources=application.properties|ascii-logo.txt</buildArg>
-                        <buildArg>-H:IncludeResources=data/.*</buildArg>
-                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
-                        <buildArg>--enable-preview</buildArg>
-                        <buildArg>--strict-image-heap</buildArg>
-                        <buildArg>--enable-url-protocols=http,https,file,resource,JAR</buildArg>
-                        <buildArg>-Dfile.encoding=UTF-8</buildArg>
-                        <buildArg>-H:ConfigurationFileDirectories=src/main/resources/META-INF/native-image</buildArg>
+                        <buildArg>-H:DefaultCharset=GB18030</buildArg>
+
+                        <!-- HanLP 需要 data/dictionary/ -->
+                        <buildArg>-H:IncludeResources=data/dictionary/.*</buildArg>
+                        <buildArg>-H:IncludeResources=application.properties|ascii-logo.txt|static/.*|templates/.*</buildArg>
+
                         <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                        <buildArg>-H:ConfigurationFileDirectories=src/main/resources/META-INF/native-image</buildArg>
+                        <buildArg>--enable-url-protocols=http,https,file,resource,JAR</buildArg>
+                        <!-- <buildArg>&#45;&#45;enable-preview</buildArg> -->
                     </buildArgs>
+                    <jvmArgs>
+                        <arg>-Dfile.encoding=GB18030</arg>
+                    </jvmArgs>
                 </configuration>
             </plugin>
             <!-- 在终端运行项目 -->
