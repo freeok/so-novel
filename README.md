@@ -88,6 +88,7 @@ docker run -d \
   -e JAVA_OPTS='-Dmode=web' \
   ghcr.io/freeok/sonovel:latest
 ```
+
 **方式 4：从源码构建镜像**
 
 ```bash
@@ -112,6 +113,14 @@ docker build -t sonovel .
 >
 > 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
 
+## JVM Options
+
+| 参数            | 说明                     | 默认值          |
+|---------------|------------------------|--------------|
+| -Djre         | JRE / JDK 路径           | ./runtime    |
+| -Dconfig.file | 配置文件路径                 | ./config.ini |
+| -Dmode        | 启动模式，可选值：tui\|cli\|web | tui          |
+
 ## 常见问题
 
 https://github.com/freeok/so-novel/issues?q=label%3A%22usage%20question%22
@@ -122,7 +131,7 @@ https://github.com/freeok/so-novel/discussions?discussions_q=
 
 ## 支持 & 赞助
 
-如果觉得有所帮助，欢迎扫码赞助☕、点击项目主页顶部的⭐Star 按钮支持！ 
+如果觉得有所帮助，欢迎扫码赞助☕、点击项目主页顶部的⭐Star 按钮支持！
 
 🚀这将是我们持续更新的动力源泉！同时，你也能第一时间获取到最新的更新动态。💡❤️
 
