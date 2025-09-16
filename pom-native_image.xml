@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.pcdd</groupId>
+    <artifactId>so-novel</artifactId>
+    <version>1.9.2</version>
+    <packaging>jar</packaging>
+
+    <name>so-novel</name>
+    <url>https://github.com/freeok/so-novel</url>
+    <description>交互式网络小说下载器</description>
+    <inceptionYear>2021</inceptionYear>
+    <organization>
+        <name>freeok</name>
+        <url>https://github.com/freeok/</url>
+    </organization>
+
+    <properties>
+        <java.version>17</java.version>
+        <javet.version>4.1.6</javet.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.21.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+        </dependency>
+        <dependency>
+            <groupId>io.documentnode</groupId>
+            <artifactId>epub4j-core</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.1.30</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.34</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.40</version>
+        </dependency>
+        <!-- JS Runtime -->
+        <dependency>
+            <groupId>com.caoccao.javet</groupId>
+            <artifactId>javet</artifactId>
+            <version>${javet.version}</version>
+        </dependency>
+        <!-- CLI -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.7.7</version>
+        </dependency>
+        <!-- Servlet 容器 -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>12.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.ee11</groupId>
+            <artifactId>jetty-ee11-servlet</artifactId>
+            <version>12.1.0</version>
+        </dependency>
+    </dependencies>
+
+    <!-- 根据平台打包 V8 -->
+    <profiles>
+        <profile>
+            <id>windows-x86_64</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.caoccao.javet</groupId>
+                    <artifactId>javet-v8-windows-x86_64</artifactId>
+                    <version>${javet.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>linux-x86_64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.caoccao.javet</groupId>
+                    <artifactId>javet-v8-linux-x86_64</artifactId>
+                    <version>${javet.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>macos-x86_64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.caoccao.javet</groupId>
+                    <artifactId>javet-v8-macos-x86_64</artifactId>
+                    <version>${javet.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>macos-arm64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.caoccao.javet</groupId>
+                    <artifactId>javet-v8-macos-arm64</artifactId>
+                    <version>${javet.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <!--
+            GraalVM 提供一个叫 Native Image 的功能，可以把 Java 程序编译成独立的本地可执行文件（native executable），这个可执行文件：
+            - 不依赖 JVM 就能运行。
+            - 启动速度极快（几乎瞬间启动）。
+            - 内存占用低。
+            - 适合微服务、命令行工具、短生命周期程序。
+            插件文档：https://graalvm.github.io/native-build-tools/latest/end-to-end-maven-guide.html
+            native image 坑比较多，需要配置许多 buildArgs 才可正常使用可执行文件
+            使用步骤：
+            1. 安装较新版本的 GraalVM 并设置 JAVA_HOME
+            2. 安装 Visual Studio Build Tools，选择“使用C++的桌面开发”，只勾选 MSVC v143 和 Windows 11 SDK
+            3. 解决反射/动态代理问题：java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar target/app-jar-with-dependencies.jar
+            4. mvn clean package "-Dmaven.test.skip=true"
+            -->
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>0.11.0</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>build-native</id>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.pcdd.sonovel.Main</mainClass>
+                    <imageName>app</imageName>
+                    <verbose>true</verbose>
+                    <buildArgs>
+                        <buildArg>-H:IncludeResources=application.properties|ascii-logo.txt</buildArg>
+                        <buildArg>-H:IncludeResources=data/.*</buildArg>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                        <buildArg>--enable-preview</buildArg>
+                        <buildArg>--strict-image-heap</buildArg>
+                        <buildArg>--enable-url-protocols=http,https,file,resource,JAR</buildArg>
+                        <buildArg>-Dfile.encoding=UTF-8</buildArg>
+                        <buildArg>-H:ConfigurationFileDirectories=src/main/resources/META-INF/native-image</buildArg>
+                        <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+            <!-- 在终端运行项目 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>com.pcdd.sonovel.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <propertiesEncoding>UTF-8</propertiesEncoding>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <!-- resources 的文件用 @..@ 获取 pom.xml 的 properties -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>
