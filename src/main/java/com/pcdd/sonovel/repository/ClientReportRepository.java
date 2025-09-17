@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.ClientReport;
 import com.pcdd.sonovel.util.ConfigUtils;
@@ -35,9 +36,9 @@ public class ClientReportRepository {
         while (retries < MAX_RETRIES && !success) {
             try {
                 ClientReport report = new ClientReport();
+                report.setUsername(System.getProperty("user.name"));
                 report.setHostName(System.getenv("COMPUTERNAME"));
                 report.setMacAddress(NetUtil.getMacAddress(InetAddress.getLocalHost()));
-                report.setUsername(System.getProperty("user.name"));
                 report.setOsName(System.getProperty("os.name"));
                 report.setOsArch(System.getProperty("os.arch"));
                 report.setOsVersion(System.getProperty("os.version"));
@@ -47,12 +48,11 @@ public class ClientReportRepository {
                 report.setCreatedAt(now);
                 report.setUpdatedAt(now);
 
-                HttpRequest.post(WORKERS_URL + "/report")
+                HttpResponse resp = HttpRequest.post(WORKERS_URL + "/report")
                         .header("Content-Type", "application/json")
                         .body(JSONUtil.toJsonStr(report))
-                        .execute()
-                        .body();
-
+                        .execute();
+                resp.close();
                 success = true;
 
             } catch (Exception e) {

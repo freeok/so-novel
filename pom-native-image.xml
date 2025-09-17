@@ -202,7 +202,7 @@
             使用步骤：
             1. 安装较新版本的 GraalVM 并设置 JAVA_HOME
             2. 安装 Visual Studio Build Tools，选择“使用C++的桌面开发”，只勾选 MSVC v143 和 Windows 11 SDK
-            3. 解决反射/动态代理问题：java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar target/app-jar-with-dependencies.jar
+            3. 解决反射/动态代理问题：java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar target/app-jar-with-dependencies.jar，然后运行全部测试用例，代理会监控所有动态特性的调用，并自动在指定目录生成所需的 JSON 配置文件。这是管理和维护元数据的最佳实践
             4. mvn clean package "-Dmaven.test.skip=true"
 
             注意：第 4 步默认只能在 x64 Native Tools Command Prompt 下执行，因为要调用 native-image.cmd。若要在其它终端运行，需修改 native-image.cmd
@@ -232,7 +232,8 @@
 
                         <!-- HanLP 需要 data/dictionary/ -->
                         <buildArg>-H:IncludeResources=data/dictionary/.*</buildArg>
-                        <buildArg>-H:IncludeResources=application.properties|ascii-logo.txt|static/.*|templates/.*</buildArg>
+                        <buildArg>-H:IncludeResources=application.properties|ascii-logo.txt|static/.*|templates/.*
+                        </buildArg>
 
                         <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
                         <buildArg>-H:+ReportExceptionStackTraces</buildArg>
