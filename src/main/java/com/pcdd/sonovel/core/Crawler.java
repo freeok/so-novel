@@ -4,7 +4,6 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.context.BookContext;
@@ -17,6 +16,7 @@ import com.pcdd.sonovel.parse.ChapterParser;
 import com.pcdd.sonovel.parse.TocParser;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LogUtils;
+import com.pcdd.sonovel.util.VirtualThreadLimiter;
 import com.pcdd.sonovel.web.model.DownloadProgressInfo;
 import com.pcdd.sonovel.web.servlet.DownloadProgressSseServlet;
 import lombok.SneakyThrows;
@@ -28,9 +28,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
@@ -73,11 +70,10 @@ public class Crawler {
         BookContext.set(book);
 
         // 下载临时目录名格式：书名 (作者) EXT
-        bookDir = FileUtils.sanitizeFileName("%s (%s) %s".formatted(book.getBookName(), book.getAuthor(), config.getExtName().toUpperCase()));
-        // 必须 new File()，否则无法使用 . 和 ..
+        bookDir = FileUtils.sanitizeFileName(
+                "%s (%s) %s".formatted(book.getBookName(), book.getAuthor(), config.getExtName().toUpperCase()));
         File dir = FileUtil.mkdir(new File(config.getDownloadPath() + File.separator + bookDir));
         if (!dir.exists()) {
-            // C:\Program Files 下创建需要管理员权限
             Console.log(render("""
                     创建下载目录失败：%s
                     1. 检查 config.ini 下载路径是否合法
@@ -86,11 +82,15 @@ public class Crawler {
             return 0;
         }
 
-        int autoThreads = config.getThreads() == -1 ? RuntimeUtil.getProcessorCount() * 2 : config.getThreads();
-        ExecutorService executor = Executors.newFixedThreadPool(autoThreads);
+        int autoThreads = config.getThreads() == -1
+                // IO 密集型任务，不要和 CPU 核数绑定
+                ? Math.min(100, toc.size())
+                : config.getThreads();
 
-        Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
-        LogUtils.info("开始下载:《{}》({}) 共计 {} 章 | 线程数：{}", book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+        Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 最大并发：{}",
+                book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+        LogUtils.info("开始下载:《{}》({}) 共计 {} 章 | 最大并发：{}",
+                book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -109,39 +109,35 @@ public class Crawler {
             Console.error("下载进度条初始化失败，已自动切换为静默下载");
         }
 
-        // 爬取&下载章节
         ProgressBar finalProgressBar = progressBar;
         AtomicInteger completed = new AtomicInteger(0);
 
-        // 提交所有任务并收集 CompletableFuture
-        var futures = toc.stream()
-                .map(item -> CompletableFuture.runAsync(() -> {
-                    createChapterFile(chapterParser.parse(item));
+        // IO 密集任务，瓶颈在网络和磁盘而不是 CPU
+        try (var limiter = new VirtualThreadLimiter(autoThreads)) {
+            toc.forEach(item -> limiter.submit(() -> {
+                createChapterFile(chapterParser.parse(item));
 
-                    long currentIndex = completed.incrementAndGet();
-                    if (finalProgressBar != null) {
-                        finalProgressBar.stepTo(currentIndex);
-                    }
+                long currentIndex = completed.incrementAndGet();
+                if (finalProgressBar != null) {
+                    finalProgressBar.stepTo(currentIndex);
+                }
 
-                    if (config.getWebEnabled() == 1) {
-                        DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
-                                .type("download-progress")
-                                .index(currentIndex)
-                                .total(toc.size())
-                                .build()));
-                    }
-                }, executor))
-                .toList();
+                if (config.getWebEnabled() == 1) {
+                    DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
+                            .type("download-progress")
+                            .index(currentIndex)
+                            .total(toc.size())
+                            .build()));
+                }
+            }));
+        }
 
-        // 阻塞 main 线程，等待所有任务完成
-        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
-
-        executor.shutdown();
         if (progressBar != null) {
             progressBar.close();
         }
         LogUtils.info("-".repeat(100));
-        Console.log("<== 章节下载日志已保存至 {}，请检查是否有 [ERROR] 级别的日志。", LogUtils.getLogFile().getAbsolutePath());
+        Console.log("<== 章节下载日志已保存至 {}，请检查是否有 [ERROR] 级别的日志。",
+                LogUtils.getLogFile().getAbsolutePath());
 
         new CrawlerPostHandler(config).handle(dir);
         stopWatch.stop();
@@ -151,7 +147,7 @@ public class Crawler {
         Console.log(render("<== 完成！总耗时 {} s\n", "green"), NumberUtil.round(totalTimeSeconds, 2));
         return totalTimeSeconds;
     }
-
+    
     /**
      * 保存章节
      */
