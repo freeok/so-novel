@@ -54,7 +54,7 @@ public class CheckUpdateAction {
             Props sys = ConfigUtils.sys();
             String jsonStr = resp.body();
             JSONArray arr = JSONUtil.parseArray(jsonStr);
-            JSONObject latest = JSONUtil.parseObj(arr.get(0));
+            JSONObject latest = JSONUtil.parseObj(arr.getFirst());
             // v1.7.0
             String currentVersion = "v" + sys.getStr("version");
             // v1.7.0-beta.2
