@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
@@ -53,31 +52,31 @@ public class AggregatedSearchAction {
     public static List<SearchResult> getSearchResults(String kw) {
         List<SearchResult> results = Collections.synchronizedList(new ArrayList<>());
         List<Source> searchableSources = SourceUtils.getSearchableSources();
-        ExecutorService threadPool = Executors.newFixedThreadPool(searchableSources.size());
         CountDownLatch latch = new CountDownLatch(searchableSources.size());
 
-        for (Source source : searchableSources) {
-            threadPool.execute(() -> {
-                try {
-                    List<SearchResult> res = "proxy-rules.json".equals(source.config.getActiveRules()) && source.config.getSourceId() == 2
-                            ? new SearchParserQuanben5(source.config).parse(kw)
-                            : new SearchParser(source.config).parse(kw);
-                    if (CollUtil.isNotEmpty(res)) {
-                        Rule rule = source.rule;
-                        Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
-                        results.addAll(res);
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (Source source : searchableSources) {
+                executor.execute(() -> {
+                    try {
+                        List<SearchResult> res = "proxy-rules.json".equals(source.config.getActiveRules()) && source.config.getSourceId() == 2
+                                ? new SearchParserQuanben5(source.config).parse(kw)
+                                : new SearchParser(source.config).parse(kw);
+                        if (CollUtil.isNotEmpty(res)) {
+                            Rule rule = source.rule;
+                            Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());
+                            results.addAll(res);
+                        }
+                    } catch (Exception e) {
+                        Console.error("搜索源 {} 异常：{}", source.rule.getName(), e.getMessage());
+                    } finally {
+                        latch.countDown();
                     }
-                } catch (Exception e) {
-                    Console.error("搜索源 {} 异常：{}", source.rule.getName(), e.getMessage());
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
+                });
+            }
 
-        latch.await();
-        threadPool.shutdown();
-        return SearchResultsHandler.aggregateSort(results, kw);
+            latch.await();
+            return SearchResultsHandler.aggregateSort(results, kw);
+        }
     }
 
 }
