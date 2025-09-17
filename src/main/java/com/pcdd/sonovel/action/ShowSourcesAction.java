@@ -53,8 +53,8 @@ public class ShowSourcesAction {
     @SneakyThrows
     private static List<SourceInfo> testWebsiteDelays(List<Rule> rules) {
         List<SourceInfo> res = new ArrayList<>();
-        ExecutorService threadPool = Executors.newFixedThreadPool(rules.size());
-        CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(threadPool);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+        CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executor);
         OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.defaultConfig(), true);
 
         for (Rule r : rules) {
@@ -95,7 +95,7 @@ public class ShowSourcesAction {
             res.add(completionService.take().get());
         }
 
-        threadPool.shutdown();
+        executor.shutdown();
 
         res.sort((o1, o2) -> {
             int delay1 = o1.getDelay() < 0 ? Integer.MAX_VALUE : o1.getDelay();
