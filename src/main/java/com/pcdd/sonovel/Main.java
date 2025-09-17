@@ -16,6 +16,9 @@ import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.web.WebServer;
 import picocli.CommandLine;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+
 import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
@@ -32,6 +35,13 @@ public class Main {
     static {
         if (EnvUtils.isDev()) {
             Console.log(render("当前为开发环境！", "red"));
+            Console.log("Default Charset: " + java.nio.charset.Charset.defaultCharset());
+            RuntimeMXBean mxBean = ManagementFactory.getRuntimeMXBean();
+            Console.log("JVM 名称: " + mxBean.getVmName());
+            Console.log("JVM 供应商: " + mxBean.getVmVendor());
+            Console.log("JVM 版本: " + mxBean.getVmVersion());
+            Console.log("启动参数: " + mxBean.getInputArguments());
+            // Console.log("类路径: " + mxBean.getClassPath());
         }
         // 关闭 hutool 日志
         ConsoleLog.setLevel(Level.OFF);
@@ -60,7 +70,7 @@ public class Main {
             new CommandLine(new CliLauncher()).execute(ArrayUtil.isEmpty(args) ? new String[]{"-h"} : args);
             System.exit(0);
         } else {
-            Console.error("❌ 启动失败，请通过 -Dmode=web|tui|cli 指定启动模式");
+            Console.error("启动失败，请通过 -Dmode=web|tui|cli 指定启动模式");
             System.exit(1);
         }
 
