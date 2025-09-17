@@ -44,15 +44,15 @@ class EpubTest {
         Metadata metadata = book.getMetadata();
 
         // 书名
-        System.out.println(metadata.getTitles().get(0));
+        System.out.println(metadata.getTitles().getFirst());
         // 作者
-        System.out.println(metadata.getAuthors().get(0));
+        System.out.println(metadata.getAuthors().getFirst());
         // 简介
-        System.out.println(metadata.getDescriptions().get(0));
+        System.out.println(metadata.getDescriptions().getFirst());
         // 章节数
         System.out.println(book.getContents().size());
         // 正文
-        System.out.println(new String(book.getContents().get(0).getData()));
+        System.out.println(new String(book.getContents().getFirst().getData()));
 
         int i = 0;
         // 遍历目录
