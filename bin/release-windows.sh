@@ -5,7 +5,7 @@ set -e  # 出现错误立即退出
 # Windows 发布脚本 (x86_64)
 
 # 最小 JRE，JDK 升级后要修改文件名版本号
-jre_filename="jre-17.0.16+8-x64_windows.tar.gz"
+jre_filename="jre-21.0.8+9-x64_windows.tar.gz"
 dist_filename="sonovel-windows.tar.gz"
 
 # 获取项目根目录

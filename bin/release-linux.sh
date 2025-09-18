@@ -4,7 +4,7 @@ set -e
 # Linux 发布脚本 (x86_64)
 
 # 最小 JRE，JDK 升级后要修改文件名版本号
-jre_filename="jre-17.0.16+8-x64_linux.tar.gz"
+jre_filename="jre-21.0.8+9-x64_linux.tar.gz"
 # 最终产物
 dist_filename="sonovel-linux_x64.tar.gz"
 dist_dirname="SoNovel-Linux_x64"
