@@ -35,13 +35,14 @@ public class Main {
     static {
         if (EnvUtils.isDev()) {
             Console.log(render("当前为开发环境！", "red"));
-            Console.log("Default Charset: " + java.nio.charset.Charset.defaultCharset());
+            Console.log("-".repeat(100));
             RuntimeMXBean mxBean = ManagementFactory.getRuntimeMXBean();
             Console.log("JVM 名称: " + mxBean.getVmName());
             Console.log("JVM 供应商: " + mxBean.getVmVendor());
             Console.log("JVM 版本: " + mxBean.getVmVersion());
             Console.log("启动参数: " + mxBean.getInputArguments());
             // Console.log("类路径: " + mxBean.getClassPath());
+            Console.log("-".repeat(100));
         }
         // 关闭 hutool 日志
         ConsoleLog.setLevel(Level.OFF);
