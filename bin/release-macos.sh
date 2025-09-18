@@ -5,10 +5,10 @@ set -e
 # JDK 升级后需要修改下面 3 个版本号
 
 # JRE 文件名
-jre_filename_arm64="jre-17.0.11+9-arm64_mac.tar.gz"
-jre_filename_x64="jre-17.0.11+9-x64_mac.tar.gz"
+jre_filename_arm64="jre-21.0.8+9-arm64_mac.tar.gz"
+jre_filename_x64="jre-21.0.8+9-x64_mac.tar.gz"
 # JRE 解压后的目录名
-jre_dirname="jdk-17.0.11+9-jre"
+jre_dirname="jdk-21.0.8+9-jre"
 
 # 最终产物名
 dist_filename_arm64="sonovel-macos_arm64.tar.gz"
