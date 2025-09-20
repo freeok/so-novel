@@ -117,6 +117,11 @@ public class SourceUtils {
         Rule.Toc ruleToc = rule.getToc();
         Rule.Chapter ruleChapter = rule.getChapter();
 
+        // language
+        if (StrUtil.isEmpty(rule.getLanguage())) {
+            rule.setLanguage(LangUtil.getCurrentLang());
+        }
+
         // baseUri
         if (ruleSearch != null && StrUtil.isEmpty(ruleSearch.getBaseUri())) {
             ruleSearch.setBaseUri(rule.getUrl());

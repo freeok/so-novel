@@ -3,7 +3,6 @@
     "url": "https://69shu.net/",
     "name": "69书",
     "comment": "正文需ajax获取",
-    "language": "zh_CN",
     "disabled": false,
     "search": {
       "disabled": false,
@@ -50,7 +49,6 @@
     "url": "https://m.xs63b.com/",
     "name": "小说路上",
     "comment": "搜索、章节的下一页url需逆向获取",
-    "language": "zh_CN",
     "search": {
       "url": "https://m.xs63b.com/search/",
       "method": "post",
