@@ -13,8 +13,8 @@
 | 7     | [笔尖中文](http://www.xbiquzw.net/)     | ✅     | ❌      |                                           | |
 | 8     | [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
 | 9     | [悠久小说网](http://www.ujxsw.org/)      | ✅     | ❌      |                                           |
-| 10    | [阅读库](http://www.yeudusk.com/)      | ✅     | ✅      |                                           |
-| 11    | [顶点小说](https://www.wxsy.net/)       | ✅     | ✅      | 搜索、详情限流                                   |
+| 10    | [阅读库](http://www.yeudusk.com/)      | ✅     | ❌      |                                           |
+| 11    | [顶点小说](https://www.wxsy.net/)       | ✅     | ❌      | 搜索、详情限流                                   |
 
 `proxy-rules.json`：需要代理（非大陆 IP）的书源
 

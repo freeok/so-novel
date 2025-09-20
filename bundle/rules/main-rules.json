@@ -36,7 +36,7 @@
   {
     "url": "https://www.shuhaige.net/",
     "name": "书海阁小说网",
-    "comment": "搜索爬取过快会丢包(Unexpected end of file from server)",
+    "comment": "部分书源正文段落顺序错乱的书在这里可能正常，搜索爬取过快会丢包(Unexpected end of file from server)",
     "language": "zh_CN",
     "search": {
       "url": "https://www.shuhaige.net/search.html",
