@@ -147,7 +147,7 @@ public class Crawler {
         Console.log(render("<== 完成！总耗时 {} s\n", "green"), NumberUtil.round(totalTimeSeconds, 2));
         return totalTimeSeconds;
     }
-    
+
     /**
      * 保存章节
      */

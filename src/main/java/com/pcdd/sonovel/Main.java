@@ -54,7 +54,7 @@ public class Main {
 
     public static void main(String[] args) {
         ConfigWatcher.watch();
-        HttpClientContext.set(OkHttpClientFactory.create(ConfigWatcher.getConfig(), true));
+        HttpClientContext.set(OkHttpClientFactory.create(ConfigWatcher.getConfig()));
 
         new Thread(ClientReportRepository::report).start();
         if (ConfigWatcher.getConfig().getAutoUpdate() == 1) {

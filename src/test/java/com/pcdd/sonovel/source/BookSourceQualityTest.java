@@ -55,7 +55,7 @@ class BookSourceQualityTest {
     static final int TOP_NUM = 20;
 
     static {
-        HttpClientContext.set(OkHttpClientFactory.create(config, true));
+        HttpClientContext.set(OkHttpClientFactory.create(config));
         ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }

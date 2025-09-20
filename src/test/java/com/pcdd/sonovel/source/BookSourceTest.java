@@ -45,7 +45,7 @@ class BookSourceTest {
     private List<Chapter> chapters;
 
     static {
-        HttpClientContext.set(OkHttpClientFactory.create(config, true));
+        HttpClientContext.set(OkHttpClientFactory.create(config));
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
         config.setExtName("txt");
