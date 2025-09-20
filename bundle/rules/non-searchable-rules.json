@@ -3,7 +3,6 @@
     "url": "http://www.xhytd.com/",
     "name": "黄易天地",
     "comment": "搜索新加了CF，仅限大陆IP",
-    "language": "zh_CN",
     "search": {
       "disabled": true,
       "url": "http://www.xhytd.com/search.html?name=%s",
@@ -39,7 +38,6 @@
     "url": "https://cn.ttkan.co/",
     "name": "天天看小说",
     "comment": "现无法搜索，搜索有限流(Read timed out)",
-    "language": "zh_CN",
     "book": {
       "url": "https://cn.ttkan.co/novel/chapters/(.*?)",
       "bookName": "meta[name=\"og:novel:book_name\"]",
@@ -65,7 +63,6 @@
     "url": "https://www.96dushu.com/",
     "name": "96读书",
     "comment": "搜索新加了CF，章节JS加密",
-    "language": "zh_CN",
     "search": {
       "disabled": true,
       "url": "https://www.96dushu.com/modules/article/search.php",
@@ -110,7 +107,6 @@
     "url": "https://www.xshbook.com/",
     "name": "小说虎",
     "comment": "搜索有人机验证，正文广告较多，需手动过滤",
-    "language": "zh_CN",
     "search": {
       "disabled": true,
       "url": "https://www.sososhu.com/?q=%s&site=xshbook",
