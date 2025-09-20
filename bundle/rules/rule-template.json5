@@ -6,7 +6,7 @@
   // 需要备注的信息
   "comment": "主要语法：CSS Selector、XPath，非必填属性可删除",
   // 默认语言
-  "language": "zh_CN",
+
   // 是否禁用
   "disabled": false,
   // 提取搜索结果的信息，不支持搜索的书源可不填
