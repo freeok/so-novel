@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
@@ -55,7 +56,7 @@ class BookSourceQualityTest {
     static final int TOP_NUM = 20;
 
     static {
-        HttpClientContext.set(OkHttpClientFactory.create(config));
+        HttpClientContext.set(OkHttpClientFactory.create(config, true));
         ConsoleLog.setLevel(Level.OFF);
         config.setLanguage("zh_CN");
     }
@@ -74,7 +75,7 @@ class BookSourceQualityTest {
                 .newCall(new Request.Builder()
                         .url(rankUrl)
                         .addHeader(Header.USER_AGENT.getValue(), RandomUA.generate())
-                        .addHeader(Header.COOKIE.getValue(), "w_tsfp=ltvuV0MF2utBvS0Q6qPpnE2sFzsidD04h0wpEaR0f5thQLErU5mG2IZyuMn2NHDf6sxnvd7DsZoyJTLYCJI3dwMSRpqReokRhQ/ElYgnjtxAVBI1QJzYWAJJJLly7DdAf3hCNxS00jA8eIUd379yilkMsyN1zap3TO14fstJ019E6KDQmI5uDW3HlFWQRzaLbjcMcuqPr6g18L5a5TjetFupeV8iA+sXhU3B3HlKWC4gskCyIuAJNBmlI5j5SqA=")
+                        .addHeader(Header.COOKIE.getValue(), "w_tsfp=ltv2UU8E3ewC6mwF46vukUysED0gdjAgnQxsXqNmeJ94Q7ErU5mA1oR8u8z0OHHX5sxnt9jMsoszd3qAUdMifxcRQs+Zd4EVkB/Gy99yicxUQ0k5VYnWS1NMcbx36DVDfTtdcRfnjj0qLdxGnrVmjwoI4HB9n6p0XvFqL5kXjB0ZufzCkpxuDW3HlFWQRzaZciVfKr/c9OtwraxQ9z/c5Vv7LFt0A6hewgfHg31dWzox6wPjMK0ddgmuUtutLvgy23S0hSe2M8T1iEg9sg9qpRxLQYrh20PfLXMxJR5pYFGyl7whctu+NONQvCQbWaVGXFsQ2HwMt+dM/1FNCCG1dXeKDIxvtwV1Qedb+rylbCnApOv5Ig0s7MgskCk+rpAA50pnZWyCKctYTRPDcHEKcYoVaZnOMz8wVEtaSDVJlxwDPn0tD/4hbPWX/hWzIzFL0LRGYPLvLJYEfH/BIoShXfJoACOg6dckvAcAGK/qVZJAaMdyFSf5x5nb0MM1acLv2wezTTfS67RLIRL0D+0hX4qkkI8hqwCSyAPnkmBejtRLkPHKvpFNg4NcP6u14xt0V8LfDtHQeI6Auv1jPGPNXJjHmZPUDPBBg1+SFqfD1lMwJ49J1k+8B6Fg2g/c/UJA6quG3kQ6WaCG7Q9izI4Wz0m4HsuJhAKKr/op4NPbSRo7Yd9VUflhRSc42KQGUSZuFoG5J1TmqCX254v30nkCsQvDsDlU6HTttaFu5/WFkY1Ie0chSZzwtkW3gFnj+CwT5597p53vQ4d3mmF4;")
                         .build()
                 )
                 .execute()) {
@@ -123,12 +124,12 @@ class BookSourceQualityTest {
         qidianRankInit(map);
 
         String divider = "-".repeat(50);
-        ExecutorService threadPool = Executors.newFixedThreadPool(map.size());
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         try {
             // 遍历榜单
             for (Map.Entry<String, String> kv : map.entrySet()) {
-                threadPool.execute(() -> {
+                executor.execute(() -> {
                     Console.log("{} {} {}", divider, kv.getKey(), divider);
                     Map<Integer, List<SourceQuality>> sourceQualityListMap = new HashMap<>();
 
@@ -147,13 +148,13 @@ class BookSourceQualityTest {
         } catch (Exception e) {
             Console.log(e.getMessage());
         } finally {
-            threadPool.shutdown();
+            executor.close();
             try {
-                if (!threadPool.awaitTermination(10, TimeUnit.MINUTES)) {
-                    threadPool.shutdownNow();
+                if (!executor.awaitTermination(10, TimeUnit.MINUTES)) {
+                    executor.shutdownNow();
                 }
             } catch (InterruptedException e) {
-                threadPool.shutdownNow();
+                executor.shutdownNow();
                 Thread.currentThread().interrupt();
             }
         }
@@ -208,13 +209,13 @@ class BookSourceQualityTest {
             list.add(sq);
 
             // 针对搜索限流书源的处理
-            /* int randomInt = RandomUtil.randomInt(200, 500);
+            int randomInt = RandomUtil.randomInt(500, 1000);
             Console.log("搜索间隔 {} ms", randomInt);
             try {
                 Thread.sleep(randomInt);
             } catch (InterruptedException e) {
                 Console.error(e);
-            } */
+            }
         }
         Console.log("书源 {} ({})，{}已找到 {} 本，未找到 {} 本\n\n",
                 rule.getId(), rule.getUrl(), rank.getKey(), foundCount, notFoundCount);
