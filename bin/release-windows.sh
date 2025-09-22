@@ -27,11 +27,7 @@ copy_files() {
     cp -r bundle/rules "$target_dir/"
     cp bundle/config.ini bundle/sonovel.l4j.ini bundle/readme.txt "$target_dir"
     cp "bundle/支持 & 赞助.png" "$target_dir"
-    cat > "$target_dir/run.bat" <<EOF
-@echo off
-chcp 65001 >nul
-sonovel.exe
-EOF
+    cp "bundle/run-windows.bat" "$target_dir"
 }
 
 extract_jre() {
