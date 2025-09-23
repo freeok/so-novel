@@ -72,7 +72,7 @@ public class ConfigUtils {
         config.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
         config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
         config.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
-        config.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, 0));
+        config.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
 
         // [crawl]
         config.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
