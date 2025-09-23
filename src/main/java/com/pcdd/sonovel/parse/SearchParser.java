@@ -106,7 +106,7 @@ public class SearchParser extends Source {
         // 合并，不去重（去重用 union）
         List<SearchResult> searchResults = CollUtil.unionAll(firstPageResults, additionalResults);
         // TODO 优化，需要几条获取几条，而不是一次性获取然后截取
-        return CollUtil.sub(searchResults, 0, config.getSearchLimit());
+        return CollUtil.sub(searchResults, 0, config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit());
     }
 
     private List<SearchResult> getSearchResults(String url, Response resp) {
@@ -153,7 +153,7 @@ public class SearchParser extends Source {
             // 只获取前 N 条搜索记录
             List<Element> limitResultEls = resultEls.stream()
                     .filter(e -> StrUtil.isNotEmpty(JsoupUtils.selectAndInvokeJs(e, r.getBookName())))
-                    .limit(config.getSearchLimit())
+                    .limit(config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit())
                     .toList();
 
             for (Element el : limitResultEls) {
