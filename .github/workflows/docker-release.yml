@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK and Maven
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'maven'
 
       - name: Build app.jar
