@@ -1,26 +1,35 @@
-## v1.9.2 (2025-09-12)
+## v1.9.3 (2025-09-24)
 
 ### ✨ 新特性
 
-- WebUI 增加源站链接 #243
-- 新增七猫封面获取
-- 自动填充 `sourceId`
-- 可选是否从 qidian 获取最新封面
+- 规则文件 `language` 属性默认从系统获取
+- 支持 native 打包方式
+- 复活书源「速读谷」 #262
 
 ### 🐛 修复
 
-- 修复 CLI 模式无法触发
+- 修复 `search-limit` 未指定时不为全部
+- 修复裁剪 JRE 引发的问题 #266
 
 ### ♻️ 重构
 
-- 移除 fonts 目录，从系统字体获取，优化体积
-- 更新章节重试策略
-- 重构 `CoverUpdater.java`
+- 优化 Linux、macOS 启动脚本
+- 使用 JDK 21 Virtual Threads
+- 使用 JDK 21 `Collection.getFirst()`
+- 重构 `OkHttpClientFactory.java`
+- 重构 `Main.java`
+- 重构 `BookSourceQualityTest.java`
+
+### 📝 文档
+
+- 添加启动参数说明 (JVM Options)
+- 添加从源码构建 Docker 镜像 #257
+- 更新 `BOOK_SOURCES.md`
+- 移除 `qidian_rank`
 
 ### 🛠️ 其他
 
-- 升级 JRE 并优化体积（Windows, Linux）
-- 支持 Docker Compose 部署 #252
-- 补充 Docker 版安装说明 #253
-- 取消包装 jar，降低误报概率
-- 重命名 exe 文件
+- JRE 升级到 21
+- 添加 `fetch-github-releases.sh`
+- 添加 `VirtualThreadTest.java`
+- 整理 `resources` 文件
