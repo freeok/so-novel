@@ -40,6 +40,6 @@ cd ..
 
 # 打包压缩
 tar czf "$dist_filename" "$dist_dirname"
-mv "$dist_filename" $project_path/dist
+mv "$dist_filename" "$project_path/dist"
 
-echo Linux done!
+echo "✅ Linux x64 构建完成！产物: $dist_filename"

@@ -48,7 +48,7 @@ main() {
     copy_files
     extract_jre
     package_artifacts
-    echo "Windows done!"
+    echo "✅ Windows x64 构建完成！产物: $dist_filename"
 }
 
 main

@@ -64,4 +64,4 @@ cd ..
 tar czf "$dist_filename" "$dist_dirname"
 mv "$dist_filename" "$project_path/dist"
 
-echo "✅ macOS [$arch] 打包完成！输出: dist/$dist_filename"
+echo "✅ macOS [$arch] 构建完成！产物: $dist_filename"
