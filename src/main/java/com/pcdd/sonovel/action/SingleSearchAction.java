@@ -88,6 +88,7 @@ public class SingleSearchAction {
 
         Source source = new Source(config);
         Rule r = source.rule;
+        Console.log("<== 当前书源: {} ({})", r.getName(), r.getUrl());
 
         if (r.getSearch() == null || r.getSearch().isDisabled()) {
             Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
