@@ -285,7 +285,7 @@
       "url": "http://www.shu009.com/indexlist/%s/",
       "item": "ol > li > a",
       "pagination": true,
-      "nextPage": "//select[@id='indexselect']/option[position()>=2 and position()<=20]"
+      "nextPage": "//select[@id='indexselect']/option"
     },
     "chapter": {
       "title": "#chapterTitle@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
