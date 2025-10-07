@@ -1,8 +1,15 @@
 #!/bin/bash
 set -e
 
+# ==========================
 # macOS 发布脚本 (arm64, x64)
-# JDK 升级后需要修改下面 3 个版本号
+# 用法：
+#   ./release-macos.sh [arch]
+# 示例：
+#   ./release-macos.sh arm64
+#   ./release-macos.sh x64
+# 默认：arm64
+# ==========================
 
 # JRE 文件名
 jre_filename_arm64="jre-21.0.8+9-arm64_mac.tar.gz"
@@ -23,7 +30,7 @@ cd "$project_path" || exit
 # 读取架构参数
 arch="$1"
 if [[ "$arch" == "x64" ]]; then
-  profile="macos-x86_64"
+  profile="macos-x64"
   jre_filename="$jre_filename_x64"
   dist_filename="$dist_filename_x64"
   dist_dirname="$dist_dirname_x64"

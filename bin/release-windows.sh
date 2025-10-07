@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e  # 出现错误立即退出
 
-# launch4j-maven-plugin 仅支持 windows，mvn package 触发
-# Windows 发布脚本 (x86_64)
+# =====================
+# Windows 发布脚本 (x64)
+# =====================
 
 # 最小 JRE，JDK 升级后要修改文件名版本号
 jre_filename="jre-21.0.8+9-x64_windows.tar.gz"
@@ -18,7 +19,7 @@ prepare_dist_dir() {
 }
 
 run_maven() {
-    mvn clean package -Pwindows-x86_64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
+    mvn clean package -Pwindows-x64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
 }
 
 copy_files() {
