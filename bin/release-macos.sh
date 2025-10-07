@@ -19,9 +19,9 @@ jre_dirname="jdk-21.0.8+9-jre"
 
 # 最终产物名
 dist_filename_arm64="sonovel-macos_arm64.tar.gz"
-dist_dirname_arm64="SoNovel-macOS_arm64"
+dist_dirname_arm64="sonovel-macos_arm64"
 dist_filename_x64="sonovel-macos_x64.tar.gz"
-dist_dirname_x64="SoNovel-macOS_x64"
+dist_dirname_x64="sonovel-macos_x64"
 
 # 自动定位项目根目录
 project_path=$(cd "$(dirname "$0")" || exit; cd ..; pwd)

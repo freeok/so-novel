@@ -8,11 +8,12 @@ set -e  # 出现错误立即退出
 # 最小 JRE，JDK 升级后要修改文件名版本号
 jre_filename="jre-21.0.8+9-x64_windows.tar.gz"
 dist_filename="sonovel-windows.tar.gz"
+dist_dirname="SoNovel"
 
 # 获取项目根目录
 project_path="$( cd "$(dirname "$0")"/.. && pwd )"
 dist_path="$project_path/dist"
-target_dir="$project_path/target/SoNovel"
+target_dir="$project_path/target/$dist_dirname"
 
 prepare_dist_dir() {
     mkdir -p "$dist_path"
@@ -38,7 +39,7 @@ extract_jre() {
 
 package_artifacts() {
     cd "$project_path/target"
-    tar czf "$dist_filename" SoNovel
+    tar czf "$dist_filename" "$dist_dirname"
     mv "$dist_filename" "$dist_path"
 }
 

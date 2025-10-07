@@ -17,7 +17,7 @@ arch="${1:-x64}"
 jre_filename="jre-21.0.8+9-${arch}_linux.tar.gz"
 # 输出文件名和目录名根据架构区分
 dist_filename="sonovel-linux_${arch}.tar.gz"
-dist_dirname="SoNovel-Linux_${arch}"
+dist_dirname="sonovel-linux_${arch}"
 
 # 检查 JRE 文件是否存在
 if [[ ! -f "bundle/$jre_filename" ]]; then
