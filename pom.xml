@@ -20,7 +20,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <javet.version>4.1.6</javet.version>
+        <javet.version>5.0.0</javet.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -118,7 +118,7 @@
     <!-- 根据平台打包 V8 -->
     <profiles>
         <profile>
-            <id>windows-x86_64</id>
+            <id>windows-x64</id>
             <activation>
                 <os>
                     <family>Windows</family>
@@ -135,7 +135,7 @@
         </profile>
 
         <profile>
-            <id>linux-x86_64</id>
+            <id>linux-x64</id>
             <activation>
                 <os>
                     <family>unix</family>
@@ -153,7 +153,25 @@
         </profile>
 
         <profile>
-            <id>macos-x86_64</id>
+            <id>linux-arm64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                    <arch>arm64</arch>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.caoccao.javet</groupId>
+                    <artifactId>javet-v8-linux-arm64</artifactId>
+                    <version>${javet.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>macos-x64</id>
             <activation>
                 <os>
                     <family>mac</family>
