@@ -27,6 +27,7 @@ jobs:
         run: |
           bash bin/release-windows.sh
           bash bin/release-linux.sh
+          bash bin/release-linux.sh arm64
           bash bin/release-macos.sh
           bash bin/release-macos.sh x64
 

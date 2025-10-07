@@ -28,7 +28,7 @@ esac
 
 APP_NAME="sonovel"
 TAR_NAME="${APP_NAME}-linux_${ARCH_TAG}.tar.gz"
-DIR_NAME="SoNovel-Linux_${ARCH_TAG}"
+DIR_NAME="sonovel-linux_${ARCH_TAG}"
 IMAGE_NAME="sonovel:${LATEST_VERSION#v}"
 
 # 下载函数
@@ -72,20 +72,20 @@ fi
 echo "✅ Docker 镜像构建完成 (${ARCH_TAG})"
 
 echo "🚀 Web 模式请手动执行以下命令启动容器:"
-echo "docker run -d \\
---name sonovel-web \\
--v /sonovel/config.ini:/sonovel/config.ini \\
--v /sonovel/downloads:/sonovel/downloads \\
--v /sonovel/rules:/sonovel/rules \\
--p 7765:7765 \\
--e JAVA_OPTS='-Dmode=web' \\
+echo "docker run -d \
+--name sonovel-web \
+-v /sonovel/config.ini:/sonovel/config.ini \
+-v /sonovel/downloads:/sonovel/downloads \
+-v /sonovel/rules:/sonovel/rules \
+-p 7765:7765 \
+-e JAVA_OPTS='-Dmode=web' \
 ${IMAGE_NAME}"
 
 echo ""
 echo "🚀 TUI 模式请手动执行以下命令启动容器:"
-echo "docker run -it --rm \\
--v /sonovel/config.ini:/sonovel/config.ini \\
--v /sonovel/downloads:/sonovel/downloads \\
--v /sonovel/rules:/sonovel/rules \\
--e JAVA_OPTS='-Dmode=tui' \\
+echo "docker run -it --rm \
+-v /sonovel/config.ini:/sonovel/config.ini \
+-v /sonovel/downloads:/sonovel/downloads \
+-v /sonovel/rules:/sonovel/rules \
+-e JAVA_OPTS='-Dmode=tui' \
 ${IMAGE_NAME}"
