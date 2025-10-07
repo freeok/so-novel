@@ -26,7 +26,7 @@ esac
 
 URL="https://github.com/freeok/so-novel/releases/download/${LATEST}/sonovel-linux_${ARCH_TAG}.tar.gz"
 TMP_FILE="/tmp/sonovel.tar.gz"
-INSTALL_DIR="$HOME/SoNovel"
+INSTALL_DIR="$HOME/sonovel"
 
 echo "📥 正在下载 SoNovel (${ARCH_TAG}) ..."
 curl -L "$URL" -o "$TMP_FILE"
@@ -35,7 +35,7 @@ curl -L "$URL" -o "$TMP_FILE"
 rm -rf "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR"
 
-# 解压时去掉第一层目录（SoNovel-Linux_x64 / SoNovel-Linux_arm64）
+# 解压时去掉第一层目录（sonovel-linux_x64 / sonovel-linux_arm64）
 tar -xzf "$TMP_FILE" -C "$INSTALL_DIR" --strip-components=1
 
 echo "✅ 安装完成！"
