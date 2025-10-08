@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.List;
 
 /**
  * @author pcdd
@@ -38,12 +37,14 @@ public class TxtMergeHandler implements PostProcessingHandler {
         Charset charset = CharsetUtil.parse(config.getTxtEncoding());
 
         FileAppender appender = new FileAppender(outputFile, charset, 16, true);
+
         // 首页添加书籍信息
-        List.of(
-                StrUtil.format("书名：{}", book.getBookName()),
-                StrUtil.format("作者：{}", book.getAuthor()),
-                StrUtil.format("简介：{}\n", StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
-        ).forEach(appender::append);
+        appender.append("""
+                书名：%s
+                作者：%s
+                简介：%s
+                """.formatted(book.getBookName(), book.getAuthor(), StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
+        );
 
         for (File f : FileUtils.sortFilesByName(saveDir)) {
             appender.append(FileUtil.readUtf8String(f));
