@@ -18,6 +18,7 @@ public class AppConfig {
     // [download]
     private String downloadPath;
     private String extName;
+    private String txtEncoding;
     private Integer preserveChapterCache;
 
     // [source]
