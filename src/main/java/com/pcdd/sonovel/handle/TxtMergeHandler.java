@@ -2,6 +2,7 @@ package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.model.AppConfig;
@@ -10,6 +11,7 @@ import com.pcdd.sonovel.util.FileUtils;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -31,14 +33,17 @@ public class TxtMergeHandler implements PostProcessingHandler {
         File outputFile = FileUtil.isAbsolutePath(outputPath)
                 ? FileUtil.touch(outputPath)
                 : FileUtil.touch(System.getProperty("user.dir"), outputPath);
-        FileAppender appender = new FileAppender(outputFile, 16, true);
-        List<String> info = List.of(
+
+        // 获取 TXT 编码，默认 UTF-8
+        Charset charset = CharsetUtil.parse(config.getTxtEncoding());
+
+        FileAppender appender = new FileAppender(outputFile, charset, 16, true);
+        // 首页添加书籍信息
+        List.of(
                 StrUtil.format("书名：{}", book.getBookName()),
                 StrUtil.format("作者：{}", book.getAuthor()),
                 StrUtil.format("简介：{}\n", StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
-        );
-        // 首页添加书籍信息
-        info.forEach(appender::append);
+        ).forEach(appender::append);
 
         for (File f : FileUtils.sortFilesByName(saveDir)) {
             appender.append(FileUtil.readUtf8String(f));

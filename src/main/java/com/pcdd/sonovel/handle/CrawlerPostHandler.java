@@ -2,6 +2,7 @@ package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.model.AppConfig;
@@ -30,6 +31,9 @@ public class CrawlerPostHandler {
 
         if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase())) {
             s.append("正在合并为 ").append(extName.toUpperCase());
+        }
+        if ("txt".equals(extName)) {
+            s.append(" (%s)".formatted(CharsetUtil.parse(config.getTxtEncoding())));
         }
         if ("html".equals(extName)) {
             s.append("正在生成 HTML 目录文件");
