@@ -66,6 +66,7 @@ public class ConfigUtils {
         // [download]
         config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));
         config.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
+        config.setTxtEncoding(getStrOrDefault(usr, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
         config.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
 
         // [source]
