@@ -18,17 +18,24 @@
 **So Novel** 是一款通用的网页内容处理与导出工具，它致力于帮助用户高效地从网页中提取结构化信息，并将其灵活导出为
 EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格式转换、电子书制作等场景。
 
-## TUI 预览 (Text-based User Interface)
+## 预览
+
+<details>
+  <summary>点击查看图片</summary>
+  
+### TUI 预览 (Text-based User Interface)
 
 ![preview-tui.png](assets/preview-tui.png)
 
-## WebUI 预览 (网页版)
+### WebUI 预览 (网页版)
 
 ![preview-webui.png](assets/preview-webui.png)
 
-## CLI 预览 (Command Line Interface)
+### CLI 预览 (Command Line Interface)
 
 ![preview-cli.png](assets/preview-cli.png)
+
+</details>
 
 ## 使用
 
