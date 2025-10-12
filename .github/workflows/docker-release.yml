@@ -23,8 +23,7 @@ jobs:
       - name: Build app.jar
         run: |
           bash bin/release-linux.sh
-          cp target/app.jar .
-          cp -r target/SoNovel-Linux_x64/{config.ini,rules} .
+          cp -r target/sonovel-linux_x64/{app.jar,config.ini,rules} .
 
       # 登录 GHCR
       - name: Log in to GitHub Container Registry

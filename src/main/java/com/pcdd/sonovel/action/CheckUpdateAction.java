@@ -46,7 +46,6 @@ public class CheckUpdateAction {
 
     public void execute() {
         Console.log("<== 检查更新中...");
-        System.out.println("ghProxy = " + ghProxy);
 
         try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
                 .timeout(timeoutMills)

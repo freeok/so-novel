@@ -109,13 +109,14 @@ docker run -d \
 
 ```bash
 # 确保已安装 git、maven
+# arch: [x64|arm64]
 
 # 构建项目
 git clone https://github.com/freeok/so-novel.git && cd so-novel
-sh bin/release-linux.sh
+sh bin/release-linux.sh [arch]
 
-# 构建 docker 镜像
-cp target/app.jar . && cp -r target/SoNovel-Linux_x64/{config.ini,rules} .
+# 构建 Docker 镜像
+cp -r target/sonovel-linux_[arch]/{app.jar,config.ini,rules} .
 docker build -t sonovel .
 ```
 
