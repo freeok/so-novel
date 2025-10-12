@@ -1,7 +1,6 @@
 package com.pcdd.sonovel.util;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 /**
@@ -26,23 +26,24 @@ import java.util.stream.IntStream;
 @UtilityClass
 public class SourceUtils {
 
-    private final Cache<String, List<Rule>> cache_rules;
     private final String RULES_DIR_DEV = "bundle/rules/";
     private final String RULES_DIR_PROD = "rules/";
-    private final String RULE_FILE_NAME;
+    private String flag = getRuleFileName();
+    private List<Rule> cachedRules;
 
-    static {
-        cache_rules = CacheUtil.newFIFOCache(1);
-        RULE_FILE_NAME = ConfigUtils.defaultConfig().getActiveRules();
+    private String getRuleFileName() {
+        return ConfigWatcher.getConfig().getActiveRules();
     }
 
     /**
      * 获取规则文件路径
      */
     private String getRuleFilePath() {
-        Path path = Paths.get(RULE_FILE_NAME);
-        if (path.isAbsolute()) return path.toString();
-        return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + RULE_FILE_NAME;
+        Path path = Paths.get(getRuleFileName());
+        if (path.isAbsolute()) {
+            return path.toString();
+        }
+        return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + getRuleFileName();
     }
 
     /**
@@ -52,7 +53,7 @@ public class SourceUtils {
         Rule rule = getAllRules().stream()
                 .filter(r -> r.getId() == sourceId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", RULE_FILE_NAME, sourceId)));
+                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", getRuleFileName(), sourceId)));
 
         return applyDefaultRule(rule);
     }
@@ -62,15 +63,14 @@ public class SourceUtils {
      * 如果缓存中已经有数据，则直接返回缓存。
      */
     public List<Rule> getAllRules() {
-        // 如果缓存中存在，则直接返回
-        if (cache_rules.get("rules") != null) {
-            return cache_rules.get("rules");
-        }
-
         File file = new File(getRuleFilePath());
-        if (!file.exists()) {
-            Console.error("规则文件不存在：{}", file.getAbsolutePath());
-            return Collections.emptyList();
+        Assert.isTrue(file.exists(), "规则文件不存在：{}", file.getAbsolutePath());
+
+        // 若缓存存在，则直接返回
+        if (Objects.equals(flag, getRuleFileName()) && cachedRules != null) {
+            return cachedRules;
+        } else { // 激活规则变更，重置缓存
+            flag = getRuleFileName();
         }
 
         try {
@@ -78,7 +78,7 @@ public class SourceUtils {
             // 填充自增 ID
             IntStream.range(0, rules.size()).forEach(i -> rules.get(i).setId(i + 1));
             // 缓存读取到的规则列表
-            cache_rules.put("rules", rules);
+            cachedRules = rules;
             return rules;
         } catch (JSONException e) {
             Console.error("解析规则文件失败：{}，错误信息：{}", file.getAbsolutePath(), e.getMessage());
@@ -104,7 +104,7 @@ public class SourceUtils {
         return getAllRules().stream()
                 .filter(r -> !r.isDisabled() && r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
-                    AppConfig config = ConfigUtils.defaultConfig();
+                    AppConfig config = ConfigWatcher.getConfig();
                     config.setSourceId(r.getId());
                     return new Source(config);
                 })

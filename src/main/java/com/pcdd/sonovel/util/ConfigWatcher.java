@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 @UtilityClass
 public class ConfigWatcher {
 
+    // 被赋值的属性不能是 static
     @Getter
     private AppConfig config = ConfigUtils.defaultConfig();
 
@@ -27,10 +28,10 @@ public class ConfigWatcher {
             path = Paths.get(configFilePath).toAbsolutePath().toString();
         }
 
-        Setting setting = new Setting(path);
-        setting.autoLoad(true, aBoolean -> {
+        // 在配置文件变更时自动加载
+        new Setting(path).autoLoad(true, aBoolean -> {
             config = ConfigUtils.defaultConfig();
-            Console.log("<== 配置文件修改成功！");
+            Console.log("\n<== 监听到配置文件变更，开始热加载配置");
             TuiLauncher.printHint(config);
         });
     }
