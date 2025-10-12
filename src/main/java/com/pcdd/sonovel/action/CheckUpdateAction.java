@@ -15,6 +15,7 @@ import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import me.tongfei.progressbar.ProgressBar;
@@ -30,9 +31,9 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
-    public static final String GHP = ConfigUtils.defaultConfig().getGhProxy();
-    public static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
-    public static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
+    private static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
+    private static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
+    private final String ghProxy = ConfigWatcher.getConfig().getGhProxy();
     private final int timeoutMills;
 
     public CheckUpdateAction() {
@@ -45,6 +46,7 @@ public class CheckUpdateAction {
 
     public void execute() {
         Console.log("<== 检查更新中...");
+        System.out.println("ghProxy = " + ghProxy);
 
         try (HttpResponse resp = HttpUtil.createGet(RELEASE_URL)
                 .timeout(timeoutMills)
@@ -87,7 +89,7 @@ public class CheckUpdateAction {
             fileName = "linux";
         }
 
-        return GHP + StrUtil.format(ASSETS_URL, version, fileName);
+        return ghProxy + StrUtil.format(ASSETS_URL, version, fileName);
     }
 
     private void download(String url) {

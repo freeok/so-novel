@@ -8,7 +8,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.TocParser;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.ConfigWatcher;
 
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +22,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class DownloadAction {
 
     private static final String GREEN = "green";
-    private final AppConfig config = ConfigUtils.defaultConfig();
+    private final AppConfig config = ConfigWatcher.getConfig();
     private final Scanner sc = Console.scanner();
 
     public void execute(List<SearchResult> results) {

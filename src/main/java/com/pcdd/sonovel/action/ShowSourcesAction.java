@@ -5,7 +5,7 @@ import cn.hutool.core.lang.ConsoleTable;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SourceInfo;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
@@ -55,7 +55,7 @@ public class ShowSourcesAction {
         List<SourceInfo> res = new ArrayList<>();
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executor);
-        OkHttpClient client = OkHttpClientFactory.create(ConfigUtils.defaultConfig());
+        OkHttpClient client = OkHttpClientFactory.create(ConfigWatcher.getConfig());
 
         for (Rule r : rules) {
             completionService.submit(() -> {
