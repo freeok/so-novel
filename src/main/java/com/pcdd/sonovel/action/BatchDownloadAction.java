@@ -26,7 +26,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class BatchDownloadAction {
 
     private final AppConfig config;
-    public static final String DIVIDER = "=".repeat(50);
+    private static final String DIVIDER = "=".repeat(50);
 
     public void execute() {
         Scanner sc = Console.scanner();

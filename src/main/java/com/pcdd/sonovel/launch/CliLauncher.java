@@ -1,13 +1,13 @@
 package com.pcdd.sonovel.launch;
 
 import cn.hutool.core.lang.Console;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import picocli.CommandLine;
 
@@ -31,7 +31,7 @@ public class CliLauncher implements Runnable {
     @CommandLine.Option(names = {"--ext", "-e"}, description = "下载格式，可选 txt|epub|html|pdf，默认 epub", defaultValue = "epub")
     String extName;
 
-    private static final AppConfig config = ConfigUtils.defaultConfig();
+    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
 
     /**
      * 全本下载
@@ -43,10 +43,10 @@ public class CliLauncher implements Runnable {
                 下载格式: {}""", bookUrl, extName);
 
         Rule rule = SourceUtils.getSource(bookUrl);
-        config.setSourceId(rule.getId());
-        config.setExtName(extName);
+        APP_CONFIG.setSourceId(rule.getId());
+        APP_CONFIG.setExtName(extName);
 
-        Book book = new BookParser(config).parse(bookUrl);
+        Book book = new BookParser(APP_CONFIG).parse(bookUrl);
         SearchResult sr = SearchResult.builder()
                 .url(book.getUrl())
                 .bookName(book.getBookName())
@@ -55,13 +55,13 @@ public class CliLauncher implements Runnable {
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
         Console.log("<== {}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
-        new Crawler(config).crawl(sr.getUrl());
+        new Crawler(APP_CONFIG).crawl(sr.getUrl());
     }
 
     static class VersionProvider implements CommandLine.IVersionProvider {
         @Override
         public String[] getVersion() {
-            return new String[]{render(config.getVersion(), "green")};
+            return new String[]{render(APP_CONFIG.getVersion(), "green")};
         }
     }
 

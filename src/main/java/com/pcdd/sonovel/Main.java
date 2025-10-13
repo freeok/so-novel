@@ -7,11 +7,12 @@ import cn.hutool.log.level.Level;
 import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.action.CheckUpdateAction;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.launch.CliLauncher;
 import com.pcdd.sonovel.launch.TuiLauncher;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.repository.ClientReportRepository;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.web.WebServer;
 import picocli.CommandLine;
@@ -31,6 +32,8 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  * bash: {@code mvnd clean compile && mvn exec:java}
  */
 public class Main {
+
+    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
 
     static {
         if (EnvUtils.isDev()) {
@@ -53,19 +56,19 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        HttpClientContext.set(OkHttpClientFactory.create(ConfigUtils.defaultConfig()));
+        HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG));
 
         new Thread(ClientReportRepository::report).start();
-        if (ConfigUtils.defaultConfig().getAutoUpdate() == 1) {
+        if (APP_CONFIG.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
 
         String mode = System.getProperty("mode", "tui");
 
-        if ("web".equalsIgnoreCase(mode) || ConfigUtils.defaultConfig().getWebEnabled() == 1) {
+        if ("web".equalsIgnoreCase(mode) || APP_CONFIG.getWebEnabled() == 1) {
             new WebServer().start();
         } else if (args.length == 0 && "tui".equalsIgnoreCase(mode)) {
-            TuiLauncher.launch(ConfigUtils.defaultConfig());
+            TuiLauncher.launch(APP_CONFIG);
         } else if (args.length > 0 || "cli".equalsIgnoreCase(mode)) {
             new CommandLine(new CliLauncher()).execute(ArrayUtil.isEmpty(args) ? new String[]{"-h"} : args);
             System.exit(0);
