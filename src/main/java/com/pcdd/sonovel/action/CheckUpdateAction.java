@@ -85,7 +85,7 @@ public class CheckUpdateAction {
             // 根据架构进一步细分
             fileName = "aarch64".equals(arch) ? "macos_arm64" : "macos_x64";
         } else if (osName.contains("linux")) {
-            fileName = "linux";
+            fileName = StrUtil.equalsAny(arch, "amd64", "x86_64") ? "linux_x64" : "linux_arm64";
         }
 
         return APP_CONFIG.getGhProxy() + StrUtil.format(ASSETS_URL, version, fileName);
