@@ -15,7 +15,6 @@ import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.pcdd.sonovel.util.ConfigUtils;
-import com.pcdd.sonovel.util.ConfigWatcher;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import me.tongfei.progressbar.ProgressBar;
@@ -33,7 +32,7 @@ public class CheckUpdateAction {
 
     private static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     private static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
-    private final String ghProxy = ConfigWatcher.getConfig().getGhProxy();
+    private final String GH_PROXY = ConfigUtils.defaultConfig().getGhProxy();
     private final int timeoutMills;
 
     public CheckUpdateAction() {
@@ -88,7 +87,7 @@ public class CheckUpdateAction {
             fileName = "linux";
         }
 
-        return ghProxy + StrUtil.format(ASSETS_URL, version, fileName);
+        return GH_PROXY + StrUtil.format(ASSETS_URL, version, fileName);
     }
 
     private void download(String url) {

@@ -1,6 +1,6 @@
 package com.pcdd.sonovel.web.servlet;
 
-import com.pcdd.sonovel.util.ConfigWatcher;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.web.model.LocalBookItem;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +15,7 @@ public class LocalBookListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        File dir = new File(ConfigWatcher.getConfig().getDownloadPath());
+        File dir = new File(ConfigUtils.defaultConfig().getDownloadPath());
         File[] files = dir.listFiles(File::isFile);
 
         List<LocalBookItem> list = new ArrayList<>();

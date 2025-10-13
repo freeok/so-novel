@@ -3,7 +3,7 @@ package com.pcdd.sonovel.core;
 import cn.hutool.core.lang.Opt;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.ConfigWatcher;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 
 /**
@@ -27,7 +27,7 @@ public class Source {
     public Source(Rule rule, AppConfig config) {
         this.rule = rule;
         // 使用配置文件中的配置，若为空则使用默认配置
-        this.config = Opt.ofNullable(config).orElse(ConfigWatcher.getConfig());
+        this.config = Opt.ofNullable(config).orElse(ConfigUtils.defaultConfig());
 
         // 规则爬取配置覆盖默认配置
         Rule.Crawl crawl = rule.getCrawl();

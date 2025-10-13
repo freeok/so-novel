@@ -7,7 +7,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.ClientReport;
-import com.pcdd.sonovel.util.ConfigWatcher;
+import com.pcdd.sonovel.util.ConfigUtils;
 import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
@@ -43,7 +43,7 @@ public class ClientReportRepository {
                 report.setOsArch(System.getProperty("os.arch"));
                 report.setOsVersion(System.getProperty("os.version"));
                 report.setLocalIp(NetUtil.getLocalhostStr());
-                report.setAppVersion(ConfigWatcher.getConfig().getVersion());
+                report.setAppVersion(ConfigUtils.defaultConfig().getVersion());
                 String now = DateUtil.now();
                 report.setCreatedAt(now);
                 report.setUpdatedAt(now);

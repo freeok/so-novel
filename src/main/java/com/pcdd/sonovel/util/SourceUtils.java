@@ -32,7 +32,7 @@ public class SourceUtils {
     private List<Rule> cachedRules;
 
     private String getRuleFileName() {
-        return ConfigWatcher.getConfig().getActiveRules();
+        return ConfigUtils.defaultConfig().getActiveRules();
     }
 
     /**
@@ -104,7 +104,7 @@ public class SourceUtils {
         return getAllRules().stream()
                 .filter(r -> !r.isDisabled() && r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
-                    AppConfig config = ConfigWatcher.getConfig();
+                    AppConfig config = ConfigUtils.defaultConfig();
                     config.setSourceId(r.getId());
                     return new Source(config);
                 })
