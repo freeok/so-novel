@@ -3,12 +3,12 @@ package com.pcdd.sonovel.action;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.TocParser;
-import com.pcdd.sonovel.util.ConfigUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +22,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class DownloadAction {
 
     private static final String GREEN = "green";
-    private final AppConfig config = ConfigUtils.defaultConfig();
+    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private final Scanner sc = Console.scanner();
 
     public void execute(List<SearchResult> results) {
@@ -51,9 +51,9 @@ public class DownloadAction {
             if (num < 0 || num > results.size()) continue;
 
             sr = results.get(num - 1);
-            config.setSourceId(sr.getSourceId());
+            APP_CONFIG.setSourceId(sr.getSourceId());
             Console.log("<== 正在获取章节目录...");
-            TocParser tocParser = new TocParser(config);
+            TocParser tocParser = new TocParser(APP_CONFIG);
             toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章，书源 {}: {}", sr.getBookName(), sr.getAuthor(), toc.size(), sr.getSourceId(), sr.getUrl());
@@ -98,7 +98,7 @@ public class DownloadAction {
             }
             if (action == 4) continue;
 
-            new Crawler(config).crawl(sr.getUrl(), toc);
+            new Crawler(APP_CONFIG).crawl(sr.getUrl(), toc);
         }
     }
 

@@ -6,6 +6,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
@@ -16,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 /**
@@ -28,22 +28,18 @@ public class SourceUtils {
 
     private final String RULES_DIR_DEV = "bundle/rules/";
     private final String RULES_DIR_PROD = "rules/";
-    private String flag = getRuleFileName();
+    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private List<Rule> cachedRules;
-
-    private String getRuleFileName() {
-        return ConfigUtils.defaultConfig().getActiveRules();
-    }
 
     /**
      * 获取规则文件路径
      */
     private String getRuleFilePath() {
-        Path path = Paths.get(getRuleFileName());
+        Path path = Paths.get(APP_CONFIG.getActiveRules());
         if (path.isAbsolute()) {
             return path.toString();
         }
-        return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + getRuleFileName();
+        return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + APP_CONFIG.getActiveRules();
     }
 
     /**
@@ -53,7 +49,7 @@ public class SourceUtils {
         Rule rule = getAllRules().stream()
                 .filter(r -> r.getId() == sourceId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", getRuleFileName(), sourceId)));
+                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", APP_CONFIG.getActiveRules(), sourceId)));
 
         return applyDefaultRule(rule);
     }
@@ -67,10 +63,8 @@ public class SourceUtils {
         Assert.isTrue(file.exists(), "规则文件不存在：{}", file.getAbsolutePath());
 
         // 若缓存存在，则直接返回
-        if (Objects.equals(flag, getRuleFileName()) && cachedRules != null) {
+        if (cachedRules != null) {
             return cachedRules;
-        } else { // 激活规则变更，重置缓存
-            flag = getRuleFileName();
         }
 
         try {
@@ -104,9 +98,10 @@ public class SourceUtils {
         return getAllRules().stream()
                 .filter(r -> !r.isDisabled() && r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
-                    AppConfig config = ConfigUtils.defaultConfig();
-                    config.setSourceId(r.getId());
-                    return new Source(config);
+                    // 此处切勿改为 AppConfigLoader.APP_CONFIG
+                    AppConfig cfg = AppConfigLoader.loadConfig();
+                    cfg.setSourceId(r.getId());
+                    return new Source(cfg);
                 })
                 .toList();
     }

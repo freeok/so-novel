@@ -13,7 +13,6 @@ import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
@@ -35,8 +34,8 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class CoverUpdater {
 
-    private final AppConfig config = ConfigUtils.defaultConfig();
-    private static final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
+    private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
+    private final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
 
     /**
      * 依次尝试不同来源获取封面
@@ -63,12 +62,12 @@ public class CoverUpdater {
      * 起点中文网
      */
     public String fetchQidian(Book book) {
-        if (StrUtil.isEmpty(config.getQidianCookie())) return "";
+        if (StrUtil.isEmpty(APP_CONFIG.getQidianCookie())) return "";
         String url = StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName());
         try (HttpResponse resp = HttpRequest.get(url).
                 headerMap(Map.of(
                         Header.USER_AGENT.getValue(), RandomUA.generate(),
-                        Header.COOKIE.getValue(), config.getQidianCookie()
+                        Header.COOKIE.getValue(), APP_CONFIG.getQidianCookie()
                 ), true).execute()) {
             Document document = Jsoup.parse(resp.body());
 

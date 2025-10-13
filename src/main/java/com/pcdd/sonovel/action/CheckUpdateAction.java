@@ -14,7 +14,8 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.core.AppConfigLoader;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import me.tongfei.progressbar.ProgressBar;
@@ -30,9 +31,9 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class CheckUpdateAction {
 
+    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private static final String RELEASE_URL = "https://api.github.com/repos/freeok/so-novel/releases";
     private static final String ASSETS_URL = "https://github.com/freeok/so-novel/releases/download/{}/sonovel-{}.tar.gz";
-    private final String GH_PROXY = ConfigUtils.defaultConfig().getGhProxy();
     private final int timeoutMills;
 
     public CheckUpdateAction() {
@@ -51,7 +52,7 @@ public class CheckUpdateAction {
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
-            Props sys = ConfigUtils.sys();
+            Props sys = AppConfigLoader.sys();
             String jsonStr = resp.body();
             JSONArray arr = JSONUtil.parseArray(jsonStr);
             JSONObject latest = JSONUtil.parseObj(arr.getFirst());
@@ -87,7 +88,7 @@ public class CheckUpdateAction {
             fileName = "linux";
         }
 
-        return GH_PROXY + StrUtil.format(ASSETS_URL, version, fileName);
+        return APP_CONFIG.getGhProxy() + StrUtil.format(ASSETS_URL, version, fileName);
     }
 
     private void download(String url) {

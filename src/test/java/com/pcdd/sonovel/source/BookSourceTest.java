@@ -13,11 +13,11 @@ import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.convert.ChapterConverter;
 import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.*;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -38,18 +38,18 @@ import java.util.concurrent.Executors;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BookSourceTest {
 
-    private static final AppConfig config = ConfigUtils.defaultConfig();
-    private static final String DIVIDER = "=".repeat(50);
-    private String firstChapterUrl;
-    private String firstChapterTitle;
-    private List<Chapter> chapters;
+    static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
+    static final String DIVIDER = "=".repeat(50);
+    String firstChapterUrl;
+    String firstChapterTitle;
+    List<Chapter> chapters;
 
     static {
-        HttpClientContext.set(OkHttpClientFactory.create(config));
+        HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG));
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖默认配置
-        config.setExtName("txt");
-        config.setLanguage("zh_TW");
+        APP_CONFIG.setExtName("txt");
+        APP_CONFIG.setLanguage("zh_TW");
     }
 
     @DisplayName("main-rules.json")
@@ -69,7 +69,7 @@ class BookSourceTest {
     })
     void test01(String bookUrl) {
         Rule rule = SourceUtils.getSource(bookUrl);
-        config.setSourceId(rule.getId());
+        APP_CONFIG.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");
         bookParse(bookUrl);
@@ -86,7 +86,7 @@ class BookSourceTest {
     })
     void test03(String bookUrl) {
         Rule rule = SourceUtils.getSource(bookUrl);
-        config.setSourceId(rule.getId());
+        APP_CONFIG.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");
         bookParse(bookUrl);
@@ -103,7 +103,7 @@ class BookSourceTest {
     })
     void test02(String bookUrl) {
         Rule rule = SourceUtils.getSource(bookUrl);
-        config.setSourceId(rule.getId());
+        APP_CONFIG.setSourceId(rule.getId());
 
         bookParse(bookUrl);
         tocParse(bookUrl);
@@ -113,22 +113,22 @@ class BookSourceTest {
 
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
-        List<SearchResult> list = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
-                ? new SearchParserQuanben5(config).parse(keyword)
-                : new SearchParser(config).parse(keyword, true);
+        List<SearchResult> list = "proxy-rules.json".equals(APP_CONFIG.getActiveRules()) && APP_CONFIG.getSourceId() == 2
+                ? new SearchParserQuanben5(APP_CONFIG).parse(keyword)
+                : new SearchParser(APP_CONFIG).parse(keyword, true);
         if (CollUtil.isEmpty(list)) {
             Console.log("\"{}\"搜索结果为空", keyword);
         }
         if (!list.isEmpty()) {
             Console.log("点击此 URL 检查首条搜索结果有效性: {}", CollUtil.getFirst(list).getUrl());
         }
-        new SearchParser(config).printSearchResult(list);
+        new SearchParser(APP_CONFIG).printSearchResult(list);
         Console.log("{} END searchParse {}\n", DIVIDER, DIVIDER);
     }
 
     public void bookParse(String bookUrl) {
         Console.log("\n{} START bookParse {}", DIVIDER, DIVIDER);
-        Book book = new BookParser(config).parse(bookUrl);
+        Book book = new BookParser(APP_CONFIG).parse(bookUrl);
         BookContext.set(book);
         Console.log(JSONUtil.toJsonPrettyStr(book));
         Console.log("{} END bookParse {}\n", DIVIDER, DIVIDER);
@@ -136,7 +136,7 @@ class BookSourceTest {
 
     public void tocParse(String bookUrl) {
         Console.log("\n{} START tocParse {}", DIVIDER, DIVIDER);
-        TocParser tocParser = new TocParser(config);
+        TocParser tocParser = new TocParser(APP_CONFIG);
         List<Chapter> toc = tocParser.parse(bookUrl, 1, Short.MAX_VALUE);
         chapters = toc;
         toc.forEach(System.out::println);
@@ -160,7 +160,7 @@ class BookSourceTest {
                 .title(firstChapterTitle)
                 .url(firstChapterUrl)
                 .build();
-        Chapter chapter = new ChapterParser(config).parse(build);
+        Chapter chapter = new ChapterParser(APP_CONFIG).parse(build);
 
         Console.log(chapter.getContent());
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
@@ -178,14 +178,14 @@ class BookSourceTest {
 
         ExecutorService threadPool = Executors.newFixedThreadPool(RuntimeUtil.getProcessorCount() * 5);
         CountDownLatch latch = new CountDownLatch(end - start);
-        Source source = new Source(config.getSourceId());
+        Source source = new Source(APP_CONFIG.getSourceId());
 
         for (Chapter chapter : CollUtil.sub(chapters, start, end)) {
             threadPool.execute(() -> {
                 Chapter o = Chapter.builder().url(chapter.getUrl()).build();
-                Chapter beforeFiltration = new ChapterParser(config).parse(o);
-                Chapter afterFiltration = new ChapterConverter(config).convert(beforeFiltration);
-                Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), config.getLanguage());
+                Chapter beforeFiltration = new ChapterParser(APP_CONFIG).parse(o);
+                Chapter afterFiltration = new ChapterConverter(APP_CONFIG).convert(beforeFiltration);
+                Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), APP_CONFIG.getLanguage());
                 if (StrUtil.isAllNotEmpty(res.getTitle(), res.getContent())) {
                     Console.log("✅ {}", res.getTitle());
                 } else {

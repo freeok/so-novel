@@ -1,10 +1,12 @@
-package com.pcdd.sonovel.util;
+package com.pcdd.sonovel.core;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.util.EnvUtils;
+import com.pcdd.sonovel.util.LangUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -17,7 +19,7 @@ import java.nio.file.Paths;
  * Created at 2024/3/23
  */
 @UtilityClass
-public class ConfigUtils {
+public class AppConfigLoader {
 
     private final String SELECTION_GLOBAL = "global";
     private final String SELECTION_DOWNLOAD = "download";
@@ -26,6 +28,7 @@ public class ConfigUtils {
     private final String SELECTION_WEB = "web";
     private final String SELECTION_COOKIE = "cookie";
     private final String SELECTION_PROXY = "proxy";
+    public final AppConfig APP_CONFIG = loadConfig();
 
     /**
      * 加载应用属性
@@ -54,49 +57,49 @@ public class ConfigUtils {
         return new Setting(absolutePath.toString());
     }
 
-    public AppConfig defaultConfig() {
-        AppConfig config = new AppConfig();
-        config.setVersion(sys().getStr("version"));
+    public AppConfig loadConfig() {
+        AppConfig cfg = new AppConfig();
+        cfg.setVersion(sys().getStr("version"));
         Setting usr = usr();
 
         // [global]
-        config.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
-        config.setGhProxy(usr.getStr("gh-proxy", SELECTION_GLOBAL, ""));
+        cfg.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
+        cfg.setGhProxy(usr.getStr("gh-proxy", SELECTION_GLOBAL, ""));
 
         // [download]
-        config.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));
-        config.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
-        config.setTxtEncoding(getStrOrDefault(usr, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
-        config.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
+        cfg.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));
+        cfg.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
+        cfg.setTxtEncoding(getStrOrDefault(usr, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
+        cfg.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
 
         // [source]
-        config.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
-        config.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
-        config.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
-        config.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
+        cfg.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
+        cfg.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
+        cfg.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
+        cfg.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
 
         // [crawl]
-        config.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
-        config.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
-        config.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
-        config.setEnableRetry(usr.getInt("enable-retry", SELECTION_CRAWL, 1));
-        config.setMaxRetries(usr.getInt("max-retries", SELECTION_CRAWL, 5));
-        config.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
-        config.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
+        cfg.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
+        cfg.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
+        cfg.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
+        cfg.setEnableRetry(usr.getInt("enable-retry", SELECTION_CRAWL, 1));
+        cfg.setMaxRetries(usr.getInt("max-retries", SELECTION_CRAWL, 5));
+        cfg.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
+        cfg.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
 
         // [web]
-        config.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
-        config.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
+        cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+        cfg.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
 
         // [cookie]
-        config.setQidianCookie(usr.getStr("qidian", SELECTION_COOKIE, ""));
+        cfg.setQidianCookie(usr.getStr("qidian", SELECTION_COOKIE, ""));
 
         // [proxy]
-        config.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
-        config.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
-        config.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
+        cfg.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
+        cfg.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
+        cfg.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
 
-        return config;
+        return cfg;
     }
 
     // 修复 hutool 空串不能触发默认值的 bug

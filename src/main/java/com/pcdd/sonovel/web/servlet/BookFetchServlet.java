@@ -1,10 +1,10 @@
 package com.pcdd.sonovel.web.servlet;
 
 import cn.hutool.core.lang.Console;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
@@ -28,10 +28,10 @@ public class BookFetchServlet extends HttpServlet {
     }
 
     private void downloadFileToServer(SearchResult sr) {
-        AppConfig config = ConfigUtils.defaultConfig();
-        config.setSourceId(sr.getSourceId());
+        AppConfig cfg = AppConfigLoader.APP_CONFIG;
+        cfg.setSourceId(sr.getSourceId());
         Console.log("<== 正在获取章节目录...");
-        new Crawler(config).crawl(sr.getUrl());
+        new Crawler(cfg).crawl(sr.getUrl());
     }
 
 }
