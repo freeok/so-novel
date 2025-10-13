@@ -13,7 +13,7 @@ import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
-import com.pcdd.sonovel.util.ConfigWatcher;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
@@ -35,7 +35,7 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class CoverUpdater {
 
-    private final AppConfig config = ConfigWatcher.getConfig();
+    private final AppConfig config = ConfigUtils.defaultConfig();
     private static final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
 
     /**
