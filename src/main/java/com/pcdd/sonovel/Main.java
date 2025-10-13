@@ -33,8 +33,6 @@ import static org.fusesource.jansi.AnsiRenderer.render;
  */
 public class Main {
 
-    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
-
     static {
         if (EnvUtils.isDev()) {
             Console.log(render("当前为开发环境！", "red"));
@@ -56,19 +54,20 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG));
+        AppConfig cfg = AppConfigLoader.APP_CONFIG;
+        HttpClientContext.set(OkHttpClientFactory.create(cfg));
 
         new Thread(ClientReportRepository::report).start();
-        if (APP_CONFIG.getAutoUpdate() == 1) {
+        if (cfg.getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
 
         String mode = System.getProperty("mode", "tui");
 
-        if ("web".equalsIgnoreCase(mode) || APP_CONFIG.getWebEnabled() == 1) {
+        if ("web".equalsIgnoreCase(mode) || cfg.getWebEnabled() == 1) {
             new WebServer().start();
         } else if (args.length == 0 && "tui".equalsIgnoreCase(mode)) {
-            TuiLauncher.launch(APP_CONFIG);
+            TuiLauncher.launch(cfg);
         } else if (args.length > 0 || "cli".equalsIgnoreCase(mode)) {
             new CommandLine(new CliLauncher()).execute(ArrayUtil.isEmpty(args) ? new String[]{"-h"} : args);
             System.exit(0);
