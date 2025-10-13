@@ -11,7 +11,7 @@ import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.launch.CliLauncher;
 import com.pcdd.sonovel.launch.TuiLauncher;
 import com.pcdd.sonovel.repository.ClientReportRepository;
-import com.pcdd.sonovel.util.ConfigWatcher;
+import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.web.WebServer;
 import picocli.CommandLine;
@@ -53,20 +53,19 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ConfigWatcher.watch();
-        HttpClientContext.set(OkHttpClientFactory.create(ConfigWatcher.getConfig()));
+        HttpClientContext.set(OkHttpClientFactory.create(ConfigUtils.defaultConfig()));
 
         new Thread(ClientReportRepository::report).start();
-        if (ConfigWatcher.getConfig().getAutoUpdate() == 1) {
+        if (ConfigUtils.defaultConfig().getAutoUpdate() == 1) {
             new CheckUpdateAction(5000).execute();
         }
 
         String mode = System.getProperty("mode", "tui");
 
-        if ("web".equalsIgnoreCase(mode) || ConfigWatcher.getConfig().getWebEnabled() == 1) {
+        if ("web".equalsIgnoreCase(mode) || ConfigUtils.defaultConfig().getWebEnabled() == 1) {
             new WebServer().start();
         } else if (args.length == 0 && "tui".equalsIgnoreCase(mode)) {
-            TuiLauncher.launch(ConfigWatcher.getConfig());
+            TuiLauncher.launch(ConfigUtils.defaultConfig());
         } else if (args.length > 0 || "cli".equalsIgnoreCase(mode)) {
             new CommandLine(new CliLauncher()).execute(ArrayUtil.isEmpty(args) ? new String[]{"-h"} : args);
             System.exit(0);
