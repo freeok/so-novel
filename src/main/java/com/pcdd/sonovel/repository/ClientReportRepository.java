@@ -6,8 +6,9 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
+import com.pcdd.sonovel.core.AppConfigLoader;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ClientReport;
-import com.pcdd.sonovel.util.ConfigUtils;
 import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
@@ -18,9 +19,9 @@ import java.net.InetAddress;
 @UtilityClass
 public class ClientReportRepository {
 
-    private final String WORKERS_URL;
     private final int MAX_RETRIES = 3;
     private final long RETRY_DELAY_MS = 3000;
+    private final String WORKERS_URL;
 
     static {
         WORKERS_URL = Base64.decodeStr("aHR0cHM6Ly9zb25vdmVsLWQxLmhlbGxvLXBjZGQud29ya2Vycy5kZXY");
@@ -43,7 +44,7 @@ public class ClientReportRepository {
                 report.setOsArch(System.getProperty("os.arch"));
                 report.setOsVersion(System.getProperty("os.version"));
                 report.setLocalIp(NetUtil.getLocalhostStr());
-                report.setAppVersion(ConfigUtils.defaultConfig().getVersion());
+                report.setAppVersion(AppConfigLoader.APP_CONFIG.getVersion());
                 String now = DateUtil.now();
                 report.setCreatedAt(now);
                 report.setUpdatedAt(now);

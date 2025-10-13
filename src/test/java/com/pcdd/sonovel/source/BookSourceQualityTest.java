@@ -12,6 +12,7 @@ import cn.hutool.http.Header;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
@@ -20,7 +21,6 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParserQuanben5;
-import com.pcdd.sonovel.util.ConfigUtils;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.Data;
@@ -50,15 +50,15 @@ import java.util.concurrent.TimeUnit;
  */
 class BookSourceQualityTest {
 
-    static final AppConfig config = ConfigUtils.defaultConfig();
+    static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     static final Map<String, List<Book>> ranks = new ConcurrentHashMap<>();
     // 测试排行榜前几名 (0, 20]
     static final int TOP_NUM = 20;
 
     static {
-        HttpClientContext.set(OkHttpClientFactory.create(config, true));
+        HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG, true));
         ConsoleLog.setLevel(Level.OFF);
-        config.setLanguage("zh_CN");
+        APP_CONFIG.setLanguage("zh_CN");
     }
 
     void qidianRankInit(Map<String, String> map) {
@@ -169,11 +169,11 @@ class BookSourceQualityTest {
         String divider = "=".repeat(30);
         Console.log("{} 测试书源质量 {} | 书源 {} {} ({}) {}",
                 divider, rank.getKey(), rule.getId(), rule.getUrl(), rule.getName(), divider);
-        config.setSourceId(id);
+        APP_CONFIG.setSourceId(id);
         // 需要代理的书源
-        config.setProxyEnabled(rule.isNeedProxy() ? 1 : 0);
-        SearchParser sp = new SearchParser(config);
-        SearchParserQuanben5 quanben5 = new SearchParserQuanben5(config);
+        APP_CONFIG.setProxyEnabled(rule.isNeedProxy() ? 1 : 0);
+        SearchParser sp = new SearchParser(APP_CONFIG);
+        SearchParserQuanben5 quanben5 = new SearchParserQuanben5(APP_CONFIG);
 
         // 遍历 20 本，即搜索源站 20 次，注意爬取频率
         for (Book b : ranks.get(rank.getKey())) {
@@ -184,7 +184,7 @@ class BookSourceQualityTest {
             sq.setQiDianUrl(b.getUrl());
 
             List<SearchResult> results;
-            if (config.getSourceId() == 6) {
+            if (APP_CONFIG.getSourceId() == 6) {
                 results = quanben5.parse(b.getBookName());
             } else {
                 results = sp.parse(b.getBookName());

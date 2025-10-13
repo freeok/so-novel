@@ -2,7 +2,7 @@ package com.pcdd.sonovel.web.servlet;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class BookDownloadServlet extends HttpServlet {
 
     @SneakyThrows
     private void downloadFileToLocal(HttpServletResponse resp, String filename) {
-        File file = new File(ConfigUtils.defaultConfig().getDownloadPath(), filename);
+        File file = new File(AppConfigLoader.APP_CONFIG.getDownloadPath(), filename);
 
         if (!file.exists()) {
             RespUtils.writeError(resp, 404, "文件不存在");

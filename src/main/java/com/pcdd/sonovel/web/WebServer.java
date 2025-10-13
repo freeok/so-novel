@@ -2,7 +2,7 @@ package com.pcdd.sonovel.web;
 
 
 import cn.hutool.core.lang.Console;
-import com.pcdd.sonovel.util.ConfigUtils;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.web.servlet.*;
 import org.eclipse.jetty.ee11.servlet.DefaultServlet;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
@@ -13,7 +13,7 @@ import org.eclipse.jetty.util.resource.ResourceFactory;
 public class WebServer {
 
     public void start() {
-        int port = ConfigUtils.defaultConfig().getWebPort();
+        int port = AppConfigLoader.APP_CONFIG.getWebPort();
         Server server = new Server(port);
         ServletContextHandler context = createServletContext();
         registerServlets(context);
