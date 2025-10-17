@@ -44,4 +44,4 @@ docker run -it --rm -v /sonovel/config.ini:/sonovel/config.ini -v /sonovel/downl
 
 
 下载地址：https://github.com/freeok/so-novel/releases
-书源一栏：https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md
+书源一览：https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md
