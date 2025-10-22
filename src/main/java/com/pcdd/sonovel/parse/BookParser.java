@@ -2,7 +2,7 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
