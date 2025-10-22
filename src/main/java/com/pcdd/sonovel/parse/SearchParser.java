@@ -9,7 +9,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.*;

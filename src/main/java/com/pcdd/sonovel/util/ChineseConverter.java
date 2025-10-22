@@ -1,10 +1,9 @@
-package com.pcdd.sonovel.convert;
+package com.pcdd.sonovel.util;
 
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.LangType;
 import lombok.experimental.UtilityClass;
 
 import java.util.function.Function;

@@ -3,8 +3,8 @@ package com.pcdd.sonovel.parse;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.convert.ChapterConverter;
-import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.core.ChapterRenderer;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
@@ -27,11 +27,11 @@ import org.jsoup.select.Elements;
 public class ChapterParser extends Source {
 
     private final OkHttpClient httpClient = HttpClientContext.get();
-    private final ChapterConverter chapterConverter;
+    private final ChapterRenderer chapterRenderer;
 
     public ChapterParser(AppConfig config) {
         super(config);
-        this.chapterConverter = new ChapterConverter(config);
+        this.chapterRenderer = new ChapterRenderer(config);
     }
 
     public Chapter parse(Chapter chapter) {
@@ -44,7 +44,7 @@ public class ChapterParser extends Source {
             chapter.setContent(content);
 
             // 确保简繁互转最后调用
-            return ChineseConverter.convert(chapterConverter.convert(chapter), this.rule.getLanguage(), config.getLanguage());
+            return ChineseConverter.convert(chapterRenderer.process(chapter), this.rule.getLanguage(), config.getLanguage());
 
         } catch (Exception e) {
             // 中断下载，不重试
@@ -70,7 +70,7 @@ public class ChapterParser extends Source {
                 chapter.setContent(content);
 
                 LogUtils.info("重试成功: 【{}】", chapter.getTitle());
-                return chapterConverter.convert(chapter);
+                return chapterRenderer.process(chapter);
 
             } catch (Exception e) {
                 LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());

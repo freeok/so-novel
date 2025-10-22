@@ -11,8 +11,8 @@ import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.convert.ChapterConverter;
-import com.pcdd.sonovel.convert.ChineseConverter;
+import com.pcdd.sonovel.core.ChapterRenderer;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
@@ -184,7 +184,7 @@ class BookSourceTest {
             threadPool.execute(() -> {
                 Chapter o = Chapter.builder().url(chapter.getUrl()).build();
                 Chapter beforeFiltration = new ChapterParser(APP_CONFIG).parse(o);
-                Chapter afterFiltration = new ChapterConverter(APP_CONFIG).convert(beforeFiltration);
+                Chapter afterFiltration = new ChapterRenderer(APP_CONFIG).process(beforeFiltration);
                 Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), APP_CONFIG.getLanguage());
                 if (StrUtil.isAllNotEmpty(res.getTitle(), res.getContent())) {
                     Console.log("✅ {}", res.getTitle());

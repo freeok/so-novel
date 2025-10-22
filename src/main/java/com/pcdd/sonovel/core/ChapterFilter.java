@@ -15,19 +15,22 @@ import java.util.regex.Pattern;
  */
 public class ChapterFilter extends Source {
 
+    private static final Pattern TITLE_NUMBER_PATTERN = Pattern.compile("^(\\d+)\\s*\\.\\s*(.+)$");
+    private static final Pattern HTML_ENTITY_PATTERN = Pattern.compile("&[^;]+;");
+
     public ChapterFilter(AppConfig config) {
         super(config);
     }
 
     /**
-     * 过滤正文内容
+     * 主过滤方法
      */
-    public String filter(Chapter chapter) {
+    public Chapter filter(Chapter chapter) {
         return new FilterBuilder(chapter)
                 .filterInvisibleChars(true)
-                .filterAds(true)
                 .filterEscape(true)
-                .filterDuplicateTitle(true)
+                .filterAds(true)
+                .filterTitle(true)
                 .build();
     }
 
@@ -56,14 +59,6 @@ public class ChapterFilter extends Source {
         }
 
         /**
-         * 是否启用广告过滤
-         */
-        public FilterBuilder filterAds(boolean apply) {
-            this.applyAdsFilter = apply;
-            return this;
-        }
-
-        /**
          * 是否启用 HTML 实体字符过滤
          */
         public FilterBuilder filterEscape(boolean apply) {
@@ -72,9 +67,17 @@ public class ChapterFilter extends Source {
         }
 
         /**
+         * 是否启用广告过滤
+         */
+        public FilterBuilder filterAds(boolean apply) {
+            this.applyAdsFilter = apply;
+            return this;
+        }
+
+        /**
          * 是否启用标题过滤
          */
-        public FilterBuilder filterDuplicateTitle(boolean apply) {
+        public FilterBuilder filterTitle(boolean apply) {
             this.applyTitleFilter = apply;
             return this;
         }
@@ -82,9 +85,14 @@ public class ChapterFilter extends Source {
         /**
          * 构建最终过滤内容
          */
-        public String build() {
+        public Chapter build() {
             if (applyInvisibleCharsFilter) {
                 this.content = CrawlUtils.cleanInvisibleChars(this.content);
+            }
+
+            if (applyEscapeFilter) {
+                // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
+                this.content = HTML_ENTITY_PATTERN.matcher(this.content).replaceAll("");
             }
 
             if (applyAdsFilter) {
@@ -92,30 +100,27 @@ public class ChapterFilter extends Source {
                 this.content = HtmlUtil.removeHtmlTag(filteredContent, StrUtil.splitToArray(rule.getChapter().getFilterTag(), " "));
             }
 
-            if (applyEscapeFilter) {
-                // 替换 &..; (HTML 字符实体引用)，主要是 &nbsp;，可能会导致 ibooks 章节报错
-                this.content = this.content.replaceAll("&[^;]+;", "");
-            }
-
-            // 确保在 EscapeFilter、AdsFilter 之后
+            // 确保在在 EscapeFilter、AdsFilter 之执行
             this.content = StrUtil.cleanBlank(this.content);
 
             if (applyTitleFilter) {
                 // 删除正文开头的标题
                 String cleanTitle = StrUtil.cleanBlank(this.title);
-                this.content = content.replaceFirst("^(%s|%s)".formatted(
-                        Pattern.quote(this.title), Pattern.quote(cleanTitle)
-                ), "");
+                String regex = "^(%s|%s)".formatted(Pattern.quote(this.title), Pattern.quote(cleanTitle));
+                this.content = this.content.replaceFirst(regex, "");
 
                 // 解决某些阅读器目录无法解析 txt 中的章节名，例如：1.章节名
-                Matcher matcher = Pattern.compile("^(\\d+)\\s*\\.\\s*(.+)$").matcher(this.title);
+                Matcher matcher = TITLE_NUMBER_PATTERN.matcher(this.title);
                 if (matcher.find()) {
                     this.title = "第%s章 %s".formatted(matcher.group(1), matcher.group(2));
                 }
             }
 
-            // 删除全部空标签，例如 <p></p>
-            return HtmlUtil.cleanEmptyTag(this.content);
+            return Chapter.builder()
+                    .title(this.title)
+                    // 删除全部空标签，例如 <p></p>
+                    .content(HtmlUtil.cleanEmptyTag(this.content))
+                    .build();
         }
     }
 
