@@ -5,18 +5,15 @@ set -e  # 出现错误立即退出
 # Windows 发布脚本 (x64)
 # =====================
 
-# === 基本信息 ===
 JRE_FILENAME="jre-21.0.8+9-windows_x64.zip"
 JRE_DIRNAME="jdk-21.0.8+9-jre"
+JRE_PATH="bundle/$JRE_FILENAME"
 DIST_FILENAME="sonovel-windows.tar.gz"
 DIST_DIRNAME="SoNovel"
 DOWNLOAD_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.8_9.zip"
-
-# === 路径定义 ===
 PROJECT_PATH="$( cd "$(dirname "$0")"/.. && pwd )"
 DIST_PATH="$PROJECT_PATH/dist"
 TARGET_DIR="$PROJECT_PATH/target/$DIST_DIRNAME"
-JRE_PATH="bundle/$JRE_FILENAME"
 
 prepare_dist_dir() {
     mkdir -p "$DIST_PATH"
@@ -25,7 +22,6 @@ prepare_dist_dir() {
     else
         echo "JRE 不存在，开始下载..."
         curl --retry 3 -C - -L -o "$JRE_PATH" "$DOWNLOAD_URL"
-
         # 检查下载是否成功
         if [ $? -eq 0 ]; then
             echo "下载完成，JRE 保存在 $JRE_PATH"
