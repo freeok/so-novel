@@ -63,6 +63,17 @@ body {
   letter-spacing: 2px;
 }
 
+.version-tag {
+  font-size: 0.6em;
+  /*color: #5d5d81;*/
+  /*background-color: #f0f2f5;*/
+  color: #529b2e;
+  background-color: #f0f9eb;
+  text-decoration: none;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
 .main-content {
   display: flex;
   flex-direction: column;

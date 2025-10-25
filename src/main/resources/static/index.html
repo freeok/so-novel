@@ -22,6 +22,7 @@
 <div class="wrap-container">
   <header class="header">
     <h1 class="app-title">SO NOVEL</h1>
+    <a id="versionTag" class="version-tag" target="_blank">version</a>
   </header>
   <main class="main-content">
     <section class="container download-container card" id="downloadContainer">
@@ -95,6 +96,7 @@
     const tableBody = document.getElementById('tableBody')
     const tipEle = document.getElementById('tipEle')
     const tipText = document.getElementById('tipText')
+    const versionTag = document.getElementById("versionTag");
 
     let bookCache = []
     // 最新下载的书的文件名
@@ -188,6 +190,15 @@
         <td data-label="操作"><button class="btn btn-secondary btn-download" data-filename="${item.name}">下载</button></td>
       </tr>
     `).join('')
+    }
+
+    const fetchVersion = async () => {
+      const response = await fetch('/version')
+      const data = await response.json()
+      const ver = data.data
+      console.log('version:', ver)
+      versionTag.innerText = ver
+      versionTag.href = `https://github.com/freeok/so-novel/releases/tag/${ver}`
     }
 
     // 数据获取
@@ -291,6 +302,7 @@
 
     // 页面加载时执行
     initSSE()
+    fetchVersion()
     fetchLocalBooks()
   })
 </script>
