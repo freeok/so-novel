@@ -15,8 +15,7 @@ PROJECT_PATH="$( cd "$(dirname "$0")"/.. && pwd )"
 DIST_PATH="$PROJECT_PATH/dist"
 TARGET_DIR="$PROJECT_PATH/target/$DIST_DIRNAME"
 
-prepare_dist_dir() {
-    mkdir -p "$DIST_PATH"
+download_jre() {
     if [ -f "$JRE_PATH" ]; then
         echo "JRE 已存在，无需下载。"
     else
@@ -52,14 +51,16 @@ extract_jre() {
 }
 
 package_artifacts() {
+    mkdir -p "$DIST_PATH"
     cd "$PROJECT_PATH/target"
     tar czf "$DIST_FILENAME" "$DIST_DIRNAME"
     mv "$DIST_FILENAME" "$DIST_PATH"
 }
 
 main() {
+    echo "🏗️ 开始构建 Windows x64..."
     cd "$PROJECT_PATH"
-    prepare_dist_dir
+    download_jre
     run_maven
     copy_files
     extract_jre
