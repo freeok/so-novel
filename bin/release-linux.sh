@@ -4,61 +4,78 @@ set -e
 # ==========================
 # Linux 发布脚本 (x64, arm64)
 # 用法：
-#   ./release-linux.sh [arch]
+#   ./release-linux.sh [ARCH]
 # 示例：
 #   ./release-linux.sh x64
 #   ./release-linux.sh arm64
 # 默认：x64
 # ==========================
 
-arch="${1:-x64}"
-
-# JRE 文件名
-jre_filename="jre-21.0.8+9-${arch}_linux.tar.gz"
+ARCH="${1:-x64}"
+JRE_FILENAME="jre-21.0.8+9-linux_${ARCH}.tar.gz"
+JRE_DIRNAME="jdk-21.0.8+9-jre"
+JRE_PATH="bundle/$JRE_FILENAME"
 # 输出文件名和目录名根据架构区分
-dist_filename="sonovel-linux_${arch}.tar.gz"
-dist_dirname="sonovel-linux_${arch}"
+DIST_FILENAME="sonovel-linux_${ARCH}.tar.gz"
+DIST_DIRNAME="sonovel-linux_${ARCH}"
+PROJECT_PATH="$( cd "$(dirname "$0")"/.. && pwd )"
+
+arch_alias=""
+if [ "$ARCH" = "x64" ]; then
+  arch_alias="x64"
+elif [ "$ARCH" = "arm64" ]; then
+  arch_alias="aarch64"
+else
+    echo "❌ 不支持的架构: $ARCH，可选值：x64|arm64"
+    exit 1
+fi
+DOWNLOAD_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_${arch_alias}_linux_hotspot_21.0.8_9.tar.gz"
+
+cd "$PROJECT_PATH" || exit
 
 # 检查 JRE 文件是否存在
-if [[ ! -f "bundle/$jre_filename" ]]; then
-  echo "❌ 未找到 bundle/$jre_filename"
-  exit 1
+if [ -f "$JRE_PATH" ]; then
+    echo "JRE 已存在，无需下载。"
+else
+    echo "JRE 不存在，开始下载..."
+    curl --retry 3 -C - -L -o "$JRE_PATH" "$DOWNLOAD_URL"
+    # 检查下载是否成功
+    if [ $? -eq 0 ]; then
+        echo "下载完成，JRE 保存在 $JRE_PATH"
+    else
+        echo "下载失败，请检查网络或 URL。"
+        exit 1
+    fi
 fi
 
-# 项目根路径
-project_path=$(
-  cd "$(dirname "$0")" || exit
-  cd ..
-  pwd
-)
-cd "$project_path" || exit
-
 # Maven 打包
-echo "🏗️ 开始 Maven 构建 ($arch)..."
-mvn clean package -P"linux-${arch}" -Dmaven.test.skip=true -DjrePath=runtime
+echo "🏗️ 开始 Maven 构建 ($ARCH)..."
+mvn clean package -P"linux-${ARCH}" -Dmaven.test.skip=true -DjrePath=runtime
 
 # 创建产物目录
 mkdir -p dist
-mkdir -p "target/$dist_dirname"
+mkdir -p "target/$DIST_DIRNAME"
 
 # 复制文件
-cp "bundle/$jre_filename" "target/$dist_dirname"
-cp -r bundle/rules "target/$dist_dirname"
-cp bundle/config.ini bundle/readme.txt bundle/run-linux.sh "target/$dist_dirname"
-cp "bundle/支持 & 赞助.png" "target/$dist_dirname"
+cp "bundle/$JRE_FILENAME" "target/$DIST_DIRNAME"
+cp -r bundle/rules "target/$DIST_DIRNAME"
+cp bundle/config.ini bundle/readme.txt bundle/run-linux.sh "target/$DIST_DIRNAME"
+cp "bundle/支持 & 赞助.png" "target/$DIST_DIRNAME"
 
 # 移动 jar 包
 cd target
 mv app-jar-with-dependencies.jar app.jar
-cp app.jar "$dist_dirname"
+cp app.jar "$DIST_DIRNAME"
 
 # 解压 JRE
-cd "$dist_dirname"
-tar zxf "$jre_filename" && rm "$jre_filename"
+cd "$DIST_DIRNAME"
+tar zxf "$JRE_FILENAME"
+mv "$JRE_DIRNAME" runtime
+rm "$JRE_FILENAME"
 cd ..
 
 # 打包压缩
-tar czf "$dist_filename" "$dist_dirname"
-mv "$dist_filename" "$project_path/dist"
+tar czf "$DIST_FILENAME" "$DIST_DIRNAME"
+mv "$DIST_FILENAME" "$PROJECT_PATH/dist"
 
-echo "✅ Linux ${arch} 构建完成！产物: $dist_filename"
+echo "✅ Linux ${ARCH} 构建完成！产物: $DIST_FILENAME"
