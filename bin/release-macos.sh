@@ -4,71 +4,76 @@ set -e
 # ==========================
 # macOS 发布脚本 (arm64, x64)
 # 用法：
-#   ./release-macos.sh [arch]
+#   ./release-macos.sh [ARCH]
 # 示例：
 #   ./release-macos.sh arm64
 #   ./release-macos.sh x64
 # 默认：arm64
 # ==========================
 
-# JRE 文件名
-jre_filename_arm64="jre-21.0.8+9-arm64_mac.tar.gz"
-jre_filename_x64="jre-21.0.8+9-x64_mac.tar.gz"
-# JRE 解压后的目录名
-jre_dirname="jdk-21.0.8+9-jre"
+ARCH="${1:-arm64}"
+JRE_FILENAME="jre-21.0.8+9-macos_${ARCH}.tar.gz"
+JRE_DIRNAME="jdk-21.0.8+9-jre"
+JRE_PATH="bundle/$JRE_FILENAME"
+DIST_FILENAME="sonovel-macos_${ARCH}.tar.gz"
+DIST_DIRNAME="sonovel-macos_${ARCH}"
+PROJECT_PATH=$(cd "$(dirname "$0")" || exit; cd ..; pwd)
 
-# 最终产物名
-dist_filename_arm64="sonovel-macos_arm64.tar.gz"
-dist_dirname_arm64="sonovel-macos_arm64"
-dist_filename_x64="sonovel-macos_x64.tar.gz"
-dist_dirname_x64="sonovel-macos_x64"
+echo "🏗️ 开始构建 macOS [$ARCH]..."
 
-# 自动定位项目根目录
-project_path=$(cd "$(dirname "$0")" || exit; cd ..; pwd)
-cd "$project_path" || exit
-
-# 读取架构参数
-arch="$1"
-if [[ "$arch" == "x64" ]]; then
-  profile="macos-x64"
-  jre_filename="$jre_filename_x64"
-  dist_filename="$dist_filename_x64"
-  dist_dirname="$dist_dirname_x64"
+arch_alias=""
+if [ "$ARCH" = "x64" ]; then
+  arch_alias="x64"
+elif [ "$ARCH" = "arm64" ]; then
+  arch_alias="aarch64"
 else
-  arch="arm64" # 默认
-  profile="macos-arm64"
-  jre_filename="$jre_filename_arm64"
-  dist_filename="$dist_filename_arm64"
-  dist_dirname="$dist_dirname_arm64"
+    echo "❌ 不支持的架构: $ARCH，可选值：x64|arm64"
+    exit 1
+fi
+DOWNLOAD_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_${arch_alias}_mac_hotspot_21.0.8_9.tar.gz"
+
+cd "$PROJECT_PATH" || exit
+
+# 下载 JRE
+if [ -f "$JRE_PATH" ]; then
+    echo "JRE 已存在，无需下载。"
+else
+    echo "JRE 不存在，开始下载..."
+    curl --retry 3 -C - -L -o "$JRE_PATH" "$DOWNLOAD_URL"
+    # 检查下载是否成功
+    if [ $? -eq 0 ]; then
+        echo "下载完成，JRE 保存在 $JRE_PATH"
+    else
+        echo "下载失败，请检查网络或 URL。"
+        exit 1
+    fi
 fi
 
-echo "👉 打包 macOS [$arch]..."
-
 # Maven 打包
-mvn clean package -P$profile '-Dmaven.test.skip=true' '-DjrePath=runtime'
+mvn clean package -P"macos-${ARCH}" -Dmaven.test.skip=true -DjrePath=runtime
 
 # 准备目录
 mkdir -p dist
-mkdir -p "target/$dist_dirname"
+mkdir -p "target/$DIST_DIRNAME"
 
-cp "bundle/$jre_filename" "target/$dist_dirname"
-cp -r bundle/rules "target/$dist_dirname"
-cp bundle/config.ini bundle/readme.txt bundle/run-macos.sh "target/$dist_dirname"
-cp "bundle/支持 & 赞助.png" "target/$dist_dirname"
+cp "bundle/$JRE_FILENAME" "target/$DIST_DIRNAME"
+cp -r bundle/rules "target/$DIST_DIRNAME"
+cp bundle/config.ini bundle/readme.txt bundle/run-macos.sh "target/$DIST_DIRNAME"
+cp "bundle/支持 & 赞助.png" "target/$DIST_DIRNAME"
 
 # 复制 jar
 cd target
 mv app-jar-with-dependencies.jar app.jar || true  # 忽略已改名的情况
-cp app.jar "$dist_dirname"
+cp app.jar "$DIST_DIRNAME"
 
 # 解压 JRE
-cd "$dist_dirname"
-tar zxf "$jre_filename" && rm "$jre_filename"
-mv "$jre_dirname" runtime
+cd "$DIST_DIRNAME"
+tar zxf "$JRE_FILENAME" && rm "$JRE_FILENAME"
+mv "$JRE_DIRNAME" runtime
 cd ..
 
 # 打包 tar.gz
-tar czf "$dist_filename" "$dist_dirname"
-mv "$dist_filename" "$project_path/dist"
+tar czf "$DIST_FILENAME" "$DIST_DIRNAME"
+mv "$DIST_FILENAME" "$PROJECT_PATH/dist"
 
-echo "✅ macOS [$arch] 构建完成！产物: $dist_filename"
+echo "✅ macOS [$ARCH] 构建完成！产物: $DIST_FILENAME"
