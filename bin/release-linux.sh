@@ -20,6 +20,8 @@ DIST_FILENAME="sonovel-linux_${ARCH}.tar.gz"
 DIST_DIRNAME="sonovel-linux_${ARCH}"
 PROJECT_PATH="$( cd "$(dirname "$0")"/.. && pwd )"
 
+echo "🏗️ 开始构建 Linux [$ARCH]..."
+
 arch_alias=""
 if [ "$ARCH" = "x64" ]; then
   arch_alias="x64"
@@ -49,7 +51,6 @@ else
 fi
 
 # Maven 打包
-echo "🏗️ 开始 Maven 构建 ($ARCH)..."
 mvn clean package -P"linux-${ARCH}" -Dmaven.test.skip=true -DjrePath=runtime
 
 # 创建产物目录
@@ -69,9 +70,8 @@ cp app.jar "$DIST_DIRNAME"
 
 # 解压 JRE
 cd "$DIST_DIRNAME"
-tar zxf "$JRE_FILENAME"
+tar zxf "$JRE_FILENAME" && rm "$JRE_FILENAME"
 mv "$JRE_DIRNAME" runtime
-rm "$JRE_FILENAME"
 cd ..
 
 # 打包压缩
