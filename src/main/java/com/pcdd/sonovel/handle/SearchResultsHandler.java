@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public class SearchResultsHandler {
 
     /**
-     * 优化某个源站的搜索结果
+     * 优化源站的搜索结果（排序）
      */
     public List<SearchResult> sort(List<SearchResult> list) {
-        // 按照作者分组
+        // 先按作者分组
         Map<String, List<SearchResult>> authorGroups = list.stream()
                 .collect(Collectors.groupingBy(SearchResult::getAuthor, LinkedHashMap::new, Collectors.toList()));
 
-        // 对每个组进行排序
+        // 再对每个组进行排序
         return authorGroups.values().stream()
                 // 根据每个作者对应的书籍数量进行降序排序
                 .sorted((entry1, entry2) -> Integer.compare(entry2.size(), entry1.size()))
@@ -35,16 +35,16 @@ public class SearchResultsHandler {
     }
 
     /**
-     * 优化聚合搜索结果 V2 版本，自动判断搜索类型
+     * 优化源站搜索结果（排序、过滤）
      */
-    public static List<SearchResult> aggregateSort(List<SearchResult> data, String kw) {
-        double bookNameScore = getSimilarity(data, kw, "bookName");
-        double authorScore = getSimilarity(data, kw, "author");
+    public List<SearchResult> filterSort(List<SearchResult> list, String kw) {
+        double bookNameScore = getSimilarity(list, kw, "bookName");
+        double authorScore = getSimilarity(list, kw, "author");
         boolean isAuthorSearch = bookNameScore < authorScore;
 
         // 缓存相似度
         Map<SearchResult, Double> similarityMap = new HashMap<>();
-        for (SearchResult sr : data) {
+        for (SearchResult sr : list) {
             double score = StrUtil.similar(kw, isAuthorSearch ? sr.getAuthor() : sr.getBookName());
             similarityMap.put(sr, score);
         }
@@ -61,22 +61,23 @@ public class SearchResultsHandler {
                     : o1.getAuthor().compareTo(o2.getAuthor());
         };
 
-        // 忽略低相似度
-        List<SearchResult> filtered = data.stream()
+        // 过滤低相似度搜索结果
+        List<SearchResult> filtered = list.stream()
                 .filter(sr -> similarityMap.get(sr) > 0.3)
                 .sorted(comparator)
                 .toList();
 
-        // 如果筛选后为空，则排序原始 data 返回
+        // 若过滤后为空，则返回仅排序的搜索结果
         return filtered.isEmpty()
-                ? data.stream().filter(sr -> similarityMap.get(sr) > 0).sorted(comparator).toList()
+                ? list.stream().filter(sr -> similarityMap.get(sr) > 0).sorted(comparator).toList()
                 : filtered;
     }
+
 
     /**
      * 计算权重，用于判断关键字是书名还是作者
      */
-    private static double getSimilarity(List<SearchResult> data, String kw, String type) {
+    private double getSimilarity(List<SearchResult> data, String kw, String type) {
         boolean isShortQuery = kw.length() <= 4; // 关键词很短，可能是作者
         boolean isLongQuery = kw.length() >= 10; // 关键词很长，可能是书名
 

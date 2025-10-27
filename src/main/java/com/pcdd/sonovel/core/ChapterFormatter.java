@@ -21,7 +21,7 @@ public class ChapterFormatter {
         Rule.Chapter r = new Source(config).rule.getChapter();
         content = JsoupUtils.clearAllAttributes(content);
 
-        // <tag>段落内容</tag>
+        // 标签闭合，例如：<tag>段落内容</tag>
         if (r.isParagraphTagClosed()) {
             // 非 <p> 闭合标签（例如 <span>段落</span>）替换为 <p>
             return content.replaceAll("<(?!p\\b)([^>]+)>(.*?)</\\1>", "<p>$2</p>");

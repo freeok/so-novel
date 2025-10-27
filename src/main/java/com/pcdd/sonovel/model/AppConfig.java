@@ -26,6 +26,7 @@ public class AppConfig {
     private String activeRules;
     private Integer sourceId;
     private Integer searchLimit;
+    private Integer searchFilter;
 
     // [crawl]
     private Integer threads;

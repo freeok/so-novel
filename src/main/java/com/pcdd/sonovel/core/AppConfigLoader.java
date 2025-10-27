@@ -77,6 +77,7 @@ public class AppConfigLoader {
         cfg.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
         cfg.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
         cfg.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
+        cfg.setSearchFilter(usr.getInt("search-filter", SELECTION_SOURCE, 1));
 
         // [crawl]
         cfg.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
