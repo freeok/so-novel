@@ -6,7 +6,9 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Source;
+import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Rule;
@@ -76,7 +78,10 @@ public class SingleSearchAction {
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
-        return searchResults;
+
+        return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
+                ? SearchResultsHandler.filterSort(searchResults, keyword)
+                : SearchResultsHandler.sort(searchResults);
     }
 
     @SneakyThrows
