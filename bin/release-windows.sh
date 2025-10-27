@@ -40,7 +40,6 @@ copy_files() {
     cp "target/app-jar-with-dependencies.jar" "$TARGET_DIR/app.jar"
     cp -r bundle/rules "$TARGET_DIR/"
     cp bundle/config.ini bundle/sonovel.l4j.ini bundle/readme.txt "$TARGET_DIR"
-    cp "bundle/支持 & 赞助.png" "$TARGET_DIR"
 }
 
 extract_jre() {

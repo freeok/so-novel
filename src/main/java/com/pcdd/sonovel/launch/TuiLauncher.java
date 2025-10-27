@@ -31,7 +31,7 @@ public class TuiLauncher {
             Console.log("\n" + """
                     q.聚合搜索\tw.独立搜索\te.批量下载
                     a.书源一览\ts.版本信息\td.配置信息
-                    z.结束程序\tx.检查更新
+                    z.结束程序\tx.检查更新\tc.赞助项目
                     """);
             Console.print(render("==> 请输入功能序号: ", "green"));
             String cmd = sc.nextLine().strip();
@@ -48,6 +48,7 @@ public class TuiLauncher {
                     System.exit(0);
                 }
                 case "x" -> new CheckUpdateAction().execute();
+                case "c" -> new DonateAction().execute();
                 default -> Console.log(render("无效的功能序号，请重新输入", "yellow"));
             }
         }
