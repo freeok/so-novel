@@ -38,7 +38,7 @@
       "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
     },
     "crawl": {
-      "threads": 5,
+      "concurrency": 5,
       "minInterval": 1000,
       "maxInterval": 2000
     }
@@ -86,7 +86,7 @@
       "nextChapterLink": "https://www\\.0xs\\.net/txt/\\d+/\\d+\\.html"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 3000
     }
@@ -130,7 +130,7 @@
       "filterTag": ""
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 2000
     }
@@ -175,7 +175,7 @@
       "nextPage": ".prenext > span:nth-child(3) > a"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 2000
     }

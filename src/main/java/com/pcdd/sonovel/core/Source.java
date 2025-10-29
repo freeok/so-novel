@@ -32,7 +32,7 @@ public class Source {
         Rule.Crawl crawl = rule.getCrawl();
         if (crawl != null) {
             if (crawl.getThreads() != null) {
-                this.config.setThreads(crawl.getThreads());
+                this.config.setConcurrency(crawl.getThreads());
             }
             if (crawl.getMinInterval() != null) {
                 this.config.setMinInterval(crawl.getMinInterval());

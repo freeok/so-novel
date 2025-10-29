@@ -29,7 +29,7 @@ public class AppConfig {
     private Integer searchFilter;
 
     // [crawl]
-    private Integer threads;
+    private Integer concurrency;
     private Integer minInterval;
     private Integer maxInterval;
     private Integer enableRetry;
