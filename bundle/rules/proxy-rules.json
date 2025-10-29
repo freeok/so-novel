@@ -30,7 +30,7 @@
       "filterTag": "h1 div"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 2000
     }

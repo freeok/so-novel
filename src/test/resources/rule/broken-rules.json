@@ -114,7 +114,7 @@
       "filterTag": "div"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "min": 1000,
       "max": 2000,
       "maxAttempts": 5,
@@ -151,7 +151,7 @@
       "filterTag": "h1 div br"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "min": 1000,
       "max": 2000,
       "maxAttempts": 5,
@@ -187,7 +187,7 @@
       "filterTag": "div br"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "min": 1000,
       "max": 2000,
       "maxAttempts": 5,
@@ -315,7 +315,7 @@
       "nextPage": ".prenext > span:nth-child(3) > a"
     },
     "crawl": {
-      "threads": 1,
+      "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 2000
     }

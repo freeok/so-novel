@@ -80,7 +80,7 @@ public class AppConfigLoader {
         cfg.setSearchFilter(usr.getInt("search-filter", SELECTION_SOURCE, 1));
 
         // [crawl]
-        cfg.setThreads(usr.getInt("threads", SELECTION_CRAWL, -1));
+        cfg.setConcurrency(usr.getInt("concurrency", SELECTION_CRAWL, -1));
         cfg.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
         cfg.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
         cfg.setEnableRetry(usr.getInt("enable-retry", SELECTION_CRAWL, 1));

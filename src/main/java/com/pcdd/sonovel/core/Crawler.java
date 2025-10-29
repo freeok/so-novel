@@ -82,10 +82,10 @@ public class Crawler {
             return 0;
         }
 
-        int autoThreads = config.getThreads() == -1
+        int autoThreads = config.getConcurrency() == -1
                 // IO 密集型任务，不要和 CPU 核数绑定
                 ? Math.min(100, toc.size())
-                : config.getThreads();
+                : config.getConcurrency();
 
         Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 最大并发：{}",
                 book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
