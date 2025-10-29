@@ -1,6 +1,8 @@
 package com.pcdd.sonovel;
 
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarStyle;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -10,8 +12,10 @@ import java.util.concurrent.Executors;
  * @author pcdd
  * Created at 2025/6/26
  */
-public class ProgressBarTest {
-    public static void main(String[] args) {
+class ProgressBarTest {
+
+    @Test
+    void main() {
         int size = 1500;
         ProgressBar progressBar = ProgressBar.builder()
                 .setTaskName("Downloading...")
@@ -29,7 +33,7 @@ public class ProgressBarTest {
                 progressBar.stepTo(finalI);
                 progressBar.setExtraMessage("正在下载第" + finalI + "章");
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -47,4 +51,5 @@ public class ProgressBarTest {
         progressBar.setExtraMessage("Done!");
         progressBar.close();
     }
+
 }

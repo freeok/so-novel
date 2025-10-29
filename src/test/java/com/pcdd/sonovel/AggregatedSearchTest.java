@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.source;
+package com.pcdd.sonovel;
 
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
