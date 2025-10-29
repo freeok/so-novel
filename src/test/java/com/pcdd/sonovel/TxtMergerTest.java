@@ -1,4 +1,4 @@
-package com.pcdd.sonovel.merge;
+package com.pcdd.sonovel;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
