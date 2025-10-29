@@ -31,8 +31,8 @@ public class Source {
         // 规则爬取配置覆盖默认配置
         Rule.Crawl crawl = rule.getCrawl();
         if (crawl != null) {
-            if (crawl.getThreads() != null) {
-                this.config.setConcurrency(crawl.getThreads());
+            if (crawl.getConcurrency() != null) {
+                this.config.setConcurrency(crawl.getConcurrency());
             }
             if (crawl.getMinInterval() != null) {
                 this.config.setMinInterval(crawl.getMinInterval());

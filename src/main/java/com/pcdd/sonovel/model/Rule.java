@@ -98,7 +98,7 @@ public class Rule {
 
     @Data
     public static class Crawl {
-        private Integer threads;
+        private Integer concurrency;
         private Integer minInterval;
         private Integer maxInterval;
         private Integer maxAttempts;
