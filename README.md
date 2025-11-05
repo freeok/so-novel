@@ -22,7 +22,7 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 
 <details>
   <summary>点击查看图片</summary>
-  
+
 ### TUI 预览 (Text-based User Interface)
 
 ![preview-tui.png](assets/preview-tui.png)
@@ -123,7 +123,7 @@ docker build -t sonovel .
 > [!TIP]
 >
 > 推荐使用以下阅读器
-> 
+>
 > 桌面端：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)、[Calibre](https://calibre-ebook.com/)、[Neat Reader (网页版)](https://www.neat-reader.cn/webapp)
 >
 > 移动端：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader (静读天下)](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)
@@ -155,6 +155,8 @@ https://github.com/freeok/so-novel/discussions?discussions_q=
 | 支付宝赞助                                                           | 微信赞助                                                           |
 |-----------------------------------------------------------------|----------------------------------------------------------------|
 | <img src="assets/donation-alipay.png" alt="支付宝收款码" width="197"> | <img src="assets/donation-wechat.jpg" alt="微信赞赏码" width="197"> |
+
+[项目赞助者列表](./SPONSORS.md)
 
 ## 免责声明
 
