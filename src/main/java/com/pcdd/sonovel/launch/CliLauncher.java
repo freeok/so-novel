@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.launch;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
@@ -28,7 +29,7 @@ public class CliLauncher implements Runnable {
 
     @CommandLine.Option(names = {"--url", "-u"}, description = "书籍详情页链接")
     String bookUrl;
-    @CommandLine.Option(names = {"--ext", "-e"}, description = "下载格式，可选 txt|epub|html|pdf，默认 epub", defaultValue = "epub")
+    @CommandLine.Option(names = {"--ext", "-e"}, description = "下载格式，可选值：txt|epub|html|pdf，默认 epub", defaultValue = "epub")
     String extName;
 
     private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
@@ -38,11 +39,13 @@ public class CliLauncher implements Runnable {
      */
     @Override
     public void run() {
-        Console.log("""
-                下载链接: {}
-                下载格式: {}""", bookUrl, extName);
+        Assert.notEmpty(bookUrl, "书籍详情页链接不能为空！");
+        Assert.isTrue(extName.matches("(?i)(txt|epub|html|pdf)"), "下载格式不合法！可选值：txt|epub|html|pdf");
+
+        Console.log("下载链接: {}，下载格式: {}", bookUrl, extName);
 
         Rule rule = SourceUtils.getSource(bookUrl);
+        Assert.notNull(rule, "URL 未匹配，请输入当前书源规则包含的 URL，当前书源规则：{}", APP_CONFIG.getActiveRules());
         APP_CONFIG.setSourceId(rule.getId());
         APP_CONFIG.setExtName(extName);
 

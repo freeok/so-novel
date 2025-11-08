@@ -20,8 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class CrawlerPostHandler {
 
-    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("txt", "epub", "pdf");
     private final AppConfig config;
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("txt", "epub", "pdf");
 
     @SneakyThrows
     public void handle(File saveDir) {
