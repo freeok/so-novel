@@ -24,7 +24,7 @@ public class ClientReportRepository {
     private final String WORKERS_URL;
 
     static {
-        WORKERS_URL = Base64.decodeStr("aHR0cHM6Ly9zb25vdmVsLWQxLmhlbGxvLXBjZGQud29ya2Vycy5kZXY");
+        WORKERS_URL = Base64.decodeStr("aHR0cHM6Ly9zb25vdmVsLWQxLmhlbGxvLXBjZGQud29ya2Vycy5kZXY=");
     }
 
     /**
