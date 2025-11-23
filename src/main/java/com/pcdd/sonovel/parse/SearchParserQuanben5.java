@@ -45,7 +45,7 @@ public class SearchParserQuanben5 extends Source {
     public List<SearchResult> parse(String keyword) {
         try {
             Rule.Search ruleSearch = rule.getSearch();
-            String js = ResourceUtil.readUtf8Str("js/quanben5.js");
+            String js = ResourceUtil.readUtf8Str("quanben5.js");
             Object paramB = JsCaller.callFunction(js, "getParamB", keyword);
 
             String url = String.format(ruleSearch.getUrl(), keyword, paramB);
