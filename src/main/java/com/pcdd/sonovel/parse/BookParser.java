@@ -2,13 +2,13 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
@@ -16,6 +16,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.io.InputStream;
 
 /**
  * @author pcdd
@@ -34,8 +36,10 @@ public class BookParser extends Source {
         Rule.Book r = this.rule.getBook();
 
         Document document;
-        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
-            document = Jsoup.parse(resp.body().string(), r.getBaseUri());
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());
+             InputStream is = resp.body().byteStream()) {
+            // null 表示自动检测编码
+            document = Jsoup.parse(is, null, r.getBaseUri());
         }
 
         String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
