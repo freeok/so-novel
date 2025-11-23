@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -69,8 +70,10 @@ public class TocParser extends Source {
 
         if (ruleToc.isPagination()) {
             Document document;
-            try (Response resp = CrawlUtils.request(httpClient, url, ruleBook.getTimeout())) {
-                document = Jsoup.parse(resp.body().string(), ruleToc.getBaseUri());
+            try (Response resp = CrawlUtils.request(httpClient, url, ruleBook.getTimeout());
+                 InputStream is = resp.body().byteStream()) {
+                // null 表示自动检测编码
+                document = Jsoup.parse(is, null, ruleToc.getBaseUri());
             }
             extractPaginationUrls(urls, document, ruleToc);
         }
@@ -107,8 +110,10 @@ public class TocParser extends Source {
             if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
-            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout())) {
-                document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
+            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout());
+                 InputStream is = resp.body().byteStream()) {
+                // null 表示自动检测编码
+                document = Jsoup.parse(is, null, this.rule.getToc().getBaseUri());
             }
 
             Thread.sleep(CrawlUtils.randomInterval(config));
@@ -126,8 +131,10 @@ public class TocParser extends Source {
         // TODO 多线程优化
         for (String url : urls) {
             Document document;
-            try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
-                document = Jsoup.parse(resp.body().string(), this.rule.getToc().getBaseUri());
+            try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());
+                 InputStream is = resp.body().byteStream()) {
+                // null 表示自动检测编码
+                document = Jsoup.parse(is, null, this.rule.getToc().getBaseUri());
             }
 
             // TODO rule.toc.item 实现 JS 语法，在此调用比 addChapter 性能更好

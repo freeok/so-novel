@@ -4,12 +4,12 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.ChapterRenderer;
-import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
 import com.pcdd.sonovel.util.LogUtils;
@@ -19,6 +19,8 @@ import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
+import java.io.InputStream;
 
 /**
  * @author pcdd
@@ -103,9 +105,10 @@ public class ChapterParser extends Source {
     @SneakyThrows
     private String fetchSinglePageContent(String url, Rule.Chapter r) {
         Document doc;
-
-        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
-            doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());
+             InputStream is = resp.body().byteStream()) {
+            // null 表示自动检测编码
+            doc = Jsoup.parse(is, null, r.getBaseUri());
         }
 
         return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
@@ -118,8 +121,10 @@ public class ChapterParser extends Source {
 
         while (true) {
             Document doc;
-            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout())) {
-                doc = Jsoup.parse(resp.body().string(), r.getBaseUri());
+            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout());
+                 InputStream is = resp.body().byteStream()) {
+                // null 表示自动检测编码
+                doc = Jsoup.parse(is, null, r.getBaseUri());
             }
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
 
