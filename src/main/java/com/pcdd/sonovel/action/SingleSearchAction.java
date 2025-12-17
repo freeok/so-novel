@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
@@ -17,6 +18,7 @@ import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -77,7 +79,8 @@ public class SingleSearchAction {
                 : new SearchParser(config).parse(keyword, true);
 
         stopWatch.stop();
-        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(), NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
+        Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(),
+                NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
 
         return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
                 ? SearchResultsHandler.filterSort(searchResults, keyword)
@@ -86,15 +89,24 @@ public class SingleSearchAction {
 
     @SneakyThrows
     public void execute() {
+        ConsoleTable asciiTables = ConsoleTable.create()
+                .setSBCMode(false)
+                .addHeader("ID", "书源", "主页", "状态");
+        SourceUtils.getBookSources(false)
+                .forEach(e -> asciiTables.addBody(
+                        e.getId() + "",
+                        e.getName(),
+                        e.getUrl(),
+                        e.isDisabled() ? "禁用" : "启用"
+                ));
+        Console.table(asciiTables);
+
         if (config.getSourceId() == -1) {
-            Console.print(render("==> 请指定书源 ID: ", GREEN));
+            Console.print(render("==> 请选择书源 ID: ", GREEN));
             config.setSourceId(Integer.parseInt(sc.nextLine()));
         }
 
-        Source source = new Source(config);
-        Rule r = source.rule;
-        Console.log("<== 当前书源: {} ({})", r.getName(), r.getUrl());
-
+        Rule r = new Source(config).rule;
         if (r.getSearch() == null || r.getSearch().isDisabled()) {
             Console.print(render("==> 请输入书籍详情页网址: ", GREEN));
             downloadFromUrl(sc.nextLine().strip());
@@ -102,6 +114,8 @@ public class SingleSearchAction {
             Console.print(render("==> 请输入书名或作者（宁少字别错字）: ", GREEN));
             downloadByKeyword(sc.nextLine().strip());
         }
+        // 不记住 source-id
+        config.setSourceId(-1);
     }
 
 }
