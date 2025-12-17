@@ -8,8 +8,11 @@ import lombok.Data;
 public class SourceInfo {
 
     private Integer id;
-    private String url;
     private String name;
+    private String url;
+    private String comment;
+    private boolean needProxy;
+    private boolean disabled;
     private Integer delay;
     private Integer code;
 
