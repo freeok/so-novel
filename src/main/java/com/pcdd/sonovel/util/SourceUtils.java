@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
@@ -7,17 +8,28 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.SourceInfo;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
+
+import static org.fusesource.jansi.AnsiRenderer.render;
 
 /**
  * @author pcdd
@@ -157,6 +169,73 @@ public class SourceUtils {
                 .filter(r -> bookUrl.startsWith(r.getUrl()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * 获取书源列表
+     *
+     * @param isDelay 是否测试连通性
+     */
+    @SneakyThrows
+    public List<SourceInfo> getBookSources(boolean isDelay) {
+        List<Rule> rules = SourceUtils.getAllRules();
+        List<SourceInfo> res = new ArrayList<>();
+
+        if (!isDelay) {
+            return BeanUtil.copyToList(rules, SourceInfo.class);
+        }
+
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+        CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executor);
+        OkHttpClient client = OkHttpClientFactory.create(AppConfigLoader.APP_CONFIG);
+
+        for (Rule r : rules) {
+            completionService.submit(() -> {
+                SourceInfo source = SourceInfo.builder()
+                        .id(r.getId())
+                        .name(r.getName())
+                        .url(r.getUrl())
+                        .build();
+                try {
+                    Call call = client.newCall(new Request.Builder()
+                            .url(r.getUrl())
+                            .header("User-Agent", RandomUA.generate())
+                            .head() // 只发 HEAD 请求，不获取 body，更快！
+                            .build());
+                    call.timeout().timeout(5, TimeUnit.SECONDS);
+
+                    // 放这里才最准确
+                    long startTime = System.currentTimeMillis();
+                    try (Response resp = call.execute()) {
+                        source.setDelay((int) (System.currentTimeMillis() - startTime));
+                        source.setCode(resp.code());
+                    }
+                } catch (Exception e) {
+                    source.setDelay(-1);
+                    source.setCode(-1);
+                    if (EnvUtils.isDev()) {
+                        Console.error(render("书源 {} ({}) 测试延迟异常：{}", "red"), r.getId(), r.getName(), e.getMessage());
+                    }
+                }
+
+                return source;
+            });
+        }
+
+        for (int i = 0; i < rules.size(); i++) {
+            // 获取最先完成的任务的结果
+            res.add(completionService.take().get());
+        }
+
+        executor.shutdown();
+
+        res.sort((o1, o2) -> {
+            int delay1 = o1.getDelay() < 0 ? Integer.MAX_VALUE : o1.getDelay();
+            int delay2 = o2.getDelay() < 0 ? Integer.MAX_VALUE : o2.getDelay();
+            return Integer.compare(delay1, delay2);
+        });
+
+        return res;
     }
 
 }
