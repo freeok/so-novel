@@ -19,7 +19,7 @@ public class ShowSourcesAction {
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "延迟", "状态码", "URL");
 
-        SourceUtils.getBookSourcesWithAvailabilityCheck()
+        SourceUtils.getActivatedSourcesWithAvailabilityCheck()
                 .forEach(e -> asciiTables.addBody(
                         e.getId() + "",
                         e.getName(),

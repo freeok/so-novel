@@ -67,7 +67,7 @@ class BookSourceTest {
             "https://www.wxsy.net/novel/1803/",
     })
     void test01(String bookUrl) {
-        Rule rule = SourceUtils.getSource(bookUrl);
+        Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");
@@ -85,7 +85,7 @@ class BookSourceTest {
             "https://www.laoyaoxs.org/info/281469.html"
     })
     void test02(String bookUrl) {
-        Rule rule = SourceUtils.getSource(bookUrl);
+        Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
         bookParse(bookUrl);
@@ -102,7 +102,7 @@ class BookSourceTest {
             "https://www.dxmwx.org/book/56441.html"
     })
     void test03(String bookUrl) {
-        Rule rule = SourceUtils.getSource(bookUrl);
+        Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
         searchParse("斗罗大陆");

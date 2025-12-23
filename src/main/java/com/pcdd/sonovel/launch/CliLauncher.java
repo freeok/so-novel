@@ -44,8 +44,7 @@ public class CliLauncher implements Runnable {
 
         Console.log("下载链接: {}，下载格式: {}", bookUrl, extName);
 
-        Rule rule = SourceUtils.getSource(bookUrl);
-        Assert.notNull(rule, "URL 未匹配，请输入当前书源规则包含的 URL，当前书源规则：{}", APP_CONFIG.getActiveRules());
+        Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
         APP_CONFIG.setExtName(extName);
 

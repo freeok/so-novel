@@ -17,10 +17,13 @@ public class BookFetchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String bookUrl = req.getParameter("url");
+            int id = SourceUtils.getRule(bookUrl).getId();
+
             SearchResult sr = SearchResult.builder()
+                    .sourceId(id)
                     .url(bookUrl)
-                    .sourceId(SourceUtils.getSource(bookUrl).getId())
                     .build();
+
             downloadFileToServer(sr);
         } catch (Exception e) {
             RespUtils.writeError(resp, 500, "下载失败: " + e.getMessage());
