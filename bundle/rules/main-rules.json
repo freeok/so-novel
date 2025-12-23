@@ -282,6 +282,7 @@
       "author": "#bookinfo > div.bookright > div.d_title > h1 > em > a",
       "intro": "#bookintro",
       "category": "#count > span:nth-child(1)",
+      "coverUrl": "#bookimg > a > img",
       "latestChapter": "#bookinfo > div.bookright > div.new > span.new_t > a",
       "lastUpdateTime": "#bookinfo > div.bookright > div.new > span.new_p",
       "wordCount": "#count > span:nth-child(5)"

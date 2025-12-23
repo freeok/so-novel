@@ -46,7 +46,7 @@ public class BookParser extends Source {
         String author = JsoupUtils.selectAndInvokeJs(document, r.getAuthor(), getContentType(r.getAuthor()));
         // 以下为非必须属性
         String intro = StrUtil.cleanBlank(JsoupUtils.selectAndInvokeJs(document, r.getIntro(), getContentType(r.getIntro())));
-        String coverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(),
+        String defaultCoverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(),
                 StrUtil.startWith(r.getCoverUrl(), "meta[") ? ContentType.ATTR_CONTENT : ContentType.ATTR_SRC);
         String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
@@ -59,7 +59,7 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CoverUpdater.fetchCover(book, coverUrl));
+        book.setCoverUrl(CoverUpdater.fetchCover(book, defaultCoverUrl));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
         book.setLastUpdateTime(lastUpdateTime);
