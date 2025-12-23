@@ -8,7 +8,6 @@
 | [书海阁小说网](https://www.shuhaige.net/) | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
 | [梦书中文](http://www.mcxs.info/)       | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
 | [鸟书网](http://www.99xs.info/)        | ✅     | ❌      | 搜索限流 (Read timed out)                     |
-| [大熊猫文学](https://www.dxmwx.org/)     | ✅     | ✅      |                                           |
 | [笔趣阁22](https://www.22biqu.com/)    | ✅     | ✅      |                                           |
 | [笔尖中文](http://www.xbiquzw.net/)     | ✅     | ❌      |                                           | |
 | [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
@@ -22,6 +21,7 @@
 |-----------------------------------|------|---------------------------------------------------------------------|
 | [69书吧1](https://www.69shuba.com/) | ❌    | 章节限流，推荐线程数 1，目前章节页也加了CF盾，获取不到正文                                     |
 | [全本小说网](https://quanben5.com/)    | ✅    | 完本很全，连载基本搜不到，同 quanben5.io, big5.quanben5.com, quanben-xiaoshuo.com |
+| [大熊猫文学](https://www.dxmwx.org/)   | ✅    |                                                                     |                                           |
 
 `flowlimit-rules.json`：下载限流的书源
 
