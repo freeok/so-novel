@@ -39,16 +39,31 @@ public class SourceUtils {
     private final String RULES_DIR_PROD = "rules/";
     private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private List<Rule> cachedAllRules;
-    private List<Rule> cachedCurrentRules;
+    private List<Rule> cachedActivatedRules;
 
     /**
-     * 根据 sourceId 获取指定规则对象
+     * 根据书籍详情页 url 从当前激活书源匹配规则
+     */
+    public Rule getRule(String bookUrl) {
+        Rule rule = getActivatedRules().stream()
+                .filter(r -> bookUrl.startsWith(r.getUrl()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 bookUrl 为 {} 的规则！", APP_CONFIG.getActiveRules(), bookUrl)));
+        return applyDefaultRule(rule);
+    }
+
+    /**
+     * 根据 sourceId 从当前激活书源匹配规则
      */
     public Rule getRule(int sourceId) {
-        Rule rule = getCurrentRules().stream()
+        Rule rule = getActivatedRules().stream()
                 .filter(r -> r.getId() == sourceId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(StrUtil.format("{} 找不到 ID 为 {} 的规则！", APP_CONFIG.getActiveRules(), sourceId)));
+        return applyDefaultRule(rule);
+    }
+
+    private Rule applyDefaultRule(Rule rule) {
         Rule.Search ruleSearch = rule.getSearch();
         Rule.Book ruleBook = rule.getBook();
         Rule.Toc ruleToc = rule.getToc();
@@ -73,16 +88,16 @@ public class SourceUtils {
     /**
      * 获取当前激活的规则（带缓存）
      */
-    public List<Rule> getCurrentRules() {
-        if (cachedCurrentRules != null) {
-            return cachedCurrentRules;
+    public List<Rule> getActivatedRules() {
+        if (cachedActivatedRules != null) {
+            return cachedActivatedRules;
         }
-        cachedCurrentRules = loadCurrentRules();
-        return cachedCurrentRules;
+        cachedActivatedRules = loadActivatedRules();
+        return cachedActivatedRules;
     }
 
     /**
-     * 获取全部规则（带缓存）
+     * 获取 rules 目录下全部规则（带缓存）
      */
     public List<Rule> getAllRules() {
         if (cachedAllRules != null) {
@@ -92,7 +107,7 @@ public class SourceUtils {
         return cachedAllRules;
     }
 
-    private List<Rule> loadCurrentRules() {
+    private List<Rule> loadActivatedRules() {
         String baseDir = EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD;
         String pathname = baseDir + APP_CONFIG.getActiveRules();
         return loadRulesFromPath(pathname);
@@ -128,7 +143,7 @@ public class SourceUtils {
      * 获取可聚合搜索的书源列表。排除不支持搜索的、搜索有限流的、搜索意义不大的、暂时无法访问的书源
      */
     public List<Source> getSearchableSources() {
-        return getCurrentRules().stream()
+        return getActivatedRules().stream()
                 .filter(r -> !r.isDisabled() && r.getSearch() != null && !r.getSearch().isDisabled())
                 .map(r -> {
                     // 此处切勿改为 AppConfigLoader.APP_CONFIG
@@ -139,25 +154,14 @@ public class SourceUtils {
                 .toList();
     }
 
-    /**
-     * 根据书籍详情页 url 匹配书源规则
-     */
-    public Rule getSource(String bookUrl) {
-        List<Rule> allRules = getAllRules();
-        return allRules.stream()
-                .filter(r -> bookUrl.startsWith(r.getUrl()))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<SourceInfo> getBookSources() {
-        List<Rule> rules = SourceUtils.getCurrentRules();
+    public List<SourceInfo> getActivatedSources() {
+        List<Rule> rules = SourceUtils.getActivatedRules();
         return BeanUtil.copyToList(rules, SourceInfo.class);
     }
 
     @SneakyThrows
-    public List<SourceInfo> getBookSourcesWithAvailabilityCheck() {
-        List<Rule> rules = SourceUtils.getCurrentRules();
+    public List<SourceInfo> getActivatedSourcesWithAvailabilityCheck() {
+        List<Rule> rules = SourceUtils.getActivatedRules();
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executor);
         OkHttpClient client = OkHttpClientFactory.create(AppConfigLoader.APP_CONFIG);

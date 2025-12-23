@@ -92,7 +92,7 @@ public class SingleSearchAction {
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "主页", "状态");
-        SourceUtils.getBookSources()
+        SourceUtils.getActivatedSources()
                 .forEach(e -> asciiTables.addBody(
                         e.getId() + "",
                         e.getName(),
