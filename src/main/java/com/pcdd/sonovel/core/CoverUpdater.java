@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.core;
 
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
@@ -19,9 +20,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
 
@@ -36,26 +42,50 @@ public class CoverUpdater {
 
     private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
+    private final int TIMEOUT = 3000;
 
     /**
-     * 依次尝试不同来源获取封面
+     * 从不同来源获取最新封面
      */
     public String fetchCover(Book book, String coverUrl) {
+        Console.log("<== 开始获取最新封面");
         book.setCoverUrl(StrUtil.emptyToDefault(coverUrl, DEFAULT_COVER));
 
         if (StrUtil.isBlank(book.getBookName())) {
             return book.getCoverUrl();
         }
 
-        return Stream.<Supplier<String>>of(
-                        () -> fetchQidian(book),
-                        () -> fetchZongheng(book),
-                        () -> fetchQimao(book)
-                )
-                .map(Supplier::get)
-                .filter(CoverUpdater::isValidCover)
-                .findFirst()
-                .orElse(book.getCoverUrl());
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Callable<String>> tasks = List.of(
+                    () -> fetchQidian(book),
+                    () -> fetchZongheng(book),
+                    () -> fetchQimao(book)
+            );
+
+            // 等待所有任务完成
+            List<Future<String>> futures = executor.invokeAll(tasks);
+            // 封面 url，分辨率大小
+            Map<String, Integer> map = new HashMap<>();
+            for (Future<String> future : futures) {
+                String url = future.get();
+                if (isValidCover(url)) {
+                    BufferedImage img = ImgUtil.read(URLUtil.url(url));
+                    map.put(url, img.getWidth() * img.getHeight());
+                }
+            }
+
+            // 返回分辨率最高的封面，若不存在有效封面，则使用默认封面
+            return map.entrySet()
+                    .stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElse(book.getCoverUrl());
+
+        } catch (Exception e) {
+            Console.error(e, "并行获取封面失败");
+        }
+
+        return book.getCoverUrl();
     }
 
     /**
@@ -64,11 +94,13 @@ public class CoverUpdater {
     public String fetchQidian(Book book) {
         if (StrUtil.isEmpty(APP_CONFIG.getQidianCookie())) return "";
         String url = StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName());
-        try (HttpResponse resp = HttpRequest.get(url).
-                headerMap(Map.of(
+        try (HttpResponse resp = HttpRequest.get(url)
+                .headerMap(Map.of(
                         Header.USER_AGENT.getValue(), RandomUA.generate(),
                         Header.COOKIE.getValue(), APP_CONFIG.getQidianCookie()
-                ), true).execute()) {
+                ), true)
+                .timeout(TIMEOUT)
+                .execute()) {
             Document document = Jsoup.parse(resp.body());
 
             for (Element e : document.select(".res-book-item")) {
@@ -100,6 +132,7 @@ public class CoverUpdater {
                         "isFromHuayu", 0
                 ))
                 .header(Header.USER_AGENT, RandomUA.generate())
+                .timeout(TIMEOUT)
                 .execute()) {
 
             JSONObject datasField = JSONUtil.parseObj(resp.body())
@@ -134,6 +167,7 @@ public class CoverUpdater {
                         "page_size", 15
                 ))
                 .header(Header.USER_AGENT, RandomUA.generate())
+                .timeout(TIMEOUT)
                 .execute()) {
 
             JSONObject datasField = JSONUtil.parseObj(resp.body()).getJSONObject("data");
