@@ -37,9 +37,9 @@ cd "$PROJECT_PATH" || exit
 
 # 检查 JRE 文件是否存在
 if [ -f "$JRE_PATH" ]; then
-    echo "JRE 已存在，无需下载。"
+    echo "$JRE_FILENAME 已存在，无需下载。"
 else
-    echo "JRE 不存在，开始下载..."
+    echo "$JRE_FILENAME 不存在，开始下载..."
     curl --retry 3 -C - -L -o "$JRE_PATH" "$DOWNLOAD_URL"
     # 检查下载是否成功
     if [ $? -eq 0 ]; then

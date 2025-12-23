@@ -1,24 +1,34 @@
-## v1.9.6 (2025-10-30)
+## v1.9.7 (2025-12-23)
 
-### ✨ 新特性
+### ✨ Features
 
-- 新增配置项：是否过滤低相似度搜索结果 #283
-- 适配 ARM64 发行版的自动更新
-- WebUI 显示版本号
-- TUI 增加赞助选项
+- 改善独立搜索体验
+- 解析器支持自动检测文本编码
+- 自动获取分辨率最高的封面
 
-### 🐛 修复
+### ⚡ Performance
 
-- 修复 Linux 版无法启用 Web 模式 #281
+- 提高封面获取性能
 
-### ♻️ 重构
+### 🐛 Bug Fixes
 
-- 解决某些阅读器无法识别 txt 中的章节名 #282
-- 重构 ChapterFilter、ChapterConverter
-- 配置项 threads 重命名为 concurrency
+- 修复全本小说网无法使用
 
-### 🛠️ 其他
+### ♻️ Refactor
 
-- 优化构建脚本，从 Adoptium 下载 JRE
-- 纠正 readme.txt 错别字 #278
-- 升级依赖
+- 重构 `SourceUtils.java`
+- 优化正文开头重复章节标题的过滤正则 #57
+- 增强 CLI 代码健壮性
+- 规范 D1 Worker URL 的 Base64 编码
+
+### 🔧 Configuration
+
+- 将「大熊猫文学」规则迁移至 `proxy-rules.json`
+- 悠久小说网新增封面规则
+- 更新 `flowlimit-rules.json`
+
+### 📝 Documentation
+
+- 新增 `SPONSORS.md`
+- 更新 `readme.txt`
+- 更新 `feedback.yml`
