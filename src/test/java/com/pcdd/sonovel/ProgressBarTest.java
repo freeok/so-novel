@@ -1,7 +1,6 @@
 package com.pcdd.sonovel;
 
 import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarStyle;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;

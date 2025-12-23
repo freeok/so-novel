@@ -11,13 +11,13 @@ import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.core.ChapterRenderer;
-import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.core.AppConfigLoader;
+import com.pcdd.sonovel.core.ChapterRenderer;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.*;
+import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -78,22 +78,6 @@ class BookSourceTest {
         // chapterBatchParse(0, 100);
     }
 
-    @DisplayName("proxy-rules.json")
-    @ParameterizedTest
-    @CsvSource({
-            "https://www.69shuba.com/book/48273.htm",
-            "https://quanben5.com/n/henchunhenaimei/",
-    })
-    void test03(String bookUrl) {
-        Rule rule = SourceUtils.getSource(bookUrl);
-        APP_CONFIG.setSourceId(rule.getId());
-
-        searchParse("斗罗大陆");
-        bookParse(bookUrl);
-        tocParse(bookUrl);
-        chapterParse();
-    }
-
     @DisplayName("non-searchable-rules.json")
     @ParameterizedTest
     @CsvSource({
@@ -109,6 +93,22 @@ class BookSourceTest {
         tocParse(bookUrl);
         chapterParse();
         chapterBatchParse(0, 100);
+    }
+
+    @DisplayName("proxy-rules.json")
+    @ParameterizedTest
+    @CsvSource({
+            "https://www.69shuba.com/book/48273.htm",
+            "https://quanben5.com/n/henchunhenaimei/",
+    })
+    void test03(String bookUrl) {
+        Rule rule = SourceUtils.getSource(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        searchParse("斗罗大陆");
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
     }
 
     public void searchParse(String keyword) {
