@@ -9,6 +9,7 @@ import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
+import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 
@@ -50,7 +51,6 @@ public class BatchDownloadAction {
             }
         }
 
-        SearchParser sp = new SearchParser(config);
         List<SearchResult> downloadList = new ArrayList<>();
         StringBuilder notFound = new StringBuilder();
 
@@ -59,7 +59,9 @@ public class BatchDownloadAction {
             if (split.length != 2) continue;
             String bookName = split[0];
             String author = split[1];
-            List<SearchResult> res = sp.parse(bookName, true);
+            List<SearchResult> res = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
+                    ? new SearchParserQuanben5(config).parse(bookName)
+                    : new SearchParser(config).parse(bookName, true);
             res.stream()
                     .filter(sr -> bookName.equals(sr.getBookName()) && author.equals(sr.getAuthor()))
                     .findFirst()
