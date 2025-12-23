@@ -7,7 +7,7 @@ function base64(_str) {
       var code = _str[i]
     } else {
       var code = staticchars[(num0 + 3) % 62]
-    }10
+    }
     var num1 = parseInt(Math.random() * 62, 10);
     var num2 = parseInt(Math.random() * 62, 10);
     encodechars += staticchars[num1] + code + staticchars[num2]

@@ -7,7 +7,6 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
-import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ClientReport;
 import lombok.experimental.UtilityClass;
 
