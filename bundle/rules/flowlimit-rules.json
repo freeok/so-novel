@@ -2,7 +2,7 @@
   {
     "url": "https://www.tianxibook.com/",
     "name": "新天禧小说",
-    "comment": "仅限大陆IP访问，章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
+    "comment": "章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
     "search": {
       "url": "https://www.sososhu.com/?q=%s&site=xtxxs",
       "method": "get",
