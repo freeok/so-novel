@@ -9,6 +9,7 @@ import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
+import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 
 import java.io.File;
@@ -26,13 +27,14 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class BatchDownloadAction {
 
     private final AppConfig config;
+    private final Scanner sc = Console.scanner();
     private static final String DIVIDER = "=".repeat(50);
 
     public void execute() {
-        Scanner sc = Console.scanner();
+        SourceUtils.printActivatedSources();
 
         if (config.getSourceId() == -1) {
-            Console.print(render("==> 请指定书源 ID: ", "green"));
+            Console.print(render("==> 请输入 ID 以选择书源: ", "green"));
             config.setSourceId(Integer.parseInt(sc.nextLine()));
         }
 
@@ -76,11 +78,12 @@ public class BatchDownloadAction {
             return;
         }
         // 存在未搜到的书
-        if (!notFound.isEmpty()) {
+        if (StrUtil.isNotEmpty(notFound)) {
             notFound.append("#\n");
             notFound.append("若要继续下载上述未搜到的书: 切换其它书源，复制以上内容，粘贴到批量下载，以此类推……\n");
             FileUtil.writeUtf8String(notFound.toString(),
-                    System.getProperty("user.dir") + File.separator + "批量下载 - 书源 %s 未搜到的书.log".formatted(config.getSourceId()));
+                    System.getProperty("user.dir") + File.separator + "logs" + File.separator + "批量下载-【%s】未搜到的书.log"
+                            .formatted(SourceUtils.getRule(config.getSourceId()).getName()));
         }
         Console.print(render("==> 输入 Y 以确认下载：", "green"));
         if ("Y".equalsIgnoreCase(sc.next().strip())) {
@@ -97,6 +100,8 @@ public class BatchDownloadAction {
 
             Console.log(render("<== 批量下载完成！总耗时 {}\n", "green"), DateUtil.formatBetween(Convert.toLong(totalTime * 1000)));
         }
+        // 不记住 source-id
+        config.setSourceId(-1);
     }
 
 }

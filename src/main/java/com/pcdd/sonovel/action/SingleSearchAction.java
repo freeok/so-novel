@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
@@ -89,20 +88,10 @@ public class SingleSearchAction {
 
     @SneakyThrows
     public void execute() {
-        ConsoleTable asciiTables = ConsoleTable.create()
-                .setSBCMode(false)
-                .addHeader("ID", "书源", "主页", "状态");
-        SourceUtils.getActivatedSources()
-                .forEach(e -> asciiTables.addBody(
-                        e.getId() + "",
-                        e.getName(),
-                        e.getUrl(),
-                        e.isDisabled() ? "禁用" : "启用"
-                ));
-        Console.table(asciiTables);
+        SourceUtils.printActivatedSources();
 
         if (config.getSourceId() == -1) {
-            Console.print(render("==> 请选择书源 ID: ", GREEN));
+            Console.print(render("==> 请输入 ID 以选择书源: ", GREEN));
             config.setSourceId(Integer.parseInt(sc.nextLine()));
         }
 
