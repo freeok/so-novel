@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -214,6 +215,20 @@ public class SourceUtils {
         });
 
         return res;
+    }
+
+    public void printActivatedSources(){
+        ConsoleTable asciiTables = ConsoleTable.create()
+                .setSBCMode(false)
+                .addHeader("ID", "书源", "主页", "状态");
+        getActivatedSources()
+                .forEach(e -> asciiTables.addBody(
+                        e.getId() + "",
+                        e.getName(),
+                        e.getUrl(),
+                        e.isDisabled() ? "禁用" : "启用"
+                ));
+        Console.table(asciiTables);
     }
 
 }
