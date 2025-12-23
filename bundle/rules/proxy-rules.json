@@ -67,5 +67,43 @@
       "filterTxt": "\\(本章完\\)",
       "filterTag": ""
     }
+  },
+  {
+    "url": "https://www.dxmwx.org/",
+    "name": "大熊猫文学",
+    "comment": "",
+    "search": {
+      "url": "https://www.dxmwx.org/list/topall_%s.html",
+      "method": "get",
+      "result": "#ListContents > div",
+      "bookName": ".margin0h5 > a.fonttext",
+      "author": ".margin0h5 > a:nth-child(2)",
+      "latestChapter": ".right_wid > div:nth-child(4) > a@js:r=r.replaceAll('最新章节','');",
+      "lastUpdateTime": ".right_wid > div:nth-child(4) > span",
+      "pagination": true,
+      "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]"
+    },
+    "book": {
+      "url": "https://www.dxmwx.org/book/(.*?).html",
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[property=\"og:description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "url": "https://www.dxmwx.org/chapter/%s.html",
+      "item": "div:nth-child(2n+5) > span > a"
+    },
+    "chapter": {
+      "title": "#ChapterTitle",
+      "content": "#Lab_Contents",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": ""
+    }
   }
 ]
