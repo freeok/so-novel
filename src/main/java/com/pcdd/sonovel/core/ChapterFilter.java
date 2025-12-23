@@ -43,7 +43,7 @@ public class ChapterFilter extends Source {
         private boolean applyInvisibleCharsFilter;
         private boolean applyEscapeFilter;
         private boolean applyAdsFilter;
-        private boolean applyTitleFilter;
+        private boolean applyDuplicateTitleFilter;
 
         public FilterBuilder(Chapter chapter) {
             this.title = chapter.getTitle();
@@ -78,7 +78,7 @@ public class ChapterFilter extends Source {
          * 是否启用标题过滤
          */
         public FilterBuilder filterTitle(boolean apply) {
-            this.applyTitleFilter = apply;
+            this.applyDuplicateTitleFilter = apply;
             return this;
         }
 
@@ -103,11 +103,13 @@ public class ChapterFilter extends Source {
             // 确保在在 EscapeFilter、AdsFilter 之执行
             this.content = StrUtil.cleanBlank(this.content);
 
-            if (applyTitleFilter) {
-                // 删除正文开头的标题
-                String cleanTitle = StrUtil.cleanBlank(this.title);
-                String regex = "^(%s|%s)".formatted(Pattern.quote(this.title), Pattern.quote(cleanTitle));
-                this.content = this.content.replaceFirst(regex, "");
+            if (applyDuplicateTitleFilter) {
+                // 删除正文开头的标题，Pattern.quote：将章节名当作纯文本，自动转义正则元字符 [、(、. 防止章节名意外破坏正则
+                String regex = "^(\\s|<[^>]+>)*(%s|%s)".formatted(
+                        Pattern.quote(this.title),
+                        Pattern.quote(StrUtil.cleanBlank(this.title))
+                );
+                this.content = this.content.replaceFirst(regex, "$1");
 
                 // 解决某些阅读器目录无法解析 txt 中的章节名，例如：1.章节名
                 Matcher matcher = TITLE_NUMBER_PATTERN.matcher(this.title);

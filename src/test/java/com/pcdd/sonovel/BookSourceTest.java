@@ -59,7 +59,6 @@ class BookSourceTest {
             "https://www.shuhaige.net/199178/",
             "http://www.mcxs.info/145_145199/",
             "http://www.99xs.info/tag/129_129843/",
-            "https://www.dxmwx.org/book/56441.html",
             "https://www.22biqu.com/biqu79148/",
             "http://www.xbiquzw.net/10_10233/",
             "http://www.shu009.com/book/111616/",
@@ -100,6 +99,7 @@ class BookSourceTest {
     @CsvSource({
             "https://www.69shuba.com/book/48273.htm",
             "https://quanben5.com/n/henchunhenaimei/",
+            "https://www.dxmwx.org/book/56441.html"
     })
     void test03(String bookUrl) {
         Rule rule = SourceUtils.getSource(bookUrl);
