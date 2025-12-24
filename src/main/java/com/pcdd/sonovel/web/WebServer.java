@@ -10,6 +10,8 @@ import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 
+import static org.fusesource.jansi.AnsiRenderer.render;
+
 public class WebServer {
 
     public void start() {
@@ -20,11 +22,12 @@ public class WebServer {
         server.setHandler(context);
         try {
             server.start();
-            Console.log("Web server started on port {}", port);
+            Console.log("SoNovel {}", "v" + AppConfigLoader.APP_CONFIG.getVersion());
+            Console.log(render("✔ Web server started.", "green"));
+            Console.log(render("➜ Local: http://localhost:{}/", "blue"), port);
             server.join();
         } catch (Exception e) {
-            Console.error("Failed to start Web server on port {}: {}", port, e.getMessage());
-            throw new IllegalStateException("Web server failed to start", e);
+            Console.error(e, render("✖ Startup failed.", "red"));
         }
     }
 
