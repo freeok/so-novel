@@ -40,6 +40,12 @@ body {
   font-family: var(--font-family-sans);
 }
 
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 12px;
+}
+
 .wrap-container {
   display: flex;
   flex-direction: column;
@@ -47,12 +53,6 @@ body {
   max-width: 1024px;
   margin: 0 auto;
   padding: 24px;
-}
-
-.header {
-  margin-bottom: 32px;
-  text-align: center;
-  padding-bottom: 12px;
 }
 
 .app-title {
@@ -93,9 +93,15 @@ body {
   margin-bottom: 0;
 }
 
-.section-title {
-  margin-top: 0;
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.section-title {
+  margin: 15px 0;
   border-left: 4px solid var(--primary-color);
   padding-left: 12px;
   color: var(--primary-color);
@@ -103,12 +109,11 @@ body {
 }
 
 .download-container {
-  height: auto;
-  flex-shrink: 0;
+  flex: none;
 }
 
 .result-container {
-  flex: 1;
+  flex: none;
 }
 
 .search-container {
@@ -168,6 +173,9 @@ input[disabled] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.btn-search {
+}
+
 .btn-download {
   padding: 5px 0 !important;
   width: 50px;
@@ -199,7 +207,6 @@ input[disabled] {
 
 .data-table {
   width: 100%;
-  margin-top: 12px;
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -209,7 +216,7 @@ input[disabled] {
 }
 
 .data-table th, .data-table td {
-  padding: 10px 10px;
+  padding: 6px 6px;
   text-align: left;
   vertical-align: middle;
   border-bottom: 1px solid var(--border-color);
@@ -281,6 +288,10 @@ input[disabled] {
 }
 
 @media (max-width: 768px) {
+  .data-table td:empty {
+    display: none;
+  }
+
   .app-title {
     font-size: 2.5rem;
   }
