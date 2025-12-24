@@ -24,23 +24,24 @@
     <h1 class="app-title">SO NOVEL</h1>
     <a id="versionTag" class="version-tag" target="_blank">version</a>
   </header>
+
   <main class="main-content">
-    <section class="container download-container card" id="downloadContainer">
+    <section class="container download-container" id="downloadContainer">
       <h2 class="section-title">搜索书籍</h2>
       <div class="search-container">
         <input id="downloadSearchName" placeholder="请输入书名或作者，尽量输完整" aria-label="搜索书名或作者">
         <button class="btn btn-primary btn-search" id="searchButton">搜索</button>
       </div>
-      <div class="body-container">
+      <div class="body-container" id="tb1">
         <div class="table-responsive">
           <table class="data-table">
             <thead>
             <tr>
-              <th scope="col">序号</th>
+              <th scope="col">No</th>
               <th scope="col">书名</th>
               <th scope="col">作者</th>
               <th scope="col">最新章节</th>
-              <th scope="col">最后更新时间</th>
+              <th scope="col">最后更新</th>
               <th scope="col">书源</th>
               <th scope="col">操作</th>
               <th scope="col">源站</th>
@@ -52,12 +53,13 @@
         </div>
       </div>
     </section>
-    <section class="container result-container card">
-      <h2 class="section-title">已下书籍</h2>
-      <div class="search-container">
-        <button id="refreshList" class="btn btn-primary">刷新列表</button>
+
+    <section class="container result-container">
+      <div class="section-header">
+        <h2 class="section-title">已下书籍</h2>
+        <button class="btn btn-primary" id="refreshList">刷新</button>
       </div>
-      <div class="body-container">
+      <div class="body-container" id="tb2">
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -74,8 +76,10 @@
         </div>
       </div>
     </section>
+
   </main>
 </div>
+
 <div class="loading-container" id="tipEle">
   <div class="content">
     <svg class="loading-icon" viewBox="0 0 100 100">
@@ -85,6 +89,7 @@
     <span class="text" id="tipText">正在下载</span>
   </div>
 </div>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // DOM 元素引用
@@ -97,6 +102,8 @@
     const tipEle = document.getElementById('tipEle')
     const tipText = document.getElementById('tipText')
     const versionTag = document.getElementById("versionTag");
+    const tb1 = document.getElementById('tb1');
+    const tb2 = document.getElementById('tb2');
 
     let bookCache = []
     // 最新下载的书的文件名
@@ -169,16 +176,19 @@
       bookCache = data
       downloadTableBody.innerHTML = data.map((item, index) => `
       <tr>
-        <td data-label="序号">${index + 1}</td>
+        <td data-label="No">${index + 1}</td>
         <td data-label="书名">${item.bookName}</td>
         <td data-label="作者">${item.author}</td>
         <td data-label="最新章节">${item.latestChapter || ''}</td>
-        <td data-label="最后更新时间">${item.lastUpdateTime || ''}</td>
+        <td data-label="最后更新">${item.lastUpdateTime || ''}</td>
         <td data-label="书源">${item.sourceId}</td>
         <td data-label="操作"><button class="btn btn-secondary btn-download" data-index="${index}">下载</button></td>
         <td data-label="源站"><a href="${item.url}" target="_blank"><button class="btn btn-secondary btn-download">前往</button></a></td>
       </tr>
     `).join('')
+      if (data.length > 0) {
+        tb1.style.display = ''
+      }
     }
 
     const renderLocalBooksTable = (data) => {
@@ -190,6 +200,9 @@
         <td data-label="操作"><button class="btn btn-secondary btn-download" data-filename="${item.name}">下载</button></td>
       </tr>
     `).join('')
+      if (data.length > 0) {
+        tb2.style.display = ''
+      }
     }
 
     const fetchVersion = async () => {
@@ -201,9 +214,9 @@
       versionTag.href = `https://github.com/freeok/so-novel/releases/tag/${ver}`
     }
 
-    // 数据获取
+    // 已下书籍
     const fetchLocalBooks = async () => {
-      showTip('正在刷新列表...')
+      showTip('正在刷新...')
       try {
         const response = await fetch('/local-books')
         const data = await response.json()
@@ -217,7 +230,7 @@
         }
       } catch (error) {
         console.error('Error fetching file list:', error)
-        updateTip('刷新列表失败')
+        updateTip('刷新失败')
       } finally {
         hideTip()
       }
@@ -266,7 +279,7 @@
         try {
           const data = JSON.parse(e.data)
           if (data.type === "download-progress") {
-            updateTip(`${data.index} / ${data.total}`)
+            updateTip(`进度: ${data.index} / ${data.total}`)
           }
         } catch (err) {
           console.error("❌ SSE 数据解析失败:", err, e.data)
@@ -304,6 +317,8 @@
     initSSE()
     fetchVersion()
     fetchLocalBooks()
+    tb1.style.display = 'none';
+    tb2.style.display = 'none';
   })
 </script>
 </body>
