@@ -40,9 +40,9 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class CoverUpdater {
 
-    private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
-    private final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
     private final int TIMEOUT = 3000;
+    private final String DEFAULT_COVER = "https://bookcover.yuewen.com/qdbimg/no-cover";
+    private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
 
     /**
      * 从不同来源获取最新封面

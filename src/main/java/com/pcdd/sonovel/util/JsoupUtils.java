@@ -12,7 +12,7 @@ import static com.pcdd.sonovel.model.ContentType.*;
 @UtilityClass
 public class JsoupUtils {
 
-    private static final String JS_SEPARATOR = "@js:";
+    private final String JS_SEPARATOR = "@js:";
 
     /**
      * 使用查询条件选择元素
