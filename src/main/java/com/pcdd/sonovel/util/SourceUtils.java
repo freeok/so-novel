@@ -22,6 +22,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -38,7 +40,7 @@ public class SourceUtils {
 
     private final String RULES_DIR_DEV = "bundle/rules/";
     private final String RULES_DIR_PROD = "rules/";
-    private static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
+    private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private List<Rule> cachedAllRules;
     private List<Rule> cachedActivatedRules;
 
@@ -93,7 +95,7 @@ public class SourceUtils {
         if (cachedActivatedRules != null) {
             return cachedActivatedRules;
         }
-        cachedActivatedRules = loadActivatedRules();
+        cachedActivatedRules = loadRulesFromPath(getActiveRulesPath());
         return cachedActivatedRules;
     }
 
@@ -104,38 +106,36 @@ public class SourceUtils {
         if (cachedAllRules != null) {
             return cachedAllRules;
         }
-        cachedAllRules = loadAllRules();
+        cachedAllRules = loadRulesFromPath(EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD);
         return cachedAllRules;
     }
 
-    private List<Rule> loadActivatedRules() {
-        String baseDir = EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD;
-        String pathname = baseDir + APP_CONFIG.getActiveRules();
-        return loadRulesFromPath(pathname);
+    /**
+     * 获取激活规则文件路径
+     */
+    private String getActiveRulesPath() {
+        Path path = Paths.get(APP_CONFIG.getActiveRules());
+        if (path.isAbsolute()) {
+            return path.toString();
+        }
+        return (EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD) + APP_CONFIG.getActiveRules();
     }
 
-    private List<Rule> loadAllRules() {
-        String baseDir = EnvUtils.isDev() ? RULES_DIR_DEV : RULES_DIR_PROD;
-        return loadRulesFromPath(baseDir);
-    }
-
+    /**
+     * @param pathname 规则目录路径 or 规则文件路径
+     */
     private List<Rule> loadRulesFromPath(String pathname) {
-        List<File> files = FileUtil.loopFiles(new File(pathname),
-                f -> f.getName().endsWith(".json"));
-
-        Assert.notEmpty(files, "规则文件不存在");
+        File file = new File(pathname);
+        Assert.isTrue(file.exists(), "激活规则文件或 rules 目录路径错误: {}", file.getAbsolutePath());
+        List<File> files = FileUtil.loopFiles(file, f -> f.getName().endsWith(".json"));
 
         List<Rule> rules = new ArrayList<>();
-        for (File file : files) {
-            rules.addAll(
-                    JSONUtil.readJSONArray(file, CharsetUtil.CHARSET_UTF_8)
-                            .toList(Rule.class)
-            );
+        for (File f : files) {
+            List<Rule> list = JSONUtil.readJSONArray(f, CharsetUtil.CHARSET_UTF_8).toList(Rule.class);
+            rules.addAll(list);
         }
-
         // 填充自增 ID
-        IntStream.range(0, rules.size())
-                .forEach(i -> rules.get(i).setId(i + 1));
+        IntStream.range(0, rules.size()).forEach(i -> rules.get(i).setId(i + 1));
 
         return rules;
     }
@@ -155,17 +155,12 @@ public class SourceUtils {
                 .toList();
     }
 
-    public List<SourceInfo> getActivatedSources() {
-        List<Rule> rules = SourceUtils.getActivatedRules();
-        return BeanUtil.copyToList(rules, SourceInfo.class);
-    }
-
     @SneakyThrows
     public List<SourceInfo> getActivatedSourcesWithAvailabilityCheck() {
         List<Rule> rules = SourceUtils.getActivatedRules();
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         CompletionService<SourceInfo> completionService = new ExecutorCompletionService<>(executor);
-        OkHttpClient client = OkHttpClientFactory.create(AppConfigLoader.APP_CONFIG);
+        OkHttpClient client = OkHttpClientFactory.create(APP_CONFIG);
 
         for (Rule r : rules) {
             completionService.submit(() -> {
@@ -199,13 +194,11 @@ public class SourceUtils {
                 return source;
             });
         }
-
         List<SourceInfo> res = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
             // 获取最先完成的任务的结果
             res.add(completionService.take().get());
         }
-
         executor.shutdown();
 
         res.sort((o1, o2) -> {
@@ -217,7 +210,12 @@ public class SourceUtils {
         return res;
     }
 
-    public void printActivatedSources(){
+    public List<SourceInfo> getActivatedSources() {
+        List<Rule> rules = SourceUtils.getActivatedRules();
+        return BeanUtil.copyToList(rules, SourceInfo.class);
+    }
+
+    public void printActivatedSources() {
         ConsoleTable asciiTables = ConsoleTable.create()
                 .setSBCMode(false)
                 .addHeader("ID", "书源", "主页", "状态");
