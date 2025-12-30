@@ -15,14 +15,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Set up JDK and Maven
+      - name: Setup Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
+
+      - name: Setup JDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'maven'
 
       - name: Build app.jar
         run: |
@@ -33,7 +35,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # 构建并推送 Docker 镜像
+      # 构建并推送 Docker 镜像到 GHCR
       - name: Build and Push Docker image
         run: |
           VERSION=${GITHUB_REF_NAME#v}
