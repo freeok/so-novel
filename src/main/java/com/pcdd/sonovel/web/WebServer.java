@@ -1,6 +1,5 @@
 package com.pcdd.sonovel.web;
 
-
 import cn.hutool.core.lang.Console;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.web.servlet.*;

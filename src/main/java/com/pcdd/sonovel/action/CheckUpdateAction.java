@@ -52,10 +52,15 @@ public class CheckUpdateAction {
                 .header(Header.USER_AGENT, RandomUA.generate())
                 .execute()) {
 
-            Props sys = AppConfigLoader.sys();
             String jsonStr = resp.body();
+            if (!resp.isOk()) {
+                Console.log(render("<== 从 GitHub 获取更新失败\n{}", "red"), JSONUtil.toJsonPrettyStr(jsonStr));
+                return;
+            }
+
             JSONArray arr = JSONUtil.parseArray(jsonStr);
             JSONObject latest = JSONUtil.parseObj(arr.getFirst());
+            Props sys = AppConfigLoader.sys();
             // v1.7.0
             String currentVersion = "v" + sys.getStr("version");
             // v1.7.0-beta.2
@@ -69,7 +74,7 @@ public class CheckUpdateAction {
                 Console.log("<== {} 已是最新版本！({})", latestVersion, latestUrl);
             }
         } catch (Exception e) {
-            Console.log(render("\n<== 更新失败，当前网络环境无法访问 GitHub，请稍后再试 ({})", "red"), e.getMessage());
+            Console.error(e, render("<== 从 GitHub 获取更新失败", "red"));
         }
     }
 
