@@ -90,7 +90,11 @@ public class AppConfigLoader {
 
         // [web]
         String mode = System.getProperty("mode", "tui");
-        cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, "web".equalsIgnoreCase(mode) ? 1 : 0));
+        if ("web".equalsIgnoreCase(mode)) {
+            cfg.setWebEnabled(1);
+        } else {
+            cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+        }
         cfg.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
 
         // [cookie]
