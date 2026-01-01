@@ -10,7 +10,7 @@ public class VersionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        RespUtils.writeJson(resp, "v" + AppConfigLoader.APP_CONFIG.getVersion());
+        RespUtils.writeJson(resp, AppConfigLoader.APP_CONFIG.getVersion());
     }
 
 }
