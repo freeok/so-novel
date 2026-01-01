@@ -89,7 +89,8 @@ public class AppConfigLoader {
         cfg.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
 
         // [web]
-        cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+        String mode = System.getProperty("mode", "tui");
+        cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, "web".equalsIgnoreCase(mode) ? 1 : 0));
         cfg.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
 
         // [cookie]

@@ -122,15 +122,12 @@ public class Crawler {
                     finalProgressBar.stepTo(currentIndex);
                 }
 
-                if (config.getWebEnabled() == 1) {
-                    // 每下载 10 章或下载完毕推送一次进度
-                    if (currentIndex % 30 == 0 || currentIndex == toc.size()) {
-                        DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
-                                .type("download-progress")
-                                .index(currentIndex)
-                                .total(toc.size())
-                                .build()));
-                    }
+                if (config.getWebEnabled() == 1 && (currentIndex % 100 == 0 || currentIndex == toc.size())) {
+                    DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
+                            .type("download-progress")
+                            .index(currentIndex)
+                            .total(toc.size())
+                            .build()));
                 }
             }));
         }

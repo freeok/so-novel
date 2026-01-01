@@ -14,8 +14,6 @@ public class DownloadProgressSseServlet extends HttpServlet {
     private static final Set<AsyncContext> clients = ConcurrentHashMap.newKeySet();
 
     public static void sendProgress(String json) {
-        if (clients.isEmpty()) return;
-
         byte[] bytes = ("data: " + json + "\n\n").getBytes();
 
         for (AsyncContext ctx : clients) {
@@ -84,7 +82,7 @@ public class DownloadProgressSseServlet extends HttpServlet {
         // 指定浏览器重新发起连接的时间间隔
         out.write("retry: 10000\n".getBytes());
         out.write(": connected\n\n".getBytes());
-        out.flush(); // 此时响应头和初始数据被强制推向网络
+        out.flush();
     }
 
 }

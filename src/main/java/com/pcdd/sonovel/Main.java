@@ -64,7 +64,7 @@ public class Main {
 
         String mode = System.getProperty("mode", "tui");
 
-        if ("web".equalsIgnoreCase(mode) || cfg.getWebEnabled() == 1) {
+        if (cfg.getWebEnabled() == 1) {
             new WebServer().start();
         } else if (args.length == 0 && "tui".equalsIgnoreCase(mode)) {
             TuiLauncher.launch(cfg);
