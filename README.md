@@ -134,7 +134,6 @@ docker build -t sonovel .
 
 | 参数            | 说明                     | 默认值          |
 |---------------|------------------------|--------------|
-| -Djre         | JRE / JDK 路径           | ./runtime    |
 | -Dconfig.file | 配置文件路径                 | ./config.ini |
 | -Dmode        | 启动模式，可选值：tui\|cli\|web | tui          |
 
