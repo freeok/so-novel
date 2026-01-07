@@ -12,7 +12,6 @@ chmod 777 ./runtime/Contents/Home/bin/java || { echo "设置权限失败"; exit 
 ./runtime/Contents/Home/bin/java \
   -XX:+UseZGC \
   -XX:+ZGenerational \
-  -DjrePath=runtime \
   -Dconfig.file=config.ini \
   -Dmode=tui \
   -jar app.jar || { echo "运行 Java 应用失败"; exit 1; }

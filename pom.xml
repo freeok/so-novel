@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.9.8</version>
+    <version>1.9.9-dev</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -269,7 +269,7 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <!-- jre 目录，动态配置：-DjrePath=runtime -->
+                                <!-- JRE 目录，仅限 mvn 构建前指定 -DjrePath=runtime -->
                                 <path>${jrePath}</path>
                                 <minVersion>21</minVersion>
                             </jre>
