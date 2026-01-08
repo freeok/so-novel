@@ -171,7 +171,8 @@ REM --------------------------------------------------
 REM 高级用户使用自定义 JRE 启动程序
 REM 将 "your_path\java.exe" 替换为你的 JRE 路径，例如：
 REM "C:\Java\jdk-21\bin\java.exe"
-REM --------------------------------------------------@echo off
+REM --------------------------------------------------
+@echo off
 your_path\java.exe ^
   -XX:+UseZGC ^
   -XX:+ZGenerational ^
