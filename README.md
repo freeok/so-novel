@@ -122,20 +122,67 @@ docker build -t sonovel .
 
 > [!TIP]
 >
-> 推荐使用以下阅读器
+> 为获得最佳阅读体验，建议使用以下电子书阅读器：
 >
-> 桌面端：[Readest](https://readest.com/)、[Koodo Reader](https://www.koodoreader.com/zh)、[Calibre](https://calibre-ebook.com/)、[Neat Reader (网页版)](https://www.neat-reader.cn/webapp)
+> **桌面端**
 >
-> 移动端：[Readest](https://readest.com/)、[Apple Books](https://www.apple.com/apple-books/)、[Moon+ Reader (静读天下)](https://moondownload.com/chinese.html)、[Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)
+> - [Readest](https://readest.com/)
+> - [Koodo Reader](https://www.koodoreader.com/zh)
+> - [Calibre](https://calibre-ebook.com/)
+> - [Neat Reader（网页版）](https://www.neat-reader.cn/webapp)
 >
-> 如需其它电子书格式，请使用 [Calibre](https://calibre-ebook.com/zh_CN) 或 [Convertio](https://convertio.co/zh/) 自行转换！
+> **移动端**
+>
+> - [Readest](https://readest.com/)
+> - [Apple Books](https://www.apple.com/apple-books/)
+> - [Moon+ Reader（静读天下）](https://moondownload.com/chinese.html)
+> - [Kindle](https://apps.apple.com/us/app/amazon-kindle/id302584613)
+>
+> 如需转换为其它电子书格式，可使用：
+>
+> - [FreeConvert](https://www.freeconvert.com/zh)
+> - [Calibre](https://calibre-ebook.com/zh_CN)
 
-## JVM Options
+## JVM Options (启动参数)
 
-| 参数            | 说明                     | 默认值          |
-|---------------|------------------------|--------------|
-| -Dconfig.file | 配置文件路径                 | ./config.ini |
-| -Dmode        | 启动模式，可选值：tui\|cli\|web | tui          |
+| 参数              | 说明                     | 默认值          |
+|-----------------|------------------------|--------------|
+| -Dconfig.file   | 配置文件路径                 | ./config.ini |
+| -Dmode          | 启动模式，可选值：tui\|cli\|web | tui          |
+| -Dfile.encoding | 启动模式，可选值：tui\|cli\|web | tui          |
+
+用法
+
+> [!NOTE]
+>
+> Windows 修改 [sonovel.l4j.ini](bundle/sonovel.l4j.ini)
+>
+> Linux 修改  [run-linux.sh](bundle/run-linux.sh)
+>
+> macOS 修改  [run-macos.sh](bundle/run-macos.sh)
+
+## 使用本地 JDK / JRE 启动
+
+如果你不想使用内置 JRE（runtime 目录），可以通过本地 JDK / JRE 启动程序
+
+Windows 使用脚本 start-custom-jre.cmd：
+
+```cmd
+REM --------------------------------------------------
+REM 高级用户使用自定义 JRE 启动程序
+REM 将 "your_path\java.exe" 替换为你的 JRE 路径，例如：
+REM "C:\Java\jdk-21\bin\java.exe"
+REM --------------------------------------------------@echo off
+your_path\java.exe ^
+  -XX:+UseZGC ^
+  -XX:+ZGenerational ^
+  -Dconfig.file=config.ini ^
+  -Dmode=tui ^
+  -Dfile.encoding=GBK|Big5 ^
+  -jar app.jar
+```
+
+Linux / macOS：[run-linux.sh](bundle/run-linux.sh) / [run-macos.sh](bundle/run-macos.sh) 修改 java 路径
 
 ## 常见问题
 
