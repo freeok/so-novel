@@ -145,11 +145,10 @@ docker build -t sonovel .
 
 ## JVM Options (启动参数)
 
-| 参数              | 说明                     | 默认值          |
-|-----------------|------------------------|--------------|
-| -Dconfig.file   | 配置文件路径                 | ./config.ini |
-| -Dmode          | 启动模式，可选值：tui\|cli\|web | tui          |
-| -Dfile.encoding | 启动模式，可选值：tui\|cli\|web | tui          |
+| 参数            | 说明                     | 默认值          |
+|---------------|------------------------|--------------|
+| -Dconfig.file | 配置文件路径                 | ./config.ini |
+| -Dmode        | 启动模式，可选值：tui\|cli\|web | tui          |
 
 用法
 
