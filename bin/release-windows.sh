@@ -32,7 +32,7 @@ download_jre() {
 }
 
 run_maven() {
-    mvn clean package -Pwindows-x64 '-Dmaven.test.skip=true' '-DjrePath=runtime'
+    mvn clean package -Pwindows-x64 -Plaunch4j '-Dmaven.test.skip=true' '-DjrePath=runtime'
 }
 
 copy_files() {

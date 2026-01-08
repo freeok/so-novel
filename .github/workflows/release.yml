@@ -1,9 +1,15 @@
 name: Releases
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
+
+env:
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'temurin'
+  TARGET_FILE: sonovel-windows-without_jdk_runtime.tar
 
 jobs:
   release:
@@ -12,13 +18,13 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up JDK and Maven
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
           # 启用 Maven 依赖缓存，以提高构建速度
           cache: 'maven'
 
@@ -36,5 +42,42 @@ jobs:
         with:
           # 表示要上传到 Release 的产出文件。这可能是单个路径或以逗号分隔的路径列表（或 globs）
           artifacts: "dist/*"
-          token: ${{ secrets.GITHUB_TOKEN  }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           bodyFile: "CHANGELOG.md"
+          allowUpdates: true
+
+  release-windows-without-jdk:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Build
+        shell: powershell
+        run: |
+          mvn clean package -Pwindows-x64 '-Dmaven.test.skip=true'
+          cd target
+          tar -rvf ../${{ env.TARGET_FILE }} *.jar
+          cd ../bundle
+          tar --exclude='*.sh' -rvf ../${{ env.TARGET_FILE }} *
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: windows-tar
+          path: |
+            ${{ env.TARGET_FILE }}
+          retention-days: 1
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          # 表示要上传到 Release 的产出文件。这可能是单个路径或以逗号分隔的路径列表（或 globs）
+          artifacts: ${{ env.TARGET_FILE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bodyFile: "CHANGELOG.md"
+          allowUpdates: true

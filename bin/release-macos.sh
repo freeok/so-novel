@@ -50,7 +50,7 @@ else
 fi
 
 # Maven 打包
-mvn clean package -P"macos-${ARCH}" -Dmaven.test.skip=true -DjrePath=runtime
+mvn clean package -P"macos-${ARCH}" -Plaunch4j -Dmaven.test.skip=true -DjrePath=runtime
 
 # 准备目录
 mkdir -p dist
