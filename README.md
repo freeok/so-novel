@@ -143,7 +143,7 @@ docker build -t sonovel .
 > - [FreeConvert](https://www.freeconvert.com/zh)
 > - [Calibre](https://calibre-ebook.com/zh_CN)
 
-## JVM Options (启动参数)
+## 自定义 JVM 系统属性
 
 | 参数            | 说明                     | 默认值          |
 |---------------|------------------------|--------------|
