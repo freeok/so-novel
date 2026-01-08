@@ -51,7 +51,7 @@ else
 fi
 
 # Maven 打包
-mvn clean package -P"linux-${ARCH}" -Dmaven.test.skip=true -DjrePath=runtime
+mvn clean package -P"linux-${ARCH}" -Plaunch4j -Dmaven.test.skip=true -DjrePath=runtime
 
 # 创建产物目录
 mkdir -p dist

@@ -205,6 +205,65 @@
                 </dependency>
             </dependencies>
         </profile>
+
+        <profile>
+            <id>launch4j</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>2.7.0</version>
+                        <executions>
+                            <execution>
+                                <id>launch4j-exe</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <!-- https://launch4j.sourceforge.net/docs.html#Configuration_file -->
+                                <configuration>
+                                    <!-- 运行方式 gui|console|jniGui32|jniConsole32 -->
+                                    <headerType>console</headerType>
+                                    <!-- 可选，默认为 false。Launch4j 默认将 jar 文件打包到原生可执行文件中，您可以通过将<dontWrapJar>设置为 true 来禁用此功能。该 exe 文件将充当启动器，并启动 <jar>或<classPath><mainClass>中指定的应用程序。 -->
+                                    <dontWrapJar>true</dontWrapJar>
+                                    <jar>app.jar</jar>
+                                    <outfile>target/SoNovel/sonovel.exe</outfile>
+                                    <icon>assets/logo.ico</icon>
+                                    <errTitle>SoNovel</errTitle>
+                                    <!-- 崩溃时重新启动 -->
+                                    <restartOnCrash>false</restartOnCrash>
+                                    <classPath>
+                                        <mainClass>com.pcdd.sonovel.Main</mainClass>
+                                        <addDependencies>true</addDependencies>
+                                        <preCp>anything</preCp>
+                                    </classPath>
+                                    <jre>
+                                        <!-- jre 目录，动态配置：-DjrePath=runtime -->
+                                        <path>${jrePath}</path>
+                                        <minVersion>21</minVersion>
+                                    </jre>
+                                    <!-- Windows 资源管理器显示的可选版本信息 -->
+                                    <versionInfo>
+                                        <!-- 中文会乱码，待解决 -->
+                                        <fileDescription>SoNovel</fileDescription>
+                                        <copyright>Copyright (C) 2021-2025 SoNovel. All rights reserved.</copyright>
+                                        <!-- 中文会乱码，待解决 -->
+                                        <productName>SoNovel</productName>
+                                        <companyName>github.com/freeok</companyName>
+                                        <internalName>SoNovel</internalName>
+                                        <originalFilename>sonovel.exe</originalFilename>
+                                        <trademarks>SoNovel</trademarks>
+                                        <language>SIMPLIFIED_CHINESE</language>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -239,57 +298,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.6.0</version>
-                <executions>
-                    <execution>
-                        <id>launch4j-exe</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <!-- https://launch4j.sourceforge.net/docs.html#Configuration_file -->
-                        <configuration>
-                            <!-- 运行方式 gui|console|jniGui32|jniConsole32 -->
-                            <headerType>console</headerType>
-                            <!-- 可选，默认为 false。Launch4j 默认将 jar 文件打包到原生可执行文件中，您可以通过将<dontWrapJar>设置为 true 来禁用此功能。该 exe 文件将充当启动器，并启动 <jar>或<classPath><mainClass>中指定的应用程序。 -->
-                            <dontWrapJar>true</dontWrapJar>
-                            <jar>app.jar</jar>
-                            <outfile>target/SoNovel/sonovel.exe</outfile>
-                            <icon>assets/logo.ico</icon>
-                            <errTitle>SoNovel</errTitle>
-                            <!-- 崩溃时重新启动 -->
-                            <restartOnCrash>false</restartOnCrash>
-                            <classPath>
-                                <mainClass>com.pcdd.sonovel.Main</mainClass>
-                                <addDependencies>true</addDependencies>
-                                <preCp>anything</preCp>
-                            </classPath>
-                            <jre>
-                                <!-- JRE 目录，仅限 mvn 构建前指定 -DjrePath=runtime -->
-                                <path>${jrePath}</path>
-                                <minVersion>21</minVersion>
-                            </jre>
-                            <!-- Windows 资源管理器显示的可选版本信息 -->
-                            <versionInfo>
-                                <!-- 中文会乱码，待解决 -->
-                                <fileDescription>SoNovel</fileDescription>
-                                <copyright>Copyright (C) 2021-2025 SoNovel. All rights reserved.</copyright>
-                                <!-- 中文会乱码，待解决 -->
-                                <productName>SoNovel</productName>
-                                <companyName>github.com/freeok</companyName>
-                                <internalName>SoNovel</internalName>
-                                <originalFilename>sonovel.exe</originalFilename>
-                                <trademarks>SoNovel</trademarks>
-                                <language>SIMPLIFIED_CHINESE</language>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
             <!-- 在终端运行项目 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

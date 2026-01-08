@@ -44,6 +44,24 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](bundle%2Freadme.txt) 使用
 
+### 🪟 下载了sonovel-windows-without_jdk_runtime.tar
+
+> [!IMPORTANT]  
+> 必须本地已经有了jdk或jre且version==21
+
+- 然后直接双击运行SoNovel.bat即可, 默认是web模式
+- 默认jdk路径为`C:\Program Files\Java\jdk-21\bin\java.exe`
+- 不是默认路径就直接编辑SoNovel.bat修改为你的
+
+```sh
+SoNovel.bat
+@echo off
+:: 默认 JVM 参数, 默认使用web, jdk路径在此修改
+set JVM_OPTS=-Xmx1G -XX:+UseZGC -XX:+ZGenerational -Dmode=web -Dfile.encoding=GBK
+"C:\Program Files\Java\jdk-21\bin\java.exe" %JVM_OPTS% -cp ".\app-jar-with-dependencies.jar" com.pcdd.sonovel.Main %*
+pause
+```
+
 ### 🍨 Scoop
 
 ```bash
