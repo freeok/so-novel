@@ -2,18 +2,19 @@
 
 `main-rules.json`：均支持搜索的书源
 
-| 书源名称                                | 大陆 IP | 非大陆 IP | ⚠️ 需要注意                                   |
-|-------------------------------------|-------|--------|-------------------------------------------|
-| [香书小说](http://www.xbiqugu.la/)      | ✅     | ❌      |                                           |
-| [书海阁小说网](https://www.shuhaige.net/) | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
-| [梦书中文](http://www.mcxs.info/)       | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
-| [鸟书网](http://www.99xs.info/)        | ✅     | ❌      | 搜索限流 (Read timed out)                     |
-| [笔趣阁22](https://www.22biqu.com/)    | ✅     | ✅      |                                           |
-| [笔尖中文](http://www.xbiquzw.net/)     | ✅     | ❌      |                                           | |
-| [书林文学](http://www.shu009.com/)      | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
-| [悠久小说网](http://www.ujxsw.org/)      | ✅     | ❌      |                                           |
-| [阅读库](http://www.yeudusk.com/)      | ✅     | ❌      |                                           |
-| [顶点小说](https://www.wxsy.net/)       | ✅     | ❌      | 搜索、详情限流                                   |
+| 书源名称                                 | 大陆 IP | 非大陆 IP | ⚠️ 需要注意                                   |
+|--------------------------------------|-------|--------|-------------------------------------------|
+| [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      |                                           |
+| [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
+| [梦书中文](http://www.mcxs.info/)        | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
+| [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
+| [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      |                                           |
+| [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      |                                           | |
+| [书林文学](http://www.shu009.com/)       | ✅     | ✅      | 源站目录有重复、缺章的情况                             |
+| [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      |                                           |
+| [阅读库](http://www.yeudusk.com/)       | ✅     | ❌      |                                           |
+| [顶点小说](https://www.wxsy.net/)        | ✅     | ❌      | 搜索、详情限流                                   |
+| [笔趣阁365](https://www.biquge365.net/) | ✅     | ✅      | 搜索间隔15秒                                   |
 
 `proxy-rules.json`：需要代理（非大陆 IP）的书源
 
