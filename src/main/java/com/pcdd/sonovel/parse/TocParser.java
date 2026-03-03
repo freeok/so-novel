@@ -1,10 +1,13 @@
 package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
@@ -38,9 +41,9 @@ public class TocParser extends Source {
     }
 
     /**
-     * 解析全章
+     * 解析全部章节
      */
-    public List<Chapter> parse(String url) {
+    public List<Chapter> parseAll(String url) {
         return parse(url, 1, Integer.MAX_VALUE);
     }
 
@@ -75,6 +78,7 @@ public class TocParser extends Source {
                 // null 表示自动检测编码
                 document = Jsoup.parse(is, null, ruleToc.getBaseUri());
             }
+            document = handleCloudflareBypass(document, url);
             extractPaginationUrls(urls, document, ruleToc);
         }
 
@@ -102,7 +106,7 @@ public class TocParser extends Source {
 
             return;
         }
-        // 递归获取分页 URL (下一页按钮)。以下代码覆盖率可能为 0，因为分页目录的链接基本全都是通过下拉菜单一次性获取的
+        // 递归获取分页目录 URL (下一页按钮的链接)。以下代码覆盖率可能为 0，因为分页目录的链接基本全都是通过下拉菜单一次性获取的
         while (true) {
             String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
@@ -115,9 +119,20 @@ public class TocParser extends Source {
                 // null 表示自动检测编码
                 document = Jsoup.parse(is, null, this.rule.getToc().getBaseUri());
             }
+            document = handleCloudflareBypass(document, nextUrl);
 
             Thread.sleep(CrawlUtils.randomInterval(config));
         }
+    }
+
+    private Document handleCloudflareBypass(Document document, String nextUrl) {
+        if (CrawlUtils.hasCf(document)) {
+            Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到目录页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", nextUrl);
+            Console.log("🤖 检测到目录页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", nextUrl);
+            String realHtml = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), nextUrl));
+            document = Jsoup.parse(realHtml);
+        }
+        return document;
     }
 
     /**
@@ -136,6 +151,8 @@ public class TocParser extends Source {
                 // null 表示自动检测编码
                 document = Jsoup.parse(is, null, this.rule.getToc().getBaseUri());
             }
+
+            document = handleCloudflareBypass(document, url);
 
             // TODO rule.toc.item 实现 JS 语法，在此调用比 addChapter 性能更好
             List<Element> elements;

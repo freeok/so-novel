@@ -54,7 +54,7 @@ public class DownloadAction {
             APP_CONFIG.setSourceId(sr.getSourceId());
             Console.log("<== 正在获取章节目录...");
             TocParser tocParser = new TocParser(APP_CONFIG);
-            toc = tocParser.parse(sr.getUrl(), 1, Integer.MAX_VALUE);
+            toc = tocParser.parseAll(sr.getUrl());
 
             Console.log("<== 你选择了《{}》({})，共计 {} 章，书源 {}: {}", sr.getBookName(), sr.getAuthor(), toc.size(), sr.getSourceId(), sr.getUrl());
             Console.log("""

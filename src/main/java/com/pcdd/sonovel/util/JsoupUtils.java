@@ -55,9 +55,9 @@ public class JsoupUtils {
      * 等价于 func(document.select(query).(text|html|attr)())
      */
     public String selectAndInvokeJs(Element el, String query, ContentType contentType) {
-        if (StrUtil.isEmpty(query) || contentType == null) {
-            return null;
-        }
+        if (el == null) return null;
+
+        if (StrUtil.isEmpty(query) || contentType == null) return null;
 
         String[] split = query.split(JS_SEPARATOR);
         String actualQuery = split[0];

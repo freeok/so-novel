@@ -137,7 +137,7 @@ class BookSourceTest {
     public void tocParse(String bookUrl) {
         Console.log("\n{} START tocParse {}", DIVIDER, DIVIDER);
         TocParser tocParser = new TocParser(APP_CONFIG);
-        List<Chapter> toc = tocParser.parse(bookUrl, 1, Short.MAX_VALUE);
+        List<Chapter> toc = tocParser.parseAll(bookUrl);
         chapters = toc;
         toc.forEach(System.out::println);
         if (CollUtil.isNotEmpty(toc)) {

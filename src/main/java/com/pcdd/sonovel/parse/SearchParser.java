@@ -2,12 +2,14 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
@@ -61,7 +63,10 @@ public class SearchParser extends Source {
         Response resp;
         Document document;
         try {
-            Request.Builder builder = new Request.Builder().url(r.getUrl().formatted(keyword));
+            String searchUrl = r.getUrl().formatted(keyword);
+            Request.Builder builder = new Request.Builder()
+                    .url(searchUrl)
+                    .addHeader("Referer", this.rule.getUrl());
 
             if (StrUtil.isNotBlank(r.getCookies())) {
                 builder.addHeader("Cookie", r.getCookies());
@@ -72,6 +77,13 @@ public class SearchParser extends Source {
 
             resp = CrawlUtils.request(httpClient, builder, r.getTimeout());
             document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
+
+            if (CrawlUtils.hasCf(document)) {
+                Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", searchUrl);
+                Console.log("🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", searchUrl);
+                String html = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), searchUrl));
+                document = Jsoup.parse(html);
+            }
 
         } catch (Exception e) {
             Console.error(render("<== 书源 {} ({}) 搜索解析出错: {}", "red"),
