@@ -48,7 +48,7 @@ public class Crawler {
 
     public double crawl(String bookUrl) {
         TocParser tocParser = new TocParser(config);
-        List<Chapter> toc = tocParser.parse(bookUrl, 1, Integer.MAX_VALUE);
+        List<Chapter> toc = tocParser.parseAll(bookUrl);
         if (toc.isEmpty()) {
             Console.log("<== 目录为空，中止下载");
             return 0;
@@ -82,15 +82,15 @@ public class Crawler {
             return 0;
         }
 
-        int autoThreads = config.getConcurrency() == -1
-                // IO 密集型任务，不要和 CPU 核数绑定
+        // IO 密集型任务，不要和 CPU 核数绑定
+        int maxConcurrent = config.getConcurrency() == -1
                 ? Math.min(50, toc.size())
                 : Math.min(config.getConcurrency(), toc.size());
 
         Console.log("<== 开始下载《{}》({}) 共计 {} 章 | 最大并发：{}",
-                book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+                book.getBookName(), book.getAuthor(), toc.size(), maxConcurrent);
         LogUtils.info("开始下载:《{}》({}) 共计 {} 章 | 最大并发：{}",
-                book.getBookName(), book.getAuthor(), toc.size(), autoThreads);
+                book.getBookName(), book.getAuthor(), toc.size(), maxConcurrent);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -113,7 +113,7 @@ public class Crawler {
         AtomicInteger completed = new AtomicInteger(0);
 
         // IO 密集任务，瓶颈在网络和磁盘而不是 CPU
-        try (var limiter = new VirtualThreadLimiter(autoThreads)) {
+        try (var limiter = new VirtualThreadLimiter(maxConcurrent)) {
             toc.forEach(item -> limiter.submit(() -> {
                 createChapterFile(chapterParser.parse(item));
 

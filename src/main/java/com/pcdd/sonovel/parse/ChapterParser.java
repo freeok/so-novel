@@ -2,6 +2,8 @@ package com.pcdd.sonovel.parse;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.ChapterRenderer;
 import com.pcdd.sonovel.core.Source;
@@ -111,6 +113,8 @@ public class ChapterParser extends Source {
             doc = Jsoup.parse(is, null, r.getBaseUri());
         }
 
+        doc = handleCloudflareBypass(doc, url);
+
         return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
     }
 
@@ -126,6 +130,9 @@ public class ChapterParser extends Source {
                 // null 表示自动检测编码
                 doc = Jsoup.parse(is, null, r.getBaseUri());
             }
+
+            doc = handleCloudflareBypass(doc, nextUrl);
+
             contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
 
             // 获取下一页按钮元素
@@ -141,6 +148,16 @@ public class ChapterParser extends Source {
         }
 
         return contentBuilder.toString();
+    }
+
+    private Document handleCloudflareBypass(Document doc, String url) {
+        if (CrawlUtils.hasCf(doc)) {
+            Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到章节页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", url);
+            LogUtils.info("🤖 检测到章节页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", url);
+            String html = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), url));
+            doc = Jsoup.parse(html);
+        }
+        return doc;
     }
 
     private String resolveNextUrl(Document doc, Elements nextEls, Rule.Chapter r) {

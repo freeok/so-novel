@@ -65,6 +65,7 @@ public class AppConfigLoader {
         // [global]
         cfg.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
         cfg.setGhProxy(usr.getStr("gh-proxy", SELECTION_GLOBAL, ""));
+        cfg.setCfBypass(usr.getStr("cf-bypass", SELECTION_GLOBAL, null));
 
         // [download]
         cfg.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));

@@ -4,7 +4,7 @@
     "name": "69书吧",
     "comment": "搜索有CF，可能启用的其他域名：69shuba.me，69shuba.cx，目前章节页也加了CF盾",
     "needProxy": true,
-    "disabled": true,
+    "disabled": false,
     "book": {
       "url": "https://www.69shuba.com/book/(.*?).htm",
       "bookName": "meta[property=\"og:novel:book_name\"]",
@@ -30,7 +30,7 @@
       "filterTag": "h1 div"
     },
     "crawl": {
-      "concurrency": 1,
+      "concurrency": 5,
       "minInterval": 1000,
       "maxInterval": 2000
     }

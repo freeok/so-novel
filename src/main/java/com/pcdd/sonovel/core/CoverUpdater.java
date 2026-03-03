@@ -48,7 +48,7 @@ public class CoverUpdater {
      * 从不同来源获取最新封面
      */
     public String fetchCover(Book book, String coverUrl) {
-        Console.log("<== 开始获取最新封面");
+        Console.log("<== 正在获取最新封面...");
         book.setCoverUrl(StrUtil.emptyToDefault(coverUrl, DEFAULT_COVER));
 
         if (StrUtil.isBlank(book.getBookName())) {
@@ -115,7 +115,7 @@ public class CoverUpdater {
                 }
             }
         } catch (Exception e) {
-            Console.error(e, render("获取起点封面失败：{}", "red"));
+            Console.error(e, render("获取起点封面失败", "red"));
         }
         return "";
     }
@@ -150,7 +150,7 @@ public class CoverUpdater {
                 }
             }
         } catch (Exception e) {
-            Console.error(e, render("获取纵横封面失败：{}", "red"));
+            Console.error(e, render("获取纵横封面失败", "red"));
         }
         return "";
     }
@@ -182,7 +182,7 @@ public class CoverUpdater {
                 }
             }
         } catch (Exception e) {
-            Console.error(e, render("获取七猫封面失败：{}", "red"));
+            Console.error(e, render("获取七猫封面失败", "red"));
         }
         return "";
     }

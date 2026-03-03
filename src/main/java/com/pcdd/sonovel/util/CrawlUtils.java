@@ -6,6 +6,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import okhttp3.*;
+import org.jsoup.nodes.Document;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +75,40 @@ public class CrawlUtils {
         call.timeout().timeout(timeout, TimeUnit.SECONDS);
 
         return call.execute();
+    }
+
+    /**
+     * 网页是否有 Cloudflare 真人验证
+     */
+    public boolean hasCf(Document doc) {
+        if (doc == null) return false;
+
+        // 1. title 特征
+        String title = doc.title();
+        if (title.contains("Just a moment") || title.contains("Attention Required") || title.contains("Checking your browser")) {
+            return true;
+        }
+
+        String html = doc.html();
+        // 2. JS challenge
+        if (html.contains("/cdn-cgi/challenge-platform")) return true;
+        if (html.contains("__cf_chl")) return true;
+
+        // 3. 验证 DOM
+        if (doc.selectFirst("form#challenge-form") != null) return true;
+        if (doc.selectFirst(".cf-browser-verification") != null) return true;
+        if (doc.selectFirst("div[id*=cf-chl]") != null) return true;
+
+        // 4. Turnstile
+        if (html.contains("turnstile")) return true;
+
+        // 5. 常见 Cloudflare 标识
+        if (html.contains("Ray ID")) return true;
+        if (html.contains("cloudflare") && (html.contains("error code") || html.contains("blocked"))) {
+            return true;
+        }
+
+        return false;
     }
 
 }

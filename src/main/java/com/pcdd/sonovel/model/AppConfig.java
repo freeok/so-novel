@@ -14,6 +14,7 @@ public class AppConfig {
     // [global]
     private Integer autoUpdate;
     private String ghProxy;
+    private String cfBypass;
 
     // [download]
     private String downloadPath;

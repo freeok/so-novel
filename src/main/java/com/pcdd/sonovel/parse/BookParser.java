@@ -1,6 +1,9 @@
 package com.pcdd.sonovel.parse;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
@@ -40,6 +43,13 @@ public class BookParser extends Source {
              InputStream is = resp.body().byteStream()) {
             // null 表示自动检测编码
             document = Jsoup.parse(is, null, r.getBaseUri());
+        }
+
+        if (CrawlUtils.hasCf(document)) {
+            Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到详情页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", url);
+            Console.log("🤖 检测到详情页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", url);
+            String realHtml = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), url));
+            document = Jsoup.parse(realHtml);
         }
 
         String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
