@@ -4,6 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * 使用 Semaphore 控制虚拟线程并发量的工具类
@@ -15,12 +17,8 @@ public class VirtualThreadLimiter implements AutoCloseable {
 
     private final Semaphore semaphore;
     private final ExecutorService executor;
+    private final AtomicInteger taskCount = new AtomicInteger(0);
 
-    /**
-     * 构造方法
-     *
-     * @param maxConcurrent 最大并发数
-     */
     public VirtualThreadLimiter(int maxConcurrent) {
         this.semaphore = new Semaphore(maxConcurrent);
         this.executor = Executors.newVirtualThreadPerTaskExecutor();
@@ -32,6 +30,8 @@ public class VirtualThreadLimiter implements AutoCloseable {
      * @param task 待执行的任务
      */
     public void submit(Runnable task) {
+        taskCount.incrementAndGet();
+
         executor.submit(() -> {
             try {
                 semaphore.acquire();
@@ -40,6 +40,7 @@ public class VirtualThreadLimiter implements AutoCloseable {
                 Thread.currentThread().interrupt();
             } finally {
                 semaphore.release();
+                taskCount.decrementAndGet();
             }
         });
     }
@@ -49,10 +50,15 @@ public class VirtualThreadLimiter implements AutoCloseable {
      */
     @Override
     public void close() {
+        // 等待所有任务执行完成
+        while (taskCount.get() > 0) {
+            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(50));
+        }
+
         executor.shutdown();
+
         try {
-            if (!executor.awaitTermination(3, TimeUnit.MINUTES)) {
-                System.err.println("仍有任务未完成，强制关闭");
+            if (!executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)) {
                 executor.shutdownNow();
             }
         } catch (InterruptedException e) {
