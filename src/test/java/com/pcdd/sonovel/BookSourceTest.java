@@ -120,8 +120,9 @@ class BookSourceTest {
     @DisplayName("cf-rules.json")
     @ParameterizedTest
     @CsvSource({
+            "http://www.xhytd.com/170/170581/",
             "https://www.96dushu.com/book/448209/",
-            "http://www.xhytd.com/170/170581/"
+            "http://www.dongtanxs.com/dong49371/"
     })
     void test04(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
