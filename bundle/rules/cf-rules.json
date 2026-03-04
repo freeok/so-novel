@@ -2,7 +2,7 @@
   {
     "url": "http://www.xhytd.com/",
     "name": "黄易天地",
-    "comment": "搜索新加了CF，仅限大陆IP",
+    "comment": "非大陆IP可能速度较慢",
     "search": {
       "disabled": true,
       "url": "http://www.xhytd.com/search.html?name=%s",
@@ -37,7 +37,7 @@
   {
     "url": "https://www.96dushu.com/",
     "name": "96读书",
-    "comment": "CF保护，章节JS加密",
+    "comment": "章节JS加密",
     "search": {
       "disabled": true,
       "url": "https://www.96dushu.com/modules/article/search.php",
@@ -76,6 +76,40 @@
       "pagination": true,
       "nextPage": "#readbg > div.mlfy_page > a:nth-child(4)",
       "nextPageInJs": "//*[@id=\"readbg\"]/script[4]@js:r=r.match(/nextpage = \"(.*?)\"/)[1];"
+    }
+  },
+  {
+    "url": "http://www.dongtanxs.com/",
+    "name": "东滩小说",
+    "comment": "全部页面有CF",
+    "search": {
+      "url": "http://www.dongtanxs.com/s.php?ie=utf-8&q=%s",
+      "method": "get",
+      "result": ".bookinfo",
+      "bookName": "h4 > a",
+      "author": "div.author",
+      "category": "div.cat",
+      "latestChapter": "div.update > a"
+    },
+    "book": {
+      "bookName": "meta[property=\"og:novel:book_name\"]",
+      "author": "meta[property=\"og:novel:author\"]",
+      "intro": "meta[name=\"description\"]",
+      "category": "meta[property=\"og:novel:category\"]",
+      "coverUrl": "meta[property=\"og:image\"]",
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
+      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
+      "status": "meta[property=\"og:novel:status\"]"
+    },
+    "toc": {
+      "item": "dl > dt:nth-of-type(2) ~ dd > a"
+    },
+    "chapter": {
+      "title": ".content > h1",
+      "content": "#content",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "http://www\\.dongtanxs\\.com/dongtan\\d+/\\d+\\.html\\s*|请记住本书首发域名：www\\.dongtanxs\\.com。东滩小说手机版阅读网址：m\\.dongtanxs\\.com"
     }
   }
 ]

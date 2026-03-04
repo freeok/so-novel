@@ -23,7 +23,7 @@ public class CrawlUtils {
 
     // Cloudflare 常见拦截标题
     private final Set<String> CF_STRONG_TITLES = Set.of(
-            "Just a moment",
+            "Just a moment...",
             "Attention Required",
             "Checking your browser before accessing"
     );
