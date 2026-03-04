@@ -50,6 +50,10 @@ docker run -it --rm -v /sonovel/config.ini:/sonovel/config.ini -v /sonovel/downl
 3. 在 config.ini 设置 cf-bypass，例如 127.0.0.1:8000
 
 
+WPS、掌阅等软件无法打开 so-novel 下载的 epub 格式的小说，在线修复工具 (由 bigxixi 制作)
+https://bigxixi.com/soNovelEpubFixer/index.html
+
+
 问题反馈
 - 使用时遇到问题
 - 希望增加某个新功能
