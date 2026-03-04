@@ -18,6 +18,7 @@ import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ChineseConverter;
+import com.pcdd.sonovel.util.LangType;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -47,9 +48,13 @@ class BookSourceTest {
     static {
         HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG));
         ConsoleLog.setLevel(Level.OFF);
-        // 覆盖默认配置
+        // 覆盖 config-dev.ini 配置
+        // 在此修改要测试的书源
+        APP_CONFIG.setActiveRules("cf-rules.json");
+        // 扩展名
         APP_CONFIG.setExtName("txt");
-        APP_CONFIG.setLanguage("zh_TW");
+        // 正文语言
+        APP_CONFIG.setLanguage(LangType.ZH_CN);
     }
 
     @DisplayName("main-rules.json")
@@ -61,10 +66,11 @@ class BookSourceTest {
             "http://www.99xs.info/tag/129_129843/",
             "https://www.22biqu.com/biqu79148/",
             "http://www.xbiquzw.net/10_10233/",
-            "http://www.shu009.com/book/111616/",
+            "http://www.shu009.com/book/161954/",
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
             "https://www.wxsy.net/novel/1803/",
+            "https://www.biquge365.net/book/95601/"
     })
     void test01(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
@@ -111,6 +117,22 @@ class BookSourceTest {
         chapterParse();
     }
 
+    @DisplayName("cf-rules.json")
+    @ParameterizedTest
+    @CsvSource({
+            "https://www.96dushu.com/book/448209/",
+            "http://www.xhytd.com/170/170581/"
+    })
+    void test04(String bookUrl) {
+        Rule rule = SourceUtils.getRule(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        searchParse("斗罗大陆");
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+    }
+
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
         List<SearchResult> list = "proxy-rules.json".equals(APP_CONFIG.getActiveRules()) && APP_CONFIG.getSourceId() == 2
@@ -140,18 +162,18 @@ class BookSourceTest {
         List<Chapter> toc = tocParser.parseAll(bookUrl);
         chapters = toc;
         toc.forEach(System.out::println);
-        if (CollUtil.isNotEmpty(toc)) {
-            // 用于 chapterParse()
-            firstChapterUrl = toc.get(0).getUrl();
-            firstChapterTitle = toc.get(0).getTitle();
-        } else {
-            Console.log("目录为空");
+        if (CollUtil.isEmpty(toc)) {
+            Console.log("目录为空，不执行 chapterParse");
+            return;
         }
+        // 被 chapterParse() 调用
+        firstChapterUrl = toc.getFirst().getUrl();
+        firstChapterTitle = toc.getFirst().getTitle();
         Console.log("{} END tocParse {}\n", DIVIDER, DIVIDER);
     }
 
     /**
-     * 必须在 tocParse 之后执行，因为需要 firstChapterUrl
+     * 必须在 tocParse 之后执行，因为需要 firstChapterUrl，测试对象是 @CsvSource 里的链接
      */
     public void chapterParse() {
         Console.log("\n{} START chapterParse {}", DIVIDER, DIVIDER);
