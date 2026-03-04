@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 切换到脚本所在目录
+cd "$(dirname "$0")" || { echo "无法进入脚本目录"; exit 1; }
+
 # 设置权限
 chmod 777 ./runtime/Contents/Home/bin/java || { echo "设置权限失败"; exit 1; }
 
