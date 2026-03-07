@@ -18,6 +18,5 @@ public class Book {
     private String latestChapter;
     private String lastUpdateTime;
     private String status;
-    private String wordCount;
 
 }

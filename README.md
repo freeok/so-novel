@@ -143,9 +143,7 @@ docker build -t sonovel .
 > - [FreeConvert](https://www.freeconvert.com/zh)
 > - [Calibre](https://calibre-ebook.com/zh_CN)
 > 
-> 修复 WPS、掌阅等软件无法打开 so-novel 下载的 EPUB：
-> 
-> https://github.com/freeok/so-novel/discussions/199
+> 修复 WPS、掌阅等软件无法打开 so-novel 下载的 EPUB：https://github.com/freeok/so-novel/discussions/199
 
 ## 自定义 JVM 系统属性
 

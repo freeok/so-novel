@@ -19,11 +19,11 @@ public class JsoupUtils {
      * <p>
      * 等价于 document.select(query) | document.selectXpath(query)
      */
-    public Elements select(Element e, String query) {
+    public Elements select(Element el, String query) {
         // 分割查询条件以提取 XPath 或 CSS 查询
         String actualQuery = StrUtil.subBefore(query, JS_SEPARATOR, false);
         // 根据查询条件选择元素
-        return actualQuery.matches("^(/|//|\\(/).*") ? e.selectXpath(actualQuery) : e.select(actualQuery);
+        return actualQuery.matches("^(/|//|\\(/).*") ? el.selectXpath(actualQuery) : el.select(actualQuery);
     }
 
     /**
