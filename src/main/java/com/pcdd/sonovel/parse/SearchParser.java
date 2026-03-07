@@ -132,9 +132,9 @@ public class SearchParser extends Source {
             // 搜索结果页 DOM
             Document document;
             if (resp == null) {
-                try (Response resp2 = CrawlUtils.request(httpClient, url, r.getTimeout())) {
+                try (Response newResp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
                     // peekBody 不会关闭原body流，可以拿一份副本出来
-                    document = Jsoup.parse(resp2.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
+                    document = Jsoup.parse(newResp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
                 }
             } else {
                 document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());

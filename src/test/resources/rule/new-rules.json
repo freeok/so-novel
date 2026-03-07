@@ -20,13 +20,7 @@
     "book": {
       "url": "https://69shu.net/(.*?)/",
       "bookName": "meta[property=\"og:novel:book_title\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_title\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "latestChapter": "meta[property=\"og:novel:latest_chapter_title\"]"
     },
     "toc": {
       "item": "#list > ul > li > a",
@@ -61,14 +55,6 @@
       "nextPage": "此处需从JS获取"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
     },
     "toc": {
       "item": "body > div.cover > ul:nth-child(12) > li> a"

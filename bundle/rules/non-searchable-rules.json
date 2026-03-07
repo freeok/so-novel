@@ -44,15 +44,7 @@
       "nextPage": "#pagelink > a:not(.first):not(.last)"
     },
     "book": {
-      "url": "https://www.96dushu.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.96dushu.com/book/(.*?)/"
     },
     "toc": {
       "item": "#chapterList > li > a"
@@ -82,15 +74,7 @@
       "intro": "dl > dd"
     },
     "book": {
-      "url": "https://www.xshbook.com/0/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.xshbook.com/0/(.*?)/"
     },
     "toc": {
       "item": "#list > dl > dd > a"

@@ -70,7 +70,7 @@ class BookSourceTest {
             "http://www.99xs.info/tag/129_129843/",
             "https://www.22biqu.com/biqu79148/",
             "http://www.xbiquzw.net/10_10233/",
-            "http://www.shu009.com/book/161954/",
+            "http://www.shu009.com/book/160879/",
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
             "https://www.wxsy.net/novel/1803/",
@@ -80,7 +80,7 @@ class BookSourceTest {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
-        searchParse("斗罗大陆");
+        searchParse("斗罗");
         bookParse(bookUrl);
         tocParse(bookUrl);
         chapterParse();
@@ -168,7 +168,7 @@ class BookSourceTest {
         chapters = toc;
         toc.forEach(System.out::println);
         if (CollUtil.isEmpty(toc)) {
-            Console.log("目录为空，不执行 chapterParse");
+            Console.log("目录为空");
             return;
         }
         // 被 chapterParse() 调用
@@ -182,6 +182,10 @@ class BookSourceTest {
      */
     public void chapterParse() {
         Console.log("\n{} START chapterParse {}", DIVIDER, DIVIDER);
+        if (StrUtil.hasEmpty(firstChapterUrl, firstChapterTitle)) {
+            Console.log("首章链接或章节名为空，不执行 chapterParse");
+            return;
+        }
 
         Chapter build = Chapter.builder()
                 .title(firstChapterTitle)

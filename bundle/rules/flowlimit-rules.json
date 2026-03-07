@@ -12,15 +12,7 @@
       "intro": "dl > dd"
     },
     "book": {
-      "url": "https://www.tianxibook.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.tianxibook.com/book/(.*?)/"
     },
     "toc": {
       "url": "https://www.tianxibook.com/xiaoshuo/%s/",
@@ -61,15 +53,7 @@
       "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)"
     },
     "book": {
-      "url": "https://www.0xs.net/txt/(.*?).html",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.0xs.net/txt/(.*?).html"
     },
     "toc": {
       "url": "https://www.0xs.net/list/%s.html",
@@ -110,12 +94,7 @@
     "book": {
       "url": "https://www.laoyaoxs.org/info/(.*?).html",
       "bookName": "body > div.main > div > div.left.w_860 > div:nth-child(1) > div.detail > h1",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[name=\"description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]@js:r=r.replaceAll('//', '');",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+      "coverUrl": "meta[property=\"og:image\"]@js:r=r.replaceAll('//', '');"
     },
     "toc": {
       "baseUri": "https://www.laoyaoxs.org/list/%s/",
