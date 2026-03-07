@@ -126,7 +126,7 @@ public class SourceUtils {
      */
     private List<Rule> loadRulesFromPath(String pathname) {
         File file = new File(pathname);
-        Assert.isTrue(file.exists(), "激活规则文件或 rules 目录路径错误: {}", file.getAbsolutePath());
+        Assert.isTrue(file.exists(), "书源规则文件不存在: {}", file.getAbsolutePath());
         List<File> files = FileUtil.loopFiles(file, f -> f.getName().endsWith(".json"));
 
         List<Rule> rules = new ArrayList<>();

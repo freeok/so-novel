@@ -15,7 +15,11 @@ import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.ChapterRenderer;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.*;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.Rule.Book;
+import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.LangType;
@@ -50,7 +54,7 @@ class BookSourceTest {
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖 config-dev.ini 配置
         // 在此修改要测试的书源
-        APP_CONFIG.setActiveRules("cf-rules.json");
+        APP_CONFIG.setActiveRules("main-rules.json");
         // 扩展名
         APP_CONFIG.setExtName("txt");
         // 正文语言

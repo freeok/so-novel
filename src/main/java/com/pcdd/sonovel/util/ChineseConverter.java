@@ -1,8 +1,8 @@
 package com.pcdd.sonovel.util;
 
 import com.hankcs.hanlp.HanLP;
-import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.Chapter;
+import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.experimental.UtilityClass;
 

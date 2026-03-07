@@ -382,7 +382,7 @@
   {
     "url": "https://www.biquge365.net/",
     "name": "笔趣阁365",
-    "comment": "搜索间隔15秒",
+    "comment": "搜索间隔15秒，若搜索结果为空则手动打开网页搜一次后再试",
     "search": {
       "url": "https://www.biquge365.net/s.php",
       "method": "post",

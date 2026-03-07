@@ -46,6 +46,7 @@ public class Rule {
         private String nextPage;
     }
 
+    // 既是详情规则，也是详情内容
     @Data
     public static class Book {
         private String baseUri;
