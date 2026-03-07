@@ -67,7 +67,8 @@ public class BookParser extends Source {
         book.setBookName(bookName);
         book.setAuthor(author);
         book.setIntro(intro);
-        book.setCoverUrl(CoverUpdater.fetchCover(book, defaultCoverUrl));
+        // 代理 IP 会被起点等网站屏蔽，故使用源站封面
+        book.setCoverUrl(this.rule.isNeedProxy() ? defaultCoverUrl : CoverUpdater.fetchCover(book, defaultCoverUrl));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
         book.setLastUpdateTime(lastUpdateTime);

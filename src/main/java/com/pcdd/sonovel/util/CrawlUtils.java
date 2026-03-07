@@ -24,6 +24,7 @@ public class CrawlUtils {
     // Cloudflare 常见拦截标题
     private final Set<String> CF_STRONG_TITLES = Set.of(
             "Just a moment...",
+            "403 Forbidden",
             "Attention Required",
             "Checking your browser before accessing"
     );
@@ -91,7 +92,7 @@ public class CrawlUtils {
     public boolean hasCf(Document document) {
         if (document == null) return false;
         String title = document.title();
-        return  CF_STRONG_TITLES.contains(title);
+        return CF_STRONG_TITLES.contains(title);
     }
 
 }

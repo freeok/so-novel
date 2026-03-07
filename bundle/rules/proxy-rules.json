@@ -4,7 +4,6 @@
     "name": "69书吧",
     "comment": "搜索有CF，可能启用的其他域名：69shuba.me，69shuba.cx，目前章节页也加了CF盾",
     "needProxy": true,
-    "disabled": false,
     "book": {
       "url": "https://www.69shuba.com/book/(.*?).htm"
     },
@@ -64,6 +63,7 @@
     "url": "https://www.dxmwx.org/",
     "name": "大熊猫文学",
     "comment": "",
+    "needProxy": true,
     "search": {
       "url": "https://www.dxmwx.org/list/topall_%s.html",
       "method": "get",
@@ -88,6 +88,40 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": ""
+    }
+  },
+  {
+    "url": "https://101kks.com/",
+    "name": "101看书",
+    "comment": "目录 AJAX 有 CF，章节页爬取过快会 CF，UI 同 69",
+    "needProxy": true,
+    "language": "zh_TW",
+    "search": {
+      "url": "https://101kks.com/search/%s/1.html",
+      "method": "get",
+      "result": "#article_list_content > li > div.newnav",
+      "bookName": "h3 > a:nth-child(2)",
+      "author": "div.labelbox > label:nth-child(1)",
+      "category": "div.labelbox > label:nth-child(2)",
+      "status": "div.labelbox > label:nth-child(3)",
+      "latestChapter": "div.zxzj > p > a",
+      "pagination": true,
+      "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)"
+    },
+    "book": {
+      "url": "https://101kks.com/book/(.*?).html"
+    },
+    "toc": {
+      "url": "https://101kks.com/ajax_novels/chapterlist/%s.html",
+      "item": "body > ul > li > a"
+    },
+    "chapter": {
+      "title": ".txtnav > h1",
+      "content": "#txtcontent",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "div"
     }
   }
 ]
