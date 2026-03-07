@@ -75,7 +75,7 @@ public class SingleSearchAction {
 
         List<SearchResult> searchResults = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
                 ? new SearchParserQuanben5(config).parse(keyword)
-                : new SearchParser(config).parse(keyword, true);
+                : new SearchParser(config).parse(keyword);
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(),
@@ -83,7 +83,7 @@ public class SingleSearchAction {
 
         return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
                 ? SearchResultsHandler.filterSort(searchResults, keyword)
-                : SearchResultsHandler.sort(searchResults);
+                : searchResults;
     }
 
     @SneakyThrows

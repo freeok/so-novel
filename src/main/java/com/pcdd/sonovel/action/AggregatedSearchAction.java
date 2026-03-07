@@ -78,7 +78,7 @@ public class AggregatedSearchAction {
             latch.await();
             return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
                     ? SearchResultsHandler.filterSort(results, kw)
-                    : SearchResultsHandler.sort(results);
+                    : results;
         }
     }
 

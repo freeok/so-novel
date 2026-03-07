@@ -12,7 +12,6 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
@@ -45,10 +44,6 @@ public class SearchParser extends Source {
 
     public SearchParser(AppConfig config) {
         super(config);
-    }
-
-    public List<SearchResult> parse(String keyword, boolean isSort) {
-        return isSort ? SearchResultsHandler.sort(parse(keyword)) : parse(keyword);
     }
 
     @SneakyThrows
@@ -112,7 +107,7 @@ public class SearchParser extends Source {
         // 一次性获取分页 URL，不考虑逐个点击下一页的情况
         for (Element e : nextPageUrls) {
             String href = e.absUrl("href");
-            // 中文解码，针对69書吧
+            // 中文解码，便于调试
             urls.add(URLUtil.decode(href));
         }
         // 使用并行流处理分页 URL

@@ -142,7 +142,7 @@ class BookSourceTest {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
         List<SearchResult> list = "proxy-rules.json".equals(APP_CONFIG.getActiveRules()) && APP_CONFIG.getSourceId() == 2
                 ? new SearchParserQuanben5(APP_CONFIG).parse(keyword)
-                : new SearchParser(APP_CONFIG).parse(keyword, true);
+                : new SearchParser(APP_CONFIG).parse(keyword);
         if (CollUtil.isEmpty(list)) {
             Console.log("\"{}\"搜索结果为空", keyword);
         }
