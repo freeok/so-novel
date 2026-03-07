@@ -6,15 +6,7 @@
     "needProxy": true,
     "disabled": false,
     "book": {
-      "url": "https://www.69shuba.com/book/(.*?).htm",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.69shuba.com/book/(.*?).htm"
     },
     "toc": {
       "url": "https://69shuba.com/book/%s/",
@@ -84,15 +76,7 @@
       "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]"
     },
     "book": {
-      "url": "https://www.dxmwx.org/book/(.*?).html",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.dxmwx.org/book/(.*?).html"
     },
     "toc": {
       "url": "https://www.dxmwx.org/chapter/%s.html",

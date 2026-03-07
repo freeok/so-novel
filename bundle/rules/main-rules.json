@@ -14,11 +14,6 @@
       "lastUpdateTime": "td:nth-of-type(4)"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]"
     },
     "toc": {
       "item": "#list > dl > dd > a"
@@ -53,14 +48,7 @@
       "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup)"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "#intro > p:nth-child(1)",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "intro": "#intro > p:nth-child(1)"
     },
     "toc": {
       "item": "dl > dt:nth-of-type(2) ~ dd > a"
@@ -90,13 +78,7 @@
       "lastUpdateTime": "span.s6.wid6"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]@js:r='http://www.mcxs.info'+r",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+      "coverUrl": "meta[property=\"og:image\"]@js:r='http://www.mcxs.info'+r"
     },
     "toc": {
       "item": "dl > dt:nth-of-type(2) ~ dd > a"
@@ -124,14 +106,6 @@
       "latestChapter": "div.bookinfo > div.update > a"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
     },
     "toc": {
       "item": "dl > dt:nth-of-type(2) ~ dd > a"
@@ -148,7 +122,7 @@
   {
     "url": "https://www.22biqu.com/",
     "name": "笔趣阁22",
-    "comment": "",
+    "comment": "meta信息lastest_chapter_name拼写错误",
     "search": {
       "url": "https://www.22biqu.com/ss/",
       "method": "post",
@@ -161,13 +135,7 @@
       "lastUpdateTime": "span.s5"
     },
     "book": {
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]"
     },
     "toc": {
       "item": "div:nth-child(4) > ul > li > a",
@@ -199,14 +167,7 @@
       "lastUpdateTime": "td:nth-child(5)"
     },
     "book": {
-      "url": "http://www.xbiquzw.net/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[property=\"og:description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+      "url": "http://www.xbiquzw.net/(.*?)/"
     },
     "toc": {
       "baseUri": "http://www.xbiquzw.net/%s/",
@@ -224,7 +185,7 @@
   {
     "url": "http://www.shu009.com/",
     "name": "书林文学",
-    "comment": "源站目录有重复、缺章的情况，目录翻页速度慢",
+    "comment": "源站目录有重复、缺章的情况。目录每页只有20章，翻页速度很慢",
     "search": {
       "url": "http://www.shu009.com/search/",
       "method": "post",
@@ -236,12 +197,8 @@
     },
     "book": {
       "url": "http://www.shu009.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
       "intro": "#intro > div",
-      "category": "meta[property=\"og:novel:category\"]",
-      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]"
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]"
     },
     "toc": {
       "url": "http://www.shu009.com/indexlist/%s/",
@@ -316,13 +273,8 @@
     },
     "book": {
       "url": "http://www.yeudusk.com/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
       "intro": "#content > div.divbox.cf > div:nth-child(2) > div:nth-child(3) > div.tabcontent > div:nth-child(1) > div",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "#content > div:nth-child(4) > h3",
-      "status": "meta[property=\"og:novel:status\"]"
+      "latestChapter": "#content > div:nth-child(4) > h3"
     },
     "toc": {
       "url": "http://www.yeudusk.com/html/0/%s/",
@@ -353,14 +305,7 @@
     },
     "book": {
       "url": "https://www.wxsy.net/novel/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[name=\"description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": ".imgbox > img",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "coverUrl": ".imgbox > img"
     },
     "toc": {
       "url": "https://www.wxsy.net/novel/%s/chapter_1.html",
@@ -395,15 +340,7 @@
       "lastUpdateTime": "span.time"
     },
     "book": {
-      "url": "https://www.biquge365.net/book/(.*?)/",
-      "bookName": "meta[property=\"og:novel:book_name\"]",
-      "author": "meta[property=\"og:novel:author\"]",
-      "intro": "meta[name=\"description\"]",
-      "category": "meta[property=\"og:novel:category\"]",
-      "coverUrl": "meta[property=\"og:image\"]",
-      "latestChapter": "meta[property=\"og:novel:latest_chapter_name\"]",
-      "lastUpdateTime": "meta[property=\"og:novel:update_time\"]",
-      "status": "meta[property=\"og:novel:status\"]"
+      "url": "https://www.biquge365.net/book/(.*?)/"
     },
     "toc": {
       "url": "https://www.biquge365.net/newbook/%s/",

@@ -53,10 +53,10 @@ public class BookParser extends Source {
 
         String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
         String author = JsoupUtils.selectAndInvokeJs(document, r.getAuthor(), getContentType(r.getAuthor()));
+        Assert.isTrue(StrUtil.isAllNotEmpty(bookName, author), "详情页书名或作者不能为空！DOM: {}", document);
         // 以下为非必须属性
         String intro = StrUtil.cleanBlank(JsoupUtils.selectAndInvokeJs(document, r.getIntro(), getContentType(r.getIntro())));
-        String defaultCoverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(),
-                StrUtil.startWith(r.getCoverUrl(), "meta[") ? ContentType.ATTR_CONTENT : ContentType.ATTR_SRC);
+        String defaultCoverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(), getContentType(r.getCoverUrl()));
         String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
         String lastUpdateTime = JsoupUtils.selectAndInvokeJs(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
@@ -76,10 +76,13 @@ public class BookParser extends Source {
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
     }
 
+    /**
+     * 部分书源的 meta 格式不标准，需自定义 meta 规则，故仍需要判断 ContentType
+     *
+     * @param query Selector or XPath
+     */
     private ContentType getContentType(String query) {
-        if (StrUtil.isEmpty(query)) {
-            return null;
-        }
+        if (StrUtil.isEmpty(query)) return null;
         return query.startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.TEXT;
     }
 

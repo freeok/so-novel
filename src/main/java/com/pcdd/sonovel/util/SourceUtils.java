@@ -38,8 +38,16 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class SourceUtils {
 
+    public final String META_BOOK_NAME = "meta[property=og:novel:book_name]";
+    public final String META_AUTHOR = "meta[property=\"og:novel:author\"]";
+    public final String META_INTRO = "meta[name=\"description\"]";
     private final String RULES_DIR_DEV = "bundle/rules/";
     private final String RULES_DIR_PROD = "rules/";
+    public final String META_CATEGORY = "meta[property=\"og:novel:category\"]";
+    public final String META_COVER_URL = "meta[property=\"og:image\"]";
+    public final String META_LATEST_CHAPTER = "meta[property=\"og:novel:latest_chapter_name\"]";
+    public final String META_LAST_UPDATE_TIME = "meta[property=\"og:novel:update_time\"]";
+    public final String META_STATUS = "meta[property=\"og:novel:status\"]";
     private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private List<Rule> cachedAllRules;
     private List<Rule> cachedActivatedRules;
@@ -74,16 +82,39 @@ public class SourceUtils {
 
         // language
         if (StrUtil.isEmpty(rule.getLanguage())) rule.setLanguage(LangUtil.getCurrentLang());
+
         // baseUri
         if (ruleSearch != null && StrUtil.isEmpty(ruleSearch.getBaseUri())) ruleSearch.setBaseUri(rule.getUrl());
         if (ruleBook != null && StrUtil.isEmpty(ruleBook.getBaseUri())) ruleBook.setBaseUri(rule.getUrl());
         if (ruleToc != null && StrUtil.isEmpty(ruleToc.getBaseUri())) ruleToc.setBaseUri(rule.getUrl());
         if (ruleChapter != null && StrUtil.isEmpty(ruleChapter.getBaseUri())) ruleChapter.setBaseUri(rule.getUrl());
+
         // timeout
         if (ruleSearch != null && ruleSearch.getTimeout() == null) ruleSearch.setTimeout(15);
         if (ruleBook != null && ruleBook.getTimeout() == null) ruleBook.setTimeout(15);
-        if (ruleToc != null && ruleToc.getTimeout() == null) ruleToc.setTimeout(30);
+        if (ruleToc != null && ruleToc.getTimeout() == null) ruleToc.setTimeout(60);
         if (ruleChapter != null && ruleChapter.getTimeout() == null) ruleChapter.setTimeout(15);
+
+        if (ruleBook != null) {
+            // 先从规则获取详情，没有再从 meta 获取
+            String nameQuery = StrUtil.emptyToDefault(ruleBook.getBookName(), META_BOOK_NAME);
+            String authorQuery = StrUtil.emptyToDefault(ruleBook.getAuthor(), META_AUTHOR);
+            String introQuery = StrUtil.emptyToDefault(ruleBook.getIntro(), META_INTRO);
+            String coverUrlQuery = StrUtil.emptyToDefault(ruleBook.getCoverUrl(), META_COVER_URL);
+            String categoryQuery = StrUtil.emptyToDefault(ruleBook.getCategory(), META_CATEGORY);
+            String latestChapterQuery = StrUtil.emptyToDefault(ruleBook.getLatestChapter(), META_LATEST_CHAPTER);
+            String lastUpdateTimeQuery = StrUtil.emptyToDefault(ruleBook.getLastUpdateTime(), META_LAST_UPDATE_TIME);
+            String statusQuery = StrUtil.emptyToDefault(ruleBook.getStatus(), META_STATUS);
+
+            ruleBook.setBookName(nameQuery);
+            ruleBook.setAuthor(authorQuery);
+            ruleBook.setIntro(introQuery);
+            ruleBook.setCoverUrl(coverUrlQuery);
+            ruleBook.setCategory(categoryQuery);
+            ruleBook.setLatestChapter(latestChapterQuery);
+            ruleBook.setLastUpdateTime(lastUpdateTimeQuery);
+            ruleBook.setStatus(statusQuery);
+        }
 
         return rule;
     }
@@ -127,15 +158,18 @@ public class SourceUtils {
     private List<Rule> loadRulesFromPath(String pathname) {
         File file = new File(pathname);
         Assert.isTrue(file.exists(), "书源规则文件不存在: {}", file.getAbsolutePath());
-        List<File> files = FileUtil.loopFiles(file, f -> f.getName().endsWith(".json"));
 
-        List<Rule> rules = new ArrayList<>();
-        for (File f : files) {
-            List<Rule> list = JSONUtil.readJSONArray(f, CharsetUtil.CHARSET_UTF_8).toList(Rule.class);
-            rules.addAll(list);
-        }
+        List<Rule> rules = FileUtil.loopFiles(file, f -> f.getName().endsWith(".json"))
+                .stream()
+                .flatMap(f -> JSONUtil.readJSONArray(f, CharsetUtil.CHARSET_UTF_8)
+                        .toList(Rule.class)
+                        .stream()
+                        .map(SourceUtils::applyDefaultRule))
+                .toList();
+
         // 填充自增 ID
-        IntStream.range(0, rules.size()).forEach(i -> rules.get(i).setId(i + 1));
+        IntStream.range(0, rules.size())
+                .forEach(i -> rules.get(i).setId(i + 1));
 
         return rules;
     }
