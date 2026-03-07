@@ -73,14 +73,14 @@ public class ChapterParser extends Source {
                 Assert.notEmpty(content, "正文内容为空");
                 chapter.setContent(content);
 
-                LogUtils.info("重试成功: 【{}】", chapter.getTitle());
+                LogUtils.info("✅ 重试成功: 【{}】", chapter.getTitle());
                 return chapterRenderer.process(chapter);
 
             } catch (Exception e) {
                 LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
                 // 最终失败时记录日志
                 if (attempt == config.getMaxRetries()) {
-                    LogUtils.error(e, "下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
+                    LogUtils.error(e, "❌ 下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
                 }
             }
         }

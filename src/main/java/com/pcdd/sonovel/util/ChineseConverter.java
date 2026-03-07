@@ -30,9 +30,9 @@ public class ChineseConverter {
 
     private Function<String, String> getConversionFunction(String sourceLang, String targetLang) {
         return switch (sourceLang + ">" + targetLang) {
-            case LangType.ZH_HANT + ">" + LangType.ZH_CN -> HanLP::t2s;
-            case LangType.ZH_CN + ">" + LangType.ZH_HANT -> HanLP::s2t;
+            case LangType.ZH_TW + ">" + LangType.ZH_CN, LangType.ZH_HANT + ">" + LangType.ZH_CN -> HanLP::t2s;
             case LangType.ZH_CN + ">" + LangType.ZH_TW -> HanLP::s2tw;
+            case LangType.ZH_CN + ">" + LangType.ZH_HANT -> HanLP::s2t;
             case LangType.ZH_HANT + ">" + LangType.ZH_TW -> HanLP::t2tw;
             default -> null;
         };

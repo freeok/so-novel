@@ -42,7 +42,7 @@ public class Main {
             Console.log("JVM 供应商: " + mxBean.getVmVendor());
             Console.log("JVM 版本: " + mxBean.getVmVersion());
             Console.log("启动参数: " + mxBean.getInputArguments());
-            // Console.log("类路径: " + mxBean.getClassPath());
+            // Console.log("ClassPath: " + mxBean.getClassPath());
             Console.log("-".repeat(100));
         }
         // 关闭 hutool 日志
