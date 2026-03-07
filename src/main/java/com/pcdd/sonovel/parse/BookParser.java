@@ -8,9 +8,8 @@ import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.CoverUpdater;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
 import com.pcdd.sonovel.model.ContentType;
-import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
@@ -36,7 +35,7 @@ public class BookParser extends Source {
 
     @SneakyThrows
     public Book parse(String url) {
-        Rule.Book r = this.rule.getBook();
+        Book r = this.rule.getBook();
 
         Document document;
         try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());

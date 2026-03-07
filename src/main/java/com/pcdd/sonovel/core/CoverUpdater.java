@@ -13,7 +13,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Book;
+import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.util.RandomUA;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
