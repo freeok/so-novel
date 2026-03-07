@@ -4,8 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.experimental.UtilityClass;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author pcdd
@@ -15,27 +17,7 @@ import java.util.stream.Collectors;
 public class SearchResultsHandler {
 
     /**
-     * 优化源站的搜索结果（排序）
-     */
-    public List<SearchResult> sort(List<SearchResult> list) {
-        // 先按作者分组
-        Map<String, List<SearchResult>> authorGroups = list.stream()
-                .collect(Collectors.groupingBy(SearchResult::getAuthor, LinkedHashMap::new, Collectors.toList()));
-
-        // 再对每个组进行排序
-        return authorGroups.values().stream()
-                // 根据每个作者对应的书籍数量进行降序排序
-                .sorted((entry1, entry2) -> Integer.compare(entry2.size(), entry1.size()))
-                // 每个作者的多个作品按书名排序，而只有一个作品的作者则不做排序
-                .map(group -> group.size() > 1
-                        ? group.stream().sorted(Comparator.comparing(SearchResult::getBookName)).toList()
-                        : group)
-                .flatMap(Collection::stream)
-                .toList();
-    }
-
-    /**
-     * 优化源站搜索结果（排序、过滤）
+     * 优化源站搜索结果（过滤低相似度并排序）
      */
     public List<SearchResult> filterSort(List<SearchResult> list, String kw) {
         double bookNameScore = getSimilarity(list, kw, "bookName");

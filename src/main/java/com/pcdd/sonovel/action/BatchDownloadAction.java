@@ -61,7 +61,7 @@ public class BatchDownloadAction {
             String author = split[1];
             List<SearchResult> res = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
                     ? new SearchParserQuanben5(config).parse(bookName)
-                    : new SearchParser(config).parse(bookName, true);
+                    : new SearchParser(config).parse(bookName);
             res.stream()
                     .filter(sr -> bookName.equals(sr.getBookName()) && author.equals(sr.getAuthor()))
                     .findFirst()

@@ -8,7 +8,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
@@ -68,7 +67,7 @@ public class SearchParserQuanben5 extends Source {
                 String html = StrUtil.strip(content, "\"");
 
                 Document document = Jsoup.parse(html, ruleSearch.getBaseUri());
-                return SearchResultsHandler.sort(getSearchResults(document));
+                return getSearchResults(document);
             }
         } catch (Exception e) {
             Console.error(e.getMessage());
