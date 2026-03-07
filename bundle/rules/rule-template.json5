@@ -5,10 +5,13 @@
   "name": "",
   // 需要备注的信息
   "comment": "主要语法：CSS Selector、XPath，非必填属性可删除",
-  // 是否禁用
+  // 源站默认语言，默认从系统获取语言，可选值：zh_CN、zh_TW、zh_Hant
+  language: "zh_TW",
+  // 是否禁用书源
   "disabled": false,
   // 提取搜索结果的信息，不支持搜索的书源可不填
   "search": {
+    // 是否禁用搜索
     "disabled": false,
     // 搜索链接，必填
     "url": "",
