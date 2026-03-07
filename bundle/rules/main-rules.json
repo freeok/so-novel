@@ -284,8 +284,7 @@
       "category": "#count > span:nth-child(1)",
       "coverUrl": "#bookimg > a > img",
       "latestChapter": "#bookinfo > div.bookright > div.new > span.new_t > a",
-      "lastUpdateTime": "#bookinfo > div.bookright > div.new > span.new_p",
-      "wordCount": "#count > span:nth-child(5)"
+      "lastUpdateTime": "#bookinfo > div.bookright > div.new > span.new_p"
     },
     "toc": {
       "url": "http://www.ujxsw.org/read/%s/",

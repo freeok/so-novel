@@ -62,7 +62,6 @@ public class BookParser extends Source {
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
         String lastUpdateTime = JsoupUtils.selectAndInvokeJs(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
         String status = JsoupUtils.selectAndInvokeJs(document, r.getStatus(), getContentType(r.getStatus()));
-        String wordCount = JsoupUtils.selectAndInvokeJs(document, r.getWordCount(), getContentType(r.getWordCount()));
 
         Book book = new Book();
         book.setUrl(url);
@@ -74,7 +73,6 @@ public class BookParser extends Source {
         book.setLatestChapter(latestChapter);
         book.setLastUpdateTime(lastUpdateTime);
         book.setStatus(status);
-        book.setWordCount(wordCount);
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());
     }
