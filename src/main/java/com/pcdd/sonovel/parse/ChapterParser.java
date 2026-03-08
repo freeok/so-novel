@@ -44,7 +44,6 @@ public class ChapterParser extends Source {
             LogUtils.info("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
 
             String content = fetchContent(chapter.getUrl(), interval);
-            Assert.notEmpty(content, "正文内容为空");
             chapter.setContent(content);
 
             // 确保简繁互转最后调用
@@ -70,7 +69,6 @@ public class ChapterParser extends Source {
                         chapter.getTitle(), attempt, config.getMaxRetries(), interval, ex.getMessage());
 
                 String content = fetchContent(chapter.getUrl(), interval);
-                Assert.notEmpty(content, "正文内容为空");
                 chapter.setContent(content);
 
                 LogUtils.info("✅ 重试成功: 【{}】", chapter.getTitle());
@@ -114,8 +112,10 @@ public class ChapterParser extends Source {
         }
 
         doc = handleCloudflareBypass(doc, url);
+        String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+        Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
 
-        return JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+        return content;
     }
 
     @SneakyThrows
@@ -133,7 +133,9 @@ public class ChapterParser extends Source {
 
             doc = handleCloudflareBypass(doc, nextUrl);
 
-            contentBuilder.append(JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML));
+            String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+            Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
+            contentBuilder.append(content);
 
             // 获取下一页按钮元素
             Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
@@ -166,7 +168,7 @@ public class ChapterParser extends Source {
             return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
         }
         if (nextEls.isEmpty()) {
-            LogUtils.error("分页章节正文获取为空，可能被限流！出错链接：{} 链接内容：{}", doc.baseUri(), doc.body().text());
+            LogUtils.error("分页章节正文获取为空，可能被限流！出错链接: {} 链接内容:\n{}\n", doc.baseUri(), doc);
             return null;
         }
         // 从按钮获取下一页链接
