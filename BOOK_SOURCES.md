@@ -15,6 +15,7 @@
 | [阅读库](http://www.yeudusk.com/)       | ✅     | ❌      |                                           |
 | [顶点小说](https://www.wxsy.net/)        | ✅     | ❌      | 搜索、详情限流                                   |
 | [笔趣阁365](https://www.biquge365.net/) | ✅     | ✅      | 搜索间隔 15 秒                                 |
+| [燃文小说网](https://www.ranwen8.cc/)     | ✅     | ❌      |                                           |
 
 `proxy-rules.json`：需要代理的书源 (必须是非大陆 IP)，需在 config.ini 设置 cf-bypass
 

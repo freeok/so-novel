@@ -22,7 +22,7 @@ public class JsCaller {
 
     public final String JS_TEMPLATE = """
             function func(r) {
-                %s
+                %s;
                 return r;
             }
             """;
@@ -37,17 +37,10 @@ public class JsCaller {
     @SneakyThrows
     public String call(String jsCode, String input) {
         V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        // 先加载函数
-        v8Runtime.getExecutor(JS_TEMPLATE.formatted(jsCode)).executeVoid();
+        String scriptString = JS_TEMPLATE.formatted(jsCode);
+        v8Runtime.getExecutor(scriptString).executeVoid();
         V8ValueFunction function = v8Runtime.getGlobalObject().get("func");
         return function.callString(null, input);
-    }
-
-    // 执行 JS_TEMPLATE 表达式，返回结果字符串
-    @SneakyThrows
-    public String eval(String jsCode) {
-        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        return v8Runtime.getExecutor(jsCode).executeString();
     }
 
     // 调用 JS_TEMPLATE 函数
@@ -58,6 +51,13 @@ public class JsCaller {
         v8Runtime.getExecutor(jsFunctionCode).executeVoid();
         V8ValueFunction function = v8Runtime.getGlobalObject().get(functionName);
         return function.callObject(null, args);
+    }
+
+    // 执行 JS_TEMPLATE 表达式，返回结果字符串
+    @SneakyThrows
+    public String eval(String jsCode) {
+        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
+        return v8Runtime.getExecutor(jsCode).executeString();
     }
 
     // 释放当前线程的 V8Runtime（可选，看线程池策略）
