@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
@@ -206,7 +207,7 @@ public class SourceUtils {
                 try {
                     Call call = client.newCall(new Request.Builder()
                             .url(r.getUrl())
-                            .header("User-Agent", RandomUA.generate())
+                            .header(Header.USER_AGENT.toString(), RandomUA.generate())
                             .head() // 只发 HEAD 请求，不获取 body，更快！
                             .build());
                     call.timeout().timeout(3, TimeUnit.SECONDS);

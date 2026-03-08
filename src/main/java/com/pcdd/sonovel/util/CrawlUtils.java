@@ -1,6 +1,8 @@
 package com.pcdd.sonovel.util;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.model.AppConfig;
 import lombok.SneakyThrows;
@@ -8,6 +10,7 @@ import lombok.experimental.UtilityClass;
 import okhttp3.*;
 import org.jsoup.nodes.Document;
 
+import java.net.URL;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -58,8 +61,10 @@ public class CrawlUtils {
                 isRetry ? config.getRetryMaxInterval() : config.getMaxInterval());
     }
 
+    /**
+     * 清理不可见字符：控制字符、格式控制符、私有区 PUA 字符 (导致中文乱码的根源)
+     */
     public String cleanInvisibleChars(String text) {
-        // 过滤：控制字符、格式控制符、私有区 PUA 字符 (导致中文乱码的根源)
         return StrUtil.isEmpty(text) ? null : text.replaceAll("[\\p{C}\\p{Cf}\\p{Co}\\p{Zl}\\p{Zp}\\u200B\\uFEFF]", "");
     }
 
@@ -67,7 +72,8 @@ public class CrawlUtils {
     public Response request(OkHttpClient client, String url, int timeout) {
         Call call = client.newCall(new Request.Builder()
                 .url(url)
-                .addHeader("User-Agent", RandomUA.generate())
+                .addHeader(Header.USER_AGENT.toString(), RandomUA.generate())
+                .addHeader(Header.REFERER.toString(), URLUtil.getHost(URLUtil.url(url)).toString())
                 .build()
         );
         call.timeout().timeout(timeout, TimeUnit.SECONDS);
@@ -77,8 +83,11 @@ public class CrawlUtils {
 
     @SneakyThrows
     public Response request(OkHttpClient client, Request.Builder builder, int timeout) {
+        URL url = builder.getUrl$okhttp().url();
+        String referer = URLUtil.getHost(url).toString();
         Call call = client.newCall(builder
-                .addHeader("User-Agent", RandomUA.generate())
+                .addHeader(Header.USER_AGENT.toString(), RandomUA.generate())
+                .addHeader(Header.REFERER.toString(), referer)
                 .build()
         );
         call.timeout().timeout(timeout, TimeUnit.SECONDS);
