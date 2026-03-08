@@ -59,7 +59,7 @@ public class BatchDownloadAction {
             if (split.length != 2) continue;
             String bookName = split[0];
             String author = split[1];
-            List<SearchResult> res = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
+            List<SearchResult> res = "proxy-required.json".equals(config.getActiveRules()) && config.getSourceId() == 2
                     ? new SearchParserQuanben5(config).parse(bookName)
                     : new SearchParser(config).parse(bookName);
             res.stream()

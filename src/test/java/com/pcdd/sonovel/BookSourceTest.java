@@ -55,14 +55,14 @@ class BookSourceTest {
         ConsoleLog.setLevel(Level.OFF);
         // 覆盖 config-dev.ini 配置
         // 在此修改要测试的书源
-        APP_CONFIG.setActiveRules("main-rules.json");
+        APP_CONFIG.setActiveRules("main.json");
         // 扩展名
         APP_CONFIG.setExtName("txt");
         // 正文语言
         APP_CONFIG.setLanguage(LangType.ZH_CN);
     }
 
-    @DisplayName("main-rules.json")
+    @DisplayName("main.json")
     @ParameterizedTest
     @CsvSource({
             "http://www.xbiqugu.la/130/130509/",
@@ -89,7 +89,7 @@ class BookSourceTest {
         // chapterBatchParse(0, 100);
     }
 
-    @DisplayName("non-searchable-rules.json")
+    @DisplayName("non-searchable.json")
     @ParameterizedTest
     @CsvSource({
             "https://www.tianxibook.com/book/66120/",
@@ -106,7 +106,7 @@ class BookSourceTest {
         chapterBatchParse(0, 100);
     }
 
-    @DisplayName("proxy-rules.json")
+    @DisplayName("proxy-required.json")
     @ParameterizedTest
     @CsvSource({
             "https://www.69shuba.com/book/48273.htm",
@@ -123,7 +123,7 @@ class BookSourceTest {
         chapterParse();
     }
 
-    @DisplayName("cf-rules.json")
+    @DisplayName("cloudflare.json")
     @ParameterizedTest
     @CsvSource({
             "http://www.xhytd.com/170/170581/",
@@ -142,7 +142,7 @@ class BookSourceTest {
 
     public void searchParse(String keyword) {
         Console.log("\n{} START searchParse {}", DIVIDER, DIVIDER);
-        List<SearchResult> list = "proxy-rules.json".equals(APP_CONFIG.getActiveRules()) && APP_CONFIG.getSourceId() == 2
+        List<SearchResult> list = "proxy-required.json".equals(APP_CONFIG.getActiveRules()) && APP_CONFIG.getSourceId() == 2
                 ? new SearchParserQuanben5(APP_CONFIG).parse(keyword)
                 : new SearchParser(APP_CONFIG).parse(keyword);
         if (CollUtil.isEmpty(list)) {
