@@ -148,6 +148,7 @@ public class SearchParser extends Source {
 
                 SearchResult sr = SearchResult.builder()
                         .sourceId(this.rule.getId())
+                        .sourceName(this.rule.getName())
                         .url(bookUrl)
                         .bookName(book.getBookName())
                         .author(book.getAuthor())
@@ -182,6 +183,7 @@ public class SearchParser extends Source {
 
                 SearchResult sr = SearchResult.builder()
                         .sourceId(this.rule.getId())
+                        .sourceName(this.rule.getName())
                         .url(href)
                         .bookName(bookName)
                         .author(author)
