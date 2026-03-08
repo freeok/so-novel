@@ -1,8 +1,7 @@
 var qsbs = {
   _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
   bb: function (a) {
-    var b = "",
-      d, c, i, e, f, h, j, g = 0;
+    var b = "", d, c, i, e, f, h, j, g = 0;
     a = a.replace(/[^A-Za-z0-9+\/=]/g, "");
     while (g < a.length) {
       e = this._keyStr.indexOf(a.charAt(g++));

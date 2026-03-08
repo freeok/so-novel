@@ -39,16 +39,17 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 @UtilityClass
 public class SourceUtils {
 
-    public final String META_BOOK_NAME = "meta[property=og:novel:book_name]";
+    public final String META_BOOK_NAME = "meta[property=\"og:novel:book_name\"]";
     public final String META_AUTHOR = "meta[property=\"og:novel:author\"]";
     public final String META_INTRO = "meta[name=\"description\"]";
-    private final String RULES_DIR_DEV = "bundle/rules/";
-    private final String RULES_DIR_PROD = "rules/";
     public final String META_CATEGORY = "meta[property=\"og:novel:category\"]";
     public final String META_COVER_URL = "meta[property=\"og:image\"]";
     public final String META_LATEST_CHAPTER = "meta[property=\"og:novel:latest_chapter_name\"]";
     public final String META_LAST_UPDATE_TIME = "meta[property=\"og:novel:update_time\"]";
     public final String META_STATUS = "meta[property=\"og:novel:status\"]";
+
+    private final String RULES_DIR_DEV = "bundle/rules/";
+    private final String RULES_DIR_PROD = "rules/";
     private final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     private List<Rule> cachedAllRules;
     private List<Rule> cachedActivatedRules;
