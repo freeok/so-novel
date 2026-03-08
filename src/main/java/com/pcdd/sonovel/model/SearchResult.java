@@ -12,6 +12,7 @@ import lombok.Data;
 public class SearchResult {
 
     private Integer sourceId;
+    private String sourceName;
     private String url;
     private String bookName;
     private String author;

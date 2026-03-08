@@ -49,6 +49,7 @@ public class SingleSearchAction {
         Book book = new BookParser(config).parse(url);
         SearchResult sr = SearchResult.builder()
                 .sourceId(config.getSourceId())
+                .sourceName(rule.getName())
                 .url(url)
                 .bookName(book.getBookName())
                 .author(book.getAuthor())

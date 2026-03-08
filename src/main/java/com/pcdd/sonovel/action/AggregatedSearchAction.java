@@ -51,6 +51,7 @@ public class AggregatedSearchAction {
 
     @SneakyThrows
     public static List<SearchResult> getSearchResults(String kw) {
+        Console.log("<== 搜索关键字 “{}”", kw);
         List<SearchResult> results = Collections.synchronizedList(new ArrayList<>());
         List<Source> searchableSources = SourceUtils.getSearchableSources();
         CountDownLatch latch = new CountDownLatch(searchableSources.size());

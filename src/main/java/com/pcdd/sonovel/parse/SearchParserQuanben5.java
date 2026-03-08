@@ -88,6 +88,7 @@ public class SearchParserQuanben5 extends Source {
 
             SearchResult sr = SearchResult.builder()
                     .sourceId(this.rule.getId())
+                    .sourceName(this.rule.getName())
                     .url(href)
                     .bookName(bookName)
                     .author(author)
