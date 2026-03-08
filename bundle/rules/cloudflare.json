@@ -66,7 +66,7 @@
   {
     "url": "http://www.dongtanxs.com/",
     "name": "东滩小说",
-    "comment": "全部页面有CF",
+    "comment": "",
     "search": {
       "url": "http://www.dongtanxs.com/s.php?ie=utf-8&q=%s",
       "method": "get",

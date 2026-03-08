@@ -74,7 +74,7 @@ public class SingleSearchAction {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        List<SearchResult> searchResults = "proxy-rules.json".equals(config.getActiveRules()) && config.getSourceId() == 2
+        List<SearchResult> searchResults = "proxy-required.json".equals(config.getActiveRules()) && config.getSourceId() == 2
                 ? new SearchParserQuanben5(config).parse(keyword)
                 : new SearchParser(config).parse(keyword);
 

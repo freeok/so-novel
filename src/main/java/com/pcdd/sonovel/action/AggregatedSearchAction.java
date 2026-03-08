@@ -60,7 +60,7 @@ public class AggregatedSearchAction {
             for (Source source : searchableSources) {
                 executor.execute(() -> {
                     try {
-                        List<SearchResult> res = "proxy-rules.json".equals(source.config.getActiveRules()) && source.config.getSourceId() == 2
+                        List<SearchResult> res = "proxy-required.json".equals(source.config.getActiveRules()) && source.config.getSourceId() == 2
                                 ? new SearchParserQuanben5(source.config).parse(kw)
                                 : new SearchParser(source.config).parse(kw);
                         if (CollUtil.isNotEmpty(res)) {

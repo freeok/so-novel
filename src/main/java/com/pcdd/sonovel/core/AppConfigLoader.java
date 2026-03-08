@@ -75,7 +75,7 @@ public class AppConfigLoader {
 
         // [source]
         cfg.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
-        cfg.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main-rules.json"));
+        cfg.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main.json"));
         cfg.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
         cfg.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
         cfg.setSearchFilter(usr.getInt("search-filter", SELECTION_SOURCE, 1));
