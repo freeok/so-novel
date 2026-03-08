@@ -5,6 +5,13 @@ set -e  # 出现错误立即退出
 # Windows 发布脚本 (x64)
 # =====================
 
+# 本地运行时取消注释
+# export JAVA_HOME="$HOME/.jdks/temurin-21.0.9"
+# export PATH="$JAVA_HOME/bin:$PATH"
+# echo $JAVA_HOME
+# java -version
+# mvn -v
+
 JRE_FILENAME="jre-21.0.8+9-windows_x64.zip"
 JRE_DIRNAME="jdk-21.0.8+9-jre"
 JRE_PATH="bundle/$JRE_FILENAME"

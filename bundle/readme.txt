@@ -36,7 +36,7 @@ docker run -it --rm -v /sonovel/config.ini:/sonovel/config.ini -v /sonovel/downl
 
 
 如何自定义书源
-1. 通过 rules/rule-template.json5 理解 rules/main-rules.json
+1. 通过 rules/rule-template.json5 理解 rules/main.json
 2. 打开对应网页，按快捷键 Ctrl + Shift + C，单击对应元素后
 3. 在开发者工具右击此元素，依次选择复制、复制 selector 或 Xpath
 4. 将复制内容粘贴到 rules/rule-template.json5 对应属性
