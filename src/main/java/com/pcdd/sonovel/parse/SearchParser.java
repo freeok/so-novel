@@ -64,8 +64,7 @@ public class SearchParser extends Source {
         try {
             String searchUrl = r.getUrl().formatted(keyword);
             Request.Builder builder = new Request.Builder()
-                    .url(searchUrl)
-                    .addHeader("Referer", this.rule.getUrl());
+                    .url(searchUrl);
 
             if (StrUtil.isNotBlank(r.getCookies())) {
                 builder.addHeader("Cookie", r.getCookies());
