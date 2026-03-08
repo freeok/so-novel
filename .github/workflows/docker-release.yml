@@ -26,6 +26,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Debug Maven compiler version
+        run: |
+          mvn help:effective-pom | grep -A 15 maven-compiler-plugin || echo "No explicit compiler plugin found"
+          echo ${GITHUB_REF_NAME}
+
       - name: Build app.jar
         run: |
           bash bin/release-linux.sh
