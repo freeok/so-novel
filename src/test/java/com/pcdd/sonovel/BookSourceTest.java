@@ -2,6 +2,7 @@ package com.pcdd.sonovel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.StopWatch;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RuntimeUtil;
@@ -65,7 +66,7 @@ class BookSourceTest {
     @ParameterizedTest
     @CsvSource({
             "http://www.xbiqugu.la/130/130509/",
-            "https://www.shuhaige.net/199178/",
+            "https://www.shuhaige.net/70475/",
             "http://www.mcxs.info/145_145199/",
             "http://www.99xs.info/tag/129_129843/",
             "https://www.22biqu.com/biqu79148/",
@@ -74,7 +75,8 @@ class BookSourceTest {
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
             "https://www.wxsy.net/novel/1803/",
-            "https://www.biquge365.net/book/95601/"
+            "https://www.biquge365.net/book/95601/",
+            "https://www.ranwen8.cc/book/8217/"
     })
     void test01(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
@@ -186,12 +188,14 @@ class BookSourceTest {
             Console.log("首章链接或章节名为空，不执行 chapterParse");
             return;
         }
+        Console.log("firstChapterUrl: {}\nfirstChapterTitle: {}", firstChapterUrl, firstChapterTitle);
 
         Chapter build = Chapter.builder()
                 .title(firstChapterTitle)
                 .url(firstChapterUrl)
                 .build();
         Chapter chapter = new ChapterParser(APP_CONFIG).parse(build);
+        Assert.notNull(chapter, "下载失败，详见 logs");
 
         Console.log(chapter.getContent());
         Console.log("{} END chapterParse {}\n", DIVIDER, DIVIDER);
