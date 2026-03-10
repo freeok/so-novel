@@ -6,8 +6,11 @@ import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.util.FileUtils;
+import lombok.AllArgsConstructor;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +20,10 @@ import java.util.List;
  * @author pcdd
  * Created at 2024/12/4
  */
+@AllArgsConstructor
 public class HtmlTocHandler implements PostProcessingHandler {
+
+    private final AppConfig config;
 
     @Override
     public void handle(Book book, File saveDir) {
@@ -36,6 +42,12 @@ public class HtmlTocHandler implements PostProcessingHandler {
         fw.writeLines(lines);
 
         downloadCover(book, saveDir);
+
+        // 将 HTML 目录打包为 zip 文件，便于下载
+        String zipPath = StrUtil.format("{}/{}({}).html.zip",
+                saveDir.getParent(), book.getBookName(), book.getAuthor());
+        FileUtil.del(zipPath);
+        ZipUtil.zip(saveDir.getAbsolutePath(), zipPath);
     }
 
 }

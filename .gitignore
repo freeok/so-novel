@@ -14,5 +14,6 @@ buildNumber.properties
 downloads/
 dist/
 logs/
+bundle/jre*.zip
 
 config-dev.ini
