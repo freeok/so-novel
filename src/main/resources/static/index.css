@@ -44,6 +44,7 @@ body {
   text-align: center;
   margin-bottom: 32px;
   padding: 12px;
+  position: relative;
 }
 
 .wrap-container {
@@ -114,6 +115,166 @@ body {
 
 .result-container {
   flex: none;
+}
+
+/* 设置按钮 - 右上角文字按钮 */
+.btn-settings {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary-color);
+  transition: all 0.2s ease;
+}
+
+.btn-settings:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background-color: rgba(93, 93, 129, 0.05);
+}
+
+/* 设置面板 */
+.settings-container {
+  flex: none;
+  margin-bottom: 24px;
+}
+
+.settings-item input[type="number"] {
+  width: 80px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: var(--text-color);
+  transition: border-color 0.2s ease;
+}
+
+.settings-item input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.settings-hint {
+  margin: 0 0 16px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary-color);
+}
+
+.settings-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-item label {
+  white-space: nowrap;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.settings-item select {
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.settings-item select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* 下载操作（自定义下拉菜单） */
+.download-action {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px !important;
+  width: auto !important;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-toggle:hover {
+  background-color: var(--secondary-hover-color);
+}
+
+.dropdown-arrow {
+  font-size: 0.7em;
+  transition: transform 0.2s;
+}
+
+.download-action.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 100;
+  min-width: 110px;
+  background: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.download-action.open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-color);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.dropdown-item + .dropdown-item {
+  border-top: 1px solid #f0f0f0;
+}
+
+.dropdown-item.default-format {
+  font-weight: 500;
+  color: var(--primary-color);
 }
 
 .search-container {
@@ -349,5 +510,19 @@ input[disabled] {
 
   .data-table tr:last-child td:last-child {
     border-bottom: none;
+  }
+
+  .settings-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .download-action {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .dropdown-menu {
+    right: 0;
   }
 }

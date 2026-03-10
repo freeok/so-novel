@@ -45,6 +45,7 @@ public class WebServer {
         context.addServlet(AggregatedSearchServlet.class, "/search/aggregated");
         context.addServlet(DownloadProgressSseServlet.class, "/download-progress");
         context.addServlet(VersionServlet.class, "/version");
+        context.addServlet(ConfigServlet.class, "/config");
 
         ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
         // 不显示目录列表，但子文件依然可访问
