@@ -21,7 +21,7 @@ import java.util.Set;
 public class CrawlerPostHandler {
 
     private final AppConfig config;
-    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("txt", "epub", "pdf");
+    private static final Set<String> EXTENSIONS = Set.of("txt", "epub", "html", "pdf");
 
     @SneakyThrows
     public void handle(File saveDir) {
@@ -29,14 +29,11 @@ public class CrawlerPostHandler {
         String extName = config.getExtName();
         StringBuilder s = new StringBuilder(StrUtil.format("<== 章节下载完毕《{}》({})，", book.getBookName(), book.getAuthor()));
 
-        if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase())) {
-            s.append("正在合并为 ").append(extName.toUpperCase());
+        if (EXTENSIONS.contains(extName.toLowerCase())) {
+            s.append("正在生成 ").append(extName.toUpperCase());
         }
         if ("txt".equals(extName)) {
             s.append(" (%s)".formatted(CharsetUtil.parse(config.getTxtEncoding())));
-        }
-        if ("html".equals(extName)) {
-            s.append("正在生成 HTML 目录文件");
         }
         Console.log(s.append("..."));
 
@@ -49,7 +46,7 @@ public class CrawlerPostHandler {
 
         PostHandlerFactory.getHandler(extName, config).handle(book, saveDir);
 
-        if (ALLOWED_EXTENSIONS.contains(extName.toLowerCase()) && config.getPreserveChapterCache() == 0) {
+        if (EXTENSIONS.contains(extName.toLowerCase()) && config.getPreserveChapterCache() == 0) {
             FileUtil.del(saveDir);
         }
     }
