@@ -23,7 +23,42 @@
   <header class="header">
     <h1 class="app-title">SO NOVEL</h1>
     <a id="versionTag" class="version-tag" target="_blank">version</a>
+    <button class="btn-settings" id="settingsToggle">设置</button>
   </header>
+
+  <section class="container settings-container" id="settingsPanel" style="display:none">
+    <h2 class="section-title">偏好设置</h2>
+    <p class="settings-hint">以下设置仅保存在浏览器本地，不会修改服务器配置。</p>
+    <div class="settings-grid">
+      <div class="settings-item">
+        <label for="settingFormat">下载格式</label>
+        <select id="settingFormat">
+          <option value="">跟随服务器配置</option>
+          <option value="epub">EPUB</option>
+          <option value="txt">TXT</option>
+          <option value="html">HTML</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+      <div class="settings-item">
+        <label for="settingLanguage">书籍内容语言</label>
+        <select id="settingLanguage">
+          <option value="">自动</option>
+          <option value="zh_CN">简体中文</option>
+          <option value="zh_TW">繁体中文(台湾)</option>
+          <option value="zh_Hant">繁体中文</option>
+        </select>
+      </div>
+      <div class="settings-item">
+        <label for="settingSearchLimit">每页显示数量</label>
+        <input type="number" id="settingSearchLimit" min="10" placeholder="默认">
+      </div>
+      <div class="settings-item">
+        <label for="settingConcurrency">下载并发限制</label>
+        <input type="number" id="settingConcurrency" min="1" placeholder="默认">
+      </div>
+    </div>
+  </section>
 
   <main class="main-content">
     <section class="container download-container" id="downloadContainer">
@@ -106,8 +141,92 @@
     const tb2 = document.getElementById('tb2');
 
     let bookCache = []
+    let currentPage = 1
     // 最新下载的书的文件名
     let latestFileName = ''
+
+    // 设置面板相关
+    const settingsToggle = document.getElementById('settingsToggle')
+    const settingsPanel = document.getElementById('settingsPanel')
+    const settingFormat = document.getElementById('settingFormat')
+    const settingLanguage = document.getElementById('settingLanguage')
+    const settingSearchLimit = document.getElementById('settingSearchLimit')
+    const settingConcurrency = document.getElementById('settingConcurrency')
+
+    const SETTINGS_KEY = 'sonovel-settings'
+    // 服务器配置限制值
+    let serverConfig = { searchLimit: -1, concurrency: -1 }
+
+    const loadSettings = () => {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')
+        settingFormat.value = saved.format || ''
+        settingLanguage.value = saved.language || ''
+        settingSearchLimit.value = saved.searchLimit || ''
+        settingConcurrency.value = saved.concurrency || ''
+      } catch (_) {}
+    }
+
+    const saveSettings = () => {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        format: settingFormat.value,
+        language: settingLanguage.value,
+        searchLimit: settingSearchLimit.value,
+        concurrency: settingConcurrency.value,
+      }))
+    }
+
+    // 确保输入值不超过配置文件限制
+    const clampSetting = (input, configVal, fallbackMax, min = 1) => {
+      const max = configVal > 0 ? configVal : fallbackMax
+      input.min = min
+      input.max = max
+      input.addEventListener('change', () => {
+        const v = parseInt(input.value)
+        if (v > max) input.value = max
+        if (v < min && input.value !== '') input.value = min
+        saveSettings()
+      })
+    }
+
+    const fetchConfig = async () => {
+      try {
+        const resp = await fetch('/config')
+        const data = await resp.json()
+        if (data && data.data) {
+          serverConfig = data.data
+          clampSetting(settingSearchLimit, -1, 100, 10)
+          clampSetting(settingConcurrency, serverConfig.concurrency, 50)
+        }
+      } catch (_) {
+        clampSetting(settingSearchLimit, -1, 100, 10)
+        clampSetting(settingConcurrency, -1, 50)
+      }
+    }
+
+    const updateDefaultFormatLabels = () => {
+      const label = settingFormat.value ? settingFormat.value.toUpperCase() : 'EPUB'
+      document.querySelectorAll('.dropdown-item.default-format').forEach(el => {
+        el.textContent = `${label}（默认）`
+      })
+    }
+
+    settingsToggle.addEventListener('click', () => {
+      settingsPanel.style.display = settingsPanel.style.display === 'none' ? '' : 'none'
+    })
+    settingFormat.addEventListener('change', () => {
+      saveSettings()
+      updateDefaultFormatLabels()
+    })
+    settingLanguage.addEventListener('change', saveSettings)
+    settingSearchLimit.addEventListener('change', () => {
+      if (bookCache.length > 0) {
+        currentPage = 1
+        renderDownloadTable()
+      }
+    })
+    loadSettings()
+    fetchConfig()
 
     // 工具函数
     const showTip = (text = '正在加载...') => {
@@ -150,7 +269,7 @@
       window.open(`${window.location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
     }
 
-    const handleDownloadToServer = async (index) => {
+    const handleDownloadToServer = async (index, format) => {
       const item = bookCache[index]
       if (!item) {
         alert('参数错误，请重新搜索')
@@ -158,9 +277,20 @@
       }
       // 在发起请求前，显示弹窗
       showTip(`正在解析目录...`)
-      const query = new URLSearchParams(item).toString()
+      const params = new URLSearchParams(item)
+      const finalFormat = format || settingFormat.value || ''
+      if (finalFormat) {
+        params.set('format', finalFormat)
+      }
+      const language = settingLanguage.value
+      if (language) {
+        params.set('language', language)
+      }
+      if (settingConcurrency.value) {
+        params.set('concurrency', settingConcurrency.value)
+      }
       try {
-        await fetch(`/book-fetch?${query}`)
+        await fetch(`/book-fetch?${params.toString()}`)
         await fetchLocalBooks()
         // fetch 会把响应当成 XHR 请求，返回一个 Response 对象，不会走浏览器默认的下载流程
         window.location.href = `/book-download?filename=${latestFileName}`
@@ -172,9 +302,26 @@
       }
     }
 
+    const getPageSize = () => {
+      const v = parseInt(settingSearchLimit.value)
+      return v > 0 ? v : 20
+    }
+
     const renderDownloadTable = (data) => {
-      bookCache = data
-      downloadTableBody.innerHTML = data.map((item, index) => `
+      if (data !== undefined) bookCache = data
+      const pageSize = getPageSize()
+      const totalPages = Math.max(1, Math.ceil(bookCache.length / pageSize))
+      if (currentPage > totalPages) currentPage = totalPages
+      if (currentPage < 1) currentPage = 1
+
+      const start = (currentPage - 1) * pageSize
+      const end = Math.min(start + pageSize, bookCache.length)
+      const pageData = bookCache.slice(start, end)
+
+      const defaultLabel = settingFormat.value ? settingFormat.value.toUpperCase() : 'EPUB'
+      downloadTableBody.innerHTML = pageData.map((item, i) => {
+        const index = start + i
+        return `
       <tr>
         <td data-label="No">${index + 1}</td>
         <td data-label="书名">${item.bookName}</td>
@@ -182,13 +329,66 @@
         <td data-label="最新章节">${item.latestChapter || ''}</td>
         <td data-label="最后更新">${item.lastUpdateTime || ''}</td>
         <td data-label="书源">${item.sourceName}</td>
-        <td data-label="操作"><button class="btn btn-secondary btn-download" data-index="${index}">下载</button></td>
+        <td data-label="操作">
+          <div class="download-action">
+            <button class="dropdown-toggle" data-index="${index}">下载为 <span class="dropdown-arrow">▾</span></button>
+            <div class="dropdown-menu">
+              <div class="dropdown-item default-format" data-format="" data-index="${index}">${defaultLabel}（默认）</div>
+              <div class="dropdown-item" data-format="epub" data-index="${index}">EPUB</div>
+              <div class="dropdown-item" data-format="txt" data-index="${index}">TXT</div>
+              <div class="dropdown-item" data-format="html" data-index="${index}">HTML</div>
+              <div class="dropdown-item" data-format="pdf" data-index="${index}">PDF</div>
+            </div>
+          </div>
+        </td>
         <td data-label="源站"><a href="${item.url}" target="_blank"><button class="btn btn-secondary btn-download">前往</button></a></td>
-      </tr>
-    `).join('')
-      if (data.length > 0) {
+      </tr>`
+      }).join('')
+
+      renderPagination(totalPages)
+
+      if (bookCache.length > 0) {
         tb1.style.display = ''
       }
+    }
+
+    const renderPagination = (totalPages) => {
+      let paginationEl = document.getElementById('pagination')
+      if (totalPages <= 1) {
+        if (paginationEl) paginationEl.remove()
+        return
+      }
+      if (!paginationEl) {
+        paginationEl = document.createElement('div')
+        paginationEl.id = 'pagination'
+        paginationEl.className = 'pagination'
+        tb1.appendChild(paginationEl)
+      }
+
+      let html = `<span class="pagination-info">共 ${bookCache.length} 条，第 ${currentPage}/${totalPages} 页</span>`
+      html += `<div class="pagination-btns">`
+      html += `<button class="page-btn" data-page="prev" ${currentPage <= 1 ? 'disabled' : ''}>上一页</button>`
+
+      const maxVisible = 5
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2))
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1)
+      if (endPage - startPage < maxVisible - 1) startPage = Math.max(1, endPage - maxVisible + 1)
+
+      if (startPage > 1) {
+        html += `<button class="page-btn" data-page="1">1</button>`
+        if (startPage > 2) html += `<span class="page-ellipsis">…</span>`
+      }
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`
+      }
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += `<span class="page-ellipsis">…</span>`
+        html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`
+      }
+
+      html += `<button class="page-btn" data-page="next" ${currentPage >= totalPages ? 'disabled' : ''}>下一页</button>`
+      html += `</div>`
+      paginationEl.innerHTML = html
     }
 
     const renderLocalBooksTable = (data) => {
@@ -246,10 +446,12 @@
       searchButton.disabled = true // 搜索时禁用按钮
       downloadSearchName.disabled = true // 搜索时禁用输入框
       try {
-        const response = await fetch(`/search/aggregated?kw=${encodeURIComponent(value)}`)
+        const searchUrl = `/search/aggregated?kw=${encodeURIComponent(value)}`
+        const response = await fetch(searchUrl)
         const data = await response.json()
         console.log('search results', data)
         if (data && data.data) {
+          currentPage = 1
           renderDownloadTable(data.data)
         }
       } catch (error) {
@@ -298,12 +500,44 @@
       }
     })
 
-    // 使用事件委托处理下载按钮点击
-    downloadTableBody.addEventListener('click', (e) => {
-      const button = e.target.closest('button.btn-secondary')
-      if (button && button.dataset.index !== undefined) {
-        handleDownloadToServer(button.dataset.index)
+    // 使用事件委托处理分页按钮
+    tb1.addEventListener('click', (e) => {
+      const pageBtn = e.target.closest('.page-btn')
+      if (pageBtn && !pageBtn.disabled) {
+        const page = pageBtn.dataset.page
+        const totalPages = Math.ceil(bookCache.length / getPageSize())
+        if (page === 'prev') currentPage--
+        else if (page === 'next') currentPage++
+        else currentPage = parseInt(page)
+        currentPage = Math.max(1, Math.min(currentPage, totalPages))
+        renderDownloadTable()
+        tb1.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
+    })
+
+    // 使用事件委托处理下载下拉菜单
+    downloadTableBody.addEventListener('click', (e) => {
+      const toggle = e.target.closest('.dropdown-toggle')
+      if (toggle) {
+        e.stopPropagation()
+        const action = toggle.closest('.download-action')
+        // 关闭其他已展开的下拉菜单
+        document.querySelectorAll('.download-action.open').forEach(el => {
+          if (el !== action) el.classList.remove('open')
+        })
+        action.classList.toggle('open')
+        return
+      }
+      const item = e.target.closest('.dropdown-item')
+      if (item) {
+        item.closest('.download-action').classList.remove('open')
+        handleDownloadToServer(item.dataset.index, item.dataset.format)
+      }
+    })
+
+    // 点击页面其他区域关闭下拉菜单
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.download-action.open').forEach(el => el.classList.remove('open'))
     })
 
     tableBody.addEventListener('click', (e) => {
