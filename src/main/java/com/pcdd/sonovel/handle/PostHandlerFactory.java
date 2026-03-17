@@ -14,7 +14,7 @@ public class PostHandlerFactory {
         return switch (extName) {
             case "txt" -> new TxtMergeHandler(config);
             case "epub" -> new EpubMergeHandler();
-            case "html" -> new HtmlTocHandler(config);
+            case "html" -> new HtmlTocHandler();
             case "pdf" -> new PdfMergeHandler(config);
             default -> throw new IllegalArgumentException("Unsupported format: " + extName);
         };
