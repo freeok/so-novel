@@ -10,7 +10,7 @@
   <meta content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" name="viewport">
   <!-- 安卓/Chrome Web App 全屏显示 -->
   <meta content="yes" name="mobile-web-app-capable">
-  <!-- iOS Safari 全屏显示（保留兼容） -->
+  <!-- iOS Safari 全屏显示 (保留兼容) -->
   <meta content="yes" name="apple-mobile-web-app-capable">
   <!-- 禁止 iOS 自动识别电话号码 -->
   <meta content="telephone=no" name="format-detection">
@@ -205,9 +205,9 @@
     }
 
     const updateDefaultFormatLabels = () => {
-      const label = settingFormat.value ? settingFormat.value.toUpperCase() : 'EPUB'
+      const defaultExt = settingFormat.value ? settingFormat.value.toUpperCase() : serverConfig.extName.toUpperCase()
       document.querySelectorAll('.dropdown-item.default-format').forEach(el => {
-        el.textContent = `${label}（默认）`
+        el.textContent = `${defaultExt} (默认)`
       })
     }
 
@@ -318,7 +318,7 @@
       const end = Math.min(start + pageSize, bookCache.length)
       const pageData = bookCache.slice(start, end)
 
-      const defaultLabel = settingFormat.value ? settingFormat.value.toUpperCase() : 'EPUB'
+      const defaultExt = settingFormat.value ? settingFormat.value.toUpperCase() : serverConfig.extName.toUpperCase()
       downloadTableBody.innerHTML = pageData.map((item, i) => {
         const index = start + i
         return `
@@ -333,7 +333,7 @@
           <div class="download-action">
             <button class="dropdown-toggle" data-index="${index}">下载为 <span class="dropdown-arrow">▾</span></button>
             <div class="dropdown-menu">
-              <div class="dropdown-item default-format" data-format="" data-index="${index}">${defaultLabel}（默认）</div>
+              <div class="dropdown-item default-format" data-format="" data-index="${index}">${defaultExt} (默认)</div>
               <div class="dropdown-item" data-format="epub" data-index="${index}">EPUB</div>
               <div class="dropdown-item" data-format="txt" data-index="${index}">TXT</div>
               <div class="dropdown-item" data-format="html" data-index="${index}">HTML</div>
