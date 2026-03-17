@@ -44,7 +44,6 @@ public class WebServer {
         context.addServlet(LocalBookListServlet.class, "/local-books");
         context.addServlet(AggregatedSearchServlet.class, "/search/aggregated");
         context.addServlet(DownloadProgressSseServlet.class, "/download-progress");
-        context.addServlet(VersionServlet.class, "/version");
         context.addServlet(ConfigServlet.class, "/config");
 
         ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);

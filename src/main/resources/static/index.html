@@ -193,10 +193,15 @@
       try {
         const resp = await fetch('/config')
         const data = await resp.json()
+
         if (data && data.data) {
           serverConfig = data.data
           clampSetting(settingSearchLimit, -1, 100, 10)
           clampSetting(settingConcurrency, serverConfig.concurrency, 50)
+
+          console.log('version:', serverConfig.version)
+          versionTag.innerText = serverConfig.version
+          versionTag.href = `https://github.com/freeok/so-novel/releases/tag/v${serverConfig.version}`
         }
       } catch (_) {
         clampSetting(settingSearchLimit, -1, 100, 10)
@@ -225,8 +230,6 @@
         renderDownloadTable()
       }
     })
-    loadSettings()
-    fetchConfig()
 
     // 工具函数
     const showTip = (text = '正在加载...') => {
@@ -405,15 +408,6 @@
       }
     }
 
-    const fetchVersion = async () => {
-      const response = await fetch('/version')
-      const data = await response.json()
-      const ver = data.data
-      console.log('version:', ver)
-      versionTag.innerText = ver
-      versionTag.href = `https://github.com/freeok/so-novel/releases/tag/${ver}`
-    }
-
     // 已下书籍
     const fetchLocalBooks = async () => {
       showTip('正在刷新...')
@@ -549,7 +543,8 @@
 
     // 页面加载时执行
     initSSE()
-    fetchVersion()
+    loadSettings()
+    fetchConfig()
     fetchLocalBooks()
     tb1.style.display = 'none';
     tb2.style.display = 'none';
