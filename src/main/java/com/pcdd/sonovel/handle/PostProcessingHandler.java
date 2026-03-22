@@ -26,7 +26,7 @@ public interface PostProcessingHandler {
             File coverFile = HttpUtil.downloadFileFromUrl(book.getCoverUrl(), FileUtils.resolvePath(saveDir.toString()));
             FileUtil.rename(coverFile, "0_封面." + FileUtil.getType(coverFile), true);
         } catch (Exception e) {
-            Console.error(render("最新封面 {} 下载失败：{}", "red"), book.getCoverUrl(), e.getMessage());
+            Console.error(render("TXT/HTML 最新封面 {} 下载失败：{}", "red"), book.getCoverUrl(), e.getMessage());
         }
     }
 

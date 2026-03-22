@@ -5,10 +5,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.Header;
-import cn.hutool.http.HtmlUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import cn.hutool.http.*;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hankcs.hanlp.HanLP;
@@ -21,6 +18,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class CoverUpdater {
      * 从不同来源获取最新封面
      */
     public String fetchCover(Book book, String coverUrl) {
-        Console.log("<== 正在获取最新封面...");
+        Console.log("<== 正在获取最新封面地址...");
         book.setCoverUrl(StrUtil.emptyToDefault(coverUrl, DEFAULT_COVER));
 
         if (StrUtil.isBlank(book.getBookName())) {
@@ -69,12 +68,15 @@ public class CoverUpdater {
             for (Future<String> future : futures) {
                 String url = future.get();
                 if (isValidCover(url)) {
-                    BufferedImage img = ImgUtil.read(URLUtil.url(url));
+                    byte[] bytes = HttpDownloader.downloadBytes(url, TIMEOUT);
+                    InputStream imageStream = new ByteArrayInputStream(bytes);
+                    BufferedImage img = ImgUtil.read(imageStream);
                     map.put(url, img.getWidth() * img.getHeight());
+                    imageStream.close();
                 }
             }
 
-            // 返回分辨率最高的封面，若不存在有效封面，则使用默认封面
+            // 若有多个封面，则返回分辨率最高的封面；若不存在有效封面，则使用默认封面
             return map.entrySet()
                     .stream()
                     .max(Map.Entry.comparingByValue())
