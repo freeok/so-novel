@@ -11,10 +11,26 @@ import org.junit.jupiter.api.Test;
 class CoverUpdaterTest {
 
     @Test
-    void test01() {
+    void testQidian() {
         Book book = new Book();
-        book.setBookName("星辰大道");
-        book.setAuthor("随散飘风");
+        book.setBookName("诡秘之主");
+        book.setAuthor("爱潜水的乌贼");
+        System.out.println(CoverUpdater.fetchCover(book, null));
+    }
+
+    @Test
+    void testZongheng() {
+        Book book = new Book();
+        book.setBookName("剑来");
+        book.setAuthor("烽火戏诸侯");
+        System.out.println(CoverUpdater.fetchCover(book, null));
+    }
+
+    @Test
+    void testQimao() {
+        Book book = new Book();
+        book.setBookName("盖世神医");
+        book.setAuthor("狐颜乱语");
         System.out.println(CoverUpdater.fetchCover(book, null));
     }
 
