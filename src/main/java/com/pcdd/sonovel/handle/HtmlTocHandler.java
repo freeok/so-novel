@@ -39,7 +39,7 @@ public class HtmlTocHandler implements PostProcessingHandler {
         downloadCover(book, saveDir);
 
         // 将 HTML 目录打包为 zip 文件，便于 WebUI 下载
-        String zipPath = System.getProperty("user.dir") + File.separator + saveDir;
+        String zipPath = saveDir.getAbsolutePath();
         ZipUtil.zip(zipPath);
     }
 

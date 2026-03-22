@@ -10,6 +10,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
 import com.pcdd.sonovel.parse.SearchParserQuanben5;
+import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 
@@ -83,9 +84,8 @@ public class BatchDownloadAction {
         if (StrUtil.isNotEmpty(notFound)) {
             notFound.append("#\n");
             notFound.append("若要继续下载上述未搜到的书: 切换其它书源，复制以上内容，粘贴到批量下载，以此类推……\n");
-            FileUtil.writeUtf8String(notFound.toString(),
-                    System.getProperty("user.dir") + File.separator + "logs" + File.separator + "批量下载-【%s】未搜到的书.log"
-                            .formatted(SourceUtils.getRule(config.getSourceId()).getName()));
+            String path = "logs" + File.separator + "批量下载-【%s】未搜到的书.log".formatted(SourceUtils.getRule(config.getSourceId()).getName());
+            FileUtil.writeUtf8String(notFound.toString(), FileUtils.toAbsolutePath(path));
         }
         Console.print(render("==> 输入 Y 以确认下载：", "green"));
         if ("Y".equalsIgnoreCase(sc.next().strip())) {

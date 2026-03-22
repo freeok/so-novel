@@ -33,7 +33,7 @@ public class CrawlerPostHandler {
             s.append("正在生成 ").append(extName.toUpperCase());
         }
         if ("txt".equals(extName)) {
-            s.append(" (%s)".formatted(CharsetUtil.parse(config.getTxtEncoding())));
+            s.append(" (%s 编码)".formatted(CharsetUtil.parse(config.getTxtEncoding())));
         }
         Console.log(s.append("..."));
 

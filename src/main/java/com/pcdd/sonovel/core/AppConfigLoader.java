@@ -6,10 +6,10 @@ import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.EnvUtils;
+import com.pcdd.sonovel.util.FileUtils;
 import com.pcdd.sonovel.util.LangUtil;
 import lombok.experimental.UtilityClass;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +47,7 @@ public class AppConfigLoader {
         // 若未指定或指定路径不存在，则从默认位置获取
         if (!FileUtil.exist(configFilePath)) {
             // 用户配置文件默认路径
-            String defaultPath = System.getProperty("user.dir") + File.separator + resolveConfigFileName();
+            String defaultPath = resolveConfigFileName();
             // 若默认路径也不存在，则抛出 FileNotFoundException
             return new Setting(defaultPath);
         }
@@ -115,8 +115,8 @@ public class AppConfigLoader {
         return StrUtil.isEmpty(value) ? defaultValue : value;
     }
 
-    public String resolveConfigFileName() {
-        return EnvUtils.isDev() ? "config-dev.ini" : "config.ini";
+    private String resolveConfigFileName() {
+        return FileUtils.toAbsolutePath(EnvUtils.isDev() ? "config-dev.ini" : "config.ini");
     }
 
 }
