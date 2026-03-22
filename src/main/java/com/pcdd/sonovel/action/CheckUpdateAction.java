@@ -107,7 +107,7 @@ public class CheckUpdateAction {
                 .setMaxRenderedLength(100)
                 .setUpdateIntervalMillis(10)
                 .build();
-        //  下载到上一级路径
+        // 下载到上一级路径
         File file = new File(System.getProperty("user.dir")).getParentFile();
 
         // 带进度显示的文件下载
