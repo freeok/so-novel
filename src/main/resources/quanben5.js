@@ -3,7 +3,7 @@ function base64(_str) {
   var encodechars = "";
   for (var i = 0; i < _str.length; i++) {
     var num0 = staticchars.indexOf(_str[i]);
-    if (num0 == -1) {
+    if (num0 === -1) {
       var code = _str[i]
     } else {
       var code = staticchars[(num0 + 3) % 62]
