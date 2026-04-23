@@ -266,19 +266,19 @@
       })
     }
 
-    // 事件处理函数
+    // 将书籍从服务器下载到本地
     const handleDownloadFileToLocal = (name) => {
       console.log('download to local', `《${name}》`)
-      window.open(`${window.location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
+      window.open(`${location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
     }
 
+    // 将书籍从源站下载到服务器
     const handleDownloadToServer = async (index, format) => {
       const item = bookCache[index]
       if (!item) {
         alert('参数错误，请重新搜索')
         return
       }
-      // 在发起请求前，显示弹窗
       showTip(`正在解析目录...`)
       const params = new URLSearchParams(item)
       const finalFormat = format || settingFormat.value || ''
@@ -293,13 +293,18 @@
         params.set('concurrency', settingConcurrency.value)
       }
       try {
-        await fetch(`/book-fetch?${params.toString()}`)
+        const resp = await fetch(`/book-fetch?${params.toString()}`)
+
+        if (!resp.ok) {
+          const data = await resp.json()
+          throw new Error(data.message || '未知错误');
+        }
+
         await fetchLocalBooks()
-        // fetch 会把响应当成 XHR 请求，返回一个 Response 对象，不会走浏览器默认的下载流程
-        window.location.href = `/book-download?filename=${latestFileName}`
+        location.href = `/book-download?filename=${latestFileName}`
+
       } catch (error) {
-        console.error('Error downloading file to server:', error)
-        updateTip('下载失败')
+        alert(`下载书籍到服务器失败: ${error.message}`)
       } finally {
         hideTip()
       }
@@ -408,7 +413,7 @@
       }
     }
 
-    // 已下书籍
+    // 获取已下书籍
     const fetchLocalBooks = async () => {
       showTip('正在刷新...')
       try {
@@ -423,8 +428,7 @@
           renderLocalBooksTable(data.data)
         }
       } catch (error) {
-        console.error('Error fetching file list:', error)
-        updateTip('刷新失败')
+        alert(`刷新已下书籍失败: ${error.message}`)
       } finally {
         hideTip()
       }
@@ -449,8 +453,7 @@
           renderDownloadTable(data.data)
         }
       } catch (error) {
-        console.error('Error searching files:', error)
-        updateTip('搜索失败')
+        alert(`搜索失败: ${error.message}`)
       } finally {
         hideTip()
         downloadContainer.classList.add('expanded')
@@ -475,7 +478,7 @@
         try {
           const data = JSON.parse(e.data)
           if (data.type === "download-progress") {
-            updateTip(`进度: ${data.index} / ${data.total}`)
+            updateTip(`${data.index} / ${data.total}`)
           }
         } catch (err) {
           console.error("❌ SSE 数据解析失败:", err, e.data)
@@ -509,7 +512,7 @@
       }
     })
 
-    // 使用事件委托处理下载下拉菜单
+    // 搜索结果 > 操作 > 下载为
     downloadTableBody.addEventListener('click', (e) => {
       const toggle = e.target.closest('.dropdown-toggle')
       if (toggle) {
