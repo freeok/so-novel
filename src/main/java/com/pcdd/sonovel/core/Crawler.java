@@ -85,6 +85,11 @@ public class Crawler {
             return 0;
         }
 
+        // 并发数最大值为 100
+        if (config.getConcurrency() > 100) {
+            config.setConcurrency(100);
+        }
+
         // IO 密集型任务，不要和 CPU 核数绑定
         int maxConcurrent = config.getConcurrency() == -1
                 ? Math.min(50, toc.size())
@@ -125,7 +130,7 @@ public class Crawler {
                     finalProgressBar.stepTo(currentIndex);
                 }
 
-                if (config.getWebEnabled() == 1 && (currentIndex % 100 == 0 || currentIndex == toc.size())) {
+                if (config.getWebEnabled() == 1 && (currentIndex % 50 == 0 || currentIndex == toc.size())) {
                     DownloadProgressSseServlet.sendProgress(JSONUtil.toJsonStr(DownloadProgressInfo.builder()
                             .type("download-progress")
                             .index(currentIndex)
