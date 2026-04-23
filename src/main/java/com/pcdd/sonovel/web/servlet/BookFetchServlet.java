@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
-import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
@@ -56,13 +55,17 @@ public class BookFetchServlet extends HttpServlet {
                     .url(bookUrl)
                     .build();
 
-            downloadFileToServer(sr, format, language, concurrency);
+            double totalTimeSeconds = downloadFileToServer(sr, format, language, concurrency);
+            if (totalTimeSeconds == 0) {
+                RespUtils.writeError(resp, 500, "源站章节目录为空，中止下载");
+            }
+
         } catch (Exception e) {
-            RespUtils.writeError(resp, 500, "下载失败: " + e.getMessage());
+            RespUtils.writeError(resp, 500, e.getMessage());
         }
     }
 
-    private void downloadFileToServer(SearchResult sr, String format, String language, Integer concurrency) {
+    private double downloadFileToServer(SearchResult sr, String format, String language, Integer concurrency) {
         AppConfig cfg = BeanUtil.copyProperties(AppConfigLoader.APP_CONFIG, AppConfig.class);
         cfg.setSourceId(sr.getSourceId());
 
@@ -76,8 +79,9 @@ public class BookFetchServlet extends HttpServlet {
             cfg.setConcurrency(concurrency);
         }
 
-        Console.log("<== 正在获取章节目录...");
-        new Crawler(cfg).crawl(sr.getUrl());
+        Console.log("<== 正在获取源站章节目录...");
+
+        return new Crawler(cfg).crawl(sr.getUrl());
     }
 
 }

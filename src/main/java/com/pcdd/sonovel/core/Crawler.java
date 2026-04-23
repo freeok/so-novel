@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
@@ -49,8 +50,9 @@ public class Crawler {
     public double crawl(String bookUrl) {
         TocParser tocParser = new TocParser(config);
         List<Chapter> toc = tocParser.parseAll(bookUrl);
-        if (toc.isEmpty()) {
-            Console.log("<== 目录为空，中止下载");
+        // 大概率是部分书源的目录页有反爬导致
+        if (CollUtil.isEmpty(toc)) {
+            Console.error("<== 源站章节目录为空，中止下载");
             return 0;
         }
         Console.log("<== 共计 {} 章", toc.size());
@@ -62,6 +64,7 @@ public class Crawler {
      *
      * @param bookUrl 详情页链接
      * @param toc     章节目录
+     * @return 总耗时
      */
     @SneakyThrows
     public double crawl(String bookUrl, List<Chapter> toc) {
