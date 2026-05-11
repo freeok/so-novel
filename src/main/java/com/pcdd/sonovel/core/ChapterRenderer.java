@@ -27,6 +27,9 @@ public class ChapterRenderer {
     private static final TemplateEngine TEMPLATE_ENGINE = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
 
     public Chapter process(Chapter chapter) {
+        /* TODO 重构为链式调用
+        new ChapterFilter(config, chapter).filter().format();
+        */
         Chapter filtered = new ChapterFilter(config).filter(chapter);
         String content = new ChapterFormatter(config).format(filtered.getContent());
 

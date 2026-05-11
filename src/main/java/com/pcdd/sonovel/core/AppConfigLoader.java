@@ -72,6 +72,7 @@ public class AppConfigLoader {
         cfg.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
         cfg.setTxtEncoding(getStrOrDefault(usr, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
         cfg.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
+        cfg.setEnableProgressbar(usr.getInt("enable-progressbar", SELECTION_DOWNLOAD, 1));
 
         // [source]
         cfg.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
