@@ -29,7 +29,7 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 
 ### WebUI 预览 (网页版)
 
-![preview-webui.png](assets/preview-webui.png)
+![preview-webui.jpg](assets/preview-webui.jpg)
 
 ### CLI 预览 (Command Line Interface)
 
