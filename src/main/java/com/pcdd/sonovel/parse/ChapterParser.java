@@ -7,10 +7,7 @@ import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.ChapterRenderer;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ContentType;
-import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsoupUtils;
@@ -41,7 +38,10 @@ public class ChapterParser extends Source {
     public Chapter parse(Chapter chapter) {
         try {
             long interval = CrawlUtils.randomInterval(config);
-            LogUtils.info("正在下载: 【{}】 间隔 {} ms", chapter.getTitle(), interval);
+            LogUtils.logByProgressbar(LogLevel.INFO, config.getEnableProgressbar(),
+                    "正在下载:【{}】 间隔 {} ms",
+                    chapter.getTitle(),
+                    interval);
 
             String content = fetchContent(chapter.getUrl(), interval);
             chapter.setContent(content);
@@ -65,20 +65,25 @@ public class ChapterParser extends Source {
             try {
                 // 重试间隔递增
                 long interval = CrawlUtils.randomInterval(config, true) * attempt;
-                LogUtils.warn("【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
+                LogUtils.logByProgressbar(LogLevel.WARN, config.getEnableProgressbar(),
+                        "【{}】下载失败，正在重试。重试次数: {}/{} 重试间隔: {} ms 原因: {}",
                         chapter.getTitle(), attempt, config.getMaxRetries(), interval, ex.getMessage());
-
                 String content = fetchContent(chapter.getUrl(), interval);
                 chapter.setContent(content);
 
-                LogUtils.info("✅ 重试成功: 【{}】", chapter.getTitle());
+                LogUtils.logByProgressbar(LogLevel.INFO, config.getEnableProgressbar(),
+                        "✅ 重试成功: 【{}】", chapter.getTitle());
                 return chapterRenderer.process(chapter);
 
             } catch (Exception e) {
-                LogUtils.warn("第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
+                LogUtils.logByProgressbar(LogLevel.WARN, config.getEnableProgressbar(),
+                        "第 {} 次重试失败: 【{}】 原因: {}", attempt, chapter.getTitle(), e.getMessage());
                 // 最终失败时记录日志
                 if (attempt == config.getMaxRetries()) {
                     LogUtils.error(e, "❌ 下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
+                    if (config.getEnableProgressbar() == 0) {
+                        Console.error(e, "❌ 下载失败章节: 【{}】({})\t原因: {}", chapter.getTitle(), chapter.getUrl(), e.getMessage());
+                    }
                 }
             }
         }
@@ -155,7 +160,8 @@ public class ChapterParser extends Source {
     private Document handleCloudflareBypass(Document doc, String url) {
         if (CrawlUtils.hasCf(doc)) {
             Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到章节页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", url);
-            LogUtils.info("🤖 检测到章节页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", url);
+            LogUtils.logByProgressbar(LogLevel.INFO, config.getEnableProgressbar(),
+                    "🤖 检测到章节页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", url);
             String html = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), url));
             doc = Jsoup.parse(html);
         }
@@ -168,7 +174,8 @@ public class ChapterParser extends Source {
             return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
         }
         if (nextEls.isEmpty()) {
-            LogUtils.error("分页章节正文获取为空，可能被限流！出错链接: {} 链接内容:\n{}\n", doc.baseUri(), doc);
+            LogUtils.logByProgressbar(LogLevel.ERROR, config.getEnableProgressbar(),
+                    "分页章节正文获取为空，可能被限流！出错链接: {} 链接内容:\n{}\n", doc.baseUri(), doc);
             return null;
         }
         // 从按钮获取下一页链接

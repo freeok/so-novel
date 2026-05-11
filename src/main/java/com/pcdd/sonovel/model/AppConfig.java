@@ -21,6 +21,7 @@ public class AppConfig {
     private String extName;
     private String txtEncoding;
     private Integer preserveChapterCache;
+    private Integer enableProgressbar;
 
     // [source]
     private String language;
