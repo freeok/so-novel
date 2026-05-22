@@ -13,7 +13,7 @@ Linux 用户
 - 为获得最佳使用体验，请将终端窗口最大化。
 - 如果书名搜不到，就用作者名称搜，反之亦然。
 - config.ini 是配置文件，每个配置项有对应的注释，修改保存后需重启应用。
-- 书源规则文件位于 rules 目录下，切换已有书源需要在 config.ini 修改 active-rules 属性
+- 书源规则文件位于 rules 目录下，切换已有书源需要在 config.ini 修改 active-rules
 
 
 WebUI 模式用法
