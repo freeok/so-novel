@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.model.ContentType;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -126,6 +127,24 @@ public class JsoupUtils {
         }
         // 删除 Element#html 产生的 \n
         return StrUtil.cleanBlank(body.html());
+    }
+
+    /**
+     * 清理 HTML 标签
+     *
+     * @param html     原始 HTML
+     * @param cssQuery 例如 .tt-title, #id, [style], script, div，详见 https://jsoup.org/cookbook/extracting-data/selector-syntax
+     * @return 清理后的 HTML
+     */
+    public String removeTags(String html, String cssQuery) {
+        if (StrUtil.isBlank(html) || StrUtil.isBlank(cssQuery)) {
+            return html;
+        }
+
+        Document doc = Jsoup.parseBodyFragment(html);
+        doc.select(cssQuery).remove();
+
+        return doc.body().html();
     }
 
 }
