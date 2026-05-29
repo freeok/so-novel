@@ -19,6 +19,7 @@ public class ChapterFormatter {
      */
     public String format(String content) {
         Rule.Chapter r = new Source(config).rule.getChapter();
+        // 这里的 content 不应被 cleanBlank（不能为  <divclass="xxx">），否则 clearAllAttributes 无效
         content = JsoupUtils.clearAllAttributes(content);
 
         // 标签闭合，例如：<tag>段落内容</tag>
