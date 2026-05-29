@@ -18,7 +18,7 @@
       "lastUpdateTime": "div.newnav > div.zxzj > span"
     },
     "book": {
-      "url": "https://www.69shuba.com/book/(.*?).htm"
+      "url": "https://(?:www\\.)?69shuba\\.com/book/(.*?)\\.htm"
     },
     "toc": {
       "url": "https://69shuba.com/book/%s/",
