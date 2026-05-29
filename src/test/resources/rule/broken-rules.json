@@ -121,7 +121,7 @@
       "content": ".txtnav",
       "paragraphTagClosed": true,
       "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
-      "filterTag": "h1 div br"
+      "filterTag": "h1, div, br"
     },
     "crawl": {
       "concurrency": 1,
@@ -156,7 +156,7 @@
       "content": ".content",
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
-      "filterTag": "div br"
+      "filterTag": "div, br"
     },
     "crawl": {
       "concurrency": 1,
@@ -230,7 +230,7 @@
       "content": "#content",
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
-      "filterTag": "a script",
+      "filterTag": "a, script",
       "pagination": true,
       "nextPage": "(//*[@id='next_url'])[1]"
     }

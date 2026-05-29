@@ -31,7 +31,7 @@
       "paragraphTagClosed": false,
       "paragraphTag": "<br>+",
       "filterTxt": "无一错一首一发一内一容一在一6一9一书一吧一看！|\\(本章完\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
-      "filterTag": "h1 div"
+      "filterTag": "h1, div"
     },
     "crawl": {
       "concurrency": 5,
