@@ -2,7 +2,7 @@
   {
     "url": "https://www.tianxibook.com/",
     "name": "新天禧小说",
-    "comment": "章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
+    "comment": "搜索功能关闭、章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
     "search": {
       "url": "https://www.sososhu.com/?q=%s&site=xtxxs",
       "method": "get",
@@ -53,11 +53,11 @@
       "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)"
     },
     "book": {
-      "url": "https://www.0xs.net/txt/(.*?).html"
+      "url": "https://www.0xs.net/txt_1/(.*?).html"
     },
     "toc": {
-      "url": "https://www.0xs.net/list/%s.html",
-      "item": ".catalog > div > ul > ul > li > a"
+      "url": "https://www.0xs.net/la_1/%s.html",
+      "item": ".catalog > div > ul > li > a"
     },
     "chapter": {
       "title": ".title > h1@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
