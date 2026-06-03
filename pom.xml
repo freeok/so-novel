@@ -6,7 +6,7 @@
 
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.10.1</version>
+    <version>1.10.2</version>
     <packaging>jar</packaging>
 
     <name>so-novel</name>
@@ -21,9 +21,9 @@
     <properties>
         <java.version>21</java.version>
         <lombok.version>1.18.42</lombok.version>
-        <javet.version>5.0.5</javet.version>
-        <jetty.version>12.1.7</jetty.version>
-        <junit.version>6.0.3</junit.version>
+        <javet.version>5.0.8</javet.version>
+        <jetty.version>12.1.9</jetty.version>
+        <junit.version>6.1.0</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.22.1</version>
+            <version>1.22.2</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -45,31 +45,24 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.34</version>
+        </dependency>
+        <dependency>
             <groupId>io.documentnode</groupId>
             <artifactId>epub4j-core</artifactId>
-            <version>4.2.2</version>
+            <version>4.2.3</version>
         </dependency>
         <dependency>
             <groupId>io.github.openhtmltopdf</groupId>
             <artifactId>openhtmltopdf-pdfbox</artifactId>
-            <version>1.1.31</version>
+            <version>1.1.37</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.34</version>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.46</version>
         </dependency>
         <dependency>
             <groupId>org.fusesource.jansi</groupId>
@@ -85,11 +78,6 @@
             <groupId>com.hankcs</groupId>
             <artifactId>hanlp</artifactId>
             <version>portable-1.8.6</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.43</version>
         </dependency>
         <!-- JS Runtime -->
         <dependency>
@@ -113,6 +101,19 @@
             <groupId>org.eclipse.jetty.ee11</groupId>
             <artifactId>jetty-ee11-servlet</artifactId>
             <version>${jetty.version}</version>
+        </dependency>
+        <!--  -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

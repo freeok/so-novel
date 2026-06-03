@@ -3,12 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.pcdd</groupId>
     <artifactId>so-novel</artifactId>
-    <version>1.9.2</version>
+    <version>1.10.2</version>
     <packaging>jar</packaging>
-
     <name>so-novel</name>
     <url>https://github.com/freeok/so-novel</url>
     <description>网络小说下载器</description>
@@ -17,175 +15,6 @@
         <name>freeok</name>
         <url>https://github.com/freeok/</url>
     </organization>
-
-    <properties>
-        <java.version>21</java.version>
-        <javet.version>4.1.6</javet.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.21.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
-        </dependency>
-        <dependency>
-            <groupId>io.documentnode</groupId>
-            <artifactId>epub4j-core</artifactId>
-            <version>4.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openhtmltopdf</groupId>
-            <artifactId>openhtmltopdf-pdfbox</artifactId>
-            <version>1.1.30</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.13.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.13.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.34</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>2.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>me.tongfei</groupId>
-            <artifactId>progressbar</artifactId>
-            <version>0.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hankcs</groupId>
-            <artifactId>hanlp</artifactId>
-            <version>portable-1.8.6</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.40</version>
-        </dependency>
-        <!-- JS Runtime -->
-        <dependency>
-            <groupId>com.caoccao.javet</groupId>
-            <artifactId>javet</artifactId>
-            <version>${javet.version}</version>
-        </dependency>
-        <!-- CLI -->
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.7.7</version>
-        </dependency>
-        <!-- Servlet 容器 -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>12.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty.ee11</groupId>
-            <artifactId>jetty-ee11-servlet</artifactId>
-            <version>12.1.0</version>
-        </dependency>
-    </dependencies>
-
-    <!-- 根据平台打包 V8 -->
-    <profiles>
-        <profile>
-            <id>windows-x86_64</id>
-            <activation>
-                <os>
-                    <family>Windows</family>
-                    <arch>x86_64</arch>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.caoccao.javet</groupId>
-                    <artifactId>javet-v8-windows-x86_64</artifactId>
-                    <version>${javet.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>linux-x86_64</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                    <name>Linux</name>
-                    <arch>x86_64</arch>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.caoccao.javet</groupId>
-                    <artifactId>javet-v8-linux-x86_64</artifactId>
-                    <version>${javet.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>macos-x86_64</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>x86_64</arch>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.caoccao.javet</groupId>
-                    <artifactId>javet-v8-macos-x86_64</artifactId>
-                    <version>${javet.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>macos-arm64</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>aarch64</arch>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.caoccao.javet</groupId>
-                    <artifactId>javet-v8-macos-arm64</artifactId>
-                    <version>${javet.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -213,7 +42,7 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
-                <version>0.11.0</version>
+                <version>1.0.0</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
