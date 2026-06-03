@@ -98,7 +98,7 @@ public class ChapterParser extends Source {
      * @param interval 爬取间隔（毫秒）
      */
     @SneakyThrows
-    public String fetchContent(String url, long interval) {
+    private String fetchContent(String url, long interval) {
         Rule.Chapter r = rule.getChapter();
         // 获取下一章的间隔
         Thread.sleep(interval);

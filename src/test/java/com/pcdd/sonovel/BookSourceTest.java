@@ -13,16 +13,13 @@ import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.AppConfigLoader;
-import com.pcdd.sonovel.core.ChapterRenderer;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
-import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.*;
-import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.LangType;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.SneakyThrows;
@@ -62,6 +59,23 @@ class BookSourceTest {
         APP_CONFIG.setLanguage(LangType.ZH_CN);
     }
 
+    @DisplayName("cloudflare.json")
+    @ParameterizedTest
+    @CsvSource({
+            "http://www.xhytd.com/170/170581/",
+            "https://www.96dushu.com/book/448209/",
+            "http://www.dongtanxs.com/dong49371/"
+    })
+    void test04(String bookUrl) {
+        Rule rule = SourceUtils.getRule(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        searchParse("斗罗大陆");
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+    }
+
     @DisplayName("main.json")
     @ParameterizedTest
     @CsvSource({
@@ -86,15 +100,14 @@ class BookSourceTest {
         bookParse(bookUrl);
         tocParse(bookUrl);
         chapterParse();
-        // chapterBatchParse(0, 100);
+        // chapterBatchParse(0, 50);
     }
 
-    @DisplayName("non-searchable.json")
+    @DisplayName("non-search.json")
     @ParameterizedTest
     @CsvSource({
-            "https://www.tianxibook.com/book/66120/",
-            "https://www.0xs.net/txt/68398.html",
-            "https://www.laoyaoxs.org/info/281469.html"
+            "https://www.xiaoshuohu.com/14/14654/",
+            "https://cn.ttkan.co/novel/chapters/gangrendepaohuijiarenquanshimieshidafanpaimoxiudeniang_xiexiudedie_beituanchongdewo-aguabushigua",
     })
     void test02(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
@@ -103,7 +116,6 @@ class BookSourceTest {
         bookParse(bookUrl);
         tocParse(bookUrl);
         chapterParse();
-        chapterBatchParse(0, 100);
     }
 
     @DisplayName("proxy-required.json")
@@ -123,14 +135,15 @@ class BookSourceTest {
         chapterParse();
     }
 
-    @DisplayName("cloudflare.json")
+    @DisplayName("rate-limit.json")
     @ParameterizedTest
     @CsvSource({
-            "http://www.xhytd.com/170/170581/",
-            "https://www.96dushu.com/book/448209/",
-            "http://www.dongtanxs.com/dong49371/"
+            "https://www.tianxibook.com/book/66120/",
+            "https://www.0xs.net/txt_1/68398.html",
+            "https://www.laoyaoxs.org/info/281469.html",
+            "https://www.sudugu.org/3415/"
     })
-    void test04(String bookUrl) {
+    void test05(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
@@ -202,7 +215,7 @@ class BookSourceTest {
     }
 
     /**
-     * 测试章节是否限流
+     * 批量抓取章节，用于测试章节是否限流
      */
     @SneakyThrows
     public void chapterBatchParse(int start, int end) {
@@ -213,14 +226,15 @@ class BookSourceTest {
 
         ExecutorService threadPool = Executors.newFixedThreadPool(RuntimeUtil.getProcessorCount() * 5);
         CountDownLatch latch = new CountDownLatch(end - start);
-        Source source = new Source(APP_CONFIG.getSourceId());
 
         for (Chapter chapter : CollUtil.sub(chapters, start, end)) {
             threadPool.execute(() -> {
-                Chapter o = Chapter.builder().url(chapter.getUrl()).build();
-                Chapter beforeFiltration = new ChapterParser(APP_CONFIG).parse(o);
-                Chapter afterFiltration = new ChapterRenderer(APP_CONFIG).process(beforeFiltration);
-                Chapter res = ChineseConverter.convert(afterFiltration, source.rule.getLanguage(), APP_CONFIG.getLanguage());
+                Chapter obj = Chapter.builder()
+                        .title(chapter.getTitle())
+                        .url(chapter.getUrl())
+                        .build();
+                Chapter res = new ChapterParser(APP_CONFIG).parse(obj);
+
                 if (StrUtil.isAllNotEmpty(res.getTitle(), res.getContent())) {
                     Console.log("✅ {}", res.getTitle());
                 } else {
