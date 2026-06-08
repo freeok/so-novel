@@ -50,5 +50,28 @@
       "filterTxt": "\\(本章完\\)",
       "filterTag": "a, center, div"
     }
+  },
+  {
+    "url": "https://xszj.org/",
+    "name": "小说之家",
+    "comment": "搜索有验证码、章节限流error code: 1015",
+    "book": {
+      "url": "/b/(\\d+)"
+    },
+    "toc": {
+      "url": "https://xszj.org/b/%s/cs/1",
+      "item": "#content_1 > a",
+      "pagination": true,
+      "nextPage": "#indexselect > option"
+    },
+    "chapter": {
+      "title": "#wrapper > article > h1",
+      "content": "#booktxt",
+      "paragraphTagClosed": "true",
+      "filterTag": "script",
+      "filterTxt": "\\(本章完\\)|小说之家为广大书友们提供好看的网络小说全文免费在线阅读，如果您喜欢本站，请分享给更多的书友们！|如果您觉得《.+》小说很精彩的话，请粘贴以下网址分享给您的好友，谢谢支持！|（本书网址：.*?）",
+      "pagination": true,
+      "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
+    }
   }
 ]
