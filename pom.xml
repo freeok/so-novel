@@ -22,7 +22,7 @@
         <java.version>21</java.version>
         <lombok.version>1.18.42</lombok.version>
         <javet.version>5.0.8</javet.version>
-        <jetty.version>12.1.9</jetty.version>
+        <jetty.version>12.1.10</jetty.version>
         <junit.version>6.1.0</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
