@@ -43,6 +43,7 @@
 |------------------------------------|-------|--------|--------------|
 | [小说虎](https://www.xiaoshuohu.com/) | ✅     | ✅      | 正文广告较多，需手动过滤 |
 | [天天看小说](https://cn.ttkan.co/)      | ✅     | ✅      | 曾经可以搜索       |
+| [小说之家](https://xszj.org/)          | ✅     | ✅      | 章节限流         |
 
 `cloudflare.json`：有 Cloudflare 保护的书源，需在 config.ini 设置 cf-bypass
 
