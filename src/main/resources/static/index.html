@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <!-- 移动端视口设置 -->
-  <!-- width=device-width → 宽度等于设备屏宽 -->
-  <!-- initial-scale=1.0 → 初始缩放比例为 1 -->
-  <!-- user-scalable=no → 禁止用户缩放 -->
-  <!-- maximum-scale=1 → 最大缩放比例为 1 -->
-  <meta content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" name="viewport">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        name="viewport">
   <!-- 安卓/Chrome Web App 全屏显示 -->
   <meta content="yes" name="mobile-web-app-capable">
   <!-- iOS Safari 全屏显示 (保留兼容) -->
@@ -42,8 +39,8 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans leading-relaxed min-h-screen overflow-x-hidden" x-data="novelApp()"
-      x-init="initApp()">
+<body class="bg-gray-50 text-gray-800 font-sans leading-relaxed min-h-screen overflow-x-hidden"
+      x-data="App()" x-init="init()">
 <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 sm:py-6 flex flex-col min-h-screen" x-cloak>
   <!-- Header -->
   <header class="relative flex flex-col items-center mb-6 sm:mb-8 pt-2 pb-1">
@@ -54,9 +51,10 @@
       </h1>
     </div>
     <div class="mt-3 h-px w-20 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-    <a :href="versionLink" class="mt-2.5 inline-flex items-center text-xs sm:text-sm text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full no-underline hover:bg-green-100 transition-colors ring-1 ring-green-200/60"
+    <a :href="versionLink"
+       class="mt-2.5 inline-flex items-center text-xs sm:text-sm text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full no-underline hover:bg-green-100 transition-colors ring-1 ring-green-200/60"
        target="_blank"
-       x-text="'v' + (serverConfig.version || 'version')"></a>
+       x-text="'v' + (serverConfig.version || 'ersion')"></a>
     <button @click="settingsVisible = !settingsVisible"
             class="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-colors">
       设置
@@ -69,7 +67,8 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-8 sm:gap-y-5">
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="text-sm font-medium text-gray-600">下载格式</label>
-        <select @change="handleSettingChange" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+        <select @change="handleSettingChange"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 x-model="settings.format">
           <option value="">跟随服务器配置</option>
           <option value="epub">EPUB</option>
@@ -80,7 +79,8 @@
       </div>
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="text-sm font-medium text-gray-600">书籍内容语言</label>
-        <select @change="handleSettingChange" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+        <select @change="handleSettingChange"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 x-model="settings.language">
           <option value="">自动</option>
           <option value="zh_CN">简体中文</option>
@@ -91,14 +91,16 @@
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="text-sm font-medium text-gray-600">每页显示数量</label>
         <input :max="searchLimitMax" :min="10" @change="validateAndSaveSettings('searchLimit')"
-               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="默认" type="number"
-               x-model.number="settings.searchLimit">
+               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+               placeholder="默认"
+               type="number" x-model.number="settings.searchLimit">
       </div>
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="text-sm font-medium text-gray-600">下载并发限制</label>
         <input :max="concurrencyMax" :min="1" @change="validateAndSaveSettings('concurrency')"
-               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="默认" type="number"
-               x-model.number="settings.concurrency">
+               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+               placeholder="默认"
+               type="number" x-model.number="settings.concurrency">
       </div>
     </div>
   </section>
@@ -114,10 +116,12 @@
         </button>
       </div>
       <div class="relative mb-5">
-        <input :disabled="isSearching" @keydown.enter="aggregatedSearch" aria-label="搜索书名或作者"
-               class="w-full pl-4 pr-12 py-3 border border-gray-200 rounded-xl text-base bg-gray-50 focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all" placeholder="请输入书名或作者，尽量输完整"
-               x-model="searchKeyword">
-        <button :disabled="isSearching" @click="aggregatedSearch" aria-label="搜索"
+        <input :disabled="isSearching" @keydown.enter="aggregatedSearch"
+               aria-label="搜索书名或作者"
+               class="w-full pl-4 pr-12 py-3 border border-gray-200 rounded-xl text-base bg-gray-50 focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all"
+               placeholder="请输入书名或作者，尽量输完整" x-model="searchKeyword">
+        <button :disabled="isSearching" @click="aggregatedSearch"
+                aria-label="搜索"
                 class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -242,9 +246,11 @@
               <span class="px-1 text-gray-400 text-sm">…</span>
             </template>
             <template :key="p" x-for="p in paginationInfo.pages">
-              <button :class="p === currentPage ? 'bg-primary border-primary text-white' : 'border-gray-200 hover:border-primary hover:text-primary'" @click="changePage(p)"
-                      class="min-w-8 h-8 px-2 text-sm border rounded-md transition-colors"
-                      x-text="p"></button>
+              <button
+                :class="p === currentPage ? 'bg-primary border-primary text-white' : 'border-gray-200 hover:border-primary hover:text-primary'"
+                @click="changePage(p)"
+                class="min-w-8 h-8 px-2 text-sm border rounded-md transition-colors"
+                x-text="p"></button>
             </template>
             <template x-if="paginationInfo.end < totalPages - 1">
               <span class="px-1 text-gray-400 text-sm">…</span>
@@ -333,11 +339,12 @@
   </main>
 </div>
 <!-- 下载格式下拉菜单（fixed 定位，避免被表格 overflow 裁剪） -->
-<div :style="dropdownStyle" @click.outside="closeDownloadMenu()" class="fixed z-[100] w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5"
-     x-cloak x-show="dropdownItem"
+<div :style="dropdownStyle" @click.outside="closeDownloadMenu()"
      x-transition:enter="transition ease-out duration-150" x-transition:enter-end="opacity-100 scale-100"
      x-transition:enter-start="opacity-0 scale-95"
      x-transition:leave="transition ease-in duration-100" x-transition:leave-end="opacity-0 scale-95"
+     class="fixed z-[100] w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5"
+     x-cloak x-show="dropdownItem"
      x-transition:leave-start="opacity-100 scale-100">
   <button @click="handleDownloadToServer(dropdownItem, '')"
           class="w-full text-left px-4 py-2 text-sm font-medium text-primary hover:bg-gray-50"
@@ -357,16 +364,17 @@
 </div>
 <!-- Loading 弹窗 -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm" x-cloak
-     x-show="showTip"
      x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100"
      x-transition:enter-start="opacity-0"
      x-transition:leave="transition ease-in duration-150" x-transition:leave-end="opacity-0"
+     x-show="showTip"
      x-transition:leave-start="opacity-100">
   <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-900/5"
-       x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+       x-transition:enter="transition ease-out duration-200"
        x-transition:enter-start="opacity-0 translate-y-2 scale-95"
        x-transition:leave="transition ease-in duration-150"
        x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+       x-transition:enter-end="opacity-100 translate-y-0 scale-100"
        x-transition:leave-start="opacity-100 translate-y-0 scale-100">
     <div class="flex flex-col items-center gap-4 text-center">
       <div class="relative flex h-12 w-12 items-center justify-center">
@@ -381,17 +389,20 @@
   </div>
 </div>
 <!-- 搜索历史 -->
-<div @click.self="showSearchHistory = false" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm" x-cloak
-     x-show="showSearchHistory"
+<div @click.self="showSearchHistory = false"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm"
      x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100"
      x-transition:enter-start="opacity-0"
      x-transition:leave="transition ease-in duration-150" x-transition:leave-end="opacity-0"
+     x-cloak
+     x-show="showSearchHistory"
      x-transition:leave-start="opacity-100">
   <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-900/5 max-h-[80vh] flex flex-col"
-       x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+       x-transition:enter="transition ease-out duration-200"
        x-transition:enter-start="opacity-0 translate-y-2 scale-95"
        x-transition:leave="transition ease-in duration-150"
        x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+       x-transition:enter-end="opacity-100 translate-y-0 scale-100"
        x-transition:leave-start="opacity-100 translate-y-0 scale-100">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-lg font-semibold text-gray-800">搜索历史</h3>
@@ -417,51 +428,42 @@
   </div>
 </div>
 
+<script src="js/api.js"></script>
 <script>
-  function novelApp() {
+  function App() {
     return {
-      SETTINGS_KEY: 'sonovel-settings',
       SEARCH_HISTORY_KEY: 'sonovel-search-history',
-      settingsVisible: false,
-      searchKeyword: '',
-      isSearching: false,
+      SETTINGS_KEY: 'sonovel-settings',
+
       bookCache: [],
-      localBooks: [],
       currentPage: 1,
-      latestFileName: '',
-      openDropdownIndex: null,
       dropdownItem: null,
       dropdownStyle: '',
+      isSearching: false,
+      latestFileName: '',
+      localBooks: [],
+      openDropdownIndex: null,
+      searchHistory: [],
+      searchKeyword: '',
+      serverConfig: { searchLimit: -1, concurrency: -1, version: '', extName: 'epub' },
+      settings: { format: '', language: '', searchLimit: '', concurrency: '' },
+      settingsVisible: false,
+      showSearchHistory: false,
       showTip: false,
       tipText: '正在加载...',
-      searchHistory: [],
-      showSearchHistory: false,
-      settings: { format: '', language: '', searchLimit: '', concurrency: '' },
-      serverConfig: { searchLimit: -1, concurrency: -1, version: '', extName: 'epub' },
 
-      initApp() {
-        this.loadSettings()
-        this.fetchConfig()
-        this.fetchLocalBooks()
-        this.initSSE()
-        this.loadSearchHistory()
-      },
-
-      get versionLink() {return this.serverConfig.version ? `https://github.com/freeok/so-novel/releases/tag/v${this.serverConfig.version}` : '#'},
-      get searchLimitMax() {return this.serverConfig.searchLimit > 0 ? this.serverConfig.searchLimit : 100},
       get concurrencyMax() {return this.serverConfig.concurrency > 0 ? this.serverConfig.concurrency : 50},
+      get defaultExtLabel() {
+        const ext = this.settings.format || this.serverConfig.extName || 'epub'
+        return ext.toUpperCase()
+      },
       get pageSize() {
         const v = parseInt(this.settings.searchLimit)
         return v > 0 ? v : 20
       },
-      get totalPages() {return Math.max(1, Math.ceil(this.bookCache.length / this.pageSize))},
       get paginatedBooks() {
         const start = (this.currentPage - 1) * this.pageSize
         return this.bookCache.slice(start, start + this.pageSize)
-      },
-      get defaultExtLabel() {
-        const ext = this.settings.format || this.serverConfig.extName || 'epub'
-        return ext.toUpperCase()
       },
       get paginationInfo() {
         const maxVisible = 5
@@ -472,38 +474,45 @@
         for (let i = start; i <= end; i++) pages.push(i)
         return { start, end, pages }
       },
+      get searchLimitMax() {return this.serverConfig.searchLimit > 0 ? this.serverConfig.searchLimit : 100},
+      get totalPages() {return Math.max(1, Math.ceil(this.bookCache.length / this.pageSize))},
+      get versionLink() {return this.serverConfig.version ? `https://github.com/freeok/so-novel/releases/tag/v${this.serverConfig.version}` : '#'},
 
-      loadSettings() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(this.SETTINGS_KEY) || '{}')
-          this.settings.format = saved.format || ''
-          this.settings.language = saved.language || ''
-          this.settings.searchLimit = saved.searchLimit || ''
-          this.settings.concurrency = saved.concurrency || ''
-        } catch (_) {}
+      init() {
+        this.loadSettings()
+        this.fetchConfig()
+        this.fetchLocalBooks()
+        this.initSSE()
+        this.loadSearchHistory()
       },
 
-      handleSettingChange() {
-        localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings))
-        if (this.bookCache.length > 0) this.currentPage = 1
+      changePage(page) {
+        this.closeDownloadMenu()
+        if (page === 'prev') this.currentPage--; else if (page === 'next') this.currentPage++; else this.currentPage = parseInt(page)
+        this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages))
+        const el = document.getElementById('downloadContainer')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
       },
 
-      validateAndSaveSettings(field) {
-        let val = parseInt(this.settings[field])
-        if (field === 'searchLimit') {
-          if (val > this.searchLimitMax) this.settings.searchLimit = this.searchLimitMax
-          if (val < 10 && this.settings.searchLimit !== '') this.settings.searchLimit = 10
-        } else if (field === 'concurrency') {
-          if (val > this.concurrencyMax) this.settings.concurrency = this.concurrencyMax
-          if (val < 1 && this.settings.concurrency !== '') this.settings.concurrency = 1
-        }
-        this.handleSettingChange()
+      clearSearchHistory() {
+        this.searchHistory = []
+        localStorage.removeItem(this.SEARCH_HISTORY_KEY)
+      },
+
+      closeDownloadMenu() {
+        this.openDropdownIndex = null
+        this.dropdownItem = null
+        this.dropdownStyle = ''
+      },
+
+      displayTip(text = '正在加载...') {
+        this.tipText = text
+        this.showTip = true
       },
 
       async fetchConfig() {
         try {
-          const resp = await fetch('/config')
-          const data = await resp.json()
+          const data = await Api.getConfig()
           if (data && data.data) Object.assign(this.serverConfig, data.data)
         } catch (_) {}
       },
@@ -519,9 +528,7 @@
         this.displayTip('正在搜索...')
         this.isSearching = true
         try {
-          const searchUrl = `/search/aggregated?kw=${encodeURIComponent(value)}`
-          const response = await fetch(searchUrl)
-          const data = await response.json()
+          const data = await Api.search(value)
           if (data && data.data) {
             this.bookCache = data.data
             this.currentPage = 1
@@ -540,13 +547,13 @@
           return
         }
         this.displayTip('正在解析目录...')
-        const params = new URLSearchParams(JSON.parse(JSON.stringify(item)))
+        const params = new URLSearchParams({ ...item })
         const finalFormat = format || this.settings.format || ''
         if (finalFormat) params.set('format', finalFormat)
         if (this.settings.language) params.set('language', this.settings.language)
         if (this.settings.concurrency) params.set('concurrency', this.settings.concurrency)
         try {
-          const resp = await fetch(`/book-fetch?${params.toString()}`)
+          const resp = await Api.downloadBook(params)
           if (!resp.ok) {
             const data = await resp.json()
             throw new Error(data.message || '未知错误')
@@ -559,14 +566,105 @@
       async fetchLocalBooks() {
         this.displayTip('正在刷新...')
         try {
-          const response = await fetch('/local-books')
-          const data = await response.json()
+          const data = await Api.getLocalBooks()
           if (data && data.data) {
             data.data.sort((a, b) => b.timestamp - a.timestamp)
             if (data.data[0]) this.latestFileName = data.data[0].name
             this.localBooks = data.data
           }
         } catch (error) {alert(`刷新已下书籍失败: ${error.message}`)} finally {this.hideTip()}
+      },
+
+      formatDate(timestamp) {
+        return new Date(timestamp).toLocaleString('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        })
+      },
+
+      formatHistoryTime(ts) {
+        const diff = Date.now() - ts
+        if (diff < 60000) return '刚刚'
+        if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`
+        const d = new Date(ts)
+        return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+      },
+
+      formatSize(bytes) {
+        if (bytes === 0) return '0.00 B'
+        const k = 1024
+        const sizes = ['B', 'KB', 'MB', 'GB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`
+      },
+
+      getGlobalIndex(index) {
+        return (this.currentPage - 1) * this.pageSize + index + 1
+      },
+
+      handleDownloadFileToLocal(name) {
+        location.href = `/book-download?filename=${encodeURIComponent(name)}`
+      },
+
+      handleSettingChange() {
+        localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings))
+        if (this.bookCache.length > 0) this.currentPage = 1
+      },
+
+      hideTip() {this.showTip = false},
+
+      initSSE() {
+        const evtSource = new EventSource('/download-progress')
+        evtSource.onopen = (event) => {
+          console.log("✅ SSE 已连接")
+        }
+        evtSource.onerror = (event) => {
+          console.warn("❌ SSE 连接异常，浏览器将自动重连", event)
+        }
+        evtSource.onmessage = (e) => {
+          try {
+            const data = JSON.parse(e.data)
+            if (data.type === 'download-progress') this.tipText = `${data.index}/${data.total}`
+          } catch (err) {
+            console.error("❌ SSE 数据解析失败:", err, e.data)
+          }
+        }
+      },
+
+      loadSearchHistory() {
+        try {
+          this.searchHistory = JSON.parse(localStorage.getItem(this.SEARCH_HISTORY_KEY) || '[]')
+        } catch (_) { this.searchHistory = [] }
+      },
+
+      loadSettings() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(this.SETTINGS_KEY) || '{}')
+          this.settings.format = saved.format || ''
+          this.settings.language = saved.language || ''
+          this.settings.searchLimit = saved.searchLimit || ''
+          this.settings.concurrency = saved.concurrency || ''
+        } catch (_) {}
+      },
+
+      saveSearchHistory(keyword, results) {
+        const entry = { keyword, results, timestamp: Date.now() }
+        this.searchHistory = this.searchHistory.filter(h => h.keyword !== keyword)
+        this.searchHistory.unshift(entry)
+        if (this.searchHistory.length > 20) this.searchHistory = this.searchHistory.slice(0, 20)
+        localStorage.setItem(this.SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory))
+      },
+
+      selectHistory(item) {
+        this.searchKeyword = item.keyword
+        this.bookCache = item.results
+        this.currentPage = 1
+        this.showSearchHistory = false
       },
 
       toggleDownloadMenu(index, item, event) {
@@ -586,92 +684,16 @@
         this.dropdownStyle = `top:${top}px;left:${left}px`
       },
 
-      closeDownloadMenu() {
-        this.openDropdownIndex = null
-        this.dropdownItem = null
-        this.dropdownStyle = ''
-      },
-
-      handleDownloadFileToLocal(name) {window.open(`${location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')},
-      initSSE() {
-        const evtSource = new EventSource('/download-progress')
-        evtSource.onmessage = (e) => {
-          try {
-            const data = JSON.parse(e.data)
-            if (data.type === 'download-progress') this.tipText = `${data.index}/${data.total}`
-          } catch (_) {}
+      validateAndSaveSettings(field) {
+        let val = parseInt(this.settings[field])
+        if (field === 'searchLimit') {
+          if (val > this.searchLimitMax) this.settings.searchLimit = this.searchLimitMax
+          if (val < 10 && this.settings.searchLimit !== '') this.settings.searchLimit = 10
+        } else if (field === 'concurrency') {
+          if (val > this.concurrencyMax) this.settings.concurrency = this.concurrencyMax
+          if (val < 1 && this.settings.concurrency !== '') this.settings.concurrency = 1
         }
-      },
-
-      changePage(page) {
-        this.closeDownloadMenu()
-        if (page === 'prev') this.currentPage--; else if (page === 'next') this.currentPage++; else this.currentPage = parseInt(page)
-        this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages))
-        const el = document.getElementById('downloadContainer')
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      },
-
-      getGlobalIndex(index) {return (this.currentPage - 1) * this.pageSize + index + 1},
-
-      formatSize(bytes) {
-        if (bytes === 0) return '0.00 B'
-        const k = 1024
-        const sizes = ['B', 'KB', 'MB', 'GB']
-        const i = Math.floor(Math.log(bytes) / Math.log(k))
-        return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`
-      },
-
-      formatDate(timestamp) {
-        return new Date(timestamp).toLocaleString('zh-CN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        })
-      },
-
-      displayTip(text = '正在加载...') {
-        this.tipText = text
-        this.showTip = true
-      },
-
-      hideTip() {this.showTip = false},
-
-      loadSearchHistory() {
-        try {
-          this.searchHistory = JSON.parse(localStorage.getItem(this.SEARCH_HISTORY_KEY) || '[]')
-        } catch (_) { this.searchHistory = [] }
-      },
-
-      saveSearchHistory(keyword, results) {
-        const entry = { keyword, results, timestamp: Date.now() }
-        this.searchHistory = this.searchHistory.filter(h => h.keyword !== keyword)
-        this.searchHistory.unshift(entry)
-        if (this.searchHistory.length > 20) this.searchHistory = this.searchHistory.slice(0, 20)
-        localStorage.setItem(this.SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory))
-      },
-
-      selectHistory(item) {
-        this.searchKeyword = item.keyword
-        this.bookCache = item.results
-        this.currentPage = 1
-        this.showSearchHistory = false
-      },
-
-      clearSearchHistory() {
-        this.searchHistory = []
-        localStorage.removeItem(this.SEARCH_HISTORY_KEY)
-      },
-
-      formatHistoryTime(ts) {
-        const diff = Date.now() - ts
-        if (diff < 60000) return '刚刚'
-        if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
-        if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`
-        const d = new Date(ts)
-        return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+        this.handleSettingChange()
       }
     }
   }
