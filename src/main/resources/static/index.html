@@ -15,24 +15,62 @@
   <!-- 禁止 iOS 自动识别电话号码 -->
   <meta content="telephone=no" name="format-detection">
   <title>SoNovel WebUI</title>
-  <link href="favicon.ico" rel="icon" type="image/x-icon">
-  <link rel="stylesheet" href="/index.css">
-</head>
-<body>
-<div class="wrap-container">
-  <header class="header">
-    <h1 class="app-title">SO NOVEL</h1>
-    <a id="versionTag" class="version-tag" target="_blank">version</a>
-    <button class="btn-settings" id="settingsToggle">设置</button>
-  </header>
+  <link href="favicon.ico" rel="icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#5d5d81', 'primary-hover': '#7b7b9d' },
+          fontFamily: {
+            sans: ['Roboto', 'Helvetica Neue', 'Helvetica', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Arial', 'sans-serif'],
+            serif: ['Noto Serif SC', 'PingFang SC', 'Heiti SC', 'Microsoft YaHei', 'Times New Roman', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] {
+      display: none !important
+    }
 
-  <section class="container settings-container" id="settingsPanel" style="display:none">
-    <h2 class="section-title">偏好设置</h2>
-    <p class="settings-hint">以下设置仅保存在浏览器本地，不会修改服务器配置。</p>
-    <div class="settings-grid">
-      <div class="settings-item">
-        <label for="settingFormat">下载格式</label>
-        <select id="settingFormat">
+    html {
+      scrollbar-gutter: stable;
+      overflow-y: scroll
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans leading-relaxed min-h-screen overflow-x-hidden" x-data="novelApp()"
+      x-init="initApp()">
+<div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 sm:py-6 flex flex-col min-h-screen" x-cloak>
+  <!-- Header -->
+  <header class="relative flex flex-col items-center mb-6 sm:mb-8 pt-2 pb-1">
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <h1 class="m-0 flex items-baseline gap-1.5 sm:gap-2">
+        <span class="text-2xl sm:text-4xl font-light text-gray-700 tracking-wide">SO</span>
+        <span class="text-2xl sm:text-4xl font-light text-gray-700 tracking-wide">NOVEL</span>
+      </h1>
+    </div>
+    <div class="mt-3 h-px w-20 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+    <a :href="versionLink" class="mt-2.5 inline-flex items-center text-xs sm:text-sm text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full no-underline hover:bg-green-100 transition-colors ring-1 ring-green-200/60"
+       target="_blank"
+       x-text="'v' + (serverConfig.version || 'version')"></a>
+    <button @click="settingsVisible = !settingsVisible"
+            class="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-colors">
+      设置
+    </button>
+  </header>
+  <!-- 设置面板 -->
+  <section class="mb-6 bg-white rounded-xl shadow-md p-4 sm:p-6" x-show="settingsVisible" x-transition>
+    <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-3">偏好设置</h2>
+    <p class="text-sm text-gray-500 mb-4">以下设置仅保存在浏览器本地，不会修改服务器配置。</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-8 sm:gap-y-5">
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="text-sm font-medium text-gray-600">下载格式</label>
+        <select @change="handleSettingChange" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                x-model="settings.format">
           <option value="">跟随服务器配置</option>
           <option value="epub">EPUB</option>
           <option value="txt">TXT</option>
@@ -40,518 +78,531 @@
           <option value="pdf">PDF</option>
         </select>
       </div>
-      <div class="settings-item">
-        <label for="settingLanguage">书籍内容语言</label>
-        <select id="settingLanguage">
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="text-sm font-medium text-gray-600">书籍内容语言</label>
+        <select @change="handleSettingChange" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                x-model="settings.language">
           <option value="">自动</option>
           <option value="zh_CN">简体中文</option>
           <option value="zh_TW">繁体中文(台湾)</option>
           <option value="zh_Hant">繁体中文</option>
         </select>
       </div>
-      <div class="settings-item">
-        <label for="settingSearchLimit">每页显示数量</label>
-        <input type="number" id="settingSearchLimit" min="10" placeholder="默认">
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="text-sm font-medium text-gray-600">每页显示数量</label>
+        <input :max="searchLimitMax" :min="10" @change="validateAndSaveSettings('searchLimit')"
+               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="默认" type="number"
+               x-model.number="settings.searchLimit">
       </div>
-      <div class="settings-item">
-        <label for="settingConcurrency">下载并发限制</label>
-        <input type="number" id="settingConcurrency" min="1" placeholder="默认">
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="text-sm font-medium text-gray-600">下载并发限制</label>
+        <input :max="concurrencyMax" :min="1" @change="validateAndSaveSettings('concurrency')"
+               class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="默认" type="number"
+               x-model.number="settings.concurrency">
       </div>
     </div>
   </section>
 
-  <main class="main-content">
-    <section class="container download-container" id="downloadContainer">
-      <h2 class="section-title">搜索书籍</h2>
-      <div class="search-container">
-        <input id="downloadSearchName" placeholder="请输入书名或作者，尽量输完整" aria-label="搜索书名或作者">
-        <button class="btn btn-primary btn-search" id="searchButton">搜索</button>
+  <main class="flex flex-col gap-6 flex-1">
+    <!-- 搜索区域 -->
+    <section class="bg-white rounded-xl shadow-md p-4 sm:p-6" id="downloadContainer">
+      <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-3 mb-5">搜索书籍</h2>
+      <div class="relative mb-5">
+        <input :disabled="isSearching" @keydown.enter="aggregatedSearch" aria-label="搜索书名或作者"
+               class="w-full pl-4 pr-12 py-3 border border-gray-200 rounded-xl text-base bg-gray-50 focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all" placeholder="请输入书名或作者，尽量输完整"
+               x-model="searchKeyword">
+        <button :disabled="isSearching" @click="aggregatedSearch" aria-label="搜索"
+                class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
-      <div class="body-container" id="tb1">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
+
+      <div x-show="bookCache.length > 0" x-transition>
+        <div class="hidden md:block overflow-visible rounded-lg border border-gray-200">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-100 sticky top-0">
             <tr>
-              <th scope="col">No</th>
-              <th scope="col">书名</th>
-              <th scope="col">作者</th>
-              <th scope="col">最新章节</th>
-              <th scope="col">最后更新</th>
-              <th scope="col">书源</th>
-              <th scope="col">操作</th>
-              <th scope="col">源站</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">No</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">书名</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">作者</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">最新章节</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">最后更新</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">书源</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">操作</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">源站</th>
             </tr>
             </thead>
-            <tbody id="downloadTableBody">
+            <tbody class="divide-y divide-gray-100">
+            <template :key="item.url + '-' + index" x-for="(item, index) in paginatedBooks">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-3 py-2" x-text="getGlobalIndex(index)"></td>
+                <td class="px-3 py-2 font-medium" x-text="item.bookName"></td>
+                <td class="px-3 py-2 text-gray-600" x-text="item.author"></td>
+                <td class="px-3 py-2 text-gray-600" x-text="item.latestChapter || ''"></td>
+                <td class="px-3 py-2 text-gray-500 text-xs" x-text="item.lastUpdateTime || ''"></td>
+                <td class="px-3 py-2 text-gray-600" x-text="item.sourceName"></td>
+                <td class="px-3 py-2 overflow-visible">
+                  <button @click.stop="toggleDownloadMenu(index, item, $event)"
+                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors whitespace-nowrap">
+                    下载为
+                    <span :class="{ 'rotate-180': openDropdownIndex === index }"
+                          class="text-[0.7em] transition-transform">▾</span>
+                  </button>
+                </td>
+                <td class="px-3 py-2">
+                  <a :href="item.url" target="_blank">
+                    <button
+                      class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                      前往
+                    </button>
+                  </a>
+                </td>
+              </tr>
+            </template>
             </tbody>
           </table>
+        </div>
+
+        <div class="md:hidden space-y-4">
+          <template :key="'m-' + item.url + '-' + index" x-for="(item, index) in paginatedBooks">
+            <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">No</span>
+                <span class="text-sm text-right" x-text="getGlobalIndex(index)"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
+                   x-show="item.bookName">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">书名</span>
+                <span class="text-sm font-medium text-right break-all" x-text="item.bookName"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100" x-show="item.author">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">作者</span>
+                <span class="text-sm text-right" x-text="item.author"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
+                   x-show="item.latestChapter">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">最新章节</span>
+                <span class="text-sm text-right break-all" x-text="item.latestChapter"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
+                   x-show="item.lastUpdateTime">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">最后更新</span>
+                <span class="text-sm text-gray-500 text-right" x-text="item.lastUpdateTime"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
+                   x-show="item.sourceName">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">书源</span>
+                <span class="text-sm text-right" x-text="item.sourceName"></span>
+              </div>
+              <div class="flex justify-between items-center gap-2 py-2 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
+                <button @click.stop="toggleDownloadMenu(index, item, $event)"
+                        class="inline-flex items-center justify-center gap-0.5 w-[4.5rem] py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary">
+                  下载为 <span :class="{ 'rotate-180 inline-block': openDropdownIndex === index }"
+                               class="text-[0.65em]">▾</span>
+                </button>
+              </div>
+              <div class="flex justify-between items-center gap-2 py-2">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">源站</span>
+                <a :href="item.url" target="_blank">
+                  <button
+                    class="inline-flex items-center justify-center w-[4.5rem] py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200">
+                    前往
+                  </button>
+                </a>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 pt-4 border-t border-gray-200"
+             x-show="totalPages > 1">
+          <span class="text-sm text-gray-500"
+                x-text="'共 ' + bookCache.length + ' 条，第 ' + currentPage + '/' + totalPages + ' 页'"></span>
+          <div class="flex flex-wrap items-center justify-center gap-1">
+            <button :disabled="currentPage <= 1" @click="changePage('prev')"
+                    class="min-w-8 h-8 px-2 text-sm border border-gray-200 rounded-md hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              上一页
+            </button>
+            <template x-if="paginationInfo.start > 1">
+              <button @click="changePage(1)"
+                      class="min-w-8 h-8 px-2 text-sm border border-gray-200 rounded-md hover:border-primary hover:text-primary transition-colors">
+                1
+              </button>
+            </template>
+            <template x-if="paginationInfo.start > 2">
+              <span class="px-1 text-gray-400 text-sm">…</span>
+            </template>
+            <template :key="p" x-for="p in paginationInfo.pages">
+              <button :class="p === currentPage ? 'bg-primary border-primary text-white' : 'border-gray-200 hover:border-primary hover:text-primary'" @click="changePage(p)"
+                      class="min-w-8 h-8 px-2 text-sm border rounded-md transition-colors"
+                      x-text="p"></button>
+            </template>
+            <template x-if="paginationInfo.end < totalPages - 1">
+              <span class="px-1 text-gray-400 text-sm">…</span>
+            </template>
+            <template x-if="paginationInfo.end < totalPages">
+              <button @click="changePage(totalPages)"
+                      class="min-w-8 h-8 px-2 text-sm border border-gray-200 rounded-md hover:border-primary hover:text-primary transition-colors"
+                      x-text="totalPages"></button>
+            </template>
+            <button :disabled="currentPage >= totalPages" @click="changePage('next')"
+                    class="min-w-8 h-8 px-2 text-sm border border-gray-200 rounded-md hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              下一页
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container result-container">
-      <div class="section-header">
-        <h2 class="section-title">已下书籍</h2>
-        <button class="btn btn-primary" id="refreshList">刷新</button>
+    <section class="bg-white rounded-xl shadow-md p-4 sm:p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-0">已下书籍</h2>
+        <button @click="fetchLocalBooks"
+                class="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm">
+          刷新
+        </button>
       </div>
-      <div class="body-container" id="tb2">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
+
+      <div x-show="localBooks.length > 0" x-transition>
+        <!-- 桌面端表格 -->
+        <div class="hidden md:block overflow-x-auto rounded-lg border border-gray-200">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-100">
             <tr>
-              <th scope="col">文件名</th>
-              <th scope="col">文件大小</th>
-              <th scope="col">下载时间</th>
-              <th scope="col">操作</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">文件名</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">文件大小</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">下载时间</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">操作</th>
             </tr>
             </thead>
-            <tbody id="tableBody">
+            <tbody class="divide-y divide-gray-100">
+            <template :key="item.name" x-for="item in localBooks">
+              <tr class="hover:bg-gray-50">
+                <td class="px-3 py-2 font-medium" x-text="item.name"></td>
+                <td class="px-3 py-2 text-gray-600" x-text="formatSize(item.size)"></td>
+                <td class="px-3 py-2 text-gray-500 text-xs" x-text="formatDate(item.timestamp)"></td>
+                <td class="px-3 py-2">
+                  <button @click="handleDownloadFileToLocal(item.name)"
+                          class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                    下载
+                  </button>
+                </td>
+              </tr>
+            </template>
             </tbody>
           </table>
+        </div>
+        <!-- 移动端卡片 -->
+        <div class="md:hidden space-y-4">
+          <template :key="'lm-' + item.name" x-for="item in localBooks">
+            <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">文件名</span>
+                <span class="text-sm font-medium text-right break-all" x-text="item.name"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">文件大小</span>
+                <span class="text-sm text-right" x-text="formatSize(item.size)"></span>
+              </div>
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">下载时间</span>
+                <span class="text-sm text-gray-500 text-right" x-text="formatDate(item.timestamp)"></span>
+              </div>
+              <div class="flex justify-between items-center gap-2 py-2">
+                <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
+                <button @click="handleDownloadFileToLocal(item.name)"
+                        class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200">
+                  下载
+                </button>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </section>
 
   </main>
 </div>
-
-<div class="loading-container" id="tipEle">
-  <div class="content">
-    <svg class="loading-icon" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="45" fill="none" stroke="#fff" stroke-width="8" stroke-dasharray="141.37 87.96"
-              stroke-linecap="round"></circle>
-    </svg>
-    <span class="text" id="tipText">正在下载</span>
+<!-- 下载格式下拉菜单（fixed 定位，避免被表格 overflow 裁剪） -->
+<div :style="dropdownStyle" @click.outside="closeDownloadMenu()" class="fixed z-[100] w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5"
+     x-cloak x-show="dropdownItem"
+     x-transition:enter="transition ease-out duration-150" x-transition:enter-end="opacity-100 scale-100"
+     x-transition:enter-start="opacity-0 scale-95"
+     x-transition:leave="transition ease-in duration-100" x-transition:leave-end="opacity-0 scale-95"
+     x-transition:leave-start="opacity-100 scale-100">
+  <button @click="handleDownloadToServer(dropdownItem, '')"
+          class="w-full text-left px-4 py-2 text-sm font-medium text-primary hover:bg-gray-50"
+          x-text="defaultExtLabel + ' (默认)'"></button>
+  <button @click="handleDownloadToServer(dropdownItem, 'epub')"
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">EPUB
+  </button>
+  <button @click="handleDownloadToServer(dropdownItem, 'txt')"
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">TXT
+  </button>
+  <button @click="handleDownloadToServer(dropdownItem, 'html')"
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">HTML
+  </button>
+  <button @click="handleDownloadToServer(dropdownItem, 'pdf')"
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">PDF
+  </button>
+</div>
+<!-- Loading 弹窗 -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm" x-cloak
+     x-show="showTip"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100"
+     x-transition:enter-start="opacity-0"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-end="opacity-0"
+     x-transition:leave-start="opacity-100">
+  <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-900/5"
+       x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+       x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+       x-transition:leave="transition ease-in duration-150"
+       x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+       x-transition:leave-start="opacity-100 translate-y-0 scale-100">
+    <div class="flex flex-col items-center gap-4 text-center">
+      <div class="relative flex h-12 w-12 items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
+        <div class="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-primary"></div>
+      </div>
+      <div>
+        <p class="text-base font-semibold text-gray-900">请稍候</p>
+        <p class="mt-1 text-sm text-gray-500" x-text="tipText"></p>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // DOM 元素引用
-    const downloadContainer = document.getElementById('downloadContainer')
-    const downloadSearchName = document.getElementById('downloadSearchName')
-    const searchButton = document.getElementById('searchButton')
-    const refreshListButton = document.getElementById('refreshList')
-    const downloadTableBody = document.getElementById('downloadTableBody')
-    const tableBody = document.getElementById('tableBody')
-    const tipEle = document.getElementById('tipEle')
-    const tipText = document.getElementById('tipText')
-    const versionTag = document.getElementById("versionTag");
-    const tb1 = document.getElementById('tb1');
-    const tb2 = document.getElementById('tb2');
+  function novelApp() {
+    return {
+      SETTINGS_KEY: 'sonovel-settings',
+      settingsVisible: false,
+      searchKeyword: '',
+      isSearching: false,
+      bookCache: [],
+      localBooks: [],
+      currentPage: 1,
+      latestFileName: '',
+      openDropdownIndex: null,
+      dropdownItem: null,
+      dropdownStyle: '',
+      showTip: false,
+      tipText: '正在加载...',
+      settings: { format: '', language: '', searchLimit: '', concurrency: '' },
+      serverConfig: { searchLimit: -1, concurrency: -1, version: '', extName: 'epub' },
 
-    let bookCache = []
-    let currentPage = 1
-    // 最新下载的书的文件名
-    let latestFileName = ''
+      initApp() {
+        this.loadSettings()
+        this.fetchConfig()
+        this.fetchLocalBooks()
+        this.initSSE()
+      },
 
-    // 设置面板相关
-    const settingsToggle = document.getElementById('settingsToggle')
-    const settingsPanel = document.getElementById('settingsPanel')
-    const settingFormat = document.getElementById('settingFormat')
-    const settingLanguage = document.getElementById('settingLanguage')
-    const settingSearchLimit = document.getElementById('settingSearchLimit')
-    const settingConcurrency = document.getElementById('settingConcurrency')
+      get versionLink() {return this.serverConfig.version ? `https://github.com/freeok/so-novel/releases/tag/v${this.serverConfig.version}` : '#'},
+      get searchLimitMax() {return this.serverConfig.searchLimit > 0 ? this.serverConfig.searchLimit : 100},
+      get concurrencyMax() {return this.serverConfig.concurrency > 0 ? this.serverConfig.concurrency : 50},
+      get pageSize() {
+        const v = parseInt(this.settings.searchLimit)
+        return v > 0 ? v : 20
+      },
+      get totalPages() {return Math.max(1, Math.ceil(this.bookCache.length / this.pageSize))},
+      get paginatedBooks() {
+        const start = (this.currentPage - 1) * this.pageSize
+        return this.bookCache.slice(start, start + this.pageSize)
+      },
+      get defaultExtLabel() {
+        const ext = this.settings.format || this.serverConfig.extName || 'epub'
+        return ext.toUpperCase()
+      },
+      get paginationInfo() {
+        const maxVisible = 5
+        let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2))
+        let end = Math.min(this.totalPages, start + maxVisible - 1)
+        if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+        const pages = []
+        for (let i = start; i <= end; i++) pages.push(i)
+        return { start, end, pages }
+      },
 
-    const SETTINGS_KEY = 'sonovel-settings'
-    // 服务器配置限制值
-    let serverConfig = { searchLimit: -1, concurrency: -1 }
-
-    const loadSettings = () => {
-      try {
-        const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')
-        settingFormat.value = saved.format || ''
-        settingLanguage.value = saved.language || ''
-        settingSearchLimit.value = saved.searchLimit || ''
-        settingConcurrency.value = saved.concurrency || ''
-      } catch (_) {}
-    }
-
-    const saveSettings = () => {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-        format: settingFormat.value,
-        language: settingLanguage.value,
-        searchLimit: settingSearchLimit.value,
-        concurrency: settingConcurrency.value,
-      }))
-    }
-
-    // 确保输入值不超过配置文件限制
-    const clampSetting = (input, configVal, fallbackMax, min = 1) => {
-      const max = configVal > 0 ? configVal : fallbackMax
-      input.min = min
-      input.max = max
-      input.addEventListener('change', () => {
-        const v = parseInt(input.value)
-        if (v > max) input.value = max
-        if (v < min && input.value !== '') input.value = min
-        saveSettings()
-      })
-    }
-
-    const fetchConfig = async () => {
-      try {
-        const resp = await fetch('/config')
-        const data = await resp.json()
-
-        if (data && data.data) {
-          serverConfig = data.data
-          clampSetting(settingSearchLimit, -1, 100, 10)
-          clampSetting(settingConcurrency, serverConfig.concurrency, 50)
-
-          console.log('version:', serverConfig.version)
-          versionTag.innerText = serverConfig.version
-          versionTag.href = `https://github.com/freeok/so-novel/releases/tag/v${serverConfig.version}`
-        }
-      } catch (_) {
-        clampSetting(settingSearchLimit, -1, 100, 10)
-        clampSetting(settingConcurrency, -1, 50)
-      }
-    }
-
-    const updateDefaultFormatLabels = () => {
-      const defaultExt = settingFormat.value ? settingFormat.value.toUpperCase() : serverConfig.extName.toUpperCase()
-      document.querySelectorAll('.dropdown-item.default-format').forEach(el => {
-        el.textContent = `${defaultExt} (默认)`
-      })
-    }
-
-    settingsToggle.addEventListener('click', () => {
-      settingsPanel.style.display = settingsPanel.style.display === 'none' ? '' : 'none'
-    })
-    settingFormat.addEventListener('change', () => {
-      saveSettings()
-      updateDefaultFormatLabels()
-    })
-    settingLanguage.addEventListener('change', saveSettings)
-    settingSearchLimit.addEventListener('change', () => {
-      if (bookCache.length > 0) {
-        currentPage = 1
-        renderDownloadTable()
-      }
-    })
-
-    // 工具函数
-    const showTip = (text = '正在加载...') => {
-      tipText.innerHTML = text
-      tipEle.style.display = 'flex'
-    }
-
-    const updateTip = (text) => {
-      tipText.innerHTML = text
-    }
-
-    const hideTip = () => {
-      tipEle.style.display = 'none'
-    }
-
-    const formatSize = (bytes) => {
-      if (bytes === 0) return '0.00 B'
-      const k = 1024
-      const sizes = ['B', 'KB', 'MB', 'GB']
-      const i = Math.floor(Math.log(bytes) / Math.log(k))
-      const sizeValue = (bytes / Math.pow(k, i)).toFixed(2)
-      return `${sizeValue} ${sizes[i]}`
-    }
-
-    const formatDate = (timestamp) => {
-      const date = new Date(timestamp)
-      return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      })
-    }
-
-    // 将书籍从服务器下载到本地
-    const handleDownloadFileToLocal = (name) => {
-      console.log('download to local', `《${name}》`)
-      window.open(`${location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
-    }
-
-    // 将书籍从源站下载到服务器
-    const handleDownloadToServer = async (index, format) => {
-      const item = bookCache[index]
-      if (!item) {
-        alert('参数错误，请重新搜索')
-        return
-      }
-      showTip(`正在解析目录...`)
-      const params = new URLSearchParams(item)
-      const finalFormat = format || settingFormat.value || ''
-      if (finalFormat) {
-        params.set('format', finalFormat)
-      }
-      const language = settingLanguage.value
-      if (language) {
-        params.set('language', language)
-      }
-      if (settingConcurrency.value) {
-        params.set('concurrency', settingConcurrency.value)
-      }
-      try {
-        const resp = await fetch(`/book-fetch?${params.toString()}`)
-
-        if (!resp.ok) {
-          const data = await resp.json()
-          throw new Error(data.message || '未知错误');
-        }
-
-        await fetchLocalBooks()
-        location.href = `/book-download?filename=${latestFileName}`
-
-      } catch (error) {
-        alert(`下载书籍到服务器失败: ${error.message}`)
-      } finally {
-        hideTip()
-      }
-    }
-
-    const getPageSize = () => {
-      const v = parseInt(settingSearchLimit.value)
-      return v > 0 ? v : 20
-    }
-
-    const renderDownloadTable = (data) => {
-      if (data !== undefined) bookCache = data
-      const pageSize = getPageSize()
-      const totalPages = Math.max(1, Math.ceil(bookCache.length / pageSize))
-      if (currentPage > totalPages) currentPage = totalPages
-      if (currentPage < 1) currentPage = 1
-
-      const start = (currentPage - 1) * pageSize
-      const end = Math.min(start + pageSize, bookCache.length)
-      const pageData = bookCache.slice(start, end)
-
-      const defaultExt = settingFormat.value ? settingFormat.value.toUpperCase() : serverConfig.extName.toUpperCase()
-      downloadTableBody.innerHTML = pageData.map((item, i) => {
-        const index = start + i
-        return `
-      <tr>
-        <td data-label="No">${index + 1}</td>
-        <td data-label="书名">${item.bookName}</td>
-        <td data-label="作者">${item.author}</td>
-        <td data-label="最新章节">${item.latestChapter || ''}</td>
-        <td data-label="最后更新">${item.lastUpdateTime || ''}</td>
-        <td data-label="书源">${item.sourceName}</td>
-        <td data-label="操作">
-          <div class="download-action">
-            <button class="dropdown-toggle" data-index="${index}">下载为 <span class="dropdown-arrow">▾</span></button>
-            <div class="dropdown-menu">
-              <div class="dropdown-item default-format" data-format="" data-index="${index}">${defaultExt} (默认)</div>
-              <div class="dropdown-item" data-format="epub" data-index="${index}">EPUB</div>
-              <div class="dropdown-item" data-format="txt" data-index="${index}">TXT</div>
-              <div class="dropdown-item" data-format="html" data-index="${index}">HTML</div>
-              <div class="dropdown-item" data-format="pdf" data-index="${index}">PDF</div>
-            </div>
-          </div>
-        </td>
-        <td data-label="源站"><a href="${item.url}" target="_blank"><button class="btn btn-secondary btn-download">前往</button></a></td>
-      </tr>`
-      }).join('')
-
-      renderPagination(totalPages)
-
-      if (bookCache.length > 0) {
-        tb1.style.display = ''
-      }
-    }
-
-    const renderPagination = (totalPages) => {
-      let paginationEl = document.getElementById('pagination')
-      if (totalPages <= 1) {
-        if (paginationEl) paginationEl.remove()
-        return
-      }
-      if (!paginationEl) {
-        paginationEl = document.createElement('div')
-        paginationEl.id = 'pagination'
-        paginationEl.className = 'pagination'
-        tb1.appendChild(paginationEl)
-      }
-
-      let html = `<span class="pagination-info">共 ${bookCache.length} 条，第 ${currentPage}/${totalPages} 页</span>`
-      html += `<div class="pagination-btns">`
-      html += `<button class="page-btn" data-page="prev" ${currentPage <= 1 ? 'disabled' : ''}>上一页</button>`
-
-      const maxVisible = 5
-      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2))
-      let endPage = Math.min(totalPages, startPage + maxVisible - 1)
-      if (endPage - startPage < maxVisible - 1) startPage = Math.max(1, endPage - maxVisible + 1)
-
-      if (startPage > 1) {
-        html += `<button class="page-btn" data-page="1">1</button>`
-        if (startPage > 2) html += `<span class="page-ellipsis">…</span>`
-      }
-      for (let i = startPage; i <= endPage; i++) {
-        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`
-      }
-      if (endPage < totalPages) {
-        if (endPage < totalPages - 1) html += `<span class="page-ellipsis">…</span>`
-        html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`
-      }
-
-      html += `<button class="page-btn" data-page="next" ${currentPage >= totalPages ? 'disabled' : ''}>下一页</button>`
-      html += `</div>`
-      paginationEl.innerHTML = html
-    }
-
-    const renderLocalBooksTable = (data) => {
-      tableBody.innerHTML = data.map(item => `
-      <tr>
-        <td data-label="文件名">${item.name}</td>
-        <td data-label="文件大小">${formatSize(item.size)}</td>
-        <td data-label="下载时间">${formatDate(item.timestamp)}</td>
-        <td data-label="操作"><button class="btn btn-secondary btn-download" data-filename="${item.name}">下载</button></td>
-      </tr>
-    `).join('')
-      if (data.length > 0) {
-        tb2.style.display = ''
-      }
-    }
-
-    // 获取已下书籍
-    const fetchLocalBooks = async () => {
-      showTip('正在刷新...')
-      try {
-        const response = await fetch('/local-books')
-        const data = await response.json()
-        console.log('local-books:', data)
-        if (data && data.data) {
-          data.data.sort((a, b) => b.timestamp - a.timestamp)
-          if (data.data[0]) {
-            latestFileName = data.data[0].name
-          }
-          renderLocalBooksTable(data.data)
-        }
-      } catch (error) {
-        alert(`刷新已下书籍失败: ${error.message}`)
-      } finally {
-        hideTip()
-      }
-    }
-
-    const aggregatedSearch = async () => {
-      const value = downloadSearchName.value.trim()
-      if (!value) {
-        alert("请输入书名或作者！")
-        return
-      }
-      showTip('正在搜索...')
-      searchButton.disabled = true // 搜索时禁用按钮
-      downloadSearchName.disabled = true // 搜索时禁用输入框
-      try {
-        const searchUrl = `/search/aggregated?kw=${encodeURIComponent(value)}`
-        const response = await fetch(searchUrl)
-        const data = await response.json()
-        console.log('search results', data)
-        if (data && data.data) {
-          currentPage = 1
-          renderDownloadTable(data.data)
-        }
-      } catch (error) {
-        alert(`搜索失败: ${error.message}`)
-      } finally {
-        hideTip()
-        downloadContainer.classList.add('expanded')
-        searchButton.disabled = false // 搜索完成后启用按钮
-        downloadSearchName.disabled = false // 搜索完成后启用输入框
-      }
-    }
-
-    const initSSE = () => {
-      // 相对路径更稳健，自动适配 http/https、端口和域名
-      const evtSource = new EventSource("/download-progress")
-
-      evtSource.onopen = (event) => {
-        console.log("✅ SSE 连接已打开")
-      }
-
-      evtSource.onerror = (event) => {
-        console.warn("⚠️ SSE 连接异常，浏览器将自动重连", event)
-      }
-
-      evtSource.onmessage = (e) => {
+      loadSettings() {
         try {
-          const data = JSON.parse(e.data)
-          if (data.type === "download-progress") {
-            updateTip(`${data.index} / ${data.total}`)
-          }
-        } catch (err) {
-          console.error("❌ SSE 数据解析失败:", err, e.data)
+          const saved = JSON.parse(localStorage.getItem(this.SETTINGS_KEY) || '{}')
+          this.settings.format = saved.format || ''
+          this.settings.language = saved.language || ''
+          this.settings.searchLimit = saved.searchLimit || ''
+          this.settings.concurrency = saved.concurrency || ''
+        } catch (_) {}
+      },
+
+      handleSettingChange() {
+        localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings))
+        if (this.bookCache.length > 0) this.currentPage = 1
+      },
+
+      validateAndSaveSettings(field) {
+        let val = parseInt(this.settings[field])
+        if (field === 'searchLimit') {
+          if (val > this.searchLimitMax) this.settings.searchLimit = this.searchLimitMax
+          if (val < 10 && this.settings.searchLimit !== '') this.settings.searchLimit = 10
+        } else if (field === 'concurrency') {
+          if (val > this.concurrencyMax) this.settings.concurrency = this.concurrencyMax
+          if (val < 1 && this.settings.concurrency !== '') this.settings.concurrency = 1
         }
-      }
-    }
+        this.handleSettingChange()
+      },
 
-    // 事件监听器
-    searchButton.addEventListener('click', aggregatedSearch)
-    refreshListButton.addEventListener('click', fetchLocalBooks)
+      async fetchConfig() {
+        try {
+          const resp = await fetch('/config')
+          const data = await resp.json()
+          if (data && data.data) Object.assign(this.serverConfig, data.data)
+        } catch (_) {}
+      },
 
-    // 按下 Enter 键触发搜索
-    downloadSearchName.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        aggregatedSearch()
-      }
-    })
+      async aggregatedSearch() {
+        const value = this.searchKeyword.trim()
+        if (!value) {
+          alert('请输入书名或作者！')
+          return
+        }
+        this.closeDownloadMenu()
+        this.displayTip('正在搜索...')
+        this.isSearching = true
+        try {
+          const searchUrl = `/search/aggregated?kw=${encodeURIComponent(value)}`
+          const response = await fetch(searchUrl)
+          const data = await response.json()
+          if (data && data.data) {
+            this.bookCache = data.data
+            this.currentPage = 1
+          }
+        } catch (error) {alert(`搜索失败: ${error.message}`)} finally {
+          this.hideTip()
+          this.isSearching = false
+        }
+      },
 
-    // 使用事件委托处理分页按钮
-    tb1.addEventListener('click', (e) => {
-      const pageBtn = e.target.closest('.page-btn')
-      if (pageBtn && !pageBtn.disabled) {
-        const page = pageBtn.dataset.page
-        const totalPages = Math.ceil(bookCache.length / getPageSize())
-        if (page === 'prev') currentPage--
-        else if (page === 'next') currentPage++
-        else currentPage = parseInt(page)
-        currentPage = Math.max(1, Math.min(currentPage, totalPages))
-        renderDownloadTable()
-        tb1.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    })
+      async handleDownloadToServer(item, format) {
+        this.closeDownloadMenu()
+        if (!item) {
+          alert('参数错误，请重新搜索')
+          return
+        }
+        this.displayTip('正在解析目录...')
+        const params = new URLSearchParams(JSON.parse(JSON.stringify(item)))
+        const finalFormat = format || this.settings.format || ''
+        if (finalFormat) params.set('format', finalFormat)
+        if (this.settings.language) params.set('language', this.settings.language)
+        if (this.settings.concurrency) params.set('concurrency', this.settings.concurrency)
+        try {
+          const resp = await fetch(`/book-fetch?${params.toString()}`)
+          if (!resp.ok) {
+            const data = await resp.json()
+            throw new Error(data.message || '未知错误')
+          }
+          await this.fetchLocalBooks()
+          location.href = `/book-download?filename=${encodeURIComponent(this.latestFileName)}`
+        } catch (error) {alert(`下载书籍到服务器失败: ${error.message}`)} finally {this.hideTip()}
+      },
 
-    // 搜索结果 > 操作 > 下载为
-    downloadTableBody.addEventListener('click', (e) => {
-      const toggle = e.target.closest('.dropdown-toggle')
-      if (toggle) {
-        e.stopPropagation()
-        const action = toggle.closest('.download-action')
-        // 关闭其他已展开的下拉菜单
-        document.querySelectorAll('.download-action.open').forEach(el => {
-          if (el !== action) el.classList.remove('open')
+      async fetchLocalBooks() {
+        this.displayTip('正在刷新...')
+        try {
+          const response = await fetch('/local-books')
+          const data = await response.json()
+          if (data && data.data) {
+            data.data.sort((a, b) => b.timestamp - a.timestamp)
+            if (data.data[0]) this.latestFileName = data.data[0].name
+            this.localBooks = data.data
+          }
+        } catch (error) {alert(`刷新已下书籍失败: ${error.message}`)} finally {this.hideTip()}
+      },
+
+      toggleDownloadMenu(index, item, event) {
+        if (this.openDropdownIndex === index) {
+          this.closeDownloadMenu()
+          return
+        }
+        const rect = event.currentTarget.getBoundingClientRect()
+        const menuWidth = 144
+        const menuHeight = 200
+        let top = rect.bottom + 6
+        if (top + menuHeight > window.innerHeight - 8) top = rect.top - menuHeight - 6
+        let left = rect.right - menuWidth
+        left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8))
+        this.openDropdownIndex = index
+        this.dropdownItem = item
+        this.dropdownStyle = `top:${top}px;left:${left}px`
+      },
+
+      closeDownloadMenu() {
+        this.openDropdownIndex = null
+        this.dropdownItem = null
+        this.dropdownStyle = ''
+      },
+
+      handleDownloadFileToLocal(name) {
+        window.open(`${location.origin}/book-download?filename=${encodeURIComponent(name)}`, '_blank')
+      },
+
+      initSSE() {
+        const evtSource = new EventSource('/download-progress')
+        evtSource.onopen = (event) => {
+          console.log("✅ SSE 连接已打开")
+        }
+        evtSource.onerror = (event) => {
+          console.warn("❌ SSE 连接异常，浏览器将自动重连", event)
+        }
+        evtSource.onmessage = (e) => {
+          try {
+            const data = JSON.parse(e.data)
+            if (data.type === 'download-progress') this.tipText = `${data.index}/${data.total}`
+          } catch (err) {
+            console.error("❌ SSE 数据解析失败:", err, e.data)
+          }
+        }
+      },
+
+      changePage(page) {
+        this.closeDownloadMenu()
+        if (page === 'prev') this.currentPage--; else if (page === 'next') this.currentPage++; else this.currentPage = parseInt(page)
+        this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages))
+        const el = document.getElementById('downloadContainer')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      },
+
+      getGlobalIndex(index) {return (this.currentPage - 1) * this.pageSize + index + 1},
+
+      formatSize(bytes) {
+        if (bytes === 0) return '0.00 B'
+        const k = 1024
+        const sizes = ['B', 'KB', 'MB', 'GB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`
+      },
+
+      formatDate(timestamp) {
+        return new Date(timestamp).toLocaleString('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
         })
-        action.classList.toggle('open')
-        return
-      }
-      const item = e.target.closest('.dropdown-item')
-      if (item) {
-        item.closest('.download-action').classList.remove('open')
-        handleDownloadToServer(item.dataset.index, item.dataset.format)
-      }
-    })
+      },
 
-    // 点击页面其他区域关闭下拉菜单
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.download-action.open').forEach(el => el.classList.remove('open'))
-    })
+      displayTip(text = '正在加载...') {
+        this.tipText = text
+        this.showTip = true
+      },
 
-    tableBody.addEventListener('click', (e) => {
-      const button = e.target.closest('button.btn-secondary')
-      if (button && button.dataset.filename) {
-        handleDownloadFileToLocal(button.dataset.filename)
-      }
-    })
-
-    // 页面加载时执行
-    initSSE()
-    loadSettings()
-    fetchConfig()
-    fetchLocalBooks()
-    tb1.style.display = 'none';
-    tb2.style.display = 'none';
-  })
+      hideTip() {this.showTip = false}
+    }
+  }
 </script>
 </body>
 </html>
