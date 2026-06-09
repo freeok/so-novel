@@ -130,6 +130,7 @@
         </button>
       </div>
 
+      <!-- 搜索结果桌面端 -->
       <div x-show="bookCache.length > 0" x-transition>
         <div class="hidden md:block overflow-visible rounded-lg border border-gray-200">
           <table class="w-full text-sm">
@@ -176,6 +177,7 @@
           </table>
         </div>
 
+        <!-- 搜索结果移动端 -->
         <div class="md:hidden space-y-4">
           <template :key="'m-' + item.url + '-' + index" x-for="(item, index) in paginatedBooks">
             <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
@@ -280,7 +282,7 @@
       </div>
 
       <div x-show="localBooks.length > 0" x-transition>
-        <!-- 桌面端表格 -->
+        <!-- 已下书籍桌面端 -->
         <div class="hidden md:block overflow-x-auto rounded-lg border border-gray-200">
           <table class="w-full text-sm">
             <thead class="bg-gray-100">
@@ -298,10 +300,16 @@
                 <td class="px-3 py-2 text-gray-600" x-text="formatSize(item.size)"></td>
                 <td class="px-3 py-2 text-gray-500 text-xs" x-text="formatDate(item.timestamp)"></td>
                 <td class="px-3 py-2">
-                  <button @click="handleDownloadFileToLocal(item.name)"
-                          class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
-                    下载
-                  </button>
+                  <div class="flex items-center gap-2">
+                    <button @click="handleDownloadFileToLocal(item.name)"
+                            class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                      下载
+                    </button>
+                    <button @click="handleDeleteBook(item.name)"
+                            class="px-4 py-1.5 text-xs border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                      删除
+                    </button>
+                  </div>
                 </td>
               </tr>
             </template>
@@ -309,7 +317,7 @@
           </table>
         </div>
 
-        <!-- 移动端卡片 -->
+        <!-- 已下书籍移动端 -->
         <div class="md:hidden space-y-4">
           <template :key="'lm-' + item.name" x-for="item in localBooks">
             <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
@@ -327,10 +335,16 @@
               </div>
               <div class="flex justify-between items-center gap-2 py-2">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
-                <button @click="handleDownloadFileToLocal(item.name)"
-                        class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200">
-                  下载
-                </button>
+                <div class="flex items-center gap-2">
+                  <button @click="handleDownloadFileToLocal(item.name)"
+                          class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                    下载
+                  </button>
+                  <button @click="handleDeleteBook(item.name)"
+                          class="px-4 py-1.5 text-xs border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                    删除
+                  </button>
+                </div>
               </div>
             </div>
           </template>
@@ -628,6 +642,20 @@
 
       getGlobalIndex(index) {
         return (this.currentPage - 1) * this.pageSize + index + 1
+      },
+
+      async handleDeleteBook(filename) {
+        if (!confirm(`确定删除「${filename}」？`)) return
+        try {
+          const res = await Api.deleteBook(filename)
+          if (res.code === 200) {
+            this.localBooks = this.localBooks.filter(item => item.name !== filename)
+          } else {
+            alert('删除失败: ' + (res.message || '未知错误'))
+          }
+        } catch (error) {
+          alert('删除失败: ' + error.message)
+        }
       },
 
       handleDownloadFileToLocal(name) {
