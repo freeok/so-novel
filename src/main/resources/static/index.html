@@ -60,6 +60,7 @@
       设置
     </button>
   </header>
+
   <!-- 设置面板 -->
   <section class="mb-6 bg-white rounded-xl shadow-md p-4 sm:p-6" x-show="settingsVisible" x-transition>
     <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-3">偏好设置</h2>
@@ -307,6 +308,7 @@
             </tbody>
           </table>
         </div>
+
         <!-- 移动端卡片 -->
         <div class="md:hidden space-y-4">
           <template :key="'lm-' + item.name" x-for="item in localBooks">
@@ -338,6 +340,7 @@
 
   </main>
 </div>
+
 <!-- 下载格式下拉菜单（fixed 定位，避免被表格 overflow 裁剪） -->
 <div :style="dropdownStyle" @click.outside="closeDownloadMenu()"
      x-transition:enter="transition ease-out duration-150" x-transition:enter-end="opacity-100 scale-100"
@@ -362,6 +365,7 @@
           class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">PDF
   </button>
 </div>
+
 <!-- Loading 弹窗 -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm" x-cloak
      x-transition:enter="transition ease-out duration-200" x-transition:enter-end="opacity-100"
@@ -381,13 +385,28 @@
         <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
         <div class="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-primary"></div>
       </div>
-      <div>
+      <div class="w-full">
         <p class="text-base font-semibold text-gray-900">请稍候</p>
-        <p class="mt-1 text-sm text-gray-500" x-text="tipText"></p>
+        <template x-if="downloadTotal > 0">
+          <div class="w-full mt-3">
+            <div class="flex justify-between text-xs text-gray-500 mb-1.5">
+              <span x-text="'下载中 ' + downloadCurrent + ' / ' + downloadTotal"></span>
+              <span x-text="Math.round(downloadCurrent / downloadTotal * 100) + '%'"></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+              <div :style="'width: ' + (downloadCurrent / downloadTotal * 100) + '%'"
+                   class="bg-primary h-2.5 rounded-full transition-all duration-300 ease-out"></div>
+            </div>
+          </div>
+        </template>
+        <template x-if="downloadTotal === 0">
+          <p class="mt-1 text-sm text-gray-500" x-text="tipText"></p>
+        </template>
       </div>
     </div>
   </div>
 </div>
+
 <!-- 搜索历史 -->
 <div @click.self="showSearchHistory = false"
      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm"
@@ -451,6 +470,8 @@
       showSearchHistory: false,
       showTip: false,
       tipText: '正在加载...',
+      downloadCurrent: 0,
+      downloadTotal: 0,
 
       get concurrencyMax() {return this.serverConfig.concurrency > 0 ? this.serverConfig.concurrency : 50},
       get defaultExtLabel() {
@@ -546,6 +567,8 @@
           alert('参数错误，请重新搜索')
           return
         }
+        this.downloadCurrent = 0
+        this.downloadTotal = 0
         this.displayTip('正在解析目录...')
         const params = new URLSearchParams({ ...item })
         const finalFormat = format || this.settings.format || ''
@@ -616,7 +639,11 @@
         if (this.bookCache.length > 0) this.currentPage = 1
       },
 
-      hideTip() {this.showTip = false},
+      hideTip() {
+        this.showTip = false
+        this.downloadCurrent = 0
+        this.downloadTotal = 0
+      },
 
       initSSE() {
         const evtSource = new EventSource('/download-progress')
@@ -629,7 +656,10 @@
         evtSource.onmessage = (e) => {
           try {
             const data = JSON.parse(e.data)
-            if (data.type === 'download-progress') this.tipText = `${data.index}/${data.total}`
+            if (data.type === 'download-progress') {
+              this.downloadCurrent = data.index
+              this.downloadTotal = data.total
+            }
           } catch (err) {
             console.error("❌ SSE 数据解析失败:", err, e.data)
           }
