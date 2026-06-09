@@ -17,4 +17,8 @@ const Api = {
     return fetch(`/book-fetch?${params.toString()}`)
   },
 
+  deleteBook(filename) {
+    return fetch(`/book-delete?filename=${encodeURIComponent(filename)}`).then(r => r.json())
+  },
+
 }
