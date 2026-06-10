@@ -57,8 +57,13 @@
        target="_blank"
        x-text="'v' + (serverConfig.version || 'ersion')"></a>
     <button @click="settingsVisible = !settingsVisible"
-            class="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-colors">
-      设置
+            class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition-colors">
+      <span>设置</span>
+      <span class="relative inline-flex items-center w-9 h-5 rounded-full transition-colors duration-200"
+            :class="settingsVisible ? 'bg-primary' : 'bg-gray-300'">
+        <span class="inline-block w-3.5 h-3.5 bg-white rounded-full shadow transition-transform duration-200"
+              :class="settingsVisible ? 'translate-x-[18px]' : 'translate-x-[3px]'"></span>
+      </span>
     </button>
   </header>
 
@@ -266,7 +271,7 @@
       <div class="flex items-center justify-between mb-5">
         <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-0">已下书籍</h2>
         <button @click="fetchLocalBooks"
-                class="px-4 py-2 text-xs bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm">
+                class="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm">
           刷新
         </button>
       </div>
@@ -496,7 +501,7 @@
           <div class="flex items-center gap-2 shrink-0">
             <span class="text-xs" x-show="s.delay != null"
                   :class="s.delay < 0 ? 'text-red-500' : 'text-green-500'"
-                  x-text="s.delay < 0 ? '超时' : s.delay + 'ms'"></span>
+                  x-text="s.delay < 0 ? '超时' : s.delay + ' ms'"></span>
 
             <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium"
                   :class="s.disabled ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-600'"
