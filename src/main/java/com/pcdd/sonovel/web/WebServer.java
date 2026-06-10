@@ -48,6 +48,7 @@ public class WebServer {
         context.addServlet(BookDeleteServlet.class, "/book-delete");
         context.addServlet(SourceListServlet.class, "/sources");
         context.addServlet(SourceListServlet.class, "/sources/check");
+        context.addServlet(SuggestionServlet.class, "/suggestion");
 
         ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
         // 不显示目录列表，但子文件依然可访问

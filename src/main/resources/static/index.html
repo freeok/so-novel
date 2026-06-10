@@ -131,8 +131,11 @@
         </button>
       </div>
       <div class="relative mb-5">
-        <input :disabled="isSearching" @keydown.enter="aggregatedSearch"
+        <input :disabled="isSearching"
+               @keydown.enter="aggregatedSearch"
+               @input.debounce.300ms="fetchSuggestions" @blur="closeSuggestions"
                aria-label="搜索书名或作者"
+               autocomplete="off"
                class="w-full pl-4 pr-12 py-3 border border-gray-200 rounded-xl text-base bg-gray-50 focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all"
                placeholder="请输入书名或作者，尽量输完整" x-model="searchKeyword">
         <button :disabled="isSearching" @click="aggregatedSearch"
@@ -142,6 +145,14 @@
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+        <div x-show="showSuggestions && suggestions.length > 0"
+             class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+          <template x-for="(s, i) in suggestions" :key="i">
+            <div @mousedown.prevent="selectSuggestion(i)"
+                 class="px-4 py-2 text-sm cursor-pointer text-gray-700 hover:bg-gray-50"
+                 x-text="s"></div>
+          </template>
+        </div>
       </div>
 
       <!-- 搜索结果 桌面端 -->
@@ -278,7 +289,9 @@
                 class="text-xs text-gray-400 hover:text-primary p-1.5 rounded border border-gray-200 hover:border-primary transition-colors"
                 title="刷新">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
@@ -457,7 +470,8 @@
           <div class="flex items-center gap-2">
             <span class="text-xs text-gray-400 shrink-0" x-text="formatHistoryTime(h.timestamp)"></span>
             <button @click.stop="removeSearchHistory(h.timestamp)"
-                    class="text-gray-300 hover:text-red-500 leading-none">&times;</button>
+                    class="text-gray-300 hover:text-red-500 leading-none">&times;
+            </button>
           </div>
         </div>
       </template>
@@ -495,7 +509,8 @@
           <span x-show="!sourcesChecking">测试延迟</span>
           <span x-show="sourcesChecking">测试中...</span>
         </button>
-        <button @click="showSources = false" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+        <button @click="showSources = false" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;
+        </button>
       </div>
     </div>
     <div class="flex-1 overflow-y-auto -mx-2 px-2">
@@ -538,6 +553,8 @@
       openDropdownIndex: null,
       searchHistory: [],
       searchKeyword: '',
+      suggestions: [],
+      showSuggestions: false,
       serverConfig: { searchLimit: -1, concurrency: -1, version: '', extName: 'epub' },
       settings: { format: '', language: '', searchLimit: '', concurrency: '' },
       settingsVisible: false,
@@ -596,6 +613,33 @@
         if (!confirm('确定清空全部搜索历史？')) return
         this.searchHistory = []
         localStorage.removeItem(this.SEARCH_HISTORY_KEY)
+      },
+
+      async fetchSuggestions() {
+        const kw = this.searchKeyword.trim()
+        if (!kw) {
+          this.suggestions = [];
+          this.showSuggestions = false;
+          return
+        }
+        try {
+          const data = await Api.getSuggestions(kw)
+          if (data && data.code === 200) {
+            this.suggestions = data.data || []
+            this.showSuggestions = this.suggestions.length > 0
+          }
+        } catch (_) {
+          this.suggestions = [];
+          this.showSuggestions = false
+        }
+      },
+
+      selectSuggestion(index) {
+        this.searchKeyword = this.suggestions[index]
+      },
+
+      closeSuggestions() {
+        setTimeout(() => { this.showSuggestions = false }, 200)
       },
 
       removeSearchHistory(timestamp) {
@@ -698,6 +742,20 @@
         } catch (error) {alert(`刷新已下书籍失败: ${error.message}`)} finally {this.hideTip()}
       },
 
+      async handleDeleteBook(filename) {
+        if (!confirm(`确定删除「${filename}」？`)) return
+        try {
+          const res = await Api.deleteBook(filename)
+          if (res.code === 200) {
+            this.localBooks = this.localBooks.filter(item => item.name !== filename)
+          } else {
+            alert('删除失败: ' + (res.message || '未知错误'))
+          }
+        } catch (error) {
+          alert('删除失败: ' + error.message)
+        }
+      },
+
       formatDate(timestamp) {
         return new Date(timestamp).toLocaleString('zh-CN', {
           year: 'numeric',
@@ -728,20 +786,6 @@
 
       getGlobalIndex(index) {
         return (this.currentPage - 1) * this.pageSize + index + 1
-      },
-
-      async handleDeleteBook(filename) {
-        if (!confirm(`确定删除「${filename}」？`)) return
-        try {
-          const res = await Api.deleteBook(filename)
-          if (res.code === 200) {
-            this.localBooks = this.localBooks.filter(item => item.name !== filename)
-          } else {
-            alert('删除失败: ' + (res.message || '未知错误'))
-          }
-        } catch (error) {
-          alert('删除失败: ' + error.message)
-        }
       },
 
       handleDownloadFileToLocal(name) {
