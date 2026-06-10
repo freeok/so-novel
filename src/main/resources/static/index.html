@@ -183,11 +183,9 @@
                 </td>
                 <td class="px-3 py-2 overflow-visible whitespace-nowrap">
                   <button @click.stop="toggleDownloadMenu(index, item, $event)"
-                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
-                    下载为
-                    <span :class="{ 'rotate-180': openDropdownIndex === index }"
-                          class="text-[0.7em] transition-transform">▾</span>
-                  </button>
+                          class="p-1.5 border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors"
+                          title="选择下载格式"
+                          x-html="iconDownload"></button>
                 </td>
               </tr>
             </template>
@@ -231,9 +229,9 @@
               <div class="flex justify-between items-center gap-2 py-2 border-b border-gray-100">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
                 <button @click.stop="toggleDownloadMenu(index, item, $event)"
-                        class="inline-flex items-center justify-center gap-0.5 w-[4.5rem] py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary">
-                  下载为 <span :class="{ 'rotate-180 inline-block': openDropdownIndex === index }"
-                               class="text-[0.65em]">▾</span>
+                        class="inline-flex items-center justify-center gap-0.5 py-1.5 px-2 border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors"
+                        title="选择下载格式">
+                  <span x-html="iconDownload"></span>
                 </button>
               </div>
             </div>
@@ -317,13 +315,13 @@
                 <td class="px-3 py-2">
                   <div class="flex items-center gap-2">
                     <button @click="handleDownloadFileToLocal(item.name)"
-                            class="px-4 py-1.5 text-xs border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
-                      下载
-                    </button>
+                            class="p-1.5 border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors"
+                            title="下载"
+                            x-html="iconDownload"></button>
                     <button @click="handleDeleteBook(item.name)"
-                            class="px-4 py-1.5 text-xs border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
-                      删除
-                    </button>
+                            class="p-1.5 border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                            title="删除"
+                            x-html="iconDelete"></button>
                   </div>
                 </td>
               </tr>
@@ -352,13 +350,13 @@
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
                 <div class="flex items-center gap-2">
                   <button @click="handleDownloadFileToLocal(item.name)"
-                          class="px-4 py-1.5 text-xs border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
-                    下载
-                  </button>
+                          class="p-1.5 border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors"
+                          title="下载"
+                          x-html="iconDownload"></button>
                   <button @click="handleDeleteBook(item.name)"
-                          class="px-4 py-1.5 text-xs border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
-                    删除
-                  </button>
+                          class="p-1.5 border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                          title="删除"
+                          x-html="iconDelete"></button>
                 </div>
               </div>
             </div>
@@ -556,12 +554,14 @@
       suggestions: [],
       showSuggestions: false,
       serverConfig: { searchLimit: -1, concurrency: -1, version: '', extName: 'epub' },
-      settings: { format: '', language: '', searchLimit: '', concurrency: '' },
+      settings: { format: '', language: '', searchLimit: '', concurrency: '', showSuggestionsEnabled: true },
       settingsVisible: false,
       showSearchHistory: false,
       showSources: false,
       sources: [],
       sourcesChecking: false,
+      iconDownload: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      iconDelete: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       showTip: false,
       tipText: '正在加载...',
       downloadCurrent: 0,
