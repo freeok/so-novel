@@ -436,16 +436,20 @@
     <div class="flex-1 overflow-y-auto -mx-2 px-2" x-show="searchHistory.length > 0">
       <template :key="h.timestamp" x-for="h in searchHistory">
         <div @click="selectHistory(h)"
-             class="flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50">
+             class="flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 group">
           <span class="text-sm text-gray-700" x-text="h.keyword"></span>
-          <span class="text-xs text-gray-400 shrink-0 ml-3" x-text="formatHistoryTime(h.timestamp)"></span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 shrink-0" x-text="formatHistoryTime(h.timestamp)"></span>
+            <button @click.stop="removeSearchHistory(h.timestamp)"
+                    class="text-gray-300 hover:text-red-500 text-sm leading-none">&times;</button>
+          </div>
         </div>
       </template>
     </div>
     <div class="text-center py-8 text-sm text-gray-400" x-show="searchHistory.length === 0">暂无搜索历史</div>
     <div class="mt-3 pt-3 border-t border-gray-100 text-center" x-show="searchHistory.length > 0">
       <button @click="clearSearchHistory; showSearchHistory = false" class="text-xs text-gray-400 hover:text-red-500">
-        清除全部历史
+        清空全部历史
       </button>
     </div>
   </div>
@@ -520,8 +524,15 @@
       },
 
       clearSearchHistory() {
+        if (!confirm('确定清空全部搜索历史？')) return
         this.searchHistory = []
         localStorage.removeItem(this.SEARCH_HISTORY_KEY)
+      },
+
+      removeSearchHistory(timestamp) {
+        if (!confirm('确定删除该条搜索历史？')) return
+        this.searchHistory = this.searchHistory.filter(h => h.timestamp !== timestamp)
+        localStorage.setItem(this.SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory))
       },
 
       closeDownloadMenu() {
