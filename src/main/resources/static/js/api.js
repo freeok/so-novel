@@ -21,4 +21,12 @@ const Api = {
     return fetch(`/book-delete?filename=${encodeURIComponent(filename)}`).then(r => r.json())
   },
 
+  getSources() {
+    return fetch('/sources').then(r => r.json())
+  },
+
+  checkSources() {
+    return fetch('/sources/check').then(r => r.json())
+  },
+
 }
