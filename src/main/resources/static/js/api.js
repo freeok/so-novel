@@ -21,6 +21,10 @@ const Api = {
     return fetch(`/book-delete?filename=${encodeURIComponent(filename)}`).then(r => r.json())
   },
 
+  getSuggestions(kw) {
+    return fetch(`/suggestion?kw=${encodeURIComponent(kw)}`).then(r => r.json())
+  },
+
   getSources() {
     return fetch('/sources').then(r => r.json())
   },
