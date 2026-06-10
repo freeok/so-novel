@@ -122,8 +122,12 @@
       <div class="flex items-center justify-between mb-5">
         <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-3">搜索书籍</h2>
         <button @click="showSearchHistory = !showSearchHistory"
-                class="text-xs text-gray-400 hover:text-primary px-2 py-1 rounded border border-gray-200 hover:border-primary transition-colors">
-          历史记录
+                class="text-xs text-gray-400 hover:text-primary p-1.5 rounded border border-gray-200 hover:border-primary transition-colors"
+                title="历史记录">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12,6 12,12 16,14" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
       <div class="relative mb-5">
@@ -271,8 +275,11 @@
       <div class="flex items-center justify-between mb-5">
         <h2 class="text-lg sm:text-2xl font-semibold text-primary border-l-4 border-primary pl-3 my-0">已下书籍</h2>
         <button @click="fetchLocalBooks"
-                class="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm">
-          刷新
+                class="text-xs text-gray-400 hover:text-primary p-1.5 rounded border border-gray-200 hover:border-primary transition-colors"
+                title="刷新">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
 
