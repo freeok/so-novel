@@ -46,6 +46,8 @@ public class WebServer {
         context.addServlet(DownloadProgressSseServlet.class, "/download-progress");
         context.addServlet(ConfigServlet.class, "/config");
         context.addServlet(BookDeleteServlet.class, "/book-delete");
+        context.addServlet(SourceListServlet.class, "/sources");
+        context.addServlet(SourceListServlet.class, "/sources/check");
 
         ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
         // 不显示目录列表，但子文件依然可访问
