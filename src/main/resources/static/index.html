@@ -353,16 +353,20 @@
           class="w-full text-left px-4 py-2 text-sm font-medium text-primary hover:bg-gray-50"
           x-text="defaultExtLabel + ' (默认)'"></button>
   <button @click="handleDownloadToServer(dropdownItem, 'epub')"
-          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">EPUB
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          x-show="defaultExtLabel !== 'EPUB'">EPUB
   </button>
   <button @click="handleDownloadToServer(dropdownItem, 'txt')"
-          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">TXT
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          x-show="defaultExtLabel !== 'TXT'">TXT
   </button>
   <button @click="handleDownloadToServer(dropdownItem, 'html')"
-          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">HTML
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          x-show="defaultExtLabel !== 'HTML'">HTML
   </button>
   <button @click="handleDownloadToServer(dropdownItem, 'pdf')"
-          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">PDF
+          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          x-show="defaultExtLabel !== 'PDF'">PDF
   </button>
 </div>
 
