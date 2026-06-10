@@ -41,9 +41,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans leading-relaxed min-h-screen overflow-x-hidden"
       x-data="App()" x-init="init()">
+
 <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 sm:py-6 flex flex-col min-h-screen" x-cloak>
-  <!-- Header -->
   <header class="relative flex flex-col items-center mb-6 sm:mb-8 pt-2 pb-1">
+    <!-- LOGO -->
     <div class="flex items-center gap-2.5 sm:gap-3">
       <h1 class="m-0 flex items-baseline gap-1.5 sm:gap-2">
         <span class="text-2xl sm:text-4xl font-light text-gray-700 tracking-wide">SO</span>
@@ -130,7 +131,7 @@
         </button>
       </div>
 
-      <!-- 搜索结果桌面端 -->
+      <!-- 搜索结果 桌面端 -->
       <div x-show="bookCache.length > 0" x-transition>
         <div class="hidden md:block overflow-visible rounded-lg border border-gray-200">
           <table class="w-full text-sm">
@@ -141,9 +142,8 @@
               <th class="px-3 py-2 text-left font-semibold text-gray-500">作者</th>
               <th class="px-3 py-2 text-left font-semibold text-gray-500">最新章节</th>
               <th class="px-3 py-2 text-left font-semibold text-gray-500">最后更新</th>
-              <th class="px-3 py-2 text-left font-semibold text-gray-500">书源</th>
-              <th class="px-3 py-2 text-left font-semibold text-gray-500">操作</th>
               <th class="px-3 py-2 text-left font-semibold text-gray-500">源站</th>
+              <th class="px-3 py-2 text-left font-semibold text-gray-500">操作</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -151,25 +151,19 @@
               <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-3 py-2" x-text="getGlobalIndex(index)"></td>
                 <td class="px-3 py-2 font-medium" x-text="item.bookName"></td>
-                <td class="px-3 py-2 text-gray-600" x-text="item.author"></td>
+                <td class="px-3 py-2 text-gray-600 whitespace-nowrap" x-text="item.author"></td>
                 <td class="px-3 py-2 text-gray-600" x-text="item.latestChapter || ''"></td>
                 <td class="px-3 py-2 text-gray-500 text-xs" x-text="item.lastUpdateTime || ''"></td>
-                <td class="px-3 py-2 text-gray-600" x-text="item.sourceName"></td>
-                <td class="px-3 py-2 overflow-visible">
+                <td class="px-3 py-2 text-gray-600">
+                  <a :href="item.url" target="_blank" class="text-primary hover:underline" x-text="item.sourceName"></a>
+                </td>
+                <td class="px-3 py-2 overflow-visible whitespace-nowrap">
                   <button @click.stop="toggleDownloadMenu(index, item, $event)"
-                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors whitespace-nowrap">
+                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
                     下载为
                     <span :class="{ 'rotate-180': openDropdownIndex === index }"
                           class="text-[0.7em] transition-transform">▾</span>
                   </button>
-                </td>
-                <td class="px-3 py-2">
-                  <a :href="item.url" target="_blank">
-                    <button
-                      class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
-                      前往
-                    </button>
-                  </a>
                 </td>
               </tr>
             </template>
@@ -177,7 +171,7 @@
           </table>
         </div>
 
-        <!-- 搜索结果移动端 -->
+        <!-- 搜索结果 移动端 -->
         <div class="md:hidden space-y-4">
           <template :key="'m-' + item.url + '-' + index" x-for="(item, index) in paginatedBooks">
             <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
@@ -206,8 +200,9 @@
               </div>
               <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
                    x-show="item.sourceName">
-                <span class="text-sm font-semibold text-gray-500 shrink-0">书源</span>
-                <span class="text-sm text-right" x-text="item.sourceName"></span>
+                <span class="text-sm font-semibold text-gray-500 shrink-0">前往源站</span>
+                <a :href="item.url" target="_blank" class="text-sm text-right text-primary hover:underline"
+                   x-text="item.sourceName"></a>
               </div>
               <div class="flex justify-between items-center gap-2 py-2 border-b border-gray-100">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
@@ -216,15 +211,6 @@
                   下载为 <span :class="{ 'rotate-180 inline-block': openDropdownIndex === index }"
                                class="text-[0.65em]">▾</span>
                 </button>
-              </div>
-              <div class="flex justify-between items-center gap-2 py-2">
-                <span class="text-sm font-semibold text-gray-500 shrink-0">源站</span>
-                <a :href="item.url" target="_blank">
-                  <button
-                    class="inline-flex items-center justify-center w-[4.5rem] py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200">
-                    前往
-                  </button>
-                </a>
               </div>
             </div>
           </template>
@@ -282,7 +268,7 @@
       </div>
 
       <div x-show="localBooks.length > 0" x-transition>
-        <!-- 已下书籍桌面端 -->
+        <!-- 已下书籍 桌面端 -->
         <div class="hidden md:block overflow-x-auto rounded-lg border border-gray-200">
           <table class="w-full text-sm">
             <thead class="bg-gray-100">
@@ -302,11 +288,11 @@
                 <td class="px-3 py-2">
                   <div class="flex items-center gap-2">
                     <button @click="handleDownloadFileToLocal(item.name)"
-                            class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                            class="px-4 py-1.5 text-xs border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
                       下载
                     </button>
                     <button @click="handleDeleteBook(item.name)"
-                            class="px-4 py-1.5 text-xs border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                            class="px-4 py-1.5 text-xs border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
                       删除
                     </button>
                   </div>
@@ -317,7 +303,7 @@
           </table>
         </div>
 
-        <!-- 已下书籍移动端 -->
+        <!-- 已下书籍 移动端 -->
         <div class="md:hidden space-y-4">
           <template :key="'lm-' + item.name" x-for="item in localBooks">
             <div class="border border-gray-200 rounded-lg p-3 shadow-sm bg-white">
@@ -337,11 +323,11 @@
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
                 <div class="flex items-center gap-2">
                   <button @click="handleDownloadFileToLocal(item.name)"
-                          class="px-4 py-1.5 text-xs border border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
+                          class="px-4 py-1.5 text-xs border-gray-200 rounded-md bg-gray-100 text-primary hover:bg-gray-200 transition-colors">
                     下载
                   </button>
                   <button @click="handleDeleteBook(item.name)"
-                          class="px-4 py-1.5 text-xs border border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                          class="px-4 py-1.5 text-xs border-red-200 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
                     删除
                   </button>
                 </div>
@@ -493,7 +479,7 @@
         return ext.toUpperCase()
       },
       get pageSize() {
-        const v = parseInt(this.settings.searchLimit)
+        const v = Number.parseInt(this.settings.searchLimit)
         return v > 0 ? v : 20
       },
       get paginatedBooks() {
@@ -523,7 +509,7 @@
 
       changePage(page) {
         this.closeDownloadMenu()
-        if (page === 'prev') this.currentPage--; else if (page === 'next') this.currentPage++; else this.currentPage = parseInt(page)
+        if (page === 'prev') this.currentPage--; else if (page === 'next') this.currentPage++; else this.currentPage = Number.parseInt(page)
         this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages))
         const el = document.getElementById('downloadContainer')
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -743,7 +729,7 @@
       },
 
       validateAndSaveSettings(field) {
-        let val = parseInt(this.settings[field])
+        let val = Number.parseInt(this.settings[field])
         if (field === 'searchLimit') {
           if (val > this.searchLimitMax) this.settings.searchLimit = this.searchLimitMax
           if (val < 10 && this.settings.searchLimit !== '') this.settings.searchLimit = 10
