@@ -1,5 +1,6 @@
 package com.pcdd.sonovel.handle;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.model.SearchResult;
@@ -15,21 +16,27 @@ import java.util.*;
 public class SearchResultsHandler {
 
     /**
-     * 优化源站搜索结果（过滤低相似度并排序）
+     * 优化源站搜索结果（过滤低相似度结果、按相似度降序）
      */
     public List<SearchResult> filterAndSort(List<SearchResult> list, String kw) {
-        double bookNameScore = getSimilarity(list, kw, "bookName");
-        double authorScore = getSimilarity(list, kw, "author");
-        boolean isAuthorSearch = bookNameScore < authorScore;
+        if (CollUtil.isEmpty(list)) return list;
 
-        // 缓存相似度
-        Map<SearchResult, Double> similarityMap = new HashMap<>();
+        // 预计算书名和作者相似度
+        Map<SearchResult, Double> bookSim = new HashMap<>();
+        Map<SearchResult, Double> authorSim = new HashMap<>();
         for (SearchResult sr : list) {
-            double score = StrUtil.similar(kw, isAuthorSearch ? sr.getAuthor() : sr.getBookName());
-            similarityMap.put(sr, score);
+            bookSim.put(sr, StrUtil.similar(kw, sr.getBookName()));
+            authorSim.put(sr, StrUtil.similar(kw, sr.getAuthor()));
         }
 
-        // 排序器统一封装，复用
+        boolean isAuthorSearch = computeWeight(bookSim, kw) < computeWeight(authorSim, kw);
+
+        // 根据匹配类型选取最终相似度
+        Map<SearchResult, Double> similarityMap = new HashMap<>();
+        for (SearchResult sr : list) {
+            similarityMap.put(sr, isAuthorSearch ? authorSim.get(sr) : bookSim.get(sr));
+        }
+
         Comparator<SearchResult> comparator = (o1, o2) -> {
             double score1 = similarityMap.get(o1);
             double score2 = similarityMap.get(o2);
@@ -43,9 +50,8 @@ public class SearchResultsHandler {
 
         List<SearchResult> filtered = Collections.emptyList();
         if (AppConfigLoader.APP_CONFIG.getSearchFilter() == 1) {
-            // 过滤低相似度搜索结果
             filtered = list.stream()
-                    .filter(sr -> similarityMap.get(sr) > 0.3)
+                    .filter(sr -> similarityMap.get(sr) > 0.3) // 过滤低相似度搜索结果
                     .sorted(comparator)
                     .toList();
         }
@@ -56,41 +62,38 @@ public class SearchResultsHandler {
                 : filtered;
     }
 
-
     /**
      * 计算权重，用于判断关键字是书名还是作者
      */
-    private double getSimilarity(List<SearchResult> data, String kw, String type) {
-        boolean isShortQuery = kw.length() <= 4; // 关键词很短，可能是作者
-        boolean isLongQuery = kw.length() >= 10; // 关键词很长，可能是书名
+    private double computeWeight(Map<SearchResult, Double> simMap, String kw) {
+        boolean isShortQuery = kw.length() <= 4;
+        boolean isLongQuery = kw.length() >= 10;
 
-        return data.stream().mapToDouble(sr -> {
-            double similar = StrUtil.similar(kw, "bookName".equals(type) ? sr.getBookName() : sr.getAuthor());
+        return simMap.values()
+                .stream()
+                .mapToDouble(s -> weight(s, isShortQuery, isLongQuery))
+                .sum();
+    }
 
-            // 短关键词匹配更严格
-            if (isShortQuery) {
-                if (similar == 1.0) return 12; // 强调完全匹配
-                if (similar >= 0.8) return Math.pow(similar, 3) * 8;
-                if (similar >= 0.7) return similar * 5;
-                return 0; // 低匹配直接归零，避免误判
-            }
-
-            // 长关键词匹配更宽松
-            if (isLongQuery) {
-                if (similar == 1.0) return 10;
-                if (similar >= 0.85) return Math.pow(similar, 3) * 8;
-                if (similar >= 0.7) return Math.pow(similar, 2) * 5;
-                if (similar >= 0.5) return similar * 3;
-                return similar * 1.2;
-            }
-
-            // 普通匹配规则
-            if (similar == 1.0) return 10;
-            if (similar >= 0.85) return Math.pow(similar, 3) * 8;
-            if (similar >= 0.7) return Math.pow(similar, 2) * 5;
-            if (similar >= 0.5) return similar * 3;
-            return 0; // 默认情况，低匹配归零
-        }).sum();
+    private double weight(double s, boolean isShort, boolean isLong) {
+        if (isShort) {
+            if (s == 1.0) return 12;
+            if (s >= 0.8) return s * s * s * 8;
+            if (s >= 0.7) return s * 5;
+            return 0;
+        }
+        if (isLong) {
+            if (s == 1.0) return 10;
+            if (s >= 0.85) return s * s * s * 8;
+            if (s >= 0.7) return s * s * 5;
+            if (s >= 0.5) return s * 3;
+            return s * 1.2;
+        }
+        if (s == 1.0) return 10;
+        if (s >= 0.85) return s * s * s * 8;
+        if (s >= 0.7) return s * s * 5;
+        if (s >= 0.5) return s * 3;
+        return 0;
     }
 
 }
