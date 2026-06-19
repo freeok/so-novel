@@ -82,9 +82,7 @@ public class SingleSearchAction {
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(),
                 NumberUtil.round(stopWatch.getTotalTimeSeconds(), 2));
 
-        return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
-                ? SearchResultsHandler.filterSort(searchResults, keyword)
-                : searchResults;
+        return SearchResultsHandler.filterAndSort(searchResults, keyword);
     }
 
     @SneakyThrows

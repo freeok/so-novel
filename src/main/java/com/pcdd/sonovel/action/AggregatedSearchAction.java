@@ -2,7 +2,6 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
-import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.Rule;
@@ -77,9 +76,7 @@ public class AggregatedSearchAction {
             }
 
             latch.await();
-            return AppConfigLoader.APP_CONFIG.getSearchFilter() == 1
-                    ? SearchResultsHandler.filterSort(results, kw)
-                    : results;
+            return SearchResultsHandler.filterAndSort(results, kw);
         }
     }
 

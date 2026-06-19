@@ -1,13 +1,11 @@
 package com.pcdd.sonovel.handle;
 
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.model.SearchResult;
 import lombok.experimental.UtilityClass;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author pcdd
@@ -19,7 +17,7 @@ public class SearchResultsHandler {
     /**
      * 优化源站搜索结果（过滤低相似度并排序）
      */
-    public List<SearchResult> filterSort(List<SearchResult> list, String kw) {
+    public List<SearchResult> filterAndSort(List<SearchResult> list, String kw) {
         double bookNameScore = getSimilarity(list, kw, "bookName");
         double authorScore = getSimilarity(list, kw, "author");
         boolean isAuthorSearch = bookNameScore < authorScore;
@@ -43,11 +41,14 @@ public class SearchResultsHandler {
                     : o1.getAuthor().compareTo(o2.getAuthor());
         };
 
-        // 过滤低相似度搜索结果
-        List<SearchResult> filtered = list.stream()
-                .filter(sr -> similarityMap.get(sr) > 0.3)
-                .sorted(comparator)
-                .toList();
+        List<SearchResult> filtered = Collections.emptyList();
+        if (AppConfigLoader.APP_CONFIG.getSearchFilter() == 1) {
+            // 过滤低相似度搜索结果
+            filtered = list.stream()
+                    .filter(sr -> similarityMap.get(sr) > 0.3)
+                    .sorted(comparator)
+                    .toList();
+        }
 
         // 若过滤后为空，则返回仅排序的搜索结果
         return filtered.isEmpty()
