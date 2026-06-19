@@ -11,7 +11,6 @@ import com.pcdd.sonovel.util.LangUtil;
 import lombok.experimental.UtilityClass;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -29,6 +28,7 @@ public class AppConfigLoader {
     private final String SELECTION_COOKIE = "cookie";
     private final String SELECTION_PROXY = "proxy";
     public final AppConfig APP_CONFIG = loadConfig();
+    private static volatile Setting cachedSetting;
 
     /**
      * 加载应用属性
@@ -38,74 +38,77 @@ public class AppConfigLoader {
     }
 
     /**
-     * 加载用户属性
+     * 加载用户属性，缓存 Setting 避免重复 I/O
      */
     public Setting usr() {
+        Setting s = cachedSetting;
+        if (s != null) return s;
+
         // 从虚拟机选项 -Dconfig.file 获取用户配置文件路径
         String configFilePath = System.getProperty("config.file");
 
         // 若未指定或指定路径不存在，则从默认位置获取
-        if (!FileUtil.exist(configFilePath)) {
+        if (StrUtil.isBlank(configFilePath) || !FileUtil.exist(configFilePath)) {
             // 用户配置文件默认路径
             String defaultPath = resolveConfigFileName();
             // 若默认路径也不存在，则抛出 FileNotFoundException
-            return new Setting(defaultPath);
+            cachedSetting = new Setting(defaultPath);
+            return cachedSetting;
         }
 
-        Path absolutePath = Paths.get(configFilePath).toAbsolutePath();
-
-        return new Setting(absolutePath.toString());
+        cachedSetting = new Setting(Paths.get(configFilePath).toAbsolutePath().toString());
+        return cachedSetting;
     }
 
     public AppConfig loadConfig() {
         AppConfig cfg = new AppConfig();
         cfg.setVersion(sys().getStr("version"));
-        Setting usr = usr();
+        Setting setting = usr();
 
         // [global]
-        cfg.setAutoUpdate(usr.getInt("auto-update", SELECTION_GLOBAL, 0));
-        cfg.setGhProxy(usr.getStr("gh-proxy", SELECTION_GLOBAL, ""));
-        cfg.setCfBypass(usr.getStr("cf-bypass", SELECTION_GLOBAL, null));
+        cfg.setAutoUpdate(setting.getInt("auto-update", SELECTION_GLOBAL, 0));
+        cfg.setGhProxy(setting.getStr("gh-proxy", SELECTION_GLOBAL, ""));
+        cfg.setCfBypass(setting.getStr("cf-bypass", SELECTION_GLOBAL, null));
 
         // [download]
-        cfg.setDownloadPath(getStrOrDefault(usr, "download-path", SELECTION_DOWNLOAD, "downloads"));
-        cfg.setExtName(getStrOrDefault(usr, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
-        cfg.setTxtEncoding(getStrOrDefault(usr, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
-        cfg.setPreserveChapterCache(usr.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
-        cfg.setEnableProgressbar(usr.getInt("enable-progressbar", SELECTION_DOWNLOAD, 1));
+        cfg.setDownloadPath(getStrOrDefault(setting, "download-path", SELECTION_DOWNLOAD, "downloads"));
+        cfg.setExtName(getStrOrDefault(setting, "extname", SELECTION_DOWNLOAD, "epub").toLowerCase());
+        cfg.setTxtEncoding(getStrOrDefault(setting, "txt-encoding", SELECTION_DOWNLOAD, "UTF-8"));
+        cfg.setPreserveChapterCache(setting.getInt("preserve-chapter-cache", SELECTION_DOWNLOAD, 0));
+        cfg.setEnableProgressbar(setting.getInt("enable-progressbar", SELECTION_DOWNLOAD, 1));
 
         // [source]
-        cfg.setLanguage(getStrOrDefault(usr, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
-        cfg.setActiveRules(getStrOrDefault(usr, "active-rules", SELECTION_SOURCE, "main.json"));
-        cfg.setSourceId(usr.getInt("source-id", SELECTION_SOURCE, -1));
-        cfg.setSearchLimit(usr.getInt("search-limit", SELECTION_SOURCE, -1));
-        cfg.setSearchFilter(usr.getInt("search-filter", SELECTION_SOURCE, 1));
+        cfg.setLanguage(getStrOrDefault(setting, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
+        cfg.setActiveRules(getStrOrDefault(setting, "active-rules", SELECTION_SOURCE, "main.json"));
+        cfg.setSourceId(setting.getInt("source-id", SELECTION_SOURCE, -1));
+        cfg.setSearchLimit(setting.getInt("search-limit", SELECTION_SOURCE, -1));
+        cfg.setSearchFilter(setting.getInt("search-filter", SELECTION_SOURCE, 1));
 
         // [crawl]
-        cfg.setConcurrency(usr.getInt("concurrency", SELECTION_CRAWL, -1));
-        cfg.setMinInterval(usr.getInt("min-interval", SELECTION_CRAWL, 200));
-        cfg.setMaxInterval(usr.getInt("max-interval", SELECTION_CRAWL, 400));
-        cfg.setEnableRetry(usr.getInt("enable-retry", SELECTION_CRAWL, 1));
-        cfg.setMaxRetries(usr.getInt("max-retries", SELECTION_CRAWL, 5));
-        cfg.setRetryMinInterval(usr.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
-        cfg.setRetryMaxInterval(usr.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
+        cfg.setConcurrency(setting.getInt("concurrency", SELECTION_CRAWL, -1));
+        cfg.setMinInterval(setting.getInt("min-interval", SELECTION_CRAWL, 200));
+        cfg.setMaxInterval(setting.getInt("max-interval", SELECTION_CRAWL, 400));
+        cfg.setEnableRetry(setting.getInt("enable-retry", SELECTION_CRAWL, 1));
+        cfg.setMaxRetries(setting.getInt("max-retries", SELECTION_CRAWL, 5));
+        cfg.setRetryMinInterval(setting.getInt("retry-min-interval", SELECTION_CRAWL, 2000));
+        cfg.setRetryMaxInterval(setting.getInt("retry-max-interval", SELECTION_CRAWL, 4000));
 
         // [web]
         String mode = System.getProperty("mode", "tui");
         if ("web".equalsIgnoreCase(mode)) {
             cfg.setWebEnabled(1);
         } else {
-            cfg.setWebEnabled(usr.getInt("enabled", SELECTION_WEB, 0));
+            cfg.setWebEnabled(setting.getInt("enabled", SELECTION_WEB, 0));
         }
-        cfg.setWebPort(usr.getInt("port", SELECTION_WEB, 7765));
+        cfg.setWebPort(setting.getInt("port", SELECTION_WEB, 7765));
 
         // [cookie]
-        cfg.setQidianCookie(usr.getStr("qidian", SELECTION_COOKIE, ""));
+        cfg.setQidianCookie(setting.getStr("qidian", SELECTION_COOKIE, ""));
 
         // [proxy]
-        cfg.setProxyEnabled(usr.getInt("enabled", SELECTION_PROXY, 0));
-        cfg.setProxyHost(getStrOrDefault(usr, "host", SELECTION_PROXY, "127.0.0.1"));
-        cfg.setProxyPort(usr.getInt("port", SELECTION_PROXY, 7890));
+        cfg.setProxyEnabled(setting.getInt("enabled", SELECTION_PROXY, 0));
+        cfg.setProxyHost(getStrOrDefault(setting, "host", SELECTION_PROXY, "127.0.0.1"));
+        cfg.setProxyPort(setting.getInt("port", SELECTION_PROXY, 7890));
 
         return cfg;
     }
