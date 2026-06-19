@@ -9,8 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author pcdd
@@ -19,14 +19,28 @@ import java.util.Objects;
 @UtilityClass
 public class FileUtils {
 
-    // 文件排序，按文件名升序
+    /**
+     * 文件排序，按文件名中下划线前的数字升序
+     */
     public List<File> sortFilesByName(File dir) {
-        return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+        File[] files = dir.listFiles();
+        if (files == null) return Collections.emptyList();
+
+        return Arrays.stream(files)
                 .sorted((o1, o2) -> {
-                    int no1 = Integer.parseInt(StrUtil.subBefore(o1.getName(), "_", false));
-                    int no2 = Integer.parseInt(StrUtil.subBefore(o2.getName(), "_", false));
-                    return no1 - no2;
+                    int no1 = extractOrder(o1.getName());
+                    int no2 = extractOrder(o2.getName());
+                    return Integer.compare(no1, no2);
                 }).toList();
+    }
+
+    private int extractOrder(String name) {
+        try {
+            String prefix = StrUtil.subBefore(name, "_", false);
+            return Integer.parseInt(prefix);
+        } catch (Exception e) { // Integer.parseInt 失败时返回 Integer.MAX_VALUE，将无法解析的文件名排到末尾
+            return Integer.MAX_VALUE;
+        }
     }
 
     /**
