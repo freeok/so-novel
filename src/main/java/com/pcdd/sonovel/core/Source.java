@@ -27,29 +27,17 @@ public class Source {
         this.rule = rule;
         // 使用配置文件中的配置，若为空则使用默认配置
         this.config = Opt.ofNullable(config).orElse(AppConfigLoader.APP_CONFIG);
+        applyCrawlSettings(rule.getCrawl());
+    }
 
-        // 规则爬取配置覆盖默认配置
-        Rule.Crawl crawl = rule.getCrawl();
-        if (crawl != null) {
-            if (crawl.getConcurrency() != null) {
-                this.config.setConcurrency(crawl.getConcurrency());
-            }
-            if (crawl.getMinInterval() != null) {
-                this.config.setMinInterval(crawl.getMinInterval());
-            }
-            if (crawl.getMaxInterval() != null) {
-                this.config.setMaxInterval(crawl.getMaxInterval());
-            }
-            if (crawl.getMaxAttempts() != null) {
-                this.config.setMaxRetries(crawl.getMaxAttempts());
-            }
-            if (crawl.getRetryMinInterval() != null) {
-                this.config.setRetryMinInterval(crawl.getRetryMinInterval());
-            }
-            if (crawl.getRetryMaxInterval() != null) {
-                this.config.setRetryMaxInterval(crawl.getRetryMaxInterval());
-            }
-        }
+    private void applyCrawlSettings(Rule.Crawl crawl) {
+        if (crawl == null) return;
+        Opt.ofNullable(crawl.getConcurrency()).ifPresent(this.config::setConcurrency);
+        Opt.ofNullable(crawl.getMinInterval()).ifPresent(this.config::setMinInterval);
+        Opt.ofNullable(crawl.getMaxInterval()).ifPresent(this.config::setMaxInterval);
+        Opt.ofNullable(crawl.getMaxAttempts()).ifPresent(this.config::setMaxRetries);
+        Opt.ofNullable(crawl.getRetryMinInterval()).ifPresent(this.config::setRetryMinInterval);
+        Opt.ofNullable(crawl.getRetryMaxInterval()).ifPresent(this.config::setRetryMaxInterval);
     }
 
 }
