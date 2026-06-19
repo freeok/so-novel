@@ -69,10 +69,10 @@ public class CoverUpdater {
                 String url = future.get();
                 if (isValidCover(url)) {
                     byte[] bytes = HttpDownloader.downloadBytes(url, TIMEOUT);
-                    InputStream imageStream = new ByteArrayInputStream(bytes);
-                    BufferedImage img = ImgUtil.read(imageStream);
-                    map.put(url, img.getWidth() * img.getHeight());
-                    imageStream.close();
+                    try (InputStream imageStream = new ByteArrayInputStream(bytes)) {
+                        BufferedImage img = ImgUtil.read(imageStream);
+                        map.put(url, img.getWidth() * img.getHeight());
+                    }
                 }
             }
 
