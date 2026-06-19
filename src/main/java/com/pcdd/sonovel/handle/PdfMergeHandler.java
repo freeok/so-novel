@@ -102,47 +102,45 @@ public class PdfMergeHandler implements PostProcessingHandler {
                 config.getDownloadPath() + File.separator,
                 book.getBookName(),
                 book.getAuthor());
-        OutputStream out = new FileOutputStream(outputPath);
 
-        // 使用 openhtmltopdf 合并 HTML 文件并生成 PDF
-        new PdfRendererBuilder()
-                .useFastMode()
-                .useFont(getFontFile(), "SoNovel")
-                // 10.3 寸屏幕
-                .useDefaultPageSize(7.36f, 9.76f, PdfRendererBuilder.PageSizeUnits.INCHES)
-                .withHtmlContent("""
-                        <html>
-                        <head>
-                          <style>
-                            body {
-                              font-family: 'SoNovel', sans-serif;
-                            }
-                            p {
-                               font-size: 18px;
-                               text-indent: 2em;
-                               line-height: 1.6;
-                             }
-                            /* 关键：每个.chapter 类的 div 都从新页开始 */
-                            .chapter {
-                              page-break-before: always;
-                              break-before: page;
-                            }
-                            /* 避免首章空白页 */
-                            .chapter:first-child {
-                              page-break-before: avoid;
-                              break-before: auto;
-                            }
-                          </style>
-                        </head>
-                        <body>
-                        %s
-                        </body>
-                        </html>
-                        """.formatted(htmlContent), null)
-                .toStream(out)
-                .run();
-        out.close();
+        try (OutputStream out = new FileOutputStream(outputPath)) {
+            // 使用 openhtmltopdf 合并 HTML 文件并生成 PDF
+            new PdfRendererBuilder()
+                    .useFont(getFontFile(), "SoNovel")
+                    // 10.3 寸屏幕
+                    .useDefaultPageSize(7.36f, 9.76f, PdfRendererBuilder.PageSizeUnits.INCHES)
+                    .withHtmlContent("""
+                            <html>
+                            <head>
+                              <style>
+                                body {
+                                  font-family: 'SoNovel', sans-serif;
+                                }
+                                p {
+                                   font-size: 18px;
+                                   text-indent: 2em;
+                                   line-height: 1.6;
+                                 }
+                                /* 关键：每个.chapter 类的 div 都从新页开始 */
+                                .chapter {
+                                  page-break-before: always;
+                                  break-before: page;
+                                }
+                                /* 避免首章空白页 */
+                                .chapter:first-child {
+                                  page-break-before: avoid;
+                                  break-before: auto;
+                                }
+                              </style>
+                            </head>
+                            <body>
+                            %s
+                            </body>
+                            </html>
+                            """.formatted(htmlContent), null)
+                    .toStream(out)
+                    .run();
+        }
     }
-
 
 }
