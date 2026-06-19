@@ -32,7 +32,13 @@ public class BookDownloadServlet extends HttpServlet {
 
     @SneakyThrows
     private void downloadFileToLocal(HttpServletResponse resp, String filename) {
-        File file = new File(AppConfigLoader.APP_CONFIG.getDownloadPath(), filename);
+        File file = new File(AppConfigLoader.APP_CONFIG.getDownloadPath(), filename).getCanonicalFile();
+        String baseDir = new File(AppConfigLoader.APP_CONFIG.getDownloadPath()).getCanonicalPath();
+
+        if (!file.getPath().startsWith(baseDir + File.separator)) {
+            RespUtils.writeError(resp, 403, "非法路径");
+            return;
+        }
 
         if (!file.exists()) {
             RespUtils.writeError(resp, 404, "文件不存在");
