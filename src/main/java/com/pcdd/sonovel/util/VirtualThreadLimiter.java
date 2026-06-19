@@ -1,11 +1,6 @@
 package com.pcdd.sonovel.util;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.*;
 
 /**
  * 使用 Semaphore 控制虚拟线程并发量的工具类
@@ -17,7 +12,7 @@ public class VirtualThreadLimiter implements AutoCloseable {
 
     private final Semaphore semaphore;
     private final ExecutorService executor;
-    private final AtomicInteger taskCount = new AtomicInteger(0);
+    private final Phaser phaser = new Phaser(1);
 
     public VirtualThreadLimiter(int maxConcurrent) {
         this.semaphore = new Semaphore(maxConcurrent);
@@ -30,7 +25,7 @@ public class VirtualThreadLimiter implements AutoCloseable {
      * @param task 待执行的任务
      */
     public void submit(Runnable task) {
-        taskCount.incrementAndGet();
+        phaser.register();
 
         executor.submit(() -> {
             try {
@@ -40,7 +35,7 @@ public class VirtualThreadLimiter implements AutoCloseable {
                 Thread.currentThread().interrupt();
             } finally {
                 semaphore.release();
-                taskCount.decrementAndGet();
+                phaser.arriveAndDeregister();
             }
         });
     }
@@ -50,10 +45,7 @@ public class VirtualThreadLimiter implements AutoCloseable {
      */
     @Override
     public void close() {
-        // 等待所有任务执行完成
-        while (taskCount.get() > 0) {
-            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(50));
-        }
+        phaser.arriveAndAwaitAdvance();
 
         executor.shutdown();
 
