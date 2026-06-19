@@ -83,13 +83,13 @@ public class SourceUtils {
         Rule.Chapter ruleChapter = rule.getChapter();
 
         // language
-        if (StrUtil.isEmpty(rule.getLanguage())) rule.setLanguage(LangUtil.getCurrentLang());
+        if (StrUtil.isBlank(rule.getLanguage())) rule.setLanguage(LangUtil.getCurrentLang());
 
         // baseUri
-        if (ruleSearch != null && StrUtil.isEmpty(ruleSearch.getBaseUri())) ruleSearch.setBaseUri(rule.getUrl());
-        if (ruleBook != null && StrUtil.isEmpty(ruleBook.getBaseUri())) ruleBook.setBaseUri(rule.getUrl());
-        if (ruleToc != null && StrUtil.isEmpty(ruleToc.getBaseUri())) ruleToc.setBaseUri(rule.getUrl());
-        if (ruleChapter != null && StrUtil.isEmpty(ruleChapter.getBaseUri())) ruleChapter.setBaseUri(rule.getUrl());
+        if (ruleSearch != null && StrUtil.isBlank(ruleSearch.getBaseUri())) ruleSearch.setBaseUri(rule.getUrl());
+        if (ruleBook != null && StrUtil.isBlank(ruleBook.getBaseUri())) ruleBook.setBaseUri(rule.getUrl());
+        if (ruleToc != null && StrUtil.isBlank(ruleToc.getBaseUri())) ruleToc.setBaseUri(rule.getUrl());
+        if (ruleChapter != null && StrUtil.isBlank(ruleChapter.getBaseUri())) ruleChapter.setBaseUri(rule.getUrl());
 
         // timeout
         if (ruleSearch != null && ruleSearch.getTimeout() == null) ruleSearch.setTimeout(15);

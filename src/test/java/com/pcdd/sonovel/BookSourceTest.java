@@ -239,10 +239,10 @@ class BookSourceTest {
                     Console.log("✅ {}", res.getTitle());
                 } else {
                     StringBuilder errMsg = new StringBuilder("❌ %s %s ".formatted(res.getTitle(), res.getUrl()));
-                    if (StrUtil.isEmpty(res.getTitle())) {
+                    if (StrUtil.isBlank(res.getTitle())) {
                         errMsg.append("章节标题为空 ");
                     }
-                    if (StrUtil.isEmpty(res.getContent())) {
+                    if (StrUtil.isBlank(res.getContent())) {
                         errMsg.append("章节正文为空");
                     }
                     Console.log(errMsg);

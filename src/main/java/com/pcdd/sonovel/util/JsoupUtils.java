@@ -33,7 +33,7 @@ public class JsoupUtils {
      * 等价于 func(input)
      */
     public String invokeJs(String query, String input) {
-        if (StrUtil.isEmpty(query)) {
+        if (StrUtil.isBlank(query)) {
             return input;
         }
 
@@ -58,7 +58,7 @@ public class JsoupUtils {
     public String selectAndInvokeJs(Element el, String query, ContentType contentType) {
         if (el == null) return null;
 
-        if (StrUtil.isEmpty(query) || contentType == null) return null;
+        if (StrUtil.isBlank(query) || contentType == null) return null;
 
         String[] split = query.split(JS_SEPARATOR);
         String actualQuery = split[0];

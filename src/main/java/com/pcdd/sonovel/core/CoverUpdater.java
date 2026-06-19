@@ -94,7 +94,7 @@ public class CoverUpdater {
      * 起点中文网
      */
     public String fetchQidian(Book book) {
-        if (StrUtil.isEmpty(APP_CONFIG.getQidianCookie())) return "";
+        if (StrUtil.isBlank(APP_CONFIG.getQidianCookie())) return "";
         String url = StrUtil.format("https://www.qidian.com/so/{}.html", book.getBookName());
         try (HttpResponse resp = HttpRequest.get(url)
                 .headerMap(Map.of(

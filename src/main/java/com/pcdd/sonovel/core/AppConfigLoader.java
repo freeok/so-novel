@@ -116,7 +116,7 @@ public class AppConfigLoader {
     // 修复 hutool 空串不能触发默认值的 bug
     private String getStrOrDefault(Setting setting, String key, String group, String defaultValue) {
         String value = setting.getByGroup(key, group);
-        return StrUtil.isEmpty(value) ? defaultValue : value;
+        return StrUtil.isBlank(value) ? defaultValue : value;
     }
 
     private String resolveConfigFileName() {

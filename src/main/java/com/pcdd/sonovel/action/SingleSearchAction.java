@@ -60,7 +60,7 @@ public class SingleSearchAction {
     }
 
     public void downloadByKeyword(String keyword) {
-        if (StrUtil.isEmpty(keyword)) return;
+        if (StrUtil.isBlank(keyword)) return;
         List<SearchResult> searchResults = search(keyword);
         if (CollUtil.isEmpty(searchResults)) {
             return;

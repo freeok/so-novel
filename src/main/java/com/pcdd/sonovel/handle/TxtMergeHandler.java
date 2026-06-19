@@ -41,7 +41,7 @@ public class TxtMergeHandler implements PostProcessingHandler {
                 书名：%s
                 作者：%s
                 简介：%s
-                """.formatted(book.getBookName(), book.getAuthor(), StrUtil.isEmpty(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
+                """.formatted(book.getBookName(), book.getAuthor(), StrUtil.isBlank(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
         );
 
         for (File f : FileUtils.sortFilesByName(saveDir)) {

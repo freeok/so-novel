@@ -83,7 +83,7 @@ public class BookParser extends Source {
      * @param query Selector or XPath
      */
     private ContentType getContentType(String query) {
-        if (StrUtil.isEmpty(query)) return null;
+        if (StrUtil.isBlank(query)) return null;
         return query.startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.TEXT;
     }
 

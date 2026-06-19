@@ -111,7 +111,7 @@ public class TocParser extends Source {
             String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
                     .orElse(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_VALUE));
-            if (StrUtil.isEmpty(nextUrl) || !Validator.isUrl(nextUrl)) break;
+            if (StrUtil.isBlank(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
             try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout());
