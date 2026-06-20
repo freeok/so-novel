@@ -45,6 +45,7 @@ public class SourceUtils {
     public final String META_CATEGORY = "meta[property=\"og:novel:category\"]";
     public final String META_COVER_URL = "meta[property=\"og:image\"]";
     public final String META_LATEST_CHAPTER = "meta[property=\"og:novel:latest_chapter_name\"]";
+    public final String META_LATEST_CHAPTER_URL = "meta[property=\"og:novel:latest_chapter_url\"]";
     public final String META_LAST_UPDATE_TIME = "meta[property=\"og:novel:update_time\"]";
     public final String META_STATUS = "meta[property=\"og:novel:status\"]";
 
@@ -105,6 +106,7 @@ public class SourceUtils {
             String coverUrlQuery = StrUtil.emptyToDefault(ruleBook.getCoverUrl(), META_COVER_URL);
             String categoryQuery = StrUtil.emptyToDefault(ruleBook.getCategory(), META_CATEGORY);
             String latestChapterQuery = StrUtil.emptyToDefault(ruleBook.getLatestChapter(), META_LATEST_CHAPTER);
+            String latestChapterUrlQuery = StrUtil.emptyToDefault(ruleBook.getLatestChapterUrl(), META_LATEST_CHAPTER_URL);
             String lastUpdateTimeQuery = StrUtil.emptyToDefault(ruleBook.getLastUpdateTime(), META_LAST_UPDATE_TIME);
             String statusQuery = StrUtil.emptyToDefault(ruleBook.getStatus(), META_STATUS);
 
@@ -114,6 +116,7 @@ public class SourceUtils {
             ruleBook.setCoverUrl(coverUrlQuery);
             ruleBook.setCategory(categoryQuery);
             ruleBook.setLatestChapter(latestChapterQuery);
+            ruleBook.setLatestChapterUrl(latestChapterUrlQuery);
             ruleBook.setLastUpdateTime(lastUpdateTimeQuery);
             ruleBook.setStatus(statusQuery);
         }

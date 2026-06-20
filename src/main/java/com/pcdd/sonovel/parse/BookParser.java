@@ -59,6 +59,7 @@ public class BookParser extends Source {
         String defaultCoverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(), getContentType(r.getCoverUrl()));
         String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
         String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
+        String latestChapterUrl = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapterUrl(), getContentType(r.getLatestChapterUrl()));
         String lastUpdateTime = JsoupUtils.selectAndInvokeJs(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
         String status = JsoupUtils.selectAndInvokeJs(document, r.getStatus(), getContentType(r.getStatus()));
 
@@ -71,6 +72,7 @@ public class BookParser extends Source {
         book.setCoverUrl(this.rule.isNeedProxy() ? defaultCoverUrl : CoverUpdater.fetchCover(book, defaultCoverUrl));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
+        book.setLatestChapterUrl(latestChapterUrl);
         book.setLastUpdateTime(lastUpdateTime);
         book.setStatus(status);
 
@@ -84,6 +86,8 @@ public class BookParser extends Source {
      */
     private ContentType getContentType(String query) {
         if (StrUtil.isBlank(query)) return null;
+        if (query.contains("@href")) return ContentType.ATTR_HREF;
+        if (query.contains("@src")) return ContentType.ATTR_SRC;
         return query.startsWith("meta[") ? ContentType.ATTR_CONTENT : ContentType.TEXT;
     }
 

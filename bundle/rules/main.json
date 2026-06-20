@@ -14,6 +14,9 @@
       "lastUpdateTime": "td:nth-of-type(4)"
     },
     "book": {
+      "latestChapter": "#info > p:nth-child(5) > a",
+      "latestChapterUrl": "#info > p:nth-child(5) > a@href",
+      "lastUpdateTime": "#info > p:nth-child(4)"
     },
     "toc": {
       "item": "#list > dl > dd > a"
@@ -135,7 +138,8 @@
       "lastUpdateTime": "span.s5"
     },
     "book": {
-      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]"
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
+      "latestChapterUrl": "meta[property=\"og:novel:lastest_chapter_url\"]"
     },
     "toc": {
       "item": "div:nth-child(4) > ul > li > a",
@@ -206,6 +210,7 @@
       "category": "#count > span:nth-child(1)",
       "coverUrl": "#bookimg > a > img",
       "latestChapter": "#bookinfo > div.bookright > div.new > span.new_t > a",
+      "latestChapterUrl": "#bookinfo > div.bookright > div.new > span.new_t > a@href",
       "lastUpdateTime": "#bookinfo > div.bookright > div.new > span.new_p"
     },
     "toc": {
@@ -239,7 +244,9 @@
     "book": {
       "url": "http://www.yeudusk.com/book/(.*?)/",
       "intro": "#content > div.divbox.cf > div:nth-child(2) > div:nth-child(3) > div.tabcontent > div:nth-child(1) > div",
-      "latestChapter": "#content > div:nth-child(4) > h3"
+      "latestChapter": "#content > div:nth-child(4) > h3",
+      "latestChapterUrl": "#content > div:nth-child(4) > h3 > a@href",
+      "lastUpdateTime": "#content > div.divbox.cf > div:nth-child(2) > div:nth-child(3) > div.tabcontent > div:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(3)"
     },
     "toc": {
       "url": "http://www.yeudusk.com/html/0/%s/",
@@ -305,7 +312,9 @@
       "lastUpdateTime": "span.time"
     },
     "book": {
-      "url": "https://www.biquge365.net/book/(.*?)/"
+      "url": "https://www.biquge365.net/book/(.*?)/",
+      "latestChapterUrl": "body > div.menu > div.right > div:nth-child(1) > div > div.xinxi > span:nth-child(8) > a@href",
+      "lastUpdateTime": "body > div.menu > div.right > div:nth-child(1) > div > div.xinxi > span:nth-child(7)"
     },
     "toc": {
       "url": "https://www.biquge365.net/newbook/%s/",

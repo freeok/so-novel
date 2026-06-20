@@ -58,6 +58,7 @@ public class Rule {
         private String category;
         private String coverUrl;
         private String latestChapter;
+        private String latestChapterUrl;
         private String lastUpdateTime;
         private String status;
     }

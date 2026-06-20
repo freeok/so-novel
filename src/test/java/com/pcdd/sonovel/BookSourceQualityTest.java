@@ -75,7 +75,7 @@ class BookSourceQualityTest {
                 .newCall(new Request.Builder()
                         .url(rankUrl)
                         .addHeader(Header.USER_AGENT.getValue(), RandomUA.generate())
-                        .addHeader(Header.COOKIE.getValue(), "w_tsfp=<REDACTED>;")
+                        .addHeader(Header.COOKIE.getValue(), APP_CONFIG.getQidianCookie())
                         .build()
                 )
                 .execute()) {

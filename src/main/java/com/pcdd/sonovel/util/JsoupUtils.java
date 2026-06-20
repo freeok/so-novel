@@ -58,6 +58,8 @@ public class JsoupUtils {
     public String selectAndInvokeJs(Element el, String query, ContentType contentType) {
         if (el == null) return null;
 
+        query = stripAt(query);
+
         if (StrUtil.isBlank(query) || contentType == null) return null;
 
         String[] split = query.split(JS_SEPARATOR);
@@ -115,6 +117,19 @@ public class JsoupUtils {
         }
 
         return "";
+    }
+
+    /**
+     * 剥离 query 中的 @xx 部分，仅保留 CSS/XPath 选择器
+     */
+    private static String stripAt(String query) {
+        if (query.contains("@href")) {
+            return StrUtil.subBefore(query, "@href", false);
+        }
+        if (query.contains("@src")) {
+            return StrUtil.subBefore(query, "@src", false);
+        }
+        return query;
     }
 
     /**

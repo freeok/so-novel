@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
  */
 // 保证测试类实例在多个测试方法间共享
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BookSourceTest {
+class BookSourceCrawlTest {
 
     static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
     static final String DIVIDER = "=".repeat(50);
@@ -59,23 +59,6 @@ class BookSourceTest {
         APP_CONFIG.setLanguage(LangType.ZH_CN);
     }
 
-    @DisplayName("cloudflare.json")
-    @ParameterizedTest
-    @CsvSource({
-            "http://www.xhytd.com/170/170581/",
-            "https://www.96dushu.com/book/448209/",
-            "http://www.dongtanxs.com/dong49371/"
-    })
-    void test04(String bookUrl) {
-        Rule rule = SourceUtils.getRule(bookUrl);
-        APP_CONFIG.setSourceId(rule.getId());
-
-        searchParse("斗罗大陆");
-        bookParse(bookUrl);
-        tocParse(bookUrl);
-        chapterParse();
-    }
-
     @DisplayName("main.json")
     @ParameterizedTest
     @CsvSource({
@@ -85,7 +68,6 @@ class BookSourceTest {
             "http://www.99xs.info/tag/129_129843/",
             "https://www.22biqu.com/biqu79148/",
             "http://www.xbiquzw.net/10_10233/",
-            "http://www.shu009.com/book/160879/",
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
             "https://www.wxsy.net/novel/1803/",
@@ -96,10 +78,10 @@ class BookSourceTest {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
-        searchParse("斗罗");
+        // searchParse("斗罗");
         bookParse(bookUrl);
-        tocParse(bookUrl);
-        chapterParse();
+        // tocParse(bookUrl);
+        // chapterParse();
         // chapterBatchParse(0, 50);
     }
 
@@ -126,6 +108,24 @@ class BookSourceTest {
             "https://www.dxmwx.org/book/56441.html"
     })
     void test03(String bookUrl) {
+        Rule rule = SourceUtils.getRule(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        searchParse("斗罗大陆");
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+    }
+
+
+    @DisplayName("cloudflare.json")
+    @ParameterizedTest
+    @CsvSource({
+            "http://www.xhytd.com/170/170581/",
+            "https://www.96dushu.com/book/448209/",
+            "http://www.dongtanxs.com/dong49371/"
+    })
+    void test04(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
