@@ -17,15 +17,15 @@ public class LangUtil {
         String country = locale.getCountry();   // CN / TW
         String script = locale.getScript();     // Hant / Hans / 空
 
-        // zh_CN
+        // zh-CN
         if ("zh".equals(language) && "CN".equals(country)) {
             return LangType.ZH_CN;
         }
-        // zh_TW
+        // zh-TW
         if ("zh".equals(language) && "TW".equals(country)) {
             return LangType.ZH_TW;
         }
-        // zh_Hant
+        // zh-Hant
         if ("zh".equals(language) && "Hant".equalsIgnoreCase(script)) {
             return LangType.ZH_HANT;
         }

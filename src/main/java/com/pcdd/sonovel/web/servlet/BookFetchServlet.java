@@ -18,7 +18,7 @@ import java.util.Set;
 public class BookFetchServlet extends HttpServlet {
 
     private static final Set<String> ALLOWED_FORMATS = Set.of("epub", "txt", "html", "pdf");
-    private static final Set<String> ALLOWED_LANGUAGES = Set.of("zh_cn", "zh_tw", "zh_hant");
+    private static final Set<String> ALLOWED_LANGUAGES = Set.of("zh-cn", "zh-tw", "zh-hant");
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -30,12 +30,12 @@ public class BookFetchServlet extends HttpServlet {
             int id = SourceUtils.getRule(bookUrl).getId();
 
             if (StrUtil.isNotBlank(format) && !ALLOWED_FORMATS.contains(format.toLowerCase())) {
-                RespUtils.writeError(resp, 400, "不支持的下载格式: " + format + "，可选: epub, txt, html, pdf");
+                RespUtils.writeError(resp, 400, "不支持的下载格式: " + format + "，可选R: epub, txt, html, pdf");
                 return;
             }
 
             if (StrUtil.isNotBlank(language) && !ALLOWED_LANGUAGES.contains(language.toLowerCase())) {
-                RespUtils.writeError(resp, 400, "不支持的语言: " + language + "，可选: zh_CN, zh_TW, zh_Hant");
+                RespUtils.writeError(resp, 400, "不支持的语言: " + language + "，可选: zh-CN, zh-TW, zh-Hant");
                 return;
             }
 
