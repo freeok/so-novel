@@ -15,6 +15,7 @@ import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.repository.ClientReportRepository;
 import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.web.WebServer;
+import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine;
 
 import java.lang.management.ManagementFactory;
@@ -45,9 +46,11 @@ public class Main {
             // Console.log("ClassPath: " + mxBean.getClassPath());
             Console.log("-".repeat(100));
         }
-        // 关闭 hutool 日志
-        ConsoleLog.setLevel(Level.OFF);
         if (EnvUtils.isProd()) {
+            // 在 Windows 旧版 cmd 上启用 ANSI 转义码支持，避免彩色文字显示为乱码
+            AnsiConsole.systemInstall();
+            // 关闭 hutool 日志
+            ConsoleLog.setLevel(Level.OFF);
             // 关闭 openhtmltopdf 日志
             XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.OFF));
         }
