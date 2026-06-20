@@ -40,7 +40,7 @@ public class ChapterRenderer {
         return chapter;
     }
 
-    private String renderTxtFormat(String title, String htmlContent) {
+    public String renderTxtFormat(String title, String htmlContent) {
         StringBuilder sb = new StringBuilder();
         Matcher matcher = P_TAG_PATTERN.matcher(htmlContent);
         // 全角空格，用于首行缩进2字符
@@ -55,7 +55,7 @@ public class ChapterRenderer {
     /**
      * 根据扩展名渲染对应模板
      */
-    private String renderTemplateFormat(String title, String content, String ext) {
+    public String renderTemplateFormat(String title, String content, String ext) {
         Template template = TEMPLATE_ENGINE.getTemplate(StrUtil.format("chapter_{}.flt", ext));
         Map<String, String> map = new HashMap<>();
         map.put("title", title);

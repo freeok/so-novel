@@ -1,4 +1,4 @@
-package com.pcdd.sonovel;
+package com.pcdd.sonovel.lab;
 
 import org.junit.jupiter.api.Test;
 

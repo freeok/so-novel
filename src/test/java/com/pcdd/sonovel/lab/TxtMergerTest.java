@@ -1,4 +1,4 @@
-package com.pcdd.sonovel;
+package com.pcdd.sonovel.lab;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
@@ -27,9 +27,8 @@ import java.util.List;
 
 class TxtMergerTest {
 
-    // static File dir = FileUtil.file("e:/Temp/small_dir");
-    static File dir = FileUtil.file("d:/Temp/small_dir");
-    static File outputFile = FileUtil.file("e:/Temp/Merge.txt");
+    static File dir = FileUtil.file("d:/txt单章目录");
+    static File outputFile = FileUtil.file("d:/txt单章目录/merged.txt");
 
     @RepeatedTest(1)
     @DisplayName("首次执行速度最慢，73 s")

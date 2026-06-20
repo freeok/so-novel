@@ -1,12 +1,16 @@
-package com.pcdd.sonovel;
+package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
-import com.pcdd.sonovel.action.AggregatedSearchAction;
+import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.AppConfigLoader;
+import com.pcdd.sonovel.core.OkHttpClientFactory;
+import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
+import com.pcdd.sonovel.util.LangType;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
@@ -20,14 +24,16 @@ import java.util.List;
  */
 class AggregatedSearchTest {
 
+    static final AppConfig APP_CONFIG = AppConfigLoader.APP_CONFIG;
+
     static {
-        ConsoleLog.setLevel(Level.OFF);
+        HttpClientContext.set(OkHttpClientFactory.create(APP_CONFIG));
     }
 
     @SneakyThrows
     @Test
     void test01() {
-        String kw = "玄鉴仙族";
+        String kw = "斗罗大陆";
         List<SearchResult> results = AggregatedSearchAction.getSearchResults(kw);
         SearchParser.printAggregateSearchResult(results);
         testTextSimilarity(results, kw);
