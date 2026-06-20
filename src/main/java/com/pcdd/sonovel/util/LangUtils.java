@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Locale;
 
 @UtilityClass
-public class LangUtil {
+public class LangUtils {
 
     /**
      * 获取当前系统语言

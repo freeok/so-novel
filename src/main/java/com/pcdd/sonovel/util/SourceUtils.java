@@ -83,7 +83,7 @@ public class SourceUtils {
         Rule.Chapter ruleChapter = rule.getChapter();
 
         // language
-        if (StrUtil.isBlank(rule.getLanguage())) rule.setLanguage(LangUtil.getCurrentLang());
+        if (StrUtil.isBlank(rule.getLanguage())) rule.setLanguage(LangUtils.getCurrentLang());
 
         // baseUri
         if (ruleSearch != null && StrUtil.isBlank(ruleSearch.getBaseUri())) ruleSearch.setBaseUri(rule.getUrl());

@@ -7,7 +7,7 @@ import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.util.EnvUtils;
 import com.pcdd.sonovel.util.FileUtils;
-import com.pcdd.sonovel.util.LangUtil;
+import com.pcdd.sonovel.util.LangUtils;
 import lombok.experimental.UtilityClass;
 
 import java.nio.charset.StandardCharsets;
@@ -78,7 +78,7 @@ public class AppConfigLoader {
         cfg.setEnableProgressbar(setting.getInt("enable-progressbar", SELECTION_DOWNLOAD, 1));
 
         // [source]
-        cfg.setLanguage(getStrOrDefault(setting, "language", SELECTION_SOURCE, LangUtil.getCurrentLang()));
+        cfg.setLanguage(getStrOrDefault(setting, "language", SELECTION_SOURCE, LangUtils.getCurrentLang()));
         cfg.setActiveRules(getStrOrDefault(setting, "active-rules", SELECTION_SOURCE, "main.json"));
         cfg.setSourceId(setting.getInt("source-id", SELECTION_SOURCE, -1));
         cfg.setSearchLimit(setting.getInt("search-limit", SELECTION_SOURCE, -1));
