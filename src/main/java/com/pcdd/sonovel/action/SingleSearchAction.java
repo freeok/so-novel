@@ -6,7 +6,6 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -15,7 +14,6 @@ import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.BookParser;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.JsoupUtils;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
@@ -74,9 +72,7 @@ public class SingleSearchAction {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        List<SearchResult> searchResults = "proxy-required.json".equals(config.getActiveRules()) && config.getSourceId() == 2
-                ? new SearchParserQuanben5(config).parse(keyword)
-                : new SearchParser(config).parse(keyword);
+        List<SearchResult> searchResults = new SearchParser(config).parse(keyword);
 
         stopWatch.stop();
         Console.log("<== 搜索到 {} 条记录，耗时 {} s", searchResults.size(),

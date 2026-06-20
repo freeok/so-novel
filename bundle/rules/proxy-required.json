@@ -45,9 +45,9 @@
     "comment": "完本很全，搜索限流，搜索需逆向加密参数b",
     "needProxy": true,
     "search": {
-      "url": "https://quanben5.com/?c=book&a=search.json&callback=search&keywords=%s&b=%s",
+      "url": "@js:var s=\"PXhw7UT1B0a9kQDKZsjIASmOezxYG4CHo5Jyfg2b8FLpEvRr3WtVnlqMidu6cN\";var kw=encodeURI(r);var e=\"\";for(var i=0;i<kw.length;i++){var n=s.indexOf(kw[i]);var c=n==-1?kw[i]:s[(n+3)%62];var n1=parseInt(Math.random()*62,10);var n2=parseInt(Math.random()*62,10);e+=s[n1]+c+s[n2];}return 'https://quanben5.com/?c=book&a=search.json&callback=search&keywords='+r+'&b='+encodeURI(e);",
       "method": "get",
-      "result": ".pic_txt_list",
+      "result": ".pic_txt_list@js:var m=r.match(/search\\((.+)\\)/);if(!m)return r;var o=JSON.parse(m[1]);return o.content.replace(/\\r/g,'').replace(/\\n/g,'').replace(/\\t/g,'');",
       "bookName": "h3 > a",
       "author": "p.info > span"
     },

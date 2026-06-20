@@ -7,7 +7,6 @@ import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.SourceUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -59,9 +58,7 @@ public class AggregatedSearchAction {
             for (Source source : searchableSources) {
                 executor.execute(() -> {
                     try {
-                        List<SearchResult> res = "proxy-required.json".equals(source.config.getActiveRules()) && source.config.getSourceId() == 2
-                                ? new SearchParserQuanben5(source.config).parse(kw)
-                                : new SearchParser(source.config).parse(kw);
+                        List<SearchResult> res = new SearchParser(source.config).parse(kw);
                         if (CollUtil.isNotEmpty(res)) {
                             Rule rule = source.rule;
                             Console.log("<== 书源 {} ({})\t搜索到 {} 条记录", rule.getId(), rule.getName(), res.size());

@@ -9,6 +9,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.Source;
@@ -19,6 +20,7 @@ import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
+import com.pcdd.sonovel.util.JsCaller;
 import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -29,6 +31,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URI;
 import java.util.*;
 
 import static org.fusesource.jansi.AnsiRenderer.render;
@@ -62,8 +65,10 @@ public class SearchParser extends Source {
         Response resp;
         Document document;
         try {
-            String searchUrl = r.getUrl().formatted(keyword);
+            String searchUrl = processUrl(r.getUrl(), keyword);
+            String referer = URI.create(searchUrl).resolve("/").toString();
             Request.Builder builder = new Request.Builder()
+                    .addHeader(Header.REFERER.toString(), referer)
                     .url(searchUrl);
 
             if (StrUtil.isNotBlank(r.getCookies())) {
@@ -74,7 +79,8 @@ public class SearchParser extends Source {
             }
 
             resp = CrawlUtils.request(httpClient, builder, r.getTimeout());
-            document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
+            String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+            document = Jsoup.parse(body, r.getBaseUri());
 
             if (CrawlUtils.hasCf(document)) {
                 Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", searchUrl);
@@ -128,13 +134,16 @@ public class SearchParser extends Source {
             if (resp == null) {
                 try (Response newResp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
                     // peekBody 不会关闭原body流，可以拿一份副本出来
-                    document = Jsoup.parse(newResp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
+                    String body = processResultWithJs(newResp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+                    document = Jsoup.parse(body, r.getBaseUri());
                 }
             } else {
-                document = Jsoup.parse(resp.peekBody(Long.MAX_VALUE).string(), r.getBaseUri());
+                String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+                document = Jsoup.parse(body, r.getBaseUri());
             }
 
-            Elements resultEls = document.select(r.getResult());
+            String resultSelector = stripJs(r.getResult());
+            Elements resultEls = document.select(resultSelector);
 
             // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
             if (resultEls.isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
@@ -276,6 +285,30 @@ public class SearchParser extends Source {
             );
         }
         Console.table(consoleTable);
+    }
+
+    // 若 url 含 @js:，则 JS 接收 keyword 返回完整 URL；否则直接格式化
+    private static String processUrl(String url, String keyword) {
+        if (url != null && url.contains("@js:")) {
+            return JsCaller.call(StrUtil.subAfter(url, "@js:", false), keyword);
+        }
+        return url.formatted(keyword);
+    }
+
+    // 若 result 含 @js:，则 JS 接收响应体并返回转换后的 HTML
+    private static String processResultWithJs(String body, String result) {
+        if (result != null && result.contains("@js:")) {
+            return JsCaller.call(StrUtil.subAfter(result, "@js:", false), body);
+        }
+        return body;
+    }
+
+    // 剥离 result 中的 @js: 部分，仅保留 CSS/XPath 选择器
+    private static String stripJs(String result) {
+        if (result != null && result.contains("@js:")) {
+            return StrUtil.subBefore(result, "@js:", false);
+        }
+        return result;
     }
 
 }

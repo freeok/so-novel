@@ -20,7 +20,6 @@ import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.parse.SearchParserQuanben5;
 import com.pcdd.sonovel.util.LangType;
 import com.pcdd.sonovel.util.RandomUA;
 import com.pcdd.sonovel.util.SourceUtils;
@@ -173,8 +172,7 @@ class BookSourceQualityTest {
         APP_CONFIG.setSourceId(id);
         // 需要代理的书源
         APP_CONFIG.setProxyEnabled(rule.isNeedProxy() ? 1 : 0);
-        SearchParser sp = new SearchParser(APP_CONFIG);
-        SearchParserQuanben5 quanben5 = new SearchParserQuanben5(APP_CONFIG);
+        SearchParser searchParser = new SearchParser(APP_CONFIG);
 
         // 遍历 20 本，即搜索源站 20 次，注意爬取频率
         for (Book b : ranks.get(rank.getKey())) {
@@ -184,12 +182,8 @@ class BookSourceQualityTest {
             sq.setAuthor(b.getAuthor());
             sq.setQiDianUrl(b.getUrl());
 
-            List<SearchResult> results;
-            if (APP_CONFIG.getSourceId() == 6) {
-                results = quanben5.parse(b.getBookName());
-            } else {
-                results = sp.parse(b.getBookName());
-            }
+            List<SearchResult> results = searchParser.parse(b.getBookName());
+
             boolean found = false;
             for (SearchResult r : results) {
                 if (Objects.equals(r.getBookName(), b.getBookName()) && Objects.equals(r.getAuthor(), b.getAuthor())) {

@@ -4,7 +4,7 @@
   // 站点名称
   "name": "",
   // 需要备注的信息
-  "comment": "主要语法：CSS Selector、XPath，非必填属性可删除",
+  "comment": "主要语法：CSS Selector、XPath，非必填属性可删除。支持 @js: 做响应体转换和 URL 参数计算，示例见 search.url / search.result",
   // 源站默认语言，默认从系统获取语言，可选值：zh_CN、zh_TW、zh_Hant
   language: "zh_TW",
   // 是否禁用书源
@@ -13,7 +13,7 @@
   "search": {
     // 是否禁用搜索
     "disabled": false,
-    // 搜索链接，必填
+    // 搜索链接，必填。若含 @js:，则 JS 接收 keyword 返回完整 URL（例：计算加密参数）
     "url": "",
     // 请求方法（GET, POST），必填
     "method": "",
@@ -21,7 +21,7 @@
     "data": "{}",
     // 键值对格式的 cookies，{k1: v1, k2: v2, ...}
     "cookies": "{}",
-    // 每条搜索记录，必填
+    // 每条搜索记录，必填。若含 @js:，则 JS 接收响应体并返回转换后的 HTML（例：JSONP 中提取 HTML）
     "result": "",
     // 书名，必填
     "bookName": "",

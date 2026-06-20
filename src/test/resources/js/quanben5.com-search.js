@@ -19,3 +19,5 @@ function base64(_str) {
 function getParamB(keywords) {
   return encodeURI(base64(encodeURI(keywords)))
 }
+
+console.log(getParamB('斗罗大陆'))
