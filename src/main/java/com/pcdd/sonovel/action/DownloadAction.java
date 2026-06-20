@@ -52,7 +52,7 @@ public class DownloadAction {
 
             sr = results.get(num - 1);
             APP_CONFIG.setSourceId(sr.getSourceId());
-            Console.log("<== 正在获取章节目录...");
+            Console.log("<== 正在解析章节目录...");
             TocParser tocParser = new TocParser(APP_CONFIG);
             toc = tocParser.parseAll(sr.getUrl());
 

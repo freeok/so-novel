@@ -79,7 +79,7 @@ public class BookFetchServlet extends HttpServlet {
             cfg.setConcurrency(concurrency);
         }
 
-        Console.log("<== 正在获取源站章节目录...");
+        Console.log("<== 正在解析章节目录...");
 
         return new Crawler(cfg).crawl(sr.getUrl());
     }

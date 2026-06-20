@@ -56,7 +56,7 @@ public class CliLauncher implements Runnable {
                 .latestChapter(book.getLatestChapter())
                 .lastUpdateTime(book.getLastUpdateTime())
                 .build();
-        Console.log("<== {}》({})，正在解析目录...", sr.getBookName(), sr.getAuthor());
+        Console.log("<== {}》({})，正在解析章节目录...", sr.getBookName(), sr.getAuthor());
         new Crawler(APP_CONFIG).crawl(sr.getUrl());
     }
 
