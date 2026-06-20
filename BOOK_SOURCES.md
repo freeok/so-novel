@@ -12,7 +12,6 @@
 | [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
 | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      |                                           |
 | [笔尖中文](http://www.xbiquzw.net/)      | ✅     | ❌      |                                           | |
-| [书林文学](http://www.shu009.com/)       | ✅     | ✅      | 源站目录有重复、缺章的情况。目录每页只有 20 章，翻页速度很慢          |
 | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      |                                           |
 | [阅读库](http://www.yeudusk.com/)       | ✅     | ❌      |                                           |
 | [顶点小说](https://www.wxsy.net/)        | ✅     | ❌      | 搜索、详情限流                                   |

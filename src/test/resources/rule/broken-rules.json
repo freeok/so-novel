@@ -279,5 +279,40 @@
       "minInterval": 1000,
       "maxInterval": 2000
     }
+  },
+  {
+    "url": "http://www.shu009.com/",
+    "name": "书林文学",
+    "comment": "源站目录有重复、缺章的情况。目录每页只有20章，翻页速度很慢",
+    "search": {
+      "url": "http://www.shu009.com/search/",
+      "method": "post",
+      "data": "{searchkey: %s, searchtype: all}",
+      "result": ".SHsectionThree > div > p",
+      "bookName": "span:nth-child(2) > a",
+      "author": "span:nth-child(3) > a",
+      "category": "span:nth-child(1) > a"
+    },
+    "book": {
+      "url": "http://www.shu009.com/book/(.*?)/",
+      "intro": "#intro > div",
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]"
+    },
+    "toc": {
+      "url": "http://www.shu009.com/indexlist/%s/",
+      "item": "ol > li > a",
+      "pagination": true,
+      "nextPage": "//select[@id='indexselect']/option"
+    },
+    "chapter": {
+      "title": "#chapterTitle@js:r=r.replace(/\\(\\d+\\/\\d+\\)/, '');",
+      "content": "#content",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "",
+      "filterTag": "center",
+      "pagination": true,
+      "nextPage": ".RBGsectionTwo-right > a"
+    }
   }
 ]
