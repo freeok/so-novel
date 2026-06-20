@@ -102,9 +102,9 @@ public class ChapterParser extends Source {
         Rule.Chapter r = rule.getChapter();
         // 获取下一章的间隔
         Thread.sleep(interval);
-        return r.isPagination()
-                ? fetchPaginatedContent(url, interval, r)
-                : fetchSinglePageContent(url, r);
+        return StrUtil.isBlank(r.getNextPage())
+                ? fetchSinglePageContent(url, r)
+                : fetchPaginatedContent(url, interval, r);
     }
 
     @SneakyThrows

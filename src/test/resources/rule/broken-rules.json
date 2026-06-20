@@ -25,7 +25,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": "",
-      "pagination": true,
       "nextPage": "#next_url"
     }
   },
@@ -55,7 +54,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)|最近转码严重，让我们更有动力，更新更快，麻烦你动动小手退出阅读模式。谢谢",
       "filterTag": "",
-      "pagination": true,
       "nextPage": "(//*[@id='next_url'])[1]"
     }
   },
@@ -75,7 +73,6 @@
       "category": "div.labelbox > label:nth-child(2)",
       "latestChapter": "div.zxzj > p > a",
       "status": "div.labelbox > label:nth-child(3)",
-      "pagination": true,
       "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)"
     },
     "book": {
@@ -187,7 +184,6 @@
     "toc": {
       "url": "https://www.369book.cc/index/%s/",
       "item": ".am-list-news-bd > ul > li > a",
-      "pagination": true,
       "nextPage": "(//select[@id='indexselect'])[1]/option@js:var matches=r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/);if(r.match(/javascript:Chapter\\('(\\d+)','(\\d+)\\.html'\\)/)){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]+\".html\"}"
     },
     "chapter": {
@@ -196,7 +192,6 @@
       "paragraphTagClosed": true,
       "filterTxt": ".*转载请注明来源：369小说网\\(www.369book.cc\\)|本章未完，请点击下一页继续阅读！",
       "filterTag": "div",
-      "pagination": true,
       "nextPage": ".book-read > div > div:nth-child(8) > a:nth-child(4)@js:var matches=r.match(/'(\\d+)',\\s*'([^']+)'/);if(matches){r=\"https://www.369book.cc/read/\"+matches[1]+\"/\"+matches[2]}"
     }
   },
@@ -222,7 +217,6 @@
     },
     "toc": {
       "item": ".row.row-section > div > div:nth-child(4) > ul > li > a",
-      "pagination": true,
       "nextPage": "#indexselect > option"
     },
     "chapter": {
@@ -231,7 +225,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": "a, script",
-      "pagination": true,
       "nextPage": "(//*[@id='next_url'])[1]"
     }
   },
@@ -262,7 +255,6 @@
     },
     "toc": {
       "item": "#list > ul > li > a",
-      "pagination": true,
       "nextPage": "#pages > .gr"
     },
     "chapter": {
@@ -271,7 +263,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": "",
-      "pagination": true,
       "nextPage": ".prenext > span:nth-child(3) > a"
     },
     "crawl": {
@@ -301,7 +292,6 @@
     "toc": {
       "url": "http://www.shu009.com/indexlist/%s/",
       "item": "ol > li > a",
-      "pagination": true,
       "nextPage": "//select[@id='indexselect']/option"
     },
     "chapter": {
@@ -311,7 +301,6 @@
       "paragraphTag": "<br>+",
       "filterTxt": "",
       "filterTag": "center",
-      "pagination": true,
       "nextPage": ".RBGsectionTwo-right > a"
     }
   }

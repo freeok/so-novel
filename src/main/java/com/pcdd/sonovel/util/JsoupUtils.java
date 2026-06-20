@@ -123,6 +123,7 @@ public class JsoupUtils {
      * 剥离 query 中的 @xx 部分，仅保留 CSS/XPath 选择器
      */
     private static String stripAt(String query) {
+        if (query == null) return null;
         if (query.contains("@href")) {
             return StrUtil.subBefore(query, "@href", false);
         }

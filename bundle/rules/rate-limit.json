@@ -17,7 +17,6 @@
     "toc": {
       "url": "https://www.tianxibook.com/xiaoshuo/%s/",
       "item": "#content_1 > a",
-      "pagination": true,
       "nextPage": "#indexselect > option"
     },
     "chapter": {
@@ -26,7 +25,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "首发网址.+。|\\(本章完\\)|一秒记住【新天禧小说\\s*】手机用户输入地址：www\\s*\\.xtxxs\\s*\\.com|支持（新天禧小说\\s*）把本站分享那些需要的小伙伴！找不到书请留言！|搜.+免费看精品文学",
       "filterTag": "",
-      "pagination": true,
       "nextPage": "#wrapper > article > div.bottem1 > a:nth-child(3)"
     },
     "crawl": {
@@ -49,7 +47,6 @@
       "status": ".serial",
       "wordCount": ".count",
       "category": ".type",
-      "pagination": true,
       "nextPage": ".page > span > a:nth-child(2), .page > span > a:nth-child(3), .page > span > a:nth-child(4)"
     },
     "book": {
@@ -65,7 +62,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "【[^】]+】小说免费阅读，请收藏[^【】]*【[^】]+】|本章未完，点击\\[下一页]继续阅读--|\\(本章完\\)",
       "filterTag": "",
-      "pagination": true,
       "nextPage": "#next",
       "nextChapterLink": "https://www\\.0xs\\.net/txt/\\d+/\\d+\\.html"
     },
@@ -88,7 +84,6 @@
       "wordCount": ".book_inf > p.tags > span:nth-child(4)@js:r=r.replaceAll('总字数：', '');",
       "latestChapter": ".book_inf > p:nth-child(3) > a",
       "lastUpdateTime": ".right > span@js:r=r.replaceAll('更新时间：', '');",
-      "pagination": true,
       "nextPage": ".result > div > span > a:not(.sl)"
     },
     "book": {
@@ -141,7 +136,6 @@
     },
     "toc": {
       "item": "#list > ul > li > a",
-      "pagination": true,
       "nextPage": "#pages > .gr"
     },
     "chapter": {
@@ -150,7 +144,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\(本章完\\)",
       "filterTag": "",
-      "pagination": true,
       "nextPage": ".prenext > span:nth-child(3) > a"
     },
     "crawl": {

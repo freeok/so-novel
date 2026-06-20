@@ -78,10 +78,10 @@ class BookSourceCrawlTest {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
-        // searchParse("斗罗");
+        searchParse("斗罗");
         bookParse(bookUrl);
-        // tocParse(bookUrl);
-        // chapterParse();
+        tocParse(bookUrl);
+        chapterParse();
         // chapterBatchParse(0, 50);
     }
 

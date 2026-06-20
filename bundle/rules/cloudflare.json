@@ -43,7 +43,6 @@
       "latestChapter": "dd:nth-child(5) > a",
       "lastUpdateTime": "dd:nth-child(2) > h3 > span",
       "status": "dd:nth-child(3) > span:nth-child(2)",
-      "pagination": true,
       "nextPage": "#pagelink > a:not(.first):not(.last)"
     },
     "book": {
@@ -58,7 +57,6 @@
       "paragraphTagClosed": true,
       "filterTxt": "\\((继续下一页|本章完)\\)|最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！",
       "filterTag": "",
-      "pagination": true,
       "nextPage": "#readbg > div.mlfy_page > a:nth-child(4)",
       "nextPageInJs": "//*[@id=\"readbg\"]/script[4]@js:r=r.match(/nextpage = \"(.*?)\"/)[1];"
     }

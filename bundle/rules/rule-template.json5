@@ -37,8 +37,6 @@
     "latestChapter": "",
     // 最后更新时间
     "lastUpdateTime": "",
-    // 搜索结果是否分页
-    "pagination": false,
     // 下一页链接
     "nextPage": ""
   },
@@ -70,8 +68,6 @@
     "item": "",
     // 是否默认倒序
     "isDesc": false,
-    // 目录是否分页
-    "pagination": false,
     // 下一页链接
     "nextPage": ""
   },
@@ -89,8 +85,6 @@
     "filterTxt": "",
     // 需要过滤的 html 标签
     "filterTag": "",
-    // 章节是否分页
-    "pagination": false,
     // 下一页链接
     "nextPage": ""
   },

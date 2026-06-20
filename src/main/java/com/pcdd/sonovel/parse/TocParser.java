@@ -71,7 +71,7 @@ public class TocParser extends Source {
         // 目录分页 url
         Set<String> urls = CollUtil.newLinkedHashSet(url);
 
-        if (ruleToc.isPagination()) {
+        if (StrUtil.isNotBlank(ruleToc.getNextPage())) {
             Document document;
             try (Response resp = CrawlUtils.request(httpClient, url, ruleBook.getTimeout());
                  InputStream is = resp.body().byteStream()) {

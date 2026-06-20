@@ -85,7 +85,6 @@
       "author": ".margin0h5 > a:nth-child(2)",
       "latestChapter": ".right_wid > div:nth-child(4) > a@js:r=r.replaceAll('最新章节','');",
       "lastUpdateTime": ".right_wid > div:nth-child(4) > span",
-      "pagination": true,
       "nextPage": "//div[@class='onlypc']//div//a[not(text()='首页') and not(text()='上一页') and not(text()='下一页') and not(text()='尾页')]"
     },
     "book": {
@@ -118,7 +117,6 @@
       "category": "div.labelbox > label:nth-child(2)",
       "status": "div.labelbox > label:nth-child(3)",
       "latestChapter": "div.zxzj > p > a",
-      "pagination": true,
       "nextPage": "#pagelink > a:not(.pgroup):not(.ngroup):not(.next)"
     },
     "book": {

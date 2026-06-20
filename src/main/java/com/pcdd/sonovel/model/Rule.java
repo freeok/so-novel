@@ -41,8 +41,6 @@ public class Rule {
         private String lastUpdateTime;
         private String status;
         private String wordCount;
-        // 搜索结果是否分页
-        private boolean pagination;
         private String nextPage;
     }
 
@@ -71,8 +69,6 @@ public class Rule {
         private String list;
         private String item;
         private boolean isDesc;
-        // 目录是否分页
-        private boolean pagination;
         private String nextPage;
     }
 
@@ -87,8 +83,6 @@ public class Rule {
         private String paragraphTag;
         private String filterTxt;
         private String filterTag;
-        // 章节是否分页
-        private boolean pagination;
         // 下一页的 HTML 元素
         private String nextPage;
         // 位于 JS 中的下一页链接

@@ -66,14 +66,14 @@ public class BookParser extends Source {
         Book book = new Book();
         book.setUrl(url);
         book.setBookName(bookName);
-        book.setAuthor(author);
+        book.setAuthor(author.replace("作者：", ""));
         book.setIntro(intro);
         // 代理 IP 会被起点等网站屏蔽，故使用源站封面
         book.setCoverUrl(this.rule.isNeedProxy() ? defaultCoverUrl : CoverUpdater.fetchCover(book, defaultCoverUrl));
         book.setCategory(category);
         book.setLatestChapter(latestChapter);
         book.setLatestChapterUrl(latestChapterUrl);
-        book.setLastUpdateTime(lastUpdateTime);
+        book.setLastUpdateTime(lastUpdateTime.replaceAll("(更新时间|最后更新)：", ""));
         book.setStatus(status);
 
         return ChineseConverter.convert(book, this.rule.getLanguage(), config.getLanguage());

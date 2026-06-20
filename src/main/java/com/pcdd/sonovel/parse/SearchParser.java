@@ -97,7 +97,7 @@ public class SearchParser extends Source {
 
         List<SearchResult> firstPageResults = getSearchResults(null, resp);
         // 搜索结果无分页
-        if (!r.isPagination()) {
+        if (StrUtil.isBlank(r.getNextPage())) {
             return firstPageResults;
         }
 
