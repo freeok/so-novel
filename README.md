@@ -44,6 +44,26 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 1. 下载最新版 https://github.com/freeok/so-novel/releases
 2. 根据 [readme.txt](bundle%2Freadme.txt) 使用
 
+### Windows
+
+**PowerShell**
+
+```powershell
+irm https://raw.githubusercontent.com/freeok/so-novel/main/bin/windows-install.ps1 | iex
+```
+
+**CMD**
+
+```cmd
+powershell -c "irm https://raw.githubusercontent.com/freeok/so-novel/main/bin/windows-install.ps1 | iex"
+```
+
+### Linux
+
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linux-install.sh)
+```
+
 ### 🍨 Scoop
 
 ```bash
@@ -58,21 +78,15 @@ brew tap ownia/homebrew-ownia
 brew install so-novel
 ```
 
-### 🐧 Linux
-
-```bash
-bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linux-install.sh)
-```
-
 ### 🐳 Docker
 
-**方式 1：脚本一键安装**
+**方式 1: 脚本一键安装**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install.sh | bash
 ```
 
-**方式 2：Docker Compose**
+**方式 2: Docker Compose** (NAS 首选)
 
 ```yaml
 services:
@@ -91,7 +105,7 @@ volumes:
   sonovel_data:
 ```
 
-**方式 3：直接运行容器**
+**方式 3: 直接运行容器**
 
 ```bash
 # 如需挂载，请提前准备好 config.ini 文件、rules 目录
@@ -105,14 +119,23 @@ docker run -d \
   ghcr.io/freeok/sonovel:latest
 ```
 
-**方式 4：从源码构建镜像**
+**从源码构建 Docker 镜像**
 
 ```bash
-# 确保已安装 git、maven
-# arch: [x64|arm64]
+# 确保已安装 git、jdk 21、maven
+sudo apt update
+sudo apt install -y git
+sudo apt install -y openjdk-21-jdk
+sudo apt install -y maven
+
+# 验证安装
+git -v
+javac -version
+mvn -v
 
 # 构建项目
 git clone https://github.com/freeok/so-novel.git && cd so-novel
+# arch: [x64|arm64]
 sh bin/release-linux.sh [arch]
 
 # 构建 Docker 镜像
