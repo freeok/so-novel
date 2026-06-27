@@ -37,38 +37,31 @@ EPUB、TXT、PDF 等多种标准电子文档格式。适用于学习采集、格
 
 </details>
 
-## 使用
+## 安装
 
-### 📦 普通安装
+### 📦 手动下载压缩包
 
-1. 下载最新版 https://github.com/freeok/so-novel/releases
-2. 根据 [readme.txt](bundle%2Freadme.txt) 使用
+<https://github.com/freeok/so-novel/releases>
 
-### Windows
+### 🪟 Windows
 
-**PowerShell**
+#### 1. PowerShell
 
 ```powershell
+# powershell
 irm https://raw.githubusercontent.com/freeok/so-novel/main/bin/windows-install.ps1 | iex
 ```
 
-**CMD**
+#### 2. CMD (命令提示符)
 
 ```cmd
-powershell -c "irm https://raw.githubusercontent.com/freeok/so-novel/main/bin/windows-install.ps1 | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/freeok/so-novel/main/bin/windows-install.ps1 | iex"
 ```
 
-### Linux
+### 🐧 Linux
 
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linux-install.sh)
-```
-
-### 🍨 Scoop
-
-```bash
-scoop bucket add freeok https://github.com/freeok/scoop-bucket
-scoop install freeok/so-novel
 ```
 
 ### 🍺 Homebrew
@@ -76,6 +69,13 @@ scoop install freeok/so-novel
 ```bash
 brew tap ownia/homebrew-ownia
 brew install so-novel
+```
+
+### 🍨 Scoop
+
+```bash
+scoop bucket add freeok https://github.com/freeok/scoop-bucket
+scoop install freeok/so-novel
 ```
 
 ### 🐳 Docker
@@ -86,7 +86,7 @@ brew install so-novel
 curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/docker-install.sh | bash
 ```
 
-**方式 2: Docker Compose** (NAS 首选)
+**方式 2: Docker Compose (NAS 首选)**
 
 ```yaml
 services:
@@ -105,7 +105,7 @@ volumes:
   sonovel_data:
 ```
 
-**方式 3: 直接运行容器**
+**方式 3: Docker Run**
 
 ```bash
 # 如需挂载，请提前准备好 config.ini 文件、rules 目录
@@ -165,15 +165,15 @@ docker build -t sonovel .
 >
 > - [FreeConvert](https://www.freeconvert.com/zh)
 > - [Calibre](https://calibre-ebook.com/zh_CN)
-> 
+>
 > 修复 WPS、掌阅等软件无法打开 so-novel 下载的 EPUB：https://github.com/freeok/so-novel/discussions/199
 
 ## 自定义 JVM 系统属性
 
 | 参数            | 说明                     | 默认值          |
 |---------------|------------------------|--------------|
-| -Dconfig.file | 配置文件路径                 | ./config.ini |
 | -Dmode        | 启动模式，可选值：tui\|cli\|web | tui          |
+| -Dconfig.file | 配置文件路径                 | ./config.ini |
 
 用法
 
