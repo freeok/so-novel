@@ -164,7 +164,8 @@
                 <td class="px-3 py-2 text-gray-600" x-text="item.latestChapter || ''"></td>
                 <td class="px-3 py-2 text-gray-500 text-xs" x-text="item.lastUpdateTime || ''"></td>
                 <td class="px-3 py-2 text-gray-600">
-                  <a :href="item.url" target="_blank" class="text-primary hover:underline" x-text="item.sourceName"></a>
+                  <a :href="item.url" target="_blank" class="text-primary hover:underline"
+                     x-text="item.sourceName"></a>
                 </td>
                 <td class="px-3 py-2 overflow-visible whitespace-nowrap">
                   <button @click.stop="toggleDownloadMenu(index, item, $event)"
@@ -191,7 +192,8 @@
                 <span class="text-sm font-semibold text-gray-500 shrink-0">书名</span>
                 <span class="text-sm font-medium text-right break-all" x-text="item.bookName"></span>
               </div>
-              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100" x-show="item.author">
+              <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
+                   x-show="item.author">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">作者</span>
                 <span class="text-sm text-right" x-text="item.author"></span>
               </div>
@@ -208,7 +210,8 @@
               <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100"
                    x-show="item.sourceName">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">前往源站</span>
-                <a :href="item.url" target="_blank" class="text-sm text-right text-primary hover:underline"
+                <a :href="item.url" target="_blank"
+                   class="text-sm text-right text-primary hover:underline"
                    x-text="item.sourceName"></a>
               </div>
               <div class="flex justify-between items-center gap-2 py-2 border-b border-gray-100">
@@ -322,7 +325,8 @@
               </div>
               <div class="flex justify-between items-start gap-2 py-1.5 border-b border-gray-100">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">下载时间</span>
-                <span class="text-sm text-gray-500 text-right" x-text="formatDate(item.timestamp)"></span>
+                <span class="text-sm text-gray-500 text-right"
+                      x-text="formatDate(item.timestamp)"></span>
               </div>
               <div class="flex justify-between items-center gap-2 py-2">
                 <span class="text-sm font-semibold text-gray-500 shrink-0">操作</span>
@@ -453,7 +457,8 @@
     </div>
     <div class="text-center py-8 text-sm text-gray-400" x-show="searchHistory.length === 0">暂无搜索历史</div>
     <div class="mt-3 pt-3 border-t border-gray-100 text-center" x-show="searchHistory.length > 0">
-      <button @click="clearSearchHistory; showSearchHistory = false" class="text-xs text-gray-400 hover:text-red-500">
+      <button @click="clearSearchHistory; showSearchHistory = false"
+              class="text-xs text-gray-400 hover:text-red-500">
         清空全部历史
       </button>
     </div>
@@ -483,7 +488,8 @@
           <span x-show="!sourcesChecking">测试延迟</span>
           <span x-show="sourcesChecking">测试中...</span>
         </button>
-        <button @click="showSources = false" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;
+        <button @click="showSources = false" class="text-gray-400 hover:text-gray-600 text-xl leading-none">
+          &times;
         </button>
       </div>
     </div>
@@ -552,7 +558,9 @@
       downloadCurrent: 0,
       downloadTotal: 0,
 
-      get concurrencyMax() {return this.serverConfig.concurrency > 0 ? this.serverConfig.concurrency : 50},
+      get concurrencyMax() {
+        return this.serverConfig.concurrency > 0 ? this.serverConfig.concurrency : 50
+      },
       get defaultExtLabel() {
         const ext = this.settings.format || this.serverConfig.extName || 'epub'
         return ext.toUpperCase()
@@ -574,9 +582,15 @@
         for (let i = start; i <= end; i++) pages.push(i)
         return { start, end, pages }
       },
-      get searchLimitMax() {return this.serverConfig.searchLimit > 0 ? this.serverConfig.searchLimit : 100},
-      get totalPages() {return Math.max(1, Math.ceil(this.bookCache.length / this.pageSize))},
-      get versionLink() {return this.serverConfig.version ? `https://github.com/freeok/so-novel/releases/tag/v${this.serverConfig.version}` : '#'},
+      get searchLimitMax() {
+        return this.serverConfig.searchLimit > 0 ? this.serverConfig.searchLimit : 100
+      },
+      get totalPages() {
+        return Math.max(1, Math.ceil(this.bookCache.length / this.pageSize))
+      },
+      get versionLink() {
+        return this.serverConfig.version ? `https://github.com/freeok/so-novel/releases/tag/v${this.serverConfig.version}` : '#'
+      },
 
       init() {
         this.loadSettings()
@@ -601,7 +615,11 @@
       },
 
       async fetchSuggestions() {
-        if (!this.settings.showSuggestionsEnabled) { this.suggestions = []; this.showSuggestions = false; return }
+        if (!this.settings.showSuggestionsEnabled) {
+          this.suggestions = [];
+          this.showSuggestions = false;
+          return
+        }
         const kw = this.searchKeyword.trim()
         if (!kw) {
           this.suggestions = [];
@@ -625,7 +643,9 @@
       },
 
       closeSuggestions() {
-        setTimeout(() => { this.showSuggestions = false }, 200)
+        setTimeout(() => {
+          this.showSuggestions = false
+        }, 200)
       },
 
       removeSearchHistory(timestamp) {
@@ -649,14 +669,16 @@
         try {
           const data = await Api.getConfig()
           if (data && data.data) Object.assign(this.serverConfig, data.data)
-        } catch (_) {}
+        } catch (_) {
+        }
       },
 
       async fetchSources() {
         try {
           const data = await Api.getSources()
           if (data && data.data) this.sources = data.data
-        } catch (_) {}
+        } catch (_) {
+        }
       },
 
       async checkSources() {
@@ -664,7 +686,8 @@
         try {
           const data = await Api.checkSources()
           if (data && data.data) this.sources = data.data
-        } catch (_) {}
+        } catch (_) {
+        }
         this.sourcesChecking = false
       },
 
@@ -685,7 +708,9 @@
             this.currentPage = 1
             this.saveSearchHistory(value, data.data)
           }
-        } catch (error) {alert(`搜索失败: ${error.message}`)} finally {
+        } catch (error) {
+          alert(`搜索失败: ${error.message}`)
+        } finally {
           this.hideTip()
           this.isSearching = false
         }
@@ -713,7 +738,11 @@
           }
           await this.fetchLocalBooks()
           location.href = `/book-download?filename=${encodeURIComponent(this.latestFileName)}`
-        } catch (error) {alert(`下载书籍到服务器失败: ${error.message}`)} finally {this.hideTip()}
+        } catch (error) {
+          alert(`下载书籍到服务器失败: ${error.message}`)
+        } finally {
+          this.hideTip()
+        }
       },
 
       async fetchLocalBooks() {
@@ -725,7 +754,11 @@
             if (data.data[0]) this.latestFileName = data.data[0].name
             this.localBooks = data.data
           }
-        } catch (error) {alert(`刷新已下书籍失败: ${error.message}`)} finally {this.hideTip()}
+        } catch (error) {
+          alert(`刷新已下书籍失败: ${error.message}`)
+        } finally {
+          this.hideTip()
+        }
       },
 
       async handleDeleteBook(filename) {
@@ -813,7 +846,9 @@
       loadSearchHistory() {
         try {
           this.searchHistory = JSON.parse(localStorage.getItem(this.SEARCH_HISTORY_KEY) || '[]')
-        } catch (_) { this.searchHistory = [] }
+        } catch (_) {
+          this.searchHistory = []
+        }
       },
 
       loadSettings() {
@@ -824,7 +859,8 @@
           this.settings.searchLimit = saved.searchLimit || ''
           this.settings.concurrency = saved.concurrency || ''
           this.settings.showSuggestionsEnabled = saved.showSuggestionsEnabled !== false
-        } catch (_) {}
+        } catch (_) {
+        }
       },
 
       saveSearchHistory(keyword, results) {

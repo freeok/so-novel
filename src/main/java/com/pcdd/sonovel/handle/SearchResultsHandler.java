@@ -51,7 +51,7 @@ public class SearchResultsHandler {
         List<SearchResult> filtered = Collections.emptyList();
         if (AppConfigLoader.APP_CONFIG.getSearchFilter() == 1) {
             filtered = list.stream()
-                    .filter(sr -> similarityMap.get(sr) > 0.3) // 过滤低相似度搜索结果
+                    .filter(sr -> similarityMap.get(sr) > 0.25) // 过滤低相似度搜索结果
                     .sorted(comparator)
                     .toList();
         }

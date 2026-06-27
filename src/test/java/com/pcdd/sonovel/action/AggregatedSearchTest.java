@@ -2,15 +2,12 @@ package com.pcdd.sonovel.action;
 
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.dialect.console.ConsoleLog;
-import cn.hutool.log.level.Level;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.OkHttpClientFactory;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.parse.SearchParser;
-import com.pcdd.sonovel.util.LangType;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
