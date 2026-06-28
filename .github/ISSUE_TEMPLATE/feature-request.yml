@@ -1,29 +1,63 @@
-name: 功能请求
-description: 我希望新增/改进某个功能
+name: 功能请求与建议
+description: 提交你希望新增的功能、或对现有功能的改进建议
 title: '[功能请求] 此文本替换为简洁明了的标题'
 labels:
   - "enhancement"
 
 body:
-  - type: checkboxes
+  - type: markdown
     attributes:
-      label: 先决条件
-      description: 在提交之前，请勾选以下所有选项以证明您已经阅读并理解了以下要求，否则该 issue 将被关闭
+      value: |
+        感谢你为 so-novel 提出建设性的想法！请填写以下表单，帮助我们更好地理解你的需求。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 🔍 提交前自查
+      description: 请勾选以下所有选项。**未完成自查的 Issue 可能会被直接关闭。**
       options:
-        - label: 我确保软件不存在类似的功能，即便是最新版本
-        - label: 我确保 [已有的问题](./issues?q=is%3Aissue) 中没有人提交过类似 issue，否则请在已有的 issue 下进行讨论
-        - label: 我确保给 issue 填写一个简洁明了的标题，以便他人快速检索
+        - label: 我确认当前最新版本中不存在类似的功能。
+        - label: 我已查阅 [功能请求列表](https://github.com/freeok/so-novel/issues?q=label%3Aenhancement)，确认没有人提交过类似的请求（如果有，请在已有 Issue 下讨论）。
+        - label: 我已为当前 Issue 拟定了一个简洁明了的标题。
+    validations:
+      required: true
 
   - type: textarea
-    id: description
+    id: problem-statement
     attributes:
-      label: 功能描述
-      description: 请详细清晰地描述你的功能请求
+      label: 💡 你想解决什么问题？
+      description: 请清晰描述目前的痛点。是什么原因让你觉得需要这个新功能？当前的体验有什么不便之处？
+      placeholder: |
+        例如：目前在下载某书源的小说时，每次都需要手动配置 XXX，当数量变多时非常耗时……
     validations:
       required: true
+
   - type: textarea
+    id: feature-description
     attributes:
-      label: 使用场景
-      description: 请描述你的功能请求的使用场景
+      label: 🚀 期待的功能描述
+      description: 请详细描述你期望的新功能应该如何工作，或者现有功能应该如何改进。
+      placeholder: |
+        我希望能够增加一个 XXX 的按钮/命令，自动实现……
     validations:
       required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 🎯 典型使用场景（Use Cases）
+      description: 请描述你在什么具体场景下会用到这个功能。
+      placeholder: |
+        场景 1：当批量追更 10 部小说时……
+        场景 2：在 NAS 环境下自动化运行时……
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: 🔄 替代方案
+      description: 你目前是如何绕过这个问题的？或者你有没有考虑过其他的替代解决方法？（选填）
+      placeholder: 目前我只能通过手动修改配置文件来解决，但这很不方便。
+    validations:
+      required: false

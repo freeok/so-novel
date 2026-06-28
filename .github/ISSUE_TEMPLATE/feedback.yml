@@ -1,29 +1,38 @@
 name: 问题反馈
-description: 反馈你遇到的问题
+description: 如果在使用过程中遇到了问题或 Bug，请在此反馈
 title: '[问题反馈] 此文本替换为简洁明了的标题'
 body:
-  - type: checkboxes
+  - type: markdown
     attributes:
-      label: 先决条件
-      description: 在提交之前，请勾选以下所有选项以证明您已经阅读并理解了以下要求，否则该 issue 将被关闭
+      value: |
+        感谢你提交问题反馈！请尽可能完整地填写以下内容，以便我们快速定位并解决问题。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前自查
+      description: 请勾选以下所有选项。**未完成自查的 Issue 可能会被直接关闭。**
       options:
-        - label: 我已下载最新版本测试，问题依然存在
-        - label: 我已认真查阅 [使用说明](https://github.com/freeok/so-novel/blob/main/bundle/readme.txt)
-        - label: 我已认真查阅 [常见问题](https://github.com/freeok/so-novel/issues?q=label%3A"usage%20question")
-        - label: 我已认真查阅 [书源一览](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)
+        - label: 我已下载最新版本测试，确认问题依然存在。
+        - label: 我已认真阅读 [使用说明](https://github.com/freeok/so-novel/blob/main/bundle/readme.txt)。
+        - label: 我已查阅 [常见问题](https://github.com/freeok/so-novel/issues?q=label%3A"usage%20question")，确认没有重复的讨论。
+        - label: 我已查阅 [书源一览](https://github.com/freeok/so-novel/blob/main/BOOK_SOURCES.md)。
         - label: 我已确保 [已有问题](https://github.com/freeok/so-novel/issues?q=is%3Aissue) 中无类似 issue（否则请在已有的 issue 内进行讨论）
-        - label: 我已填写一个简洁明了的标题，以便他人快速检索
+        - label: 我已为当前 Issue 拟定了一个简洁明了的标题。
 
   - type: input
+    id: os-info
     attributes:
       label: 操作系统名称及版本号 (在终端执行命令以查看，Windows：winver，Linux：lsb_release -a，macOS：sw_vers)
-      placeholder: 格式要求：Windows 11 24H2 26100.4652、Ubuntu 24.04.2 LTS、macOS 15.0 24A335
+      placeholder: 例如：Windows 11 24H2 (26100.4652) / Ubuntu 24.04.2 LTS / macOS 15.0 (24A335)
     validations:
       required: true
 
   - type: dropdown
+    id: release-version
     attributes:
       label: so-novel 发行版
+      description: 请选择你下载并使用的具体发行版文件名。
       options:
         - sonovel-windows.tar.gz
         - sonovel-macos_x64.tar.gz
@@ -34,37 +43,49 @@ body:
       required: true
 
   - type: dropdown
+    id: install-method
     attributes:
-      label: so-novel 安装方式
+      label: so-novel 安装/运行方式
       options:
-        - 下载压缩包
-        - Scoop
+        - 手动下载压缩包
+        - Windows PowerShell 脚本一键安装
+        - Windows CMD 脚本一键安装
+        - Linux 脚本一键安装
         - Homebrew
-        - linux-install.sh
+        - Scoop
         - Docker 方式 1：脚本一键安装
-        - Docker 方式 2：Docker Compose
-        - Docker 方式 3：直接运行容器
-        - Docker 方式 4：从源码构建镜像
+        - Docker 方式 2：Docker Compose (NAS 首选)
+        - Docker 方式 3：Docker Run
+        - 从源码构建 Docker 镜像
     validations:
       required: true
 
   - type: textarea
+    id: config-info
     attributes:
       label: 配置信息
-      placeholder: 选择功能 d.配置信息，结果粘贴到此处，不要粘贴 config.ini 内容！
+      placeholder: |
+        【复制指南】选择功能 -> d.配置信息，将输出结果粘贴到此处。
+        警告：请勿在此直接粘贴 config.ini 的原始内容！
+      render: markdown
     validations:
       required: true
 
   - type: textarea
+    id: bug-description
     attributes:
       label: 问题描述
-      description: 简要地描述你遇到的问题，尽量提供截图、视频
+      description: 请清晰、简要地描述你遇到了什么问题。尽量提供截图、视频
+      placeholder: |
+        发生了什么：
+        预期结果：
     validations:
       required: true
 
   - type: textarea
+    id: reproduction-steps
     attributes:
       label: 复现步骤
-      description: 请提供复现该问题的完整步骤，尽量提供截图、视频
+      description: 请提供能够稳定复现该问题的完整步骤。尽量提供截图、视频
     validations:
       required: true
