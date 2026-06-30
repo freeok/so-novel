@@ -19,6 +19,7 @@
 - 修复 PdfMergeHandler 中 FileOutputStream 未安全关闭导致的资源泄漏
 - 修复 CoverUpdater.fetchCover 中 InputStream 可能的资源泄漏
 - 修复 FileUtils.sortFilesByName 潜在的空指针和数字解析异常
+- 修复 Javet 5.0.8 下 ThreadLocal 频繁创建 V8Runtime 导致 V8 sandbox 虚拟地址空间耗尽 #336
 
 ### ♻️ Refactor
 
