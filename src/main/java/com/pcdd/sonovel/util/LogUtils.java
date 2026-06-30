@@ -13,6 +13,9 @@ import lombok.experimental.UtilityClass;
 
 import java.io.File;
 
+/**
+ * 注意，成员方法必须在 BookContext.set() 后调用
+ */
 @UtilityClass
 public class LogUtils {
 

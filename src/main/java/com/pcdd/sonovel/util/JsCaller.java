@@ -1,9 +1,8 @@
 package com.pcdd.sonovel.util;
 
-import com.caoccao.javet.exceptions.JavetException;
-import com.caoccao.javet.interop.V8Host;
 import com.caoccao.javet.interop.V8Runtime;
-import com.caoccao.javet.utils.JavetResourceUtils;
+import com.caoccao.javet.interop.engine.IJavetEngine;
+import com.caoccao.javet.interop.engine.JavetEnginePool;
 import com.caoccao.javet.values.reference.V8ValueFunction;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -11,16 +10,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class JsCaller {
 
-    // 每个线程绑定一个 V8Runtime（线程安全）
-    private final ThreadLocal<V8Runtime> THREAD_LOCAL_RUNTIME = ThreadLocal.withInitial(() -> {
-        try {
-            return V8Host.getV8Instance().createV8Runtime();
-        } catch (JavetException e) {
-            throw new RuntimeException("Failed to create V8 runtime", e);
-        }
-    });
-
-    public final String JS_TEMPLATE = """
+    private static final JavetEnginePool<V8Runtime> POOL = new JavetEnginePool<>();
+    private static final String JS_TEMPLATE = """
             function func(r) {
                 %s;
                 return r;
@@ -28,43 +19,55 @@ public class JsCaller {
             """;
 
     /**
-     * 调用 jsCode 代码处理 input，并返回结果
+     * 调用 jsCode 传入后的 func 函数
      *
      * @param jsCode JS_TEMPLATE 代码 (动态逻辑)
      * @param input  输入参数 (如 HTML 字符串)
-     * @return 处理后的结果
+     * @return 执行结果
      */
     @SneakyThrows
     public String call(String jsCode, String input) {
-        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        String scriptString = JS_TEMPLATE.formatted(jsCode);
-        v8Runtime.getExecutor(scriptString).executeVoid();
-        V8ValueFunction function = v8Runtime.getGlobalObject().get("func");
-        return function.callString(null, input);
+        try (IJavetEngine<V8Runtime> engine = POOL.getEngine()) {
+            // Console.log("V8引擎池状态 => 正在使用={}, 空闲={}, 已释放={}", POOL.getActiveEngineCount(), POOL.getIdleEngineCount(), POOL.getReleasedEngineCount());
+            V8Runtime v8Runtime = engine.getV8Runtime();
+            String scriptString = JS_TEMPLATE.formatted(jsCode);
+            // Console.log("scriptString = " + scriptString);
+            v8Runtime.getExecutor(scriptString).executeVoid();
+
+            try (V8ValueFunction function = v8Runtime.getGlobalObject().get("func")) {
+                return function.callString(null, input);
+            }
+        }
     }
 
-    // 调用 JS_TEMPLATE 函数
+    /**
+     * 调用 JS 函数
+     *
+     * @param jsFunctionCode JS 函数代码
+     * @param functionName   函数名
+     * @param args           参数
+     * @return 执行结果
+     */
     @SneakyThrows
     public Object callFunction(String jsFunctionCode, String functionName, Object... args) {
-        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        // 先加载函数
-        v8Runtime.getExecutor(jsFunctionCode).executeVoid();
-        V8ValueFunction function = v8Runtime.getGlobalObject().get(functionName);
-        return function.callObject(null, args);
+        try (IJavetEngine<V8Runtime> engine = POOL.getEngine()) {
+            V8Runtime v8Runtime = engine.getV8Runtime();
+            // 先加载函数
+            v8Runtime.getExecutor(jsFunctionCode).executeVoid();
+            V8ValueFunction function = v8Runtime.getGlobalObject().get(functionName);
+            return function.callObject(null, args);
+        }
     }
 
-    // 执行 JS_TEMPLATE 表达式，返回结果字符串
+    /**
+     * 执行 JS 表达式，返回结果字符串
+     */
     @SneakyThrows
     public String eval(String jsCode) {
-        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        return v8Runtime.getExecutor(jsCode).executeString();
-    }
-
-    // 释放当前线程的 V8Runtime（可选，看线程池策略）
-    public void close() {
-        V8Runtime v8Runtime = THREAD_LOCAL_RUNTIME.get();
-        JavetResourceUtils.safeClose(v8Runtime);
-        THREAD_LOCAL_RUNTIME.remove();
+        try (IJavetEngine<V8Runtime> engine = POOL.getEngine()) {
+            V8Runtime v8Runtime = engine.getV8Runtime();
+            return v8Runtime.getExecutor(jsCode).executeString();
+        }
     }
 
 }
