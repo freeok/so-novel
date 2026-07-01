@@ -11,12 +11,9 @@ import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
-import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.model.Chapter;
-import com.pcdd.sonovel.model.ContentType;
-import com.pcdd.sonovel.model.Rule;
+import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.utils.CrawlUtils;
-import com.pcdd.sonovel.model.TocList;
+import com.pcdd.sonovel.utils.VirtualThreadLimiter;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -26,8 +23,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.pcdd.sonovel.model.ContentType.ATTR_HREF;
 import static com.pcdd.sonovel.model.ContentType.ATTR_VALUE;
@@ -138,47 +138,65 @@ public class TocParser extends Source {
     /**
      * @param urls 分页目录的 url
      */
-    @SneakyThrows
     private List<Chapter> parseToc(Set<String> urls, int start, int end, Rule.Toc r) {
-        List<Chapter> toc = new TocList();
-        int orderNumber = 1;
+        List<String> urlList = new ArrayList<>(urls);
+        Map<Integer, List<Element>> pageElements = new ConcurrentHashMap<>();
 
-        // TODO 多线程优化
-        for (String url : urls) {
-            Document document;
-            try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());
-                 InputStream is = resp.body().byteStream()) {
-                // null 表示自动检测编码
-                document = Jsoup.parse(is, null, this.rule.getToc().getBaseUri());
-            }
+        /*
+         * 仅分页目录生效，7140 章测试结果
+         * concurrent: time
+         * 0:  9.32s
+         * 1:  8.85s
+         * 5:  3.26s
+         * 10: 2.3s
+         * 20: 1.94s
+         */
+        try (var limiter = new VirtualThreadLimiter(5)) {
+            for (int i = 0; i < urlList.size(); i++) {
+                int pageIndex = i;
+                String pageUrl = urlList.get(i);
+                limiter.submit(() -> {
+                    try {
+                        Document document;
+                        try (Response resp = CrawlUtils.request(httpClient, pageUrl, r.getTimeout());
+                             InputStream is = resp.body().byteStream()) {
+                            document = Jsoup.parse(is, null, rule.getToc().getBaseUri());
+                        }
+                        document = handleCloudflareBypass(document, pageUrl);
 
-            document = handleCloudflareBypass(document, url);
-
-            // TODO rule.toc.item 实现 JS 语法，在此调用比 addChapter 性能更好
-            List<Element> elements;
-            // 处理 ul
-            if (StrUtil.isNotEmpty(r.getList())) {
-                String tocHtml = HtmlExtractor.extract(document, r.getList(), ContentType.HTML);
-                Document tocDocument = Jsoup.parse(tocHtml);
-                elements = HtmlExtractor.select(tocDocument, r.getItem());
-            } else { // 处理 ul > li > a
-                elements = HtmlExtractor.select(document, r.getItem());
-            }
-
-            int minIndex = Math.min(end, elements.size());
-            if (r.isDesc()) {
-                for (int i = minIndex - 1; i >= start - 1; i--) {
-                    addChapter(elements.get(i), toc, orderNumber++, r);
-                }
-            } else {
-                for (int i = start - 1; i < minIndex; i++) {
-                    addChapter(elements.get(i), toc, orderNumber++, r);
-                }
+                        // TODO wxsy.net rule.toc.item 实现 JS 语法比在此调用 addChapter 性能更好
+                        List<Element> elements;
+                        if (StrUtil.isNotEmpty(r.getList())) { // 处理 ul
+                            String tocHtml = HtmlExtractor.extract(document, r.getList(), ContentType.HTML);
+                            Document tocDocument = Jsoup.parse(tocHtml);
+                            elements = HtmlExtractor.select(tocDocument, r.getItem());
+                        } else { // 处理 ul > li > a
+                            elements = HtmlExtractor.select(document, r.getItem());
+                        }
+                        pageElements.put(pageIndex, elements);
+                    } catch (Exception e) {
+                        Console.error("目录页解析失败: {} - {}", pageUrl, e.getMessage());
+                    }
+                });
             }
         }
 
-        // 不要根据章节名中的小写数字或大写数字对 urls 进行排序（此方法仍不可靠，因为某些章节名的数字不按顺序，例如番外 1）
+        List<Chapter> toc = new TocList();
+        int orderNumber = 1;
 
+        for (int i = 0; i < urlList.size(); i++) {
+            List<Element> elements = pageElements.get(i);
+            if (elements == null) continue;
+
+            int minIndex = Math.min(end, elements.size());
+            if (r.isDesc()) {
+                for (int j = minIndex - 1; j >= start - 1; j--) addChapter(elements.get(j), toc, orderNumber++, r);
+            } else {
+                for (int j = start - 1; j < minIndex; j++) addChapter(elements.get(j), toc, orderNumber++, r);
+            }
+        }
+
+        // 不要根据章节名中的小写数字或大写数字对 urls 进行排序（此方法不可靠，因为某些章节名的数字不按顺序，例如番外 1 并不是第一章）
         return toc;
     }
 
