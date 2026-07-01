@@ -6,11 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.ChapterRenderer;
+import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.*;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
 import com.pcdd.sonovel.util.LogUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -117,7 +117,7 @@ public class ChapterParser extends Source {
         }
 
         doc = handleCloudflareBypass(doc, url);
-        String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+        String content = HtmlExtractor.extract(doc, r.getContent(), ContentType.HTML);
         Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
 
         return content;
@@ -138,12 +138,12 @@ public class ChapterParser extends Source {
 
             doc = handleCloudflareBypass(doc, nextUrl);
 
-            String content = JsoupUtils.selectAndInvokeJs(doc, r.getContent(), ContentType.HTML);
+            String content = HtmlExtractor.extract(doc, r.getContent(), ContentType.HTML);
             Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
             contentBuilder.append(content);
 
             // 获取下一页按钮元素
-            Elements nextEls = JsoupUtils.select(doc, r.getNextPage());
+            Elements nextEls = HtmlExtractor.select(doc, r.getNextPage());
             String candidateNext = resolveNextUrl(doc, nextEls, r);
             if (isLastPage(candidateNext, nextEls, r)) {
                 break;
@@ -171,7 +171,7 @@ public class ChapterParser extends Source {
     private String resolveNextUrl(Document doc, Elements nextEls, Rule.Chapter r) {
         // 从 JS 获取下一页链接
         if (r.getNextPageInJs() != null) {
-            return JsoupUtils.selectAndInvokeJs(doc, r.getNextPageInJs(), ContentType.HTML);
+            return HtmlExtractor.extract(doc, r.getNextPageInJs(), ContentType.HTML);
         }
         if (nextEls.isEmpty()) {
             LogUtils.logByProgressbar(LogLevel.ERROR, config.getEnableProgressbar(),

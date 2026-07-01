@@ -12,6 +12,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
@@ -21,7 +22,6 @@ import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
 import com.pcdd.sonovel.util.JsCaller;
-import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -102,7 +102,7 @@ public class SearchParser extends Source {
         }
 
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素
-        Elements nextPageUrls = JsoupUtils.select(document, r.getNextPage());
+        Elements nextPageUrls = HtmlExtractor.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
         if (nextPageUrls.isEmpty()) {
             return firstPageResults;
@@ -172,21 +172,21 @@ public class SearchParser extends Source {
 
             // 只获取前 N 条搜索记录
             List<Element> limitResultEls = resultEls.stream()
-                    .filter(e -> StrUtil.isNotEmpty(JsoupUtils.selectAndInvokeJs(e, r.getBookName())))
+                    .filter(e -> StrUtil.isNotEmpty(HtmlExtractor.extract(e, r.getBookName())))
                     .limit(config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit())
                     .toList();
 
             for (Element el : limitResultEls) {
                 // jsoup 不支持一次性获取属性的值
-                String href = JsoupUtils.selectAndInvokeJs(el, r.getBookName(), ContentType.ATTR_HREF);
-                String bookName = JsoupUtils.selectAndInvokeJs(el, r.getBookName());
+                String href = HtmlExtractor.extract(el, r.getBookName(), ContentType.ATTR_HREF);
+                String bookName = HtmlExtractor.extract(el, r.getBookName());
                 // 以下为非必须属性
-                String author = JsoupUtils.selectAndInvokeJs(el, r.getAuthor());
-                String category = JsoupUtils.selectAndInvokeJs(el, r.getCategory());
-                String latestChapter = JsoupUtils.selectAndInvokeJs(el, r.getLatestChapter());
-                String lastUpdateTime = JsoupUtils.selectAndInvokeJs(el, r.getLastUpdateTime());
-                String status = JsoupUtils.selectAndInvokeJs(el, r.getStatus());
-                String wordCount = JsoupUtils.selectAndInvokeJs(el, r.getWordCount());
+                String author = HtmlExtractor.extract(el, r.getAuthor());
+                String category = HtmlExtractor.extract(el, r.getCategory());
+                String latestChapter = HtmlExtractor.extract(el, r.getLatestChapter());
+                String lastUpdateTime = HtmlExtractor.extract(el, r.getLastUpdateTime());
+                String status = HtmlExtractor.extract(el, r.getStatus());
+                String wordCount = HtmlExtractor.extract(el, r.getWordCount());
 
                 if (bookName.isEmpty()) continue;
 

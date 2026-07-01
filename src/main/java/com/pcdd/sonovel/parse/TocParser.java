@@ -9,13 +9,13 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
+import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
 import com.pcdd.sonovel.util.TocList;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -87,7 +87,7 @@ public class TocParser extends Source {
 
     @SneakyThrows
     private void extractPaginationUrls(Set<String> urls, Document document, Rule.Toc r) {
-        Elements elements = JsoupUtils.select(document, r.getNextPage());
+        Elements elements = HtmlExtractor.select(document, r.getNextPage());
         // 一次性获取分页 URL (下拉菜单)
         if (CollUtil.isNotEmpty(elements) && elements.hasAttr(ATTR_VALUE.getValue())) {
             String attrKey = elements.eachAttr(ATTR_HREF.getValue()).isEmpty()
@@ -108,9 +108,9 @@ public class TocParser extends Source {
         }
         // 递归获取分页目录 URL (下一页按钮的链接)。以下代码覆盖率可能为 0，因为分页目录的链接基本全都是通过下拉菜单一次性获取的
         while (true) {
-            String nextUrl = Opt.ofNullable(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_HREF))
+            String nextUrl = Opt.ofNullable(HtmlExtractor.extract(document, r.getNextPage(), ATTR_HREF))
                     .filter(StrUtil::isNotEmpty)
-                    .orElse(JsoupUtils.selectAndInvokeJs(document, r.getNextPage(), ATTR_VALUE));
+                    .orElse(HtmlExtractor.extract(document, r.getNextPage(), ATTR_VALUE));
             if (StrUtil.isBlank(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
@@ -158,11 +158,11 @@ public class TocParser extends Source {
             List<Element> elements;
             // 处理 ul
             if (StrUtil.isNotEmpty(r.getList())) {
-                String tocHtml = JsoupUtils.selectAndInvokeJs(document, r.getList(), ContentType.HTML);
+                String tocHtml = HtmlExtractor.extract(document, r.getList(), ContentType.HTML);
                 Document tocDocument = Jsoup.parse(tocHtml);
-                elements = JsoupUtils.select(tocDocument, r.getItem());
+                elements = HtmlExtractor.select(tocDocument, r.getItem());
             } else { // 处理 ul > li > a
-                elements = JsoupUtils.select(document, r.getItem());
+                elements = HtmlExtractor.select(document, r.getItem());
             }
 
             int minIndex = Math.min(end, elements.size());
@@ -185,7 +185,7 @@ public class TocParser extends Source {
     private void addChapter(Element el, List<Chapter> toc, int order, Rule.Toc r) {
         toc.add(Chapter.builder()
                 .title(el.text())
-                .url(JsoupUtils.getStrAndInvokeJs(el, r.getNextPage(), ATTR_HREF))
+                .url(HtmlExtractor.extractContent(el, r.getNextPage(), ATTR_HREF))
                 .order(order)
                 .build());
     }

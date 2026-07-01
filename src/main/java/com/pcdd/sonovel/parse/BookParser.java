@@ -6,13 +6,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.pcdd.sonovel.context.HttpClientContext;
 import com.pcdd.sonovel.core.CoverUpdater;
+import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.ContentType;
 import com.pcdd.sonovel.model.Rule.Book;
 import com.pcdd.sonovel.util.ChineseConverter;
 import com.pcdd.sonovel.util.CrawlUtils;
-import com.pcdd.sonovel.util.JsoupUtils;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -51,17 +51,17 @@ public class BookParser extends Source {
             document = Jsoup.parse(realHtml);
         }
 
-        String bookName = JsoupUtils.selectAndInvokeJs(document, r.getBookName(), getContentType(r.getBookName()));
-        String author = JsoupUtils.selectAndInvokeJs(document, r.getAuthor(), getContentType(r.getAuthor()));
+        String bookName = HtmlExtractor.extract(document, r.getBookName(), getContentType(r.getBookName()));
+        String author = HtmlExtractor.extract(document, r.getAuthor(), getContentType(r.getAuthor()));
         Assert.isTrue(StrUtil.isAllNotEmpty(bookName, author), "详情页书名或作者不能为空！DOM:\n{}\n", document);
         // 以下为非必须属性
-        String intro = StrUtil.cleanBlank(JsoupUtils.selectAndInvokeJs(document, r.getIntro(), getContentType(r.getIntro())));
-        String defaultCoverUrl = JsoupUtils.selectAndInvokeJs(document, r.getCoverUrl(), getContentType(r.getCoverUrl()));
-        String category = JsoupUtils.selectAndInvokeJs(document, r.getCategory(), getContentType(r.getCategory()));
-        String latestChapter = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
-        String latestChapterUrl = JsoupUtils.selectAndInvokeJs(document, r.getLatestChapterUrl(), getContentType(r.getLatestChapterUrl()));
-        String lastUpdateTime = JsoupUtils.selectAndInvokeJs(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
-        String status = JsoupUtils.selectAndInvokeJs(document, r.getStatus(), getContentType(r.getStatus()));
+        String intro = StrUtil.cleanBlank(HtmlExtractor.extract(document, r.getIntro(), getContentType(r.getIntro())));
+        String defaultCoverUrl = HtmlExtractor.extract(document, r.getCoverUrl(), getContentType(r.getCoverUrl()));
+        String category = HtmlExtractor.extract(document, r.getCategory(), getContentType(r.getCategory()));
+        String latestChapter = HtmlExtractor.extract(document, r.getLatestChapter(), getContentType(r.getLatestChapter()));
+        String latestChapterUrl = HtmlExtractor.extract(document, r.getLatestChapterUrl(), getContentType(r.getLatestChapterUrl()));
+        String lastUpdateTime = HtmlExtractor.extract(document, r.getLastUpdateTime(), getContentType(r.getLastUpdateTime()));
+        String status = HtmlExtractor.extract(document, r.getStatus(), getContentType(r.getStatus()));
 
         Book book = new Book();
         book.setUrl(url);

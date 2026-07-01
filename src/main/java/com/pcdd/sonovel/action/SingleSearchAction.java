@@ -6,6 +6,7 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.core.HtmlExtractor;
 import com.pcdd.sonovel.core.Source;
 import com.pcdd.sonovel.handle.SearchResultsHandler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -43,7 +44,7 @@ public class SingleSearchAction {
             Console.print(render("<== 书源 {} ({}) 已被禁用\n", "yellow"), rule.getId(), rule.getName());
             return;
         }
-        url = JsoupUtils.invokeJs(rule.getBook().getUrl(), url);
+        url = HtmlExtractor.executeDsl(rule.getBook().getUrl(), url);
         Book book = new BookParser(config).parse(url);
         SearchResult sr = SearchResult.builder()
                 .sourceId(config.getSourceId())
