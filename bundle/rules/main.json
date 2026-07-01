@@ -65,11 +65,11 @@
     }
   },
   {
-    "url": "http://www.mcxs.info/",
+    "url": "http://www.mcxs.la/",
     "name": "梦书中文",
     "comment": "搜索有限流(Connect timed out)",
     "search": {
-      "url": "http://www.mcxs.info/search.html",
+      "url": "http://www.mcxs.la/search.html",
       "method": "post",
       "data": "{name: %s}",
       "result": ".novelslist2 > ul > li",
@@ -79,7 +79,7 @@
       "lastUpdateTime": "span.s6.wid6"
     },
     "book": {
-      "coverUrl": "meta[property=\"og:image\"]@js:r='http://www.mcxs.info'+r"
+      "coverUrl": "meta[property=\"og:image\"]@js:r='http://www.mcxs.la'+r"
     },
     "toc": {
       "item": "dl > dt:nth-of-type(2) ~ dd > a"
@@ -153,11 +153,11 @@
     }
   },
   {
-    "url": "http://www.xbiquzw.net/",
+    "url": "http://www.xbiquwk.com/",
     "name": "笔尖中文",
     "comment": "",
     "search": {
-      "url": "http://www.xbiquzw.net/modules/article/search.php",
+      "url": "http://www.xbiquwk.com/modules/article/search.php",
       "method": "post",
       "data": "{searchkey: %s}",
       "result": "#wrapper > table > tbody > tr",
@@ -167,10 +167,10 @@
       "lastUpdateTime": "td:nth-child(5)"
     },
     "book": {
-      "url": "http://www.xbiquzw.net/(.*?)/"
+      "url": "http://www.xbiquwk.com/(.*?)/"
     },
     "toc": {
-      "baseUri": "http://www.xbiquzw.net/%s/",
+      "baseUri": "http://www.xbiquwk.com/%s/",
       "item": "#list > dl > dd > a"
     },
     "chapter": {
