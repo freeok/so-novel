@@ -2,7 +2,7 @@ package com.pcdd.sonovel.lab;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileAppender;
-import com.pcdd.sonovel.util.FileUtils;
+import com.pcdd.sonovel.utils.FileUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;

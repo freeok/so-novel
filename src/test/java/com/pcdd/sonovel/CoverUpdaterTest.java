@@ -1,6 +1,6 @@
 package com.pcdd.sonovel;
 
-import com.pcdd.sonovel.core.CoverUpdater;
+import com.pcdd.sonovel.utils.CoverUpdater;
 import com.pcdd.sonovel.model.Rule.Book;
 import org.junit.jupiter.api.Test;
 

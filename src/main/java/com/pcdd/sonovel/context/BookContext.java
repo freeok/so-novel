@@ -1,7 +1,7 @@
 package com.pcdd.sonovel.context;
 
 import com.pcdd.sonovel.model.Rule.Book;
-import com.pcdd.sonovel.util.FileUtils;
+import com.pcdd.sonovel.utils.FileUtils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

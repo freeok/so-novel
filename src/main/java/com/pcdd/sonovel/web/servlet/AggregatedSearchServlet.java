@@ -1,7 +1,7 @@
 package com.pcdd.sonovel.web.servlet;
 
 import cn.hutool.core.util.StrUtil;
-import com.pcdd.sonovel.action.AggregatedSearchAction;
+import com.pcdd.sonovel.actions.AggregatedSearchAction;
 import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.model.SearchResult;
 import com.pcdd.sonovel.web.util.RespUtils;

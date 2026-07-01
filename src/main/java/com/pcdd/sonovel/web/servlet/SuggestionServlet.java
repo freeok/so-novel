@@ -5,7 +5,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.pcdd.sonovel.util.RandomUA;
+import com.pcdd.sonovel.utils.RandomUA;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

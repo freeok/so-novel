@@ -7,7 +7,7 @@ import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.core.Crawler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.SearchResult;
-import com.pcdd.sonovel.util.SourceUtils;
+import com.pcdd.sonovel.utils.SourceUtils;
 import com.pcdd.sonovel.web.util.RespUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

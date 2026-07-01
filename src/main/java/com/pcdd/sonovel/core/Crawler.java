@@ -8,16 +8,16 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.pcdd.sonovel.context.BookContext;
-import com.pcdd.sonovel.handle.CrawlerPostHandler;
+import com.pcdd.sonovel.handler.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Chapter;
 import com.pcdd.sonovel.model.Rule.Book;
-import com.pcdd.sonovel.parse.BookParser;
-import com.pcdd.sonovel.parse.ChapterParser;
-import com.pcdd.sonovel.parse.TocParser;
-import com.pcdd.sonovel.util.FileUtils;
-import com.pcdd.sonovel.util.LogUtils;
-import com.pcdd.sonovel.util.VirtualThreadLimiter;
+import com.pcdd.sonovel.parser.BookParser;
+import com.pcdd.sonovel.parser.ChapterParser;
+import com.pcdd.sonovel.parser.TocParser;
+import com.pcdd.sonovel.utils.FileUtils;
+import com.pcdd.sonovel.utils.LogUtils;
+import com.pcdd.sonovel.utils.VirtualThreadLimiter;
 import com.pcdd.sonovel.web.model.DownloadProgressInfo;
 import com.pcdd.sonovel.web.servlet.DownloadProgressSseServlet;
 import lombok.SneakyThrows;
@@ -177,7 +177,7 @@ public class Crawler {
                 : String.valueOf(chapter.getOrder()); // 非全本下载
 
         return parentPath + order + switch (config.getExtName()) {
-            // 下划线用于兼容，不要删除，见 com/pcdd/sonovel/handle/HtmlTocHandler.java:28
+            // 下划线用于兼容，不要删除，见 com/pcdd/sonovel/handler/HtmlTocHandler.java:28
             case "html" -> "_.html";
             case "txt" -> "_" + FileUtils.sanitizeFileName(chapter.getTitle()) + ".txt";
             // 转换前的格式为 html

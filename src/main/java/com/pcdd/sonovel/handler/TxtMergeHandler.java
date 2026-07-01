@@ -1,0 +1,55 @@
+package com.pcdd.sonovel.handler;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileAppender;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HtmlUtil;
+import com.pcdd.sonovel.model.AppConfig;
+import com.pcdd.sonovel.model.Rule.Book;
+import com.pcdd.sonovel.utils.FileUtils;
+import lombok.AllArgsConstructor;
+
+import java.io.File;
+import java.nio.charset.Charset;
+
+/**
+ * @author pcdd
+ * Created at 2024/12/4
+ */
+@AllArgsConstructor
+public class TxtMergeHandler implements PostProcessingHandler {
+
+    private final AppConfig config;
+
+    @Override
+    public void handle(Book book, File saveDir) {
+        String outputPath = StrUtil.format("{}{}({}).txt",
+                config.getDownloadPath() + File.separator, book.getBookName(), book.getAuthor());
+        // 删除旧的同名 txt 文件
+        FileUtil.del(outputPath);
+        String absolutePath = FileUtils.toAbsolutePath(outputPath);
+        File outputFile = FileUtil.touch(absolutePath);
+
+        // 获取 TXT 编码，默认 UTF-8
+        Charset charset = CharsetUtil.parse(config.getTxtEncoding());
+
+        FileAppender appender = new FileAppender(outputFile, charset, 16, true);
+
+        // 首页添加书籍信息
+        appender.append("""
+                书名：%s
+                作者：%s
+                简介：%s
+                """.formatted(book.getBookName(), book.getAuthor(), StrUtil.isBlank(book.getIntro()) ? "暂无" : HtmlUtil.cleanHtmlTag(book.getIntro()))
+        );
+
+        for (File f : FileUtils.sortFilesByName(saveDir)) {
+            appender.append(FileUtil.readUtf8String(f));
+        }
+        appender.flush();
+
+        downloadCover(book, saveDir);
+    }
+
+}

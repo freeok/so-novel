@@ -3,7 +3,7 @@ package com.pcdd.sonovel.core;
 import cn.hutool.core.lang.Opt;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.SourceUtils;
+import com.pcdd.sonovel.utils.SourceUtils;
 
 /**
  * @author pcdd

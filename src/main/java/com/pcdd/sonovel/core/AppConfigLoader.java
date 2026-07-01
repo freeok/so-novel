@@ -5,9 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.pcdd.sonovel.model.AppConfig;
-import com.pcdd.sonovel.util.EnvUtils;
-import com.pcdd.sonovel.util.FileUtils;
-import com.pcdd.sonovel.util.LangUtils;
+import com.pcdd.sonovel.utils.EnvUtils;
+import com.pcdd.sonovel.utils.FileUtils;
+import com.pcdd.sonovel.utils.LangUtils;
 import lombok.experimental.UtilityClass;
 
 import java.nio.charset.StandardCharsets;

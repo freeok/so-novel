@@ -2,7 +2,7 @@ package com.pcdd.sonovel.core;
 
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule;
-import com.pcdd.sonovel.util.JsoupUtils;
+import com.pcdd.sonovel.utils.HtmlUtils;
 import lombok.AllArgsConstructor;
 
 /**
@@ -20,7 +20,7 @@ public class ChapterFormatter {
     public String format(String content) {
         Rule.Chapter r = new Source(config).rule.getChapter();
         // 这里的 content 不应被 cleanBlank（不能为  <divclass="xxx">），否则 clearAllAttributes 无效
-        content = JsoupUtils.clearAllAttributes(content);
+        content = HtmlUtils.clearAllAttributes(content);
 
         // 标签闭合，例如：<tag>段落内容</tag>
         if (r.isParagraphTagClosed()) {
