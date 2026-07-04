@@ -68,6 +68,8 @@ bash <(curl -sSL https://raw.githubusercontent.com/freeok/so-novel/main/bin/linu
 
 ```bash
 brew tap ownia/homebrew-ownia
+# https://docs.brew.sh/Tap-Trust#why-tap-trust-exists
+brew trust --formula ownia/homebrew-ownia/so-novel
 brew install so-novel
 ```
 
