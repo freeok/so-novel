@@ -237,4 +237,4 @@ https://github.com/freeok/so-novel/discussions?discussions_q=
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=freeok/so-novel&type=Date)](https://star-history.com/#freeok/so-novel&Date)
+[![Star History Chart](https://api.star-history.com/chart?repos=freeok/so-novel&type=date&legend=top-left&sealed_token=5phfE_GEDrDmXeO6LQ3d-73K_Z4w75PKWLzMkb1UqUVwFszcO9t76DKuf9l4wYgZ-ik27ocHo67YGTpn8oCGHq0_Iy_3FKy-mi8H8BY6S3x0j5HYYO9__A)](https://www.star-history.com/?repos=freeok%2Fso-novel&type=date&legend=top-left)
