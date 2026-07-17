@@ -65,7 +65,8 @@ public class SearchParser extends Source {
         Document document;
         try {
             String searchUrl = processUrl(r.getUrl(), keyword);
-            String referer = URI.create(searchUrl).resolve("/").toString();
+            URI uri = URI.create(searchUrl);
+            String referer = uri.getScheme() + "://" + uri.getAuthority();
             Request.Builder builder = new Request.Builder()
                     .addHeader(Header.REFERER.toString(), referer)
                     .url(searchUrl);
