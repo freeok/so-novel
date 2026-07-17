@@ -9,7 +9,7 @@
 | [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      |                                           |
 | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
 | [梦书中文](http://www.mcxs.la/)          | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
-| [鸟书网](http://www.99xs.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
+| [鸟书网](http://www.99wx.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
 | [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      |                                           |
 | [笔尖中文](http://www.xbiquwk.com/)      | ✅     | ❌      |                                           | |
 | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      |                                           |

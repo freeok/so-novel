@@ -94,11 +94,11 @@
     }
   },
   {
-    "url": "http://www.99xs.info/",
+    "url": "http://www.99wx.info/",
     "name": "鸟书网",
     "comment": "搜索有限流 (Read timed out)，数量15w+",
     "search": {
-      "url": "http://www.99xs.info/read/search/",
+      "url": "http://www.99wx.info/read/search/",
       "method": "post",
       "data": "{searchkey: %s}",
       "result": "div.wrap > div > div > div",
