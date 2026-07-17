@@ -3,6 +3,7 @@ package com.pcdd.sonovel.parser;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
@@ -99,7 +100,7 @@ public class TocParser extends Source {
             String href = HtmlExtractor.extract(document, r.getNextPage(), ATTR_HREF);
             String nextUrl = StrUtil.isNotEmpty(href) ? href
                     : HtmlExtractor.extract(document, r.getNextPage(), ATTR_VALUE);
-            if (StrUtil.isBlank(nextUrl) || !nextUrl.startsWith("http")) break;
+            if (StrUtil.isBlank(nextUrl) || !Validator.isUrl(nextUrl)) break;
             urls.add(nextUrl);
 
             document = fetchDocument(nextUrl, r, r.getTimeout());
@@ -117,11 +118,13 @@ public class TocParser extends Source {
     }
 
     private List<Element> extractElements(Document document, Rule.Toc r) {
+        // 处理 ul
         if (StrUtil.isNotEmpty(r.getList())) {
             String tocHtml = HtmlExtractor.extract(document, r.getList(), ContentType.HTML);
             Document tocDoc = Jsoup.parse(tocHtml);
             return HtmlExtractor.select(tocDoc, r.getItem());
         }
+        // 处理 ul > li > a
         return HtmlExtractor.select(document, r.getItem());
     }
 

@@ -43,7 +43,7 @@ public class HtmlExtractor {
     }
 
     public String extract(Element el, String query) {
-        return extract(el, query, ContentType.TEXT);
+        return extract(el, query, getContentType(query));
     }
 
     /**
@@ -86,6 +86,14 @@ public class HtmlExtractor {
         String value = getContent(el, contentType);
         // 如果 query 包含 @js、@java，调用它
         return StrUtil.isNotEmpty(query) ? executeDsl(query, value) : value;
+    }
+
+    private ContentType getContentType(String query) {
+        if (StrUtil.isBlank(query)) return null;
+        if (query.contains("@href")) return ContentType.ATTR_HREF;
+        if (query.contains("@src")) return ContentType.ATTR_SRC;
+        if (query.startsWith("meta[")) return ContentType.ATTR_CONTENT;
+        return ContentType.TEXT;
     }
 
     /**
