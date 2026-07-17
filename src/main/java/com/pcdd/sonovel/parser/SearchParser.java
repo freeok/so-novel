@@ -62,7 +62,6 @@ public class SearchParser extends Source {
             return Collections.emptyList();
         }
 
-        Response resp;
         Document document;
         try {
             String searchUrl = processUrl(r.getUrl(), keyword);
@@ -78,9 +77,10 @@ public class SearchParser extends Source {
                 builder = builder.post(CrawlUtils.buildData(r.getData(), keyword));
             }
 
-            resp = CrawlUtils.request(httpClient, builder, r.getTimeout());
-            String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
-            document = Jsoup.parse(body, r.getBaseUri());
+            try (Response resp = CrawlUtils.request(httpClient, builder, r.getTimeout())) {
+                String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+                document = Jsoup.parse(body, r.getBaseUri());
+            }
 
             if (CrawlUtils.hasCf(document)) {
                 Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", searchUrl);
@@ -95,12 +95,11 @@ public class SearchParser extends Source {
             return Collections.emptyList();
         }
 
-        List<SearchResult> firstPageResults = getSearchResults(null, resp);
+        List<SearchResult> firstPageResults = getSearchResults(document, r);
         // 搜索结果无分页
         if (StrUtil.isBlank(r.getNextPage())) {
             return firstPageResults;
         }
-
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素
         Elements nextPageUrls = HtmlExtractor.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
@@ -117,37 +116,32 @@ public class SearchParser extends Source {
         }
         // 使用并行流处理分页 URL
         List<SearchResult> additionalResults = urls.parallelStream()
-                .flatMap(url -> getSearchResults(url, null).stream())
+                .flatMap(url -> getSearchResults(fetchDocument(url, r), r).stream())
                 .toList();
         // 合并，不去重（去重用 union）
         List<SearchResult> searchResults = CollUtil.unionAll(firstPageResults, additionalResults);
+        int limit = config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit();
         // TODO 优化，需要几条获取几条，而不是一次性获取然后截取
-        return CollUtil.sub(searchResults, 0, config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit());
+        return CollUtil.sub(searchResults, 0, limit);
     }
 
-    private List<SearchResult> getSearchResults(String url, Response resp) {
-        Rule.Search r = this.rule.getSearch();
+    @SneakyThrows
+    private Document fetchDocument(String url, Rule.Search r) {
+        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
+            String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+            return Jsoup.parse(body, r.getBaseUri());
+        }
+    }
+
+    private List<SearchResult> getSearchResults(Document document, Rule.Search r) {
         List<SearchResult> list = new ArrayList<>();
         try {
-            // 搜索结果页 DOM
-            Document document;
-            if (resp == null) {
-                try (Response newResp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
-                    // peekBody 不会关闭原body流，可以拿一份副本出来
-                    String body = processResultWithJs(newResp.peekBody(Long.MAX_VALUE).string(), r.getResult());
-                    document = Jsoup.parse(body, r.getBaseUri());
-                }
-            } else {
-                String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
-                document = Jsoup.parse(body, r.getBaseUri());
-            }
-
             String resultSelector = stripJs(r.getResult());
-            Elements resultEls = document.select(resultSelector);
+            Elements resultEls = HtmlExtractor.select(document, resultSelector);
 
             // 部分书源完全匹配时会直接跳转到详情页（搜索结果为空 && 书名不为空），故需要构造搜索结果
-            if (resultEls.isEmpty() && !document.select(this.rule.getBook().getBookName()).isEmpty()) {
-                String bookUrl = resp.request().url().toString();
+            if (resultEls.isEmpty() && !HtmlExtractor.select(document, this.rule.getBook().getBookName()).isEmpty()) {
+                String bookUrl = document.location();
                 BookParser bookParser = new BookParser(config);
                 Book book = bookParser.parse(bookUrl);
 
@@ -166,10 +160,8 @@ public class SearchParser extends Source {
                         .build();
                 list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
                 Thread.sleep(CrawlUtils.randomInterval(config));
-
                 return list;
             }
-
             // 只获取前 N 条搜索记录
             List<Element> limitResultEls = resultEls.stream()
                     .filter(e -> StrUtil.isNotEmpty(HtmlExtractor.extract(e, r.getBookName())))
@@ -180,14 +172,6 @@ public class SearchParser extends Source {
                 // jsoup 不支持一次性获取属性的值
                 String href = HtmlExtractor.extract(el, r.getBookName(), ContentType.ATTR_HREF);
                 String bookName = HtmlExtractor.extract(el, r.getBookName());
-                // 以下为非必须属性
-                String author = HtmlExtractor.extract(el, r.getAuthor());
-                String category = HtmlExtractor.extract(el, r.getCategory());
-                String latestChapter = HtmlExtractor.extract(el, r.getLatestChapter());
-                String lastUpdateTime = HtmlExtractor.extract(el, r.getLastUpdateTime());
-                String status = HtmlExtractor.extract(el, r.getStatus());
-                String wordCount = HtmlExtractor.extract(el, r.getWordCount());
-
                 if (bookName.isEmpty()) continue;
 
                 SearchResult sr = SearchResult.builder()
@@ -195,12 +179,13 @@ public class SearchParser extends Source {
                         .sourceName(this.rule.getName())
                         .url(href)
                         .bookName(bookName)
-                        .author(author)
-                        .category(category)
-                        .latestChapter(latestChapter)
-                        .lastUpdateTime(lastUpdateTime)
-                        .status(status)
-                        .wordCount(wordCount)
+                        // 以下为非必须属性
+                        .author(HtmlExtractor.extract(el, r.getAuthor()))
+                        .category(HtmlExtractor.extract(el, r.getCategory()))
+                        .latestChapter(HtmlExtractor.extract(el, r.getLatestChapter()))
+                        .lastUpdateTime(HtmlExtractor.extract(el, r.getLastUpdateTime()))
+                        .status(HtmlExtractor.extract(el, r.getStatus()))
+                        .wordCount(HtmlExtractor.extract(el, r.getWordCount()))
                         .build();
 
                 list.add(ChineseConverter.convert(sr, this.rule.getLanguage(), config.getLanguage()));
@@ -208,11 +193,6 @@ public class SearchParser extends Source {
         } catch (Exception e) {
             Console.error(e);
             return Collections.emptyList();
-
-        } finally {
-            if (resp != null) {
-                resp.close();
-            }
         }
 
         return list;
@@ -220,33 +200,31 @@ public class SearchParser extends Source {
 
     public void printSearchResult(List<SearchResult> results) {
         Rule.Search r = this.rule.getSearch();
-        if (r == null || CollUtil.isEmpty(results)) {
-            return;
-        }
+        if (r == null || CollUtil.isEmpty(results)) return;
 
         ConsoleTable consoleTable = ConsoleTable.create();
+        // 根据首个结果判断哪些属性列存在，统一构造表头
+        SearchResult first = results.getFirst();
+        List<String> cols = new ArrayList<>();
+        List<String> titles = ListUtil.toList("序号", "书名");
+        if (addColumnIfNotEmpty(cols, r.getAuthor(), first.getAuthor())) titles.add("作者");
+        if (addColumnIfNotEmpty(cols, r.getCategory(), first.getCategory())) titles.add("类别");
+        if (addColumnIfNotEmpty(cols, r.getLatestChapter(), first.getLatestChapter())) titles.add("最新章节");
+        if (addColumnIfNotEmpty(cols, r.getLastUpdateTime(), first.getLastUpdateTime())) titles.add("更新时间");
+        if (addColumnIfNotEmpty(cols, r.getStatus(), first.getStatus())) titles.add("状态");
+        if (addColumnIfNotEmpty(cols, r.getWordCount(), first.getWordCount())) titles.add("总字数");
+        consoleTable.addHeader(ArrayUtil.toArray(titles, String.class));
+
         for (int i = 1; i <= results.size(); i++) {
             SearchResult sr = results.get(i - 1);
-            List<String> cols = ListUtil.toList(String.valueOf(i), sr.getBookName());
-            boolean existsAuthor = addColumnIfNotEmpty(cols, r.getAuthor(), sr.getAuthor());
-            boolean existsCategory = addColumnIfNotEmpty(cols, r.getCategory(), sr.getCategory());
-            boolean existsLatestChapter = addColumnIfNotEmpty(cols, r.getLatestChapter(), StrUtil.subPre(sr.getLatestChapter(), TEXT_LIMIT_LENGTH));
-            boolean existsLastUpdateTime = addColumnIfNotEmpty(cols, r.getLastUpdateTime(), ReUtil.replaceAll(sr.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
-            boolean existsStatus = addColumnIfNotEmpty(cols, r.getStatus(), sr.getStatus());
-            boolean existsWordCount = addColumnIfNotEmpty(cols, r.getWordCount(), sr.getWordCount());
-            // 构造表头
-            if (i == 1) {
-                // 必定存在的列
-                List<String> titles = ListUtil.toList("序号", "书名");
-                if (existsAuthor) titles.add("作者");
-                if (existsCategory) titles.add("类别");
-                if (existsLatestChapter) titles.add("最新章节");
-                if (existsLastUpdateTime) titles.add("更新时间");
-                if (existsStatus) titles.add("状态");
-                if (existsWordCount) titles.add("总字数");
-                consoleTable.addHeader(ArrayUtil.toArray(titles, String.class));
-            }
-            consoleTable.addBody(ArrayUtil.toArray(cols, String.class));
+            List<String> row = ListUtil.toList(String.valueOf(i), sr.getBookName());
+            addColumnIfNotEmpty(row, r.getAuthor(), sr.getAuthor());
+            addColumnIfNotEmpty(row, r.getCategory(), sr.getCategory());
+            addColumnIfNotEmpty(row, r.getLatestChapter(), StrUtil.subPre(sr.getLatestChapter(), TEXT_LIMIT_LENGTH));
+            addColumnIfNotEmpty(row, r.getLastUpdateTime(), ReUtil.replaceAll(sr.getLastUpdateTime(), "\\d{2}:\\d{2}(:\\d{2})?", ""));
+            addColumnIfNotEmpty(row, r.getStatus(), sr.getStatus());
+            addColumnIfNotEmpty(row, r.getWordCount(), sr.getWordCount());
+            consoleTable.addBody(ArrayUtil.toArray(row, String.class));
         }
 
         Console.table(consoleTable);
