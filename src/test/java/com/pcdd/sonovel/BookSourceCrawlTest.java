@@ -65,17 +65,15 @@ class BookSourceCrawlTest {
     @DisplayName("main.json")
     @ParameterizedTest
     @CsvSource({
-            "http://www.xbiqugu.la/130/130509/",
+            "http://www.ibiqugu.net/130/130509/",
             "https://www.shuhaige.net/70475/",
             "http://www.mcxs.la/145_145199/",
             "http://www.99wx.info/tag/129_129843/",
-            "https://www.22biqu.com/biqu79148/",
             "http://www.xbiquwk.com/10_10233/",
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
             "https://www.wxsy.net/novel/1803/",
             "https://www.biquge365.net/book/95601/",
-            "https://www.ranwen8.cc/book/8217/"
     })
     void test01(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);

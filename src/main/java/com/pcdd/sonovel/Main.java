@@ -4,11 +4,14 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
+import com.caoccao.javet.exceptions.JavetException;
+import com.caoccao.javet.interop.V8Host;
+import com.caoccao.javet.interop.V8Runtime;
 import com.openhtmltopdf.util.XRLog;
 import com.pcdd.sonovel.actions.CheckUpdateAction;
 import com.pcdd.sonovel.context.HttpClientContext;
-import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.context.OkHttpClientFactory;
+import com.pcdd.sonovel.core.AppConfigLoader;
 import com.pcdd.sonovel.launcher.CliLauncher;
 import com.pcdd.sonovel.launcher.TuiLauncher;
 import com.pcdd.sonovel.model.AppConfig;
@@ -56,7 +59,9 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JavetException {
+        // 解决 V8 模式运行 createV8Runtime () 时发生 SIGSEGV 错误，这样无需设置环境变量 JAVET_DISABLE_PKU=1
+        try (V8Runtime v8Runtime = V8Host.getV8Instance().createV8Runtime()) {}
         AppConfig cfg = AppConfigLoader.APP_CONFIG;
         HttpClientContext.set(OkHttpClientFactory.create(cfg));
 

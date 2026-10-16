@@ -6,17 +6,15 @@
 
 | 书源名称                                 | 大陆 IP | 非大陆 IP | ⚠️ 需要注意                                   |
 |--------------------------------------|-------|--------|-------------------------------------------|
-| [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      |                                           |
+| [香书小说](http://www.ibiqugu.net/)       | ✅     | ❌      |                                           |
 | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
 | [梦书中文](http://www.mcxs.la/)          | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
 | [鸟书网](http://www.99wx.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
-| [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      |                                           |
 | [笔尖中文](http://www.xbiquwk.com/)      | ✅     | ❌      |                                           | |
 | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      |                                           |
 | [阅读库](http://www.yeudusk.com/)       | ✅     | ❌      |                                           |
 | [顶点小说](https://www.wxsy.net/)        | ✅     | ❌      | 搜索、详情限流                                   |
 | [笔趣阁365](https://www.biquge365.net/) | ✅     | ✅      | 搜索间隔 15 秒                                 |
-| [燃文小说网](https://www.ranwen8.cc/)     | ✅     | ❌      |                                           |
 | [第八中文网](https://www.d8zw.com/)        | ✅     | 未测     | 目录自动翻页（每页 100 章），站点偶发 502                 |
 | [笔趣阁52](https://www.52bqg.com/)       | ✅     | 未测     | 目录/章节链接为 JS onclick（规则用 @js 转成绝对链接），正文 base64 编码 |
 | [新笔趣阁](https://www.xbiquge.cc/)       | ✅     | 未测     | 同笔趣阁52；该站连接偶有超时，失败请重试                   |
