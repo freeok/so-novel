@@ -13,8 +13,7 @@
       "latestChapter": "span.s3.wid3 > a",
       "lastUpdateTime": "span.s6.wid6"
     },
-    "book": {
-    },
+    "book": {},
     "toc": {
       "item": "#list > dl > dt:nth-of-type(2) ~ dd > a"
     },
@@ -74,8 +73,7 @@
       "category": "div.cat",
       "latestChapter": "div.update > a"
     },
-    "book": {
-    },
+    "book": {},
     "toc": {
       "item": "dl > dt:nth-of-type(2) ~ dd > a"
     },
@@ -85,6 +83,92 @@
       "paragraphTagClosed": false,
       "paragraphTag": "<br>+",
       "filterTxt": "http://www\\.dongtanxs\\.com/dongtan\\d+/\\d+\\.html\\s*|请记住本书首发域名：www\\.dongtanxs\\.com。东滩小说手机版阅读网址：m\\.dongtanxs\\.com"
+    }
+  },
+  {
+    "url": "http://127.0.0.1:8000/",
+    "name": "和图书",
+    "comment": "本地新增：Cloudflare 托管挑战。规则把所有 URL 改写成本地 cf-bypass 服务（http://127.0.0.1:8000/html?url=…），因此官方二进制也能用；需先启动 cf-bypass",
+    "search": {
+      "url": "http://127.0.0.1:8000/html?url=%s@js:r='http://127.0.0.1:8000/html?url='+encodeURIComponent('https://www.hetushu.com/search/?keyword='+r);",
+      "method": "get",
+      "baseUri": "https://www.hetushu.com/",
+      "timeout": 120,
+      "result": "dl#body > dd@js:r=r.replace(/href=\"(\\/book\\/\\d+\\/index\\.html)\"/g,function(m,h){return 'href=\"http://127.0.0.1:8000/html?url='+encodeURIComponent('https://www.hetushu.com'+h)+'\"';});",
+      "bookName": "h4 > a",
+      "author": "h4 > span@js:r=r.replace(/[\\/\\s]/g,'')",
+      "intro": ".intro p"
+    },
+    "book": {
+      "baseUri": "https://www.hetushu.com/",
+      "timeout": 120,
+      "bookName": ".book_info > h2",
+      "author": ".book_info > div:nth-child(3) > a",
+      "intro": ".book_info .intro",
+      "category": ".book_info > div:nth-of-type(2)@js:r=r.replace(/[^：]*：/,'')",
+      "coverUrl": ".book_info > img@src"
+    },
+    "toc": {
+      "baseUri": "https://www.hetushu.com/",
+      "timeout": 120,
+      "list": "html@js:r=r.replace(/href=\"(\\/book\\/\\d+\\/\\d+\\.html)\"/g,function(m,h){return 'href=\"http://127.0.0.1:8000/html?url='+encodeURIComponent('https://www.hetushu.com'+h)+'\"';});",
+      "item": "dl#dir > dd > a"
+    },
+    "chapter": {
+      "baseUri": "https://www.hetushu.com/",
+      "timeout": 120,
+      "title": "h2.h2",
+      "content": "#content",
+      "paragraphTagClosed": true,
+      "filterTxt": "和图书|hetushu\\.com|\\(本章完\\)",
+      "filterTag": ""
+    },
+    "crawl": {
+      "concurrency": 2,
+      "minInterval": 200,
+      "maxInterval": 600,
+      "maxAttempts": 3,
+      "retryMinInterval": 1500,
+      "retryMaxInterval": 3000
+    }
+  },
+  {
+    "url": "https://www.linovelib.com/",
+    "name": "哔哩轻小说",
+    "comment": "本地新增：Cloudflare 站点（403 页标题为 Attention Required! | Cloudflare，程序自带 cf-bypass 检测能命中）；搜索为 POST /S6/（searchkey），详情用 og:novel meta，目录 /novel/{id}/catalog，正文 #mlfy_main_text，章节单页",
+    "search": {
+      "url": "https://www.linovelib.com/S6/",
+      "method": "post",
+      "data": "{searchkey: %s}",
+      "timeout": 60,
+      "result": "div.search-result-list",
+      "bookName": "h2.tit > a",
+      "author": ".bookinfo a"
+    },
+    "book": {
+      "url": "https://www.linovelib.com/novel/(\\d+)\\.html",
+      "timeout": 60
+    },
+    "toc": {
+      "url": "https://www.linovelib.com/novel/%s/catalog",
+      "timeout": 90,
+      "item": "ul.chapter-list > li > a"
+    },
+    "chapter": {
+      "timeout": 90,
+      "title": "h1",
+      "content": "#mlfy_main_text",
+      "paragraphTagClosed": true,
+      "filterTxt": "请勿开启浏览器阅读模式|\\(本章完\\)|哔哩轻小说|和图书",
+      "filterTag": "script"
+    },
+    "crawl": {
+      "concurrency": 2,
+      "minInterval": 400,
+      "maxInterval": 1000,
+      "maxAttempts": 3,
+      "retryMinInterval": 1500,
+      "retryMaxInterval": 3000
     }
   }
 ]
