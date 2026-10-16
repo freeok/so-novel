@@ -134,5 +134,44 @@
       "filterTxt": "\\(本章完\\)",
       "filterTag": "div"
     }
+  },
+  {
+    "url": "https://www.fsshu.com/",
+    "name": "笔趣屋",
+    "comment": "本地新增：与新笔趣阁info同款CMS(fsshu镜像)；搜索GET、目录20页、正文article.font_max、章节内分页",
+    "search": {
+      "url": "https://www.fsshu.com/search.php?q=%s",
+      "method": "get",
+      "result": ".box.hot dl",
+      "bookName": "dd > h3 > a@js:r=r.replace(/^\\[[^\\]]*\\]/,'')",
+      "author": "dd.book_other > span",
+      "latestChapter": "dd.book_other a"
+    },
+    "book": {
+      "url": "https://www.fsshu.com/biquge/(\\d+/\\d+)/"
+    },
+    "toc": {
+      "url": "https://www.fsshu.com/biquge/%s/index_1.html",
+      "baseUri": "https://www.fsshu.com/biquge/%s/",
+      "item": ".book_list2 > ul > li > a",
+      "nextPage": ".pagination li.page-item.active + li > a"
+    },
+    "chapter": {
+      "title": "h1",
+      "content": "article.font_max",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "第\\(\\d+/\\d+\\)页|正在手打中，请稍等片刻|内容更新后，请重新刷新页面，即可获取最新更新！",
+      "filterTag": "script",
+      "nextPage": "#next1"
+    },
+    "crawl": {
+      "concurrency": 3,
+      "minInterval": 400,
+      "maxInterval": 1000,
+      "maxAttempts": 3,
+      "retryMinInterval": 1500,
+      "retryMaxInterval": 3000
+    }
   }
 ]

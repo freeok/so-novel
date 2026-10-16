@@ -225,40 +225,6 @@
     }
   },
   {
-    "url": "https://www.wxsy.net/",
-    "name": "顶点小说",
-    "comment": "搜索、详情、章节限流。目录乱序、正文段落被base64编码",
-    "search": {
-      "url": "https://www.wxsy.net/search.html",
-      "method": "post",
-      "data": "{s: %s}",
-      "result": "body > div.container > div:nth-child(1) > div > ul > li",
-      "bookName": "span.s2 > a",
-      "author": "span.s3 > a",
-      "category": "span.s1",
-      "latestChapter": "span.s4 > a",
-      "lastUpdateTime": "span.s5"
-    },
-    "book": {
-      "url": "https://www.wxsy.net/novel/(.*?)/",
-      "coverUrl": ".imgbox > img"
-    },
-    "toc": {
-      "url": "https://www.wxsy.net/novel/%s/chapter_1.html",
-      "list": "/html@js:const childRegex=/\\.section-list\\.ycxsid>li:nth-child\\(\\d+\\){display:none}/g;const lastChildRegex=/\\.section-list\\.ycxsid>li:nth-last-child\\(\\d+\\){display:none}/g;const preHiddenCount=[...r.matchAll(childRegex)].length;const afterHiddenCount=[...r.matchAll(lastChildRegex)].length;r=r.replace(/<ul[^>]*class=\"[^\"]*\\bsection-list\\b[^\"]*\\bycxsid\\b[^\"]*\"[^>]*>([\\s\\S]*?)<\\/ul>/g,(match,liContent)=>{const lis=liContent.match(/<li[\\s\\S]*?<\\/li>/g)||[];const newLis=lis.slice(preHiddenCount,lis.length-afterHiddenCount);return match.replace(liContent,newLis.join(''))});",
-      "item": ".biqunaicc > div:nth-child(2) > div > ul > li > a",
-      "nextPage": ".biqunaicc > div:nth-child(2) > div > div:nth-child(2) > select > option"
-    },
-    "chapter": {
-      "title": "h3",
-      "content": ".row-detail > div > div@js:r=r.replace(/<script>\\s*document\\.writeln\\(qsbs\\.bb\\('([^']+)'\\)\\);\\s*<\\/script>/g,function(a,b){return b});@java:base64.decode()",
-      "paragraphTagClosed": true,
-      "filterTxt": "请勿开启浏览器阅读模式，否则将导致章节内容缺失及无法阅读下一章。|\\(本章完\\)",
-      "filterTag": "h3, div, p[style=font-size:12px;]",
-      "nextPage": ".row.row-detail > div > div > div:nth-child(2) > a:nth-child(4)"
-    }
-  },
-  {
     "url": "https://www.biquge365.net/",
     "name": "笔趣阁365",
     "comment": "搜索间隔15秒，若搜索结果为空则手动打开网页搜一次后再试",
@@ -333,7 +299,7 @@
   {
     "url": "https://www.52bqg.com/",
     "name": "笔趣阁52",
-    "comment": "本地新增：搜索可用；目录/章节链接为 JS onclick，规则用 @js 重写为绝对链接；正文 base64 编码（分页章节用 nextPageInJs 解析）",
+    "comment": "搜索可用；目录/章节链接为 JS onclick，规则用 @js 重写为绝对链接；正文 base64 编码（分页章节用 nextPageInJs 解析）",
     "search": {
       "url": "https://www.52bqg.com/search.html",
       "method": "post",
@@ -375,8 +341,8 @@
   },
   {
     "url": "https://www.xbiquge.cc/",
-    "name": "新笔趣阁",
-    "comment": "本地新增：搜索已通过引擎验证；目录/章节链接为 JS onclick（规则用 @js 重写为绝对链接）、正文 base64 编码。注意：该站对本程序连接不稳定（connect timed out），失败请重试",
+    "name": "笔趣阁中文网",
+    "comment": "搜索已通过引擎验证；目录/章节链接为 JS onclick（规则用 @js 重写为绝对链接）、正文 base64 编码。注意：该站对本程序连接不稳定（connect timed out），失败请重试",
     "search": {
       "url": "https://www.xbiquge.cc/search.html",
       "method": "post",
@@ -417,7 +383,7 @@
   {
     "url": "https://www.snxsw.com/",
     "name": "少年小说网",
-    "comment": "本地新增：与笔趣阁52同款 CMS（搜索需带 submit 字段）；目录含隐藏 li、正文 base64、章节多页",
+    "comment": "与笔趣阁52同款 CMS（搜索需带 submit 字段）；目录含隐藏 li、正文 base64、章节多页",
     "search": {
       "url": "https://www.snxsw.com/search.html",
       "method": "post",
@@ -459,8 +425,8 @@
   },
   {
     "url": "https://www.xbiquge.info/",
-    "name": "新笔趣阁info",
-    "comment": "本地新增：与第八中文网同款 CMS 的镜像站；目录分页 .pagination、正文 article.font_max，章节分 3 页需翻页",
+    "name": "新笔趣阁小说网",
+    "comment": "与第八中文网同款 CMS 的镜像站；目录分页 .pagination、正文 article.font_max，章节分 3 页需翻页",
     "search": {
       "url": "https://www.xbiquge.info/search.php?q=%s",
       "method": "get",
@@ -527,80 +493,6 @@
       "concurrency": 4,
       "minInterval": 600,
       "maxInterval": 1200,
-      "maxAttempts": 3,
-      "retryMinInterval": 1500,
-      "retryMaxInterval": 3000
-    }
-  },
-  {
-    "url": "https://www.xbiqugeu.net/",
-    "name": "新笔趣阁U",
-    "comment": "本地新增：与顶点小说同款CMS；搜索POST、目录下拉分页(模板混入最新章/首章，按连续编号提取)、章节内分页、正文base64编码(qsbs.bb)",
-    "search": {
-      "url": "https://www.xbiqugeu.net/search.html",
-      "method": "post",
-      "data": "{s: %s}",
-      "result": ".txt-list-row5 > li",
-      "bookName": "span.s2 > a",
-      "author": "span.s3 > a",
-      "category": "span.s1",
-      "latestChapter": "span.s4 > a",
-      "lastUpdateTime": "span.s5"
-    },
-    "book": {
-      "url": "https://www.xbiqugeu.net/txt/(.*?)/",
-      "coverUrl": ".imgbox > img"
-    },
-    "toc": {
-      "url": "https://www.xbiqugeu.net/txt/%s/index_1.html",
-      "baseUri": "https://www.xbiqugeu.net/txt/%s/",
-      "list": "/html@js:var bs=r.match(/<ul[^>]*class=[\"'][^\"']*section-list[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/ul>/g)||[];\nvar ls=[];\nbs.forEach(function(b){var x=b.match(/<li[\\s\\S]*?<\\/li>/g);if(x)ls=ls.concat(x);});\nvar nm=ls.map(function(li){var mm=li.match(/\\/txt\\/\\d+\\/(\\d+)\\.html/);return mm?{li:li,id:+mm[1]}:null;}).filter(Boolean);\nnm.sort(function(a,b){return a.id-b.id;});\nvar dd=[];var pv=-1;\nnm.forEach(function(x){if(x.id!==pv){dd.push(x);pv=x.id;}});\nvar best=[];var cur=dd.length?[dd[0]]:[];\nfor(var i=1;i<dd.length;i++){if(dd[i].id===dd[i-1].id+1)cur.push(dd[i]);else{if(cur.length>best.length)best=cur;cur=[dd[i]];}}\nif(cur.length>best.length)best=cur;\nr='<ul class=\"section-list\">'+best.map(function(x){return x.li;}).join('')+'</ul>';",
-      "item": "li > a",
-      "nextPage": "div.page_num select > option"
-    },
-    "chapter": {
-      "title": "h3",
-      "content": ".row-detail > div > div@js:r=r.replace(/<script>\\s*document\\.writeln\\(qsbs\\.bb\\('([^']+)'\\)\\);\\s*<\\/script>/g,function(a,b){return b});@java:base64.decode()",
-      "paragraphTagClosed": true,
-      "filterTxt": "请勿开启浏览器阅读模式，否则将导致章节内容缺失及无法阅读下一章。|\\(本章完\\)",
-      "filterTag": "h3, div, p[style=font-size:12px;]",
-      "nextPage": ".row.row-detail > div > div > div:nth-child(2) > a:nth-child(4)"
-    }
-  },
-  {
-    "url": "https://www.biquwu.cc/",
-    "name": "笔趣屋",
-    "comment": "本地新增：与新笔趣阁info同款CMS(fsshu镜像)；搜索GET、目录20页、正文article.font_max、章节内分页",
-    "search": {
-      "url": "https://www.biquwu.cc/search.php?q=%s",
-      "method": "get",
-      "result": ".box.hot dl",
-      "bookName": "dd > h3 > a@js:r=r.replace(/^\\[[^\\]]*\\]/,'')",
-      "author": "dd.book_other > span",
-      "latestChapter": "dd.book_other a"
-    },
-    "book": {
-      "url": "https://www.biquwu.cc/biquge/(\\d+/\\d+)/"
-    },
-    "toc": {
-      "url": "https://www.biquwu.cc/biquge/%s/index_1.html",
-      "baseUri": "https://www.biquwu.cc/biquge/%s/",
-      "item": ".book_list2 > ul > li > a",
-      "nextPage": ".pagination li.page-item.active + li > a"
-    },
-    "chapter": {
-      "title": "h1",
-      "content": "article.font_max",
-      "paragraphTagClosed": false,
-      "paragraphTag": "<br>+",
-      "filterTxt": "第\\(\\d+/\\d+\\)页|正在手打中，请稍等片刻|内容更新后，请重新刷新页面，即可获取最新更新！",
-      "filterTag": "script",
-      "nextPage": "#next1"
-    },
-    "crawl": {
-      "concurrency": 3,
-      "minInterval": 400,
-      "maxInterval": 1000,
       "maxAttempts": 3,
       "retryMinInterval": 1500,
       "retryMaxInterval": 3000
