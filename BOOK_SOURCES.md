@@ -6,17 +6,15 @@
 
 | 书源名称                                 | 大陆 IP | 非大陆 IP | ⚠️ 需要注意                                   |
 |--------------------------------------|-------|--------|-------------------------------------------|
-| [香书小说](http://www.xbiqugu.la/)       | ✅     | ❌      |                                           |
+| [香书小说](http://www.ibiqugu.net/)       | ✅     | ❌      |                                           |
 | [书海阁小说网](https://www.shuhaige.net/)  | ✅     | ✅      | 搜索限流 (Unexpected end of file from server) |
 | [梦书中文](http://www.mcxs.la/)          | ✅     | ❌      | 搜索限流 (Connect timed out)                  |
 | [鸟书网](http://www.99wx.info/)         | ✅     | ❌      | 搜索限流 (Read timed out)                     |
-| [笔趣阁22](https://www.22biqu.com/)     | ✅     | ✅      |                                           |
 | [笔尖中文](http://www.xbiquwk.com/)      | ✅     | ❌      |                                           | |
 | [悠久小说网](http://www.ujxsw.org/)       | ✅     | ❌      |                                           |
 | [阅读库](http://www.yeudusk.com/)       | ✅     | ❌      |                                           |
 | [顶点小说](https://www.wxsy.net/)        | ✅     | ❌      | 搜索、详情限流                                   |
 | [笔趣阁365](https://www.biquge365.net/) | ✅     | ✅      | 搜索间隔 15 秒                                 |
-| [燃文小说网](https://www.ranwen8.cc/)     | ✅     | ❌      |                                           |
 
 `proxy-required.json`：需要代理的书源 (必须是非大陆 IP)，需在 config.ini 设置 cf-bypass
 
