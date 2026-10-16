@@ -25,8 +25,9 @@ public class SearchResultsHandler {
         Map<SearchResult, Double> bookSim = new HashMap<>();
         Map<SearchResult, Double> authorSim = new HashMap<>();
         for (SearchResult sr : list) {
-            bookSim.put(sr, StrUtil.similar(kw, sr.getBookName()));
-            authorSim.put(sr, StrUtil.similar(kw, sr.getAuthor()));
+            // 个别书源（如 bqg.info）搜索结果不返回作者，需 null 安全
+            bookSim.put(sr, StrUtil.similar(kw, StrUtil.nullToEmpty(sr.getBookName())));
+            authorSim.put(sr, StrUtil.similar(kw, StrUtil.nullToEmpty(sr.getAuthor())));
         }
 
         boolean isAuthorSearch = computeWeight(bookSim, kw) < computeWeight(authorSim, kw);
@@ -44,8 +45,8 @@ public class SearchResultsHandler {
                 return Double.compare(score2, score1); // 按相似度降序
             }
             return isAuthorSearch
-                    ? o1.getBookName().compareTo(o2.getBookName())
-                    : o1.getAuthor().compareTo(o2.getAuthor());
+                    ? StrUtil.nullToEmpty(o1.getBookName()).compareTo(StrUtil.nullToEmpty(o2.getBookName()))
+                    : StrUtil.nullToEmpty(o1.getAuthor()).compareTo(StrUtil.nullToEmpty(o2.getAuthor()));
         };
 
         List<SearchResult> filtered = Collections.emptyList();
