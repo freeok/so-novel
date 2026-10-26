@@ -72,8 +72,13 @@ class BookSourceCrawlTest {
             "http://www.xbiquwk.com/10_10233/",
             "http://www.ujxsw.org/book/107612/",
             "http://www.yeudusk.com/book/1322535/",
-            "https://www.wxsy.net/novel/1803/",
             "https://www.biquge365.net/book/95601/",
+            "https://www.d8zw.com/134/134526/",
+            "https://www.52bqg.com/book_266271/",
+            "https://www.xbiquge.cc/book/3558/",
+            "https://www.snxsw.com/book/76366/",
+            "https://www.xbiquge.info/17/17937/",
+            "https://www.bqg.info/book/172/",
     })
     void test01(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
