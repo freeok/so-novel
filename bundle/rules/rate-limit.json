@@ -1,6 +1,6 @@
 [
   {
-    "url": "https://www.tianxibook.com/",
+    "url": "https://www.xtxxs9.com/",
     "name": "新天禧小说",
     "comment": "搜索功能关闭、章节限流，下载过快会导致章节内容为空，建议线程数不大于5",
     "search": {
@@ -12,10 +12,10 @@
       "intro": "dl > dd"
     },
     "book": {
-      "url": "https://www.tianxibook.com/book/(.*?)/"
+      "url": "https://www.xtxxs9.com/book/(.*?)/"
     },
     "toc": {
-      "url": "https://www.tianxibook.com/xiaoshuo/%s/",
+      "url": "https://www.xtxxs9.com/xiaoshuo/%s/",
       "item": "#content_1 > a",
       "nextPage": "#indexselect > option"
     },
@@ -72,50 +72,12 @@
     }
   },
   {
-    "url": "https://www.laoyaoxs.org/",
-    "name": "老幺小说网",
-    "comment": "章节限流，正文段落会乱序",
-    "search": {
-      "url": "https://www.laoyaoxs.org/search.php?key=%s",
-      "method": "get",
-      "result": ".result > ul > li",
-      "bookName": ".book_inf > h3 > a",
-      "author": ".book_inf > p.tags > span:nth-child(1) > a",
-      "wordCount": ".book_inf > p.tags > span:nth-child(4)@js:r=r.replaceAll('总字数：', '');",
-      "latestChapter": ".book_inf > p:nth-child(3) > a",
-      "lastUpdateTime": ".right > span@js:r=r.replaceAll('更新时间：', '');",
-      "nextPage": ".result > div > span > a:not(.sl)"
-    },
-    "book": {
-      "url": "https://www.laoyaoxs.org/info/(.*?).html",
-      "bookName": "body > div.main > div > div.left.w_860 > div:nth-child(1) > div.detail > h1",
-      "coverUrl": "meta[property=\"og:image\"]@js:r=r.replaceAll('//', '');"
-    },
-    "toc": {
-      "baseUri": "https://www.laoyaoxs.org/list/%s/",
-      "url": "https://www.laoyaoxs.org/list/%s/",
-      "item": "#chapters > a"
-    },
-    "chapter": {
-      "title": "#chapter-name > h2",
-      "content": "#txt@js:const ddMatches=[...r.matchAll(/<dd\\s+data-id=\"(\\d+)\">([\\s\\S]*?)<\\/dd>/g)];const ddList=ddMatches.map(match=>({id:Number(match[1]),content:match[2]}));ddList.sort((a,b)=>a.id-b.id);let result='';for(const dd of ddList){const pMatches=[...dd.content.matchAll(/<p>[\\s\\S]*?<\\/p>/g)];pMatches.forEach(p=>{result+=p[0]})}r=result;",
-      "paragraphTagClosed": true,
-      "filterTxt": "",
-      "filterTag": ""
-    },
-    "crawl": {
-      "concurrency": 1,
-      "minInterval": 1000,
-      "maxInterval": 2000
-    }
-  },
-  {
-    "url": "https://www.sudugu.org/",
+    "url": "https://www.suduguu.com/",
     "name": "速读谷",
     "comment": "UI同得奇小说网",
     "needProxy": true,
     "search": {
-      "url": "https://www.sudugu.org/i/sor.aspx?key=%s",
+      "url": "https://www.suduguu.com/i/sor.aspx?key=%s",
       "method": "get",
       "result": ".container > div",
       "bookName": "div > h3 > a",
@@ -124,7 +86,7 @@
       "lastUpdateTime": "div > ul > li:nth-child(1) > i"
     },
     "book": {
-      "url": "https://www.sudugu.org/(.*?)/",
+      "url": "https://www.suduguu.com/(.*?)/",
       "bookName": ".item > div > h1 > a",
       "author": ".item > div > p:nth-child(3) > a@js:r=r.replaceAll('作者：', '');",
       "intro": "//div[@class='des bb'][1]",
@@ -150,6 +112,47 @@
       "concurrency": 1,
       "minInterval": 1000,
       "maxInterval": 2000
+    }
+  },
+  {
+    "url": "https://www.xbiquge.cc/",
+    "name": "笔趣阁中文网",
+    "comment": "搜索已通过引擎验证；目录/章节链接为 JS onclick（规则用 @js 重写为绝对链接）、正文 base64 编码。注意：该站对本程序连接不稳定（connect timed out），失败请重试",
+    "search": {
+      "url": "https://www.xbiquge.cc/search.html",
+      "method": "post",
+      "data": "{submit: 搜索, s: %s}",
+      "result": "ul.txt-list > li",
+      "bookName": "span.s2 > a",
+      "author": "span.s3 > a",
+      "category": "span.s1",
+      "latestChapter": "span.s4 > a",
+      "lastUpdateTime": "span.s5"
+    },
+    "book": {
+      "url": "https://www.xbiquge.cc/book/(\\d+)/"
+    },
+    "toc": {
+      "url": "https://www.xbiquge.cc/book/%s/ml1.html",
+      "list": "html@js:var pre=0,post=0,m;var rp=/li:nth-child\\((\\d+)\\)\\s*\\{\\s*display\\s*:\\s*none/g;while((m=rp.exec(r))){pre=Math.max(pre,+m[1]);}var rq=/li:nth-last-child\\((\\d+)\\)\\s*\\{\\s*display\\s*:\\s*none/g;while((m=rq.exec(r))){post=Math.max(post,+m[1]);}var cnt={},rb=/\\/book\\/(\\d+)\\//g;while((m=rb.exec(r))){cnt[m[1]]=(cnt[m[1]]||0)+1;}var bid='',bn=0;for(var k in cnt){if(cnt[k]>bn){bn=cnt[k];bid=k;}}var best=[],bestN=-1,ru=/<ul[^>]*class=\"[^\"]*yanqing_list[^\"]*\"[^>]*>([\\s\\S]*?)<\\/ul>/g;while((m=ru.exec(r))){var lis=m[1].match(/<li[\\s\\S]*?<\\/li>/g)||[];if(lis.length>bestN){bestN=lis.length;best=lis;}}if(bestN>0){best=best.slice(pre,bestN-post);}r='<ul class=\"yanqing_list\">'+best.join('').replace(/<a\\s+onclick=\"read_tz\\((\\d+)\\);?\">/g,'<a href=\"https://www.xbiquge.cc/book/'+bid+'/$1.html\">').replace(/href=\"\\//g,'href=\"https://www.xbiquge.cc/')+'</ul>';",
+      "item": "ul.yanqing_list > li > a",
+      "nextPage": "select > option"
+    },
+    "chapter": {
+      "title": "h2.chapter-title@js:r=r.replace(/（第\\d+页）$/,'')",
+      "content": "div.info_dv1@js:var o=[],m,re=/writeln\\([^']*'([^']+)'\\)/g;while((m=re.exec(r))){o.push(m[1]);}r=o.join('\\n');@java:base64.decode()",
+      "paragraphTagClosed": true,
+      "filterTxt": "请勿开启浏览器阅读模式，否则将导致章节内容缺失及无法阅读下一章。|\\(本章完\\)",
+      "filterTag": "script",
+      "nextPage": "div.read_btn > a:contains(下一章)"
+    },
+    "crawl": {
+      "concurrency": 4,
+      "minInterval": 800,
+      "maxInterval": 1500,
+      "maxAttempts": 3,
+      "retryMinInterval": 2000,
+      "retryMaxInterval": 4000
     }
   }
 ]

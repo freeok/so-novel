@@ -75,7 +75,6 @@ class BookSourceCrawlTest {
             "https://www.biquge365.net/book/95601/",
             "https://www.d8zw.com/134/134526/",
             "https://www.52bqg.com/book_266271/",
-            "https://www.xbiquge.cc/book/3558/",
             "https://www.snxsw.com/book/76366/",
             "https://www.xbiquge.info/17/17937/",
             "https://www.bqg.info/book/172/",
@@ -91,21 +90,6 @@ class BookSourceCrawlTest {
         // chapterBatchParse(0, 50);
     }
 
-    @DisplayName("non-search.json")
-    @ParameterizedTest
-    @CsvSource({
-            "https://www.xiaoshuohu.com/14/14654/",
-            "https://cn.ttkan.co/novel/chapters/gangrendepaohuijiarenquanshimieshidafanpaimoxiudeniang_xiexiudedie_beituanchongdewo-aguabushigua",
-    })
-    void test02(String bookUrl) {
-        Rule rule = SourceUtils.getRule(bookUrl);
-        APP_CONFIG.setSourceId(rule.getId());
-
-        bookParse(bookUrl);
-        tocParse(bookUrl);
-        chapterParse();
-    }
-
     @DisplayName("proxy-required.json")
     @ParameterizedTest
     @CsvSource({
@@ -113,25 +97,7 @@ class BookSourceCrawlTest {
             "https://quanben5.com/n/henchunhenaimei/",
             "https://www.dxmwx.org/book/56441.html"
     })
-    void test03(String bookUrl) {
-        Rule rule = SourceUtils.getRule(bookUrl);
-        APP_CONFIG.setSourceId(rule.getId());
-
-        searchParse("斗罗大陆");
-        bookParse(bookUrl);
-        tocParse(bookUrl);
-        chapterParse();
-    }
-
-
-    @DisplayName("cloudflare.json")
-    @ParameterizedTest
-    @CsvSource({
-            "http://www.xhytd.com/170/170581/",
-            "https://www.96dushu.com/book/448209/",
-            "http://www.dongtanxs.com/dong49371/"
-    })
-    void test04(String bookUrl) {
+    void test02(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
         APP_CONFIG.setSourceId(rule.getId());
 
@@ -144,10 +110,42 @@ class BookSourceCrawlTest {
     @DisplayName("rate-limit.json")
     @ParameterizedTest
     @CsvSource({
-            "https://www.tianxibook.com/book/66120/",
+            "https://www.xtxxs9.com/book/66120/",
             "https://www.0xs.net/txt_1/68398.html",
-            "https://www.laoyaoxs.org/info/281469.html",
-            "https://www.sudugu.org/3415/"
+            "https://www.suduguu.com/3415/",
+            "https://www.xbiquge.cc/book/3558/"
+    })
+    void test03(String bookUrl) {
+        Rule rule = SourceUtils.getRule(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        searchParse("斗罗大陆");
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+    }
+
+    @DisplayName("non-search.json")
+    @ParameterizedTest
+    @CsvSource({
+            "https://www.xiaoshuohu.com/14/14654/",
+            "https://cn.ttkan.co/novel/chapters/gangrendepaohuijiarenquanshimieshidafanpaimoxiudeniang_xiexiudedie_beituanchongdewo-aguabushigua",
+    })
+    void test04(String bookUrl) {
+        Rule rule = SourceUtils.getRule(bookUrl);
+        APP_CONFIG.setSourceId(rule.getId());
+
+        bookParse(bookUrl);
+        tocParse(bookUrl);
+        chapterParse();
+    }
+
+    @DisplayName("cloudflare.json")
+    @ParameterizedTest
+    @CsvSource({
+            "http://www.xhytd.com/170/170581/",
+            "https://www.96dushu.com/book/448209/",
+            "http://www.dongtanxs.com/dong49371/"
     })
     void test05(String bookUrl) {
         Rule rule = SourceUtils.getRule(bookUrl);
