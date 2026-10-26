@@ -408,7 +408,7 @@
       "content": "article.font_max",
       "paragraphTagClosed": false,
       "paragraphTag": "<br>+",
-      "filterTxt": "正在手打中，请稍等片刻|内容更新后，请重新刷新页面，即可获取最新更新！|请记住本书首发域名|天才一秒记住本站地址",
+      "filterTxt": "正在手打中，请稍等片刻|内容更新后，请重新刷新页面，即可获取最新更新！|请记住本书首发域名|天才一秒记住本站地址|第 \\(\\d+/\\d+\\) 页",
       "filterTag": "script",
       "timeout": 20,
       "nextPage": "a:contains(下一章)"
@@ -444,7 +444,7 @@
       "title": "h1.readTitle",
       "content": "#booktxt",
       "paragraphTagClosed": true,
-      "filterTxt": "\\[笔趣阁信息\\].*?超级好记！|本章未完，请点击下一页继续阅读|\\(本章完\\)",
+      "filterTxt": "\\[笔趣阁信息\\].*?超级好记！|本章未完，请点击下一页继续阅读|\\(本章完\\)|\uD835\uDE71Ⓠ\uD83C\uDD56.\uD835\uDE44nf\uD83C\uDD5E",
       "filterTag": "script",
       "nextPage": "#linkNext"
     },
