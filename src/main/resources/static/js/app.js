@@ -108,7 +108,7 @@ function App() {
         {key: 'fix-garbled', label: '删除乱码（不耗 token）', options: ['0', '1']},
         {key: 'base-url', label: 'AI 服务地址', placeholder: 'https://api.deepseek.com/v1'},
         {key: 'model', label: '模型名', placeholder: 'deepseek-chat'},
-        {key: 'api-key', label: 'API 密钥', secret: true, placeholder: '留空表示不修改'},
+        {key: 'api-key', label: 'API 密钥', secret: true, placeholder: '未配置，粘贴密钥后保存'},
         {key: 'chunk-size', label: '单次送审字数', placeholder: '1200'},
         {key: 'concurrency', label: '校对并发', placeholder: '4'},
         {key: 'audit', label: '输出校对记录', options: ['0', '1']}

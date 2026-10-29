@@ -200,7 +200,7 @@ public class ProofreadService {
         AtomicInteger edits = new AtomicInteger();
         AtomicInteger garbled = new AtomicInteger();
         AtomicInteger rejected = new AtomicInteger();
-        AtomicInteger aiFailed = new AtomicInteger();
+        AtomicInteger failedChunks = new AtomicInteger();
         AtomicInteger done = new AtomicInteger();
 
         try (var limiter = new VirtualThreadLimiter(maxConcurrent)) {
@@ -221,14 +221,22 @@ public class ProofreadService {
                     edits.addAndGet(r.outcome.edits.size());
                     garbled.addAndGet(r.outcome.garbledFixed);
                     rejected.addAndGet(r.outcome.rejected.size());
-                    if (r.outcome.aiError != null) aiFailed.incrementAndGet();
+                    failedChunks.addAndGet(r.outcome.chunkFailures);
                 });
             }
         }
 
         String summary = StrUtil.format(
-                "AI 校对完成：改动 {} 章 / {} 处（乱码清理 {} 处，拒绝可疑建议 {} 条，AI 请求失败 {} 章）",
-                changed.get(), edits.get(), garbled.get(), rejected.get(), aiFailed.get());
+                "AI 校对完成：改动 {} 章 / {} 处（乱码清理 {} 处，拒绝可疑建议 {} 条）",
+                changed.get(), edits.get(), garbled.get(), rejected.get());
+        /**
+         * 请求失败必须单独喊出来：这些块根本没拿到建议，等于没校对过，
+         * 用户需要的是重试而不是以为「都检查过了、没问题」。
+         */
+        if (failedChunks.get() > 0) {
+            summary += StrUtil.format("；注意：{} 个送审块请求失败，未校对到内容，建议重试",
+                    failedChunks.get());
+        }
 
         // 3) 审计落盘
         if (Integer.valueOf(1).equals(ai.getAudit()) && logDir != null) {
@@ -276,7 +284,7 @@ public class ProofreadService {
             // 节流由引擎按「每次 AI 请求」处理（整本书一个文件时章级节流无效）
             ProofreadEngine.Outcome out = engine.proofread(titleOf(f), raw, langs);
             boolean changed = !out.content.equals(raw);
-            if (!changed && out.aiError == null && out.rejected.isEmpty()) {
+            if (!changed && out.chunkFailures == 0 && out.rejected.isEmpty()) {
                 // 什么都没发生，无需进审计
                 return null;
             }
@@ -311,8 +319,14 @@ public class ProofreadService {
         for (String x : out.rejected) {
             sb.append("  [拒绝] ").append(x).append('\n');
         }
-        if (out.aiError != null) {
-            sb.append("  [AI 请求失败] ").append(out.aiError);
+        if (out.chunkFailures > 0) {
+            sb.append("  [请求失败] ").append(out.chunkFailures)
+                    .append(" 个送审块未拿到建议（").append(StrUtil.blankToDefault(out.aiError, "原因未知"))
+                    .append("）；这部分内容等于没校对，需要重试\n");
+        }
+        // 整文件级异常（读文件、写回等）不走块计数，必须单独留痕，否则错误会被静默吞掉
+        if (out.chunkFailures == 0 && StrUtil.isNotBlank(out.aiError)) {
+            sb.append("  [校对异常] ").append(out.aiError).append("（正文保持原样）\n");
         }
         return sb.toString();
     }

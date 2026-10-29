@@ -92,9 +92,16 @@ public class ProofreadEngine {
     public static class Outcome {
         public String content;
         public final List<Edit> edits = new ArrayList<>();
+        /**
+         * 引擎判定不安全而放弃的 AI 建议（真·拒绝）
+         */
         public final List<String> rejected = new ArrayList<>();
+        /**
+         * 送审块请求失败的次数。必须与 rejected 分开统计：混在一起会让人以为
+         * 「模型提了建议但被拦下」，而实际是根本没拿到建议 —— 复核时该重试而非放心。
+         */
+        public int chunkFailures;
         public int garbledFixed;
-        public boolean aiAttempted;
         public String aiError;
 
         public boolean changed() {
@@ -137,7 +144,6 @@ public class ProofreadEngine {
             return out;
         }
 
-        out.aiAttempted = true;
         try {
             current = aiPass(title, current, out, langs);
         } catch (Exception e) {
@@ -191,7 +197,8 @@ public class ProofreadEngine {
                 suggestions = suggester.suggest(background, composed);
             } catch (Exception e) {
                 // 单块失败不影响其余块；整体失败由上层记录
-                out.rejected.add("本块请求失败：" + e.getMessage());
+                out.chunkFailures++;
+                out.aiError = e.getMessage();
                 continue;
             }
             for (LlmClient.Replacement s : suggestions) {

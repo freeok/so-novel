@@ -377,6 +377,26 @@ class ProofreadEngineTest {
     }
 
     /**
+     * 统计口径：请求失败不得混进「拒绝建议」。
+     * <p>
+     * 混在一起会让人以为「模型提了建议但被引擎拦下」，而实际是根本没拿到建议 ——
+     * 复核时该重试，而不是放心。
+     */
+    @Test
+    void requestFailureIsNotCountedAsRejectedSuggestion() {
+        FakeSuggester fake = new FakeSuggester();
+        fake.throwError = true;
+        ProofreadEngine engine = new ProofreadEngine(usable(), glossary(), fake);
+
+        ProofreadEngine.Outcome out = engine.proofread("第一章",
+                "<p>克莱恩缓缓睁开双眼，打量着这间陌生的卧室。</p>", "zh-CN");
+
+        assertEquals(1, out.chunkFailures, "失败要按块计数");
+        assertTrue(out.rejected.isEmpty(), "请求失败不是「拒绝建议」：" + out.rejected);
+        assertNotNull(out.aiError, "错误原因要留痕，供审计说明");
+    }
+
+    /**
      * 未配置 AI（无 key）时只做乱码修复，不应发起任何请求
      */
     @Test
