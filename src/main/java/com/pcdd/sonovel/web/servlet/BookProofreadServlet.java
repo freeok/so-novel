@@ -45,12 +45,11 @@ public class BookProofreadServlet extends HttpServlet {
             return;
         }
 
-        AppConfig cfg = AppConfigLoader.APP_CONFIG;
-        if (!cfg.getAi().garbledFixEnabled() && !cfg.getAi().usable()) {
-            RespUtils.writeError(resp, 400, "AI 校对未启用：请在设置中打开 [ai] enabled 并填写服务地址与密钥");
-            return;
-        }
-
+        /**
+         * 安全与合法性校验一律放在功能开关之前：
+         * 否则未启用时直接返回，越权探测就落在开关后面 —— 既验证不到防护是否生效，
+         * 也让错误信息先泄露配置状态。
+         */
         File file = resolveInDownloadDir(resp, filename);
         if (file == null) return;
 
@@ -61,6 +60,12 @@ public class BookProofreadServlet extends HttpServlet {
         String ext = FileUtil.extName(file.getName()).toLowerCase();
         if (!ext.equals("txt") && !ext.equals("html")) {
             RespUtils.writeError(resp, 400, "只能校对 TXT/HTML 成品；epub/pdf 请改用 txt/html 格式重新下载后再校对");
+            return;
+        }
+
+        AppConfig cfg = AppConfigLoader.APP_CONFIG;
+        if (!cfg.getAi().garbledFixEnabled() && !cfg.getAi().usable()) {
+            RespUtils.writeError(resp, 400, "AI 校对未启用：请在设置中打开 [ai] enabled 并填写服务地址与密钥");
             return;
         }
 

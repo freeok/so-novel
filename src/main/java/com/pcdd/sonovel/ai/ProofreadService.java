@@ -3,6 +3,7 @@ package com.pcdd.sonovel.ai;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.model.AiConfig;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.model.Rule.Book;
@@ -124,15 +125,62 @@ public class ProofreadService {
             return "没有可校对的文件";
         }
 
+        /**
+         * LogUtils 写文件日志时依赖 BookContext（下载流程由 Crawler 设置）。
+         * 本地/CLI/Web 校对没有走 Crawler，不绑定的话第一句 LogUtils.info 就 NPE，
+         * 整本书校对直接失败。
+         * <p>
+         * 只有「本方法自己绑定」时才负责清理 —— 下载流水线已经绑定过上下文，
+         * 若在此 clear 会让后续的成品合并阶段失去上下文而崩掉。
+         */
+        boolean ownedContext = BookContext.get() == null;
+        if (ownedContext) {
+            bindContext(bookName, author);
+        }
+        try {
+            return doProofread(files, bookName, author, intro, logDir, backupBeforeWrite, progress);
+        } finally {
+            if (ownedContext) {
+                BookContext.clear();
+            }
+        }
+    }
+
+    /**
+     * 为日志与审计文件名绑定书籍上下文。
+     * 包内可见以便单测直接覆盖「校对路径必须自带上下文」这一约束。
+     */
+    void bindContext(String bookName, String author) {
+        Book book = new Book();
+        book.setBookName(bookName);
+        book.setAuthor(StrUtil.nullToEmpty(author));
+        BookContext.set(book);
+    }
+
+    private String doProofread(List<File> files, String bookName, String author, String intro,
+                               File logDir, boolean backupBeforeWrite, Progress progress) {
         AiConfig ai = config.getAi();
-        Console.log(render("<== 正在调研《{}》的背景资料（百科 + 正文专名统计）…", "cyan"), bookName);
 
-        // 1) 背景调研
-        BookGlossary glossary = GlossaryCollector.collect(bookName, author, intro,
-                buildSample(files), ai.getMaxTerms());
+        BookGlossary glossary;
+        ProofreadEngine engine;
+        /**
+         * 只有关联了可用的 AI 服务才值得做背景调研：调研产出的专有名词只用于
+         * 「拒绝 AI 的错误建议」，AI 不调用时毫无作用，却仍会发若干网络请求
+         * 并做一次全文 HanLP 分词（整本书可达数十万字，纯浪费）。
+         */
+        if (ai.usable()) {
+            Console.log(render("<== 正在调研《{}》的背景资料（百科 + 正文专名统计）…", "cyan"), bookName);
+            glossary = GlossaryCollector.collect(bookName, author, intro,
+                    buildSample(files), ai.getMaxTerms());
+            engine = new ProofreadEngine(ai, glossary, LlmClient.of(ai));
+        } else {
+            Console.log(render("<== {}：未配置可用 AI 服务，仅做确定性乱码修复", "yellow"), "AI 校对");
+            glossary = new BookGlossary();
+            glossary.setBookName(bookName);
+            glossary.setAuthor(author);
+            engine = new ProofreadEngine(ai, glossary, null);
+        }
 
-        ProofreadEngine engine = new ProofreadEngine(ai, glossary,
-                ai.usable() ? LlmClient.of(ai) : null);
         // 整本书一个文件时，章级进度无意义（永远 0/1），改用文件内部的块进度
         if (files.size() == 1) {
             String only = files.get(0).getName();
@@ -284,7 +332,9 @@ public class ProofreadService {
                         {}""",
                 StrUtil.blankToDefault(bookName, "未知书名"), StrUtil.blankToDefault(author, "佚名"),
                 java.time.LocalDateTime.now().withNano(0),
-                g.isResearched() ? g.getSourceNote() : "无百科条目（保守模式）",
+                ai.usable()
+                        ? (g.isResearched() ? g.getSourceNote() : "无百科条目（保守模式）")
+                        : "未配置可用 AI 服务（跳过调研）",
                 g.getProtectedTerms().size(), g.getDomainWords().size(),
                 ai.usable() ? ai.getBaseUrl() + " / " + ai.getModel() : "未配置（仅确定性乱码修复）",
                 concurrency,
