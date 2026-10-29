@@ -31,7 +31,8 @@ public class TuiLauncher {
             Console.log("\n" + """
                     q.聚合搜索\tw.独立搜索\te.批量下载
                     a.书源一览\ts.版本信息\td.配置信息
-                    z.结束程序\tx.检查更新\tc.赞助项目
+                    r.AI 校对\tz.结束程序\tx.检查更新
+                    c.赞助项目
                     """);
             Console.print(render("==> 请输入功能序号: ", "green"));
             String cmd = sc.nextLine().strip();
@@ -40,6 +41,7 @@ public class TuiLauncher {
                 case "q" -> new AggregatedSearchAction().execute();
                 case "w" -> new SingleSearchAction(config).execute();
                 case "e" -> new BatchDownloadAction(config).execute();
+                case "r" -> new ProofreadLocalAction(config).execute();
                 case "a" -> new ShowSourcesAction().execute();
                 case "s" -> printHint(config);
                 case "d" -> Console.log(JSONUtil.toJsonPrettyStr(config));
