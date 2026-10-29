@@ -27,6 +27,13 @@ class AiConfigBindingTest {
     Path tmp;
 
     /**
+     * surefire 注入了默认测试配置（见 pom），本类用例会临时改指向。
+     * 必须记下原值并在用例后恢复 —— 同 JVM 里后续测试仍要用它来初始化 AppConfigLoader，
+     * 清掉会让它们退回「找不到配置文件」而连带报 NoClassDefFoundError。
+     */
+    private static final String ORIGINAL_CONFIG_FILE = System.getProperty("config.file");
+
+    /**
      * 本机若设了 SONOVEL_AI_KEY，它会压过文件与启动参数，属于预期优先级；
      * 这些用例只在「没有外部密钥」的前提下断言可用性
      */
@@ -34,9 +41,14 @@ class AiConfigBindingTest {
             System.getenv("SONOVEL_AI_KEY") != null && !System.getenv("SONOVEL_AI_KEY").isBlank();
 
     @AfterEach
-    void clearProp() {
-        System.clearProperty("config.file");
-        // 恢复全局单例的默认指向，避免影响其它测试
+    void restore() {
+        if (ORIGINAL_CONFIG_FILE != null) {
+            System.setProperty("config.file", ORIGINAL_CONFIG_FILE);
+        } else {
+            System.clearProperty("config.file");
+        }
+        System.clearProperty("ai.api-key");
+        // 恢复到指向真实测试文件的缓存状态
         AppConfigLoader.reload();
     }
 
