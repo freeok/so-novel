@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
+import com.pcdd.sonovel.model.AiConfig;
 import com.pcdd.sonovel.model.AppConfig;
 import com.pcdd.sonovel.utils.EnvUtils;
 import com.pcdd.sonovel.utils.FileUtils;
@@ -27,6 +28,7 @@ public class AppConfigLoader {
     private final String SELECTION_WEB = "web";
     private final String SELECTION_COOKIE = "cookie";
     private final String SELECTION_PROXY = "proxy";
+    private final String SELECTION_AI = "ai";
     public final AppConfig APP_CONFIG = loadConfig();
     private static volatile Setting cachedSetting;
 
@@ -58,6 +60,20 @@ public class AppConfigLoader {
 
         cachedSetting = new Setting(Paths.get(configFilePath).toAbsolutePath().toString());
         return cachedSetting;
+    }
+
+    /**
+     * 使配置文件缓存失效。
+     * <p>
+     * hutool 的 Setting 会把内容读进内存，缓存后再次 new Setting 才会重读磁盘。
+     * 只有<strong>改过 config.ini 之后</strong>必须调用本方法（见 ConfigService#save），
+     * 否则 loadConfig() 拿到的仍是旧值。
+     * <p>
+     * 注意：不要在 loadConfig() 里自动清缓存 —— SourceUtils 会为每个书源各调一次
+     * loadConfig()，那样会把这层缓存整个废掉，退化成每次重读磁盘。
+     */
+    public void reload() {
+        cachedSetting = null;
     }
 
     public AppConfig loadConfig() {
@@ -110,7 +126,48 @@ public class AppConfigLoader {
         cfg.setProxyHost(getStrOrDefault(setting, "host", SELECTION_PROXY, "127.0.0.1"));
         cfg.setProxyPort(setting.getInt("port", SELECTION_PROXY, 7890));
 
+        // [ai]
+        cfg.setAi(loadAi(setting));
+
         return cfg;
+    }
+
+    /**
+     * 读取 AI 校对配置。
+     * 密钥允许三种来源，优先级从高到低：环境变量 SONOVEL_AI_KEY &gt; JVM 参数 -Dai.api-key &gt; config.ini。
+     * 这样使用者可以不必把密钥写进明文配置文件（避免误提交/误分享）。
+     */
+    private AiConfig loadAi(Setting setting) {
+        AiConfig ai = new AiConfig();
+        ai.setEnabled(setting.getInt("enabled", SELECTION_AI, 0));
+        ai.setBaseUrl(setting.getStr("base-url", SELECTION_AI, ""));
+        ai.setModel(getStrOrDefault(setting, "model", SELECTION_AI, "deepseek-chat"));
+        ai.setTimeout(setting.getInt("timeout", SELECTION_AI, 60));
+        ai.setMaxTokens(setting.getInt("max-tokens", SELECTION_AI, 1200));
+        ai.setChunkSize(setting.getInt("chunk-size", SELECTION_AI, 1200));
+        ai.setMaxTerms(setting.getInt("max-terms", SELECTION_AI, 200));
+        ai.setMinInterval(setting.getInt("min-interval", SELECTION_AI, 300));
+        ai.setConcurrency(setting.getInt("concurrency", SELECTION_AI, 4));
+        ai.setFixGarbled(setting.getInt("fix-garbled", SELECTION_AI, 1));
+        ai.setAudit(setting.getInt("audit", SELECTION_AI, 1));
+
+        String key = firstNonBlank(
+                System.getenv("SONOVEL_AI_KEY"),
+                System.getProperty("ai.api-key"),
+                setting.getStr("api-key", SELECTION_AI, ""));
+        // 掩码占位符不是密钥：万一被写进文件（老版本或被手工粘贴），不能让拿去请求服务
+        if (AiConfig.SECRET_MASK.equals(StrUtil.trimToEmpty(key))) {
+            key = "";
+        }
+        ai.setApiKey(key == null ? "" : key.trim());
+        return ai;
+    }
+
+    private String firstNonBlank(String... values) {
+        for (String v : values) {
+            if (StrUtil.isNotBlank(v)) return v;
+        }
+        return null;
     }
 
     // 修复 hutool 空串不能触发默认值的 bug

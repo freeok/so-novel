@@ -43,6 +43,8 @@ public class ConfigService {
         FileUtil.writeLines(lines, file, StandardCharsets.UTF_8);
 
         // 重新加载，并把新属性拷贝进全局单例（保持 APP_CONFIG 引用不变）
+        // 必须先 reload：hutool Setting 把文件内容缓在内存里，不清缓存读到的仍是旧值
+        AppConfigLoader.reload();
         AppConfig latest = AppConfigLoader.loadConfig();
         BeanUtil.copyProperties(latest, AppConfigLoader.APP_CONFIG);
         return AppConfigLoader.APP_CONFIG;

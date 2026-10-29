@@ -115,6 +115,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- 缺了 engine 时 surefire 不会真正执行 JUnit5 测试（表现为 Tests run: 0） -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- 根据平台打包 V8 -->

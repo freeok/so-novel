@@ -51,4 +51,19 @@ public class AppConfig {
     private String proxyHost;
     private Integer proxyPort;
 
+    // [ai] AI 校对（错别字修正 + 乱码清理）
+    private AiConfig ai = new AiConfig();
+
+    /**
+     * 兼容旧代码：AI 总开关（等价于 ai.enabled）
+     */
+    public Integer getAiProofread() {
+        return ai == null ? 0 : ai.getEnabled();
+    }
+
+    public void setAiProofread(Integer value) {
+        if (ai == null) ai = new AiConfig();
+        ai.setEnabled(value);
+    }
+
 }
