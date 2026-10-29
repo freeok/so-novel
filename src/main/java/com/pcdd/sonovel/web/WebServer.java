@@ -47,6 +47,8 @@ public class WebServer {
         context.addServlet(DownloadProgressSseServlet.class, "/download-progress");
         context.addServlet(ConfigServlet.class, "/config");
         context.addServlet(BookDeleteServlet.class, "/book-delete");
+        // AI 校对已下载的成品书（异步长任务，进度走 /download-progress SSE）
+        context.addServlet(BookProofreadServlet.class, "/book-proofread");
         context.addServlet(CheckUpdateServlet.class, "/check-update");
         context.addServlet(SourceListServlet.class, "/sources");
         context.addServlet(SourceListServlet.class, "/sources/check");

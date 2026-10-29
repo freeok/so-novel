@@ -22,6 +22,13 @@ const Api = {
   downloadFileFromServer(filename) {
     return `/book-download?filename=${encodeURIComponent(filename)}`
   },
+  /**
+   * AI 校对已下载的成品书（TXT/HTML）。服务端立即返回「已受理」，
+   * 真正的进度通过 /download-progress 的 proofread-* 事件推送。
+   */
+  proofreadBook(filename) {
+    return fetch(`/book-proofread?filename=${encodeURIComponent(filename)}`).then(r => r.json())
+  },
 
   // ---------- 搜索 ----------
   search(keyword) {

@@ -59,6 +59,11 @@ function App() {
     localBooks: [],
     latestFileName: '',
 
+    // ---------- AI 校对（异步长任务，进度走 SSE）----------
+    proofreading: '',        // 正在校对的文件名，空 = 空闲
+    proofreadMsg: '',        // 当前进度/结果文案
+    proofreadPct: 0,         // 0-100
+
     // ---------- 检查更新 ----------
     updateInfo: null,
     checkingUpdate: false,
@@ -97,6 +102,16 @@ function App() {
       ]},
       {name: 'cookie', fields: [
         {key: 'qidian', label: '起点 Cookie', placeholder: '留空'}
+      ]},
+      {name: 'ai', fields: [
+        {key: 'enabled', label: 'AI 校对（错字/乱码）', options: ['0', '1'], restart: false},
+        {key: 'fix-garbled', label: '删除乱码（不耗 token）', options: ['0', '1']},
+        {key: 'base-url', label: 'AI 服务地址', placeholder: 'https://api.deepseek.com/v1'},
+        {key: 'model', label: '模型名', placeholder: 'deepseek-chat'},
+        {key: 'api-key', label: 'API 密钥', secret: true, placeholder: '留空表示不修改'},
+        {key: 'chunk-size', label: '单次送审字数', placeholder: '1200'},
+        {key: 'concurrency', label: '校对并发', placeholder: '4'},
+        {key: 'audit', label: '输出校对记录', options: ['0', '1']}
       ]}
     ],
     configForm: {
@@ -106,8 +121,14 @@ function App() {
       global: {'cf-bypass': '', 'gh-proxy': '', 'auto-update': '0'},
       web: {'enabled': '1', 'port': '7765'},
       proxy: {'enabled': '0', 'host': '127.0.0.1', 'port': '7890'},
-      cookie: {'qidian': ''}
+      cookie: {'qidian': ''},
+      ai: {'enabled': '0', 'fix-garbled': '1', 'base-url': '', 'model': 'deepseek-chat',
+        'api-key': '', 'chunk-size': '1200', 'concurrency': '4', 'audit': '1'}
     },
+
+    // AI 密钥是否已在服务器侧配置（前端只看到掩码，用于提示与占位）
+    aiKeyConfigured: false,
+    aiKeyFromEnv: false,
 
     // ---------- 样式 ----------
     sectionClass: 'bg-white rounded-xl shadow-md p-4 sm:p-6',
@@ -119,6 +140,8 @@ function App() {
     iconSearch: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     iconDownload: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     iconDelete: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    iconProofread: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    iconSpinner: '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-6.219-8.56" stroke-linecap="round"/></svg>',
     iconRefresh: '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     iconEdit: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     iconExternal: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 3h6v6M10 14L21 3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -419,6 +442,23 @@ function App() {
       this.configForm.proxy.host = c.proxyHost;
       this.configForm.proxy.port = String(c.proxyPort);
       this.configForm.cookie.qidian = c.qidianCookie || '';
+      this.fillAiForm(c.ai);
+    },
+    // AI 段：服务端返回驼峰字段，表单用 config.ini 的 kebab-case 键名；密钥只回传掩码
+    fillAiForm(ai) {
+      if (!ai) return;
+      this.aiKeyConfigured = !!ai.hasApiKey;
+      this.aiKeyFromEnv = !!ai.apiKeyFromEnv;
+      const f = this.configForm.ai;
+      f['enabled'] = String(ai.enabled == null ? 0 : ai.enabled);
+      f['fix-garbled'] = String(ai.fixGarbled == null ? 1 : ai.fixGarbled);
+      f['base-url'] = ai.baseUrl || '';
+      f['model'] = ai.model || 'deepseek-chat';
+      // 已配置时填掩码，提示用户"不改就保持原值"
+      f['api-key'] = ai.hasApiKey ? '********' : '';
+      f['chunk-size'] = String(ai.chunkSize || 1200);
+      f['concurrency'] = String(ai.concurrency || 4);
+      f['audit'] = String(ai.audit == null ? 1 : ai.audit);
     },
     async saveServerConfig() {
       this.displayTip('正在保存服务器配置...');
@@ -462,6 +502,35 @@ function App() {
       } catch (e) {
         alert('删除失败: ' + e.message);
       }
+    },
+
+    // ---------- AI 校对 ----------
+    async handleProofread(name) {
+      if (this.proofreading) {
+        alert('已有校对任务在进行中：' + this.proofreading);
+        return;
+      }
+      if (!/\.(txt|html)$/i.test(name)) {
+        alert('只能校对 TXT/HTML 成品；epub/pdf 请改用 txt/html 格式重新下载');
+        return;
+      }
+      if (!confirm(`将向 AI 服务发送《${name}》正文用于校对错别字与乱码。\n原文件会被就地覆盖（自动备份 .proofread.bak）。\n确认开始？`)) return;
+      try {
+        const d = await Api.proofreadBook(name);
+        if (d.code === 200) {
+          this.proofreading = name;
+          this.proofreadPct = 0;
+          this.proofreadMsg = '已受理，正在调研背景资料…';
+        } else {
+          alert('启动失败: ' + (d.message || '未知错误'));
+        }
+      } catch (e) {
+        alert('启动失败: ' + e.message);
+      }
+    },
+    // 只有 txt/html 成品可校对
+    canProofread(name) {
+      return /\.(txt|html)$/i.test(name);
     },
 
     // ---------- 书源管理 ----------
@@ -605,6 +674,19 @@ function App() {
           if (d.type === 'download-progress') {
             this.downloadCurrent = d.index;
             this.downloadTotal = d.total;
+          } else if (d.type === 'proofread-start') {
+            this.proofreadPct = 0;
+            this.proofreadMsg = d.message || '开始校对…';
+          } else if (d.type === 'proofread-progress') {
+            if (d.total > 0) this.proofreadPct = Math.min(99, Math.round(d.index * 100 / d.total));
+            if (d.message) this.proofreadMsg = d.message;
+          } else if (d.type === 'proofread-done') {
+            this.proofreadPct = 100;
+            this.proofreadMsg = d.message || '校对完成';
+            this.proofreading = '';
+            // 成品文件已被就地覆盖，刷新大小与时间
+            this.fetchLocalBooks(false);
+            alert(this.proofreadMsg);
           }
         } catch (err) {
         }

@@ -14,5 +14,9 @@ public class DownloadProgressInfo {
     private String type;
     private Integer total;
     private Long index;
+    /**
+     * 可选的人类可读消息（校对任务用它汇报开始/完成/失败）
+     */
+    private String message;
 
 }
