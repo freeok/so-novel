@@ -43,11 +43,14 @@ public class WebServer {
         context.addServlet(BookDownloadServlet.class, "/book-download");
         context.addServlet(LocalBookListServlet.class, "/local-books");
         context.addServlet(AggregatedSearchServlet.class, "/search/aggregated");
+        context.addServlet(SingleSearchServlet.class, "/search/single");
         context.addServlet(DownloadProgressSseServlet.class, "/download-progress");
         context.addServlet(ConfigServlet.class, "/config");
         context.addServlet(BookDeleteServlet.class, "/book-delete");
+        context.addServlet(CheckUpdateServlet.class, "/check-update");
         context.addServlet(SourceListServlet.class, "/sources");
         context.addServlet(SourceListServlet.class, "/sources/check");
+        context.addServlet(SourceManageServlet.class, "/source-manage");
         context.addServlet(SuggestionServlet.class, "/suggestion");
 
         ServletHolder staticHolder = new ServletHolder("default", DefaultServlet.class);
