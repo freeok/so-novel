@@ -54,7 +54,8 @@ class Epub4jTest {
     @SneakyThrows
     void readEpub() {
         EpubReader epubReader = new EpubReader();
-        Book book = epubReader.readEpub(FileUtil.getInputStream("test.epub"));
+        // 必须与 createEpub 的写出路径一致（此前读相对 CWD 的 test.epub，永远找不到）
+        Book book = epubReader.readEpub(FileUtil.getInputStream(Path.of("target", "test.epub").toFile()));
         Metadata metadata = book.getMetadata();
 
         Console.log("书名：{}", metadata.getTitles().getFirst());

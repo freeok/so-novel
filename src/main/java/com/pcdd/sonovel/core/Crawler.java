@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.pcdd.sonovel.ai.ProofreadService;
 import com.pcdd.sonovel.context.BookContext;
 import com.pcdd.sonovel.handler.CrawlerPostHandler;
 import com.pcdd.sonovel.model.AppConfig;
@@ -146,6 +147,10 @@ public class Crawler {
         LogUtils.info("-".repeat(100));
         Console.log("<== 章节下载日志已保存至 {}，请检查是否有 [ERROR] 级别的日志。",
                 LogUtils.getLogFile().getAbsolutePath());
+
+        // AI 校对（错别字 + 乱码）：必须在合并成品之前，这样 txt/epub/pdf/html 自动带上校对结果。
+        // 未开启时 run() 直接返回 null，不影响原有流程。
+        new ProofreadService(config).run(book, dir);
 
         new CrawlerPostHandler(config).handle(dir);
         stopWatch.stop();

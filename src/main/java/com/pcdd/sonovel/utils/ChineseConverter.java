@@ -15,8 +15,21 @@ import java.util.function.Function;
 @UtilityClass
 public class ChineseConverter {
 
-    public <T> T convert(T obj, String sourceLang, String targetLang) {
-        if (obj == null || targetLang.equals(sourceLang)) {
+    /**
+     * 繁体转简体（供 AI 校对判定「是否只是字形差异」使用）
+     */
+    public String toSimplified(String text) {
+        return text == null ? null : HanLP.convertToSimplifiedChinese(text);
+    }
+
+    /**
+     * 简体转繁体（与 toSimplified 配对使用；二者并非严格互逆，需双向比较才可靠）
+     */
+    public String toTraditional(String text) {
+        return text == null ? null : HanLP.convertToTraditionalChinese(text);
+    }
+
+    public <T> T convert(T obj, String sourceLang, String targetLang) {        if (obj == null || targetLang.equals(sourceLang)) {
             return obj;
         }
 

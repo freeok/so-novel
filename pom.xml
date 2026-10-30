@@ -115,6 +115,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- 缺了 engine 时 surefire 不会真正执行 JUnit5 测试（表现为 Tests run: 0） -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- 根据平台打包 V8 -->
@@ -209,6 +216,21 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                      AppConfigLoader 在类初始化时就要读配置文件（无文件则整个类崩掉，
+                      连带所有引用它的测试报 NoClassDefFoundError）。而仓库里的
+                      config-dev.ini 被 .gitignore 排除，干净检出下并不存在。
+                      这里统一指向随仓库提供的测试配置，让测试不依赖开发者本地恰好有的文件。
+                    -->
+                    <systemPropertyVariables>
+                        <config.file>${project.basedir}/src/test/resources/test-config.ini</config.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <!-- 指定编译使用的 JDK 版本、字符编码、编译参数等 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
