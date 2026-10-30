@@ -60,7 +60,7 @@ mkdir -p "target/$DIST_DIRNAME"
 # 复制文件
 cp "bundle/$JRE_FILENAME" "target/$DIST_DIRNAME"
 cp -r bundle/rules "target/$DIST_DIRNAME"
-cp bundle/config.ini bundle/readme.txt bundle/run-linux.sh "target/$DIST_DIRNAME"
+cp bundle/config.ini bundle/readme.txt bundle/run-linux.sh CHANGELOG_ALL.md "target/$DIST_DIRNAME"
 
 # 移动 jar 包
 cd target

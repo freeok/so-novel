@@ -46,7 +46,7 @@ copy_files() {
     cp "bundle/$JRE_FILENAME" "$TARGET_DIR"
     cp "target/app-jar-with-dependencies.jar" "$TARGET_DIR/app.jar"
     cp -r bundle/rules "$TARGET_DIR/"
-    cp bundle/config.ini bundle/sonovel.l4j.ini bundle/readme.txt "$TARGET_DIR"
+    cp bundle/config.ini bundle/sonovel.l4j.ini bundle/readme.txt CHANGELOG_ALL.md "$TARGET_DIR"
 }
 
 extract_jre() {

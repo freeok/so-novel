@@ -1,5 +1,110 @@
 [
   {
+    "url": "https://www.laoyaoxs.org/",
+    "name": "老幺小说网",
+    "comment": "章节限流，正文段落会乱序",
+    "search": {
+      "url": "https://www.laoyaoxs.org/search.php?key=%s",
+      "method": "get",
+      "result": ".result > ul > li",
+      "bookName": ".book_inf > h3 > a",
+      "author": ".book_inf > p.tags > span:nth-child(1) > a",
+      "wordCount": ".book_inf > p.tags > span:nth-child(4)@js:r=r.replaceAll('总字数：', '');",
+      "latestChapter": ".book_inf > p:nth-child(3) > a",
+      "lastUpdateTime": ".right > span@js:r=r.replaceAll('更新时间：', '');",
+      "nextPage": ".result > div > span > a:not(.sl)"
+    },
+    "book": {
+      "url": "https://www.laoyaoxs.org/info/(.*?).html",
+      "bookName": "body > div.main > div > div.left.w_860 > div:nth-child(1) > div.detail > h1",
+      "coverUrl": "meta[property=\"og:image\"]@js:r=r.replaceAll('//', '');"
+    },
+    "toc": {
+      "baseUri": "https://www.laoyaoxs.org/list/%s/",
+      "url": "https://www.laoyaoxs.org/list/%s/",
+      "item": "#chapters > a"
+    },
+    "chapter": {
+      "title": "#chapter-name > h2",
+      "content": "#txt@js:const ddMatches=[...r.matchAll(/<dd\\s+data-id=\"(\\d+)\">([\\s\\S]*?)<\\/dd>/g)];const ddList=ddMatches.map(match=>({id:Number(match[1]),content:match[2]}));ddList.sort((a,b)=>a.id-b.id);let result='';for(const dd of ddList){const pMatches=[...dd.content.matchAll(/<p>[\\s\\S]*?<\\/p>/g)];pMatches.forEach(p=>{result+=p[0]})}r=result;",
+      "paragraphTagClosed": true,
+      "filterTxt": "",
+      "filterTag": ""
+    },
+    "crawl": {
+      "concurrency": 1,
+      "minInterval": 1000,
+      "maxInterval": 2000
+    }
+  },
+  {
+    "url": "https://www.ranwen8.cc/",
+    "name": "燃文小说网",
+    "comment": "域名失效，正文段落被base64编码",
+    "search": {
+      "url": "https://www.ranwen8.cc/search.html",
+      "method": "post",
+      "data": "{submit: 搜索, s: %s}",
+      "result": "body > div.padding > div > table > tbody > tr",
+      "bookName": "td:nth-child(1) > a",
+      "author": "td:nth-child(3)",
+      "latestChapter": "td:nth-child(2) > a",
+      "lastUpdateTime": "td:nth-child(4)"
+    },
+    "book": {
+      "url": "https://www.ranwen8.cc/book/(.*?)/",
+      "bookName": "meta[property=\"og:title\"]",
+      "author": "#info > h1 > small > a",
+      "coverUrl": "meta[property=\"og:image\"]@js:r='https://www.ranwen8.cc'+r"
+    },
+    "toc": {
+      "url": "https://www.ranwen8.cc/book/%s/index_1.html",
+      "item": "body > div:nth-child(4) > div > ul > li > a",
+      "nextPage": "body > div:nth-child(4) > div > div > select > option"
+    },
+    "chapter": {
+      "title": "#jsnc_l > div > h1",
+      "content": "#htmlContent@js:var qsbs={_keyStr:\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\",bb:function(input){var output=\"\";var chr1,chr2,chr3;var enc1,enc2,enc3,enc4;var i=0;input=input.replace(/[^A-Za-z0-9\\+\\/\\=]/g,\"\");while(i<input.length){enc1=this._keyStr.indexOf(input.charAt(i++));enc2=this._keyStr.indexOf(input.charAt(i++));enc3=this._keyStr.indexOf(input.charAt(i++));enc4=this._keyStr.indexOf(input.charAt(i++));chr1=(enc1<<2)|(enc2>>4);chr2=((enc2&15)<<4)|(enc3>>2);chr3=((enc3&3)<<6)|enc4;output=output+String.fromCharCode(chr1);if(enc3!=64){output=output+String.fromCharCode(chr2)}if(enc4!=64){output=output+String.fromCharCode(chr3)}}output=qsbs._utf8_decode(output);return output},_utf8_encode:function(string){string=string.replace(/\\r\\n/g,\"\\n\");var utftext=\"\";for(var n=0;n<string.length;n++){var c=string.charCodeAt(n);if(c<128){utftext+=String.fromCharCode(c)}else if((c>127)&&(c<2048)){utftext+=String.fromCharCode((c>>6)|192);utftext+=String.fromCharCode((c&63)|128)}else{utftext+=String.fromCharCode((c>>12)|224);utftext+=String.fromCharCode(((c>>6)&63)|128);utftext+=String.fromCharCode((c&63)|128)}}return utftext},_utf8_decode:function(utftext){var string=\"\";var i=0,c1,c2,c3;var c=c1=c2=0;while(i<utftext.length){c=utftext.charCodeAt(i);if(c<128){string+=String.fromCharCode(c);i++}else if((c>191)&&(c<224)){c2=utftext.charCodeAt(i+1);string+=String.fromCharCode(((c&31)<<6)|(c2&63));i+=2}else{c2=utftext.charCodeAt(i+1);c3=utftext.charCodeAt(i+2);string+=String.fromCharCode(((c&15)<<12)|((c2&63)<<6)|(c3&63));i+=3}}return string}};r=r.replace(/<script>\\s*document\\.writeln\\(qsbs\\.bb\\('([^']+)'\\)\\);\\s*<\\/script>/g,function(match,p1){return qsbs.bb(p1)});",
+      "paragraphTagClosed": false,
+      "paragraphTag": "<br>+",
+      "filterTxt": "首发：~小÷说◎网】，♂小÷说◎网】，",
+      "filterTag": "",
+      "nextPage": "#link-next"
+    }
+  },
+  {
+    "url": "https://www.22biqu.com/",
+    "name": "笔趣阁22",
+    "comment": "域名失效，meta信息lastest_chapter_name拼写错误",
+    "search": {
+      "url": "https://www.22biqu.com/ss/",
+      "method": "post",
+      "data": "{searchkey: %s, Submit: 搜索}",
+      "result": "body > div.container > div > div > ul > li",
+      "bookName": "span.s2 > a",
+      "author": "span.s4",
+      "category": "span.s1",
+      "latestChapter": "span.s3",
+      "lastUpdateTime": "span.s5"
+    },
+    "book": {
+      "latestChapter": "meta[property=\"og:novel:lastest_chapter_name\"]",
+      "latestChapterUrl": "meta[property=\"og:novel:lastest_chapter_url\"]"
+    },
+    "toc": {
+      "item": "div:nth-child(4) > ul > li > a",
+      "nextPage": "#indexselect > option"
+    },
+    "chapter": {
+      "title": ".title",
+      "content": "#content",
+      "paragraphTagClosed": true,
+      "filterTxt": "\\(本章完\\)",
+      "filterTag": "",
+      "nextPage": "#next_url"
+    }
+  },
+  {
     "url": "https://www.luegeng.com/",
     "name": "略更网",
     "comment": "疑似SSL证书过期，搜索限流，不支持IPv6",

@@ -108,18 +108,20 @@ public class ChapterParser extends Source {
     }
 
     @SneakyThrows
-    private String fetchSinglePageContent(String url, Rule.Chapter r) {
-        Document doc;
-        try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout());
+    private Document fetchDocument(String url, int timeout) {
+        try (Response resp = CrawlUtils.request(httpClient, url, timeout);
              InputStream is = resp.body().byteStream()) {
             // null 表示自动检测编码
-            doc = Jsoup.parse(is, null, r.getBaseUri());
+            return Jsoup.parse(is, null, rule.getChapter().getBaseUri());
         }
+    }
 
+    @SneakyThrows
+    private String fetchSinglePageContent(String url, Rule.Chapter r) {
+        Document doc = fetchDocument(url, r.getTimeout());
         doc = handleCloudflareBypass(doc, url);
         String content = HtmlExtractor.extract(doc, r.getContent(), ContentType.HTML);
         Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
-
         return content;
     }
 
@@ -129,28 +131,18 @@ public class ChapterParser extends Source {
         StringBuilder contentBuilder = new StringBuilder();
 
         while (true) {
-            Document doc;
-            try (Response resp = CrawlUtils.request(httpClient, nextUrl, r.getTimeout());
-                 InputStream is = resp.body().byteStream()) {
-                // null 表示自动检测编码
-                doc = Jsoup.parse(is, null, r.getBaseUri());
-            }
-
+            Document doc = fetchDocument(nextUrl, r.getTimeout());
             doc = handleCloudflareBypass(doc, nextUrl);
 
             String content = HtmlExtractor.extract(doc, r.getContent(), ContentType.HTML);
             Assert.notEmpty(content, "正文内容为空:\n{}\n", doc);
             contentBuilder.append(content);
-
             // 获取下一页按钮元素
             Elements nextEls = HtmlExtractor.select(doc, r.getNextPage());
             String candidateNext = resolveNextUrl(doc, nextEls, r);
-            if (isLastPage(candidateNext, nextEls, r)) {
-                break;
-            }
+            if (isLastPage(candidateNext, nextEls, r)) break;
 
             nextUrl = candidateNext;
-            // 获取下一分页章节的间隔
             Thread.sleep(interval);
         }
 

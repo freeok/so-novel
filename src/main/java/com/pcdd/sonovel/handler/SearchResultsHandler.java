@@ -20,12 +20,14 @@ public class SearchResultsHandler {
      */
     public List<SearchResult> filterAndSort(List<SearchResult> list, String kw) {
         if (CollUtil.isEmpty(list)) return list;
+        if (StrUtil.isBlank(kw)) return list;
 
-        // 预计算书名和作者相似度
+        // 预计算书名和作者相似度，null 按空字符串处理
         Map<SearchResult, Double> bookSim = new HashMap<>();
         Map<SearchResult, Double> authorSim = new HashMap<>();
+
+        // 部分书源搜索结果作者为 null
         for (SearchResult sr : list) {
-            // 个别书源（如 bqg.info）搜索结果不返回作者，需 null 安全
             bookSim.put(sr, StrUtil.similar(kw, StrUtil.nullToEmpty(sr.getBookName())));
             authorSim.put(sr, StrUtil.similar(kw, StrUtil.nullToEmpty(sr.getAuthor())));
         }
@@ -41,25 +43,35 @@ public class SearchResultsHandler {
         Comparator<SearchResult> comparator = (o1, o2) -> {
             double score1 = similarityMap.get(o1);
             double score2 = similarityMap.get(o2);
+
             if (score1 != score2) {
                 return Double.compare(score2, score1); // 按相似度降序
             }
-            return isAuthorSearch
-                    ? StrUtil.nullToEmpty(o1.getBookName()).compareTo(StrUtil.nullToEmpty(o2.getBookName()))
-                    : StrUtil.nullToEmpty(o1.getAuthor()).compareTo(StrUtil.nullToEmpty(o2.getAuthor()));
+
+            // 排序字段为 null 时按空字符串处理
+            String name1 = StrUtil.nullToEmpty(
+                    isAuthorSearch ? o1.getBookName() : o1.getAuthor());
+            String name2 = StrUtil.nullToEmpty(
+                    isAuthorSearch ? o2.getBookName() : o2.getAuthor());
+
+            return name1.compareTo(name2);
         };
 
         List<SearchResult> filtered = Collections.emptyList();
+
         if (AppConfigLoader.APP_CONFIG.getSearchFilter() == 1) {
             filtered = list.stream()
-                    .filter(sr -> similarityMap.get(sr) > 0.25) // 过滤低相似度搜索结果
+                    .filter(sr -> similarityMap.get(sr) > 0.25)  // 过滤低相似度搜索结果
                     .sorted(comparator)
                     .toList();
         }
 
         // 若过滤后为空，则返回仅排序的搜索结果
         return filtered.isEmpty()
-                ? list.stream().filter(sr -> similarityMap.get(sr) > 0).sorted(comparator).toList()
+                ? list.stream()
+                .filter(sr -> similarityMap.get(sr) > 0)
+                .sorted(comparator)
+                .toList()
                 : filtered;
     }
 
@@ -83,6 +95,7 @@ public class SearchResultsHandler {
             if (s >= 0.7) return s * 5;
             return 0;
         }
+
         if (isLong) {
             if (s == 1.0) return 10;
             if (s >= 0.85) return s * s * s * 8;
@@ -90,11 +103,11 @@ public class SearchResultsHandler {
             if (s >= 0.5) return s * 3;
             return s * 1.2;
         }
+
         if (s == 1.0) return 10;
         if (s >= 0.85) return s * s * s * 8;
         if (s >= 0.7) return s * s * 5;
         if (s >= 0.5) return s * 3;
         return 0;
     }
-
 }
