@@ -106,6 +106,8 @@ function App() {
       {name: 'ai', fields: [
         {key: 'enabled', label: 'AI 校对（错字/乱码）', options: ['0', '1'], restart: false},
         {key: 'fix-garbled', label: '删除乱码（不耗 token）', options: ['0', '1']},
+        {key: 'provider', label: '服务预设', options: ['', 'eac-qwen-cn', 'eac-qwen-intl'], restart: false},
+        {key: 'enable-thinking', label: '模型思考', options: ['0', '1'], restart: false},
         {key: 'base-url', label: 'AI 服务地址', placeholder: 'https://api.deepseek.com/v1'},
         {key: 'model', label: '模型名', placeholder: 'deepseek-chat'},
         {key: 'api-key', label: 'API 密钥', secret: true, placeholder: '未配置，粘贴密钥后保存'},
@@ -452,6 +454,8 @@ function App() {
       const f = this.configForm.ai;
       f['enabled'] = String(ai.enabled == null ? 0 : ai.enabled);
       f['fix-garbled'] = String(ai.fixGarbled == null ? 1 : ai.fixGarbled);
+      f['provider'] = ai.provider || '';
+      f['enable-thinking'] = String(ai.enableThinking == null ? 0 : ai.enableThinking);
       f['base-url'] = ai.baseUrl || '';
       f['model'] = ai.model || 'deepseek-chat';
       // 已配置时填掩码，提示用户"不改就保持原值"

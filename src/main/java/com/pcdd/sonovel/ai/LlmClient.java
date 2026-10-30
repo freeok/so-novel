@@ -67,6 +67,19 @@ public class LlmClient implements ProofreadEngine.Suggester {
         // 明确不需要流式，避免个别实现默认 SSE
         body.set("stream", false);
 
+        /**
+         * 思考开关只发给「有内置预设的服务」：EAC 这类网关默认开思考，
+         * 而校对是确定性任务，推理链纯属浪费 —— 实测同一请求开思考时
+         * reasoning tokens 占 completion 的 83%~92%（763 里有 635），
+         * 关掉后 token 降 3.8 倍、耗时降 2~3 倍。
+         * <p>
+         * 自定义 OpenAI 兼容服务不保证接受这个字段，客户端不该因为一个
+         * 可选参数而被拒，所以它们保持不发送。
+         */
+        if (cfg.isProviderBased()) {
+            body.set("enable_thinking", Integer.valueOf(1).equals(cfg.getEnableThinking()));
+        }
+
         JSONArray messages = new JSONArray();
         messages.add(msg("system", SYSTEM_PROMPT));
         messages.add(msg("user", USER_TEMPLATE

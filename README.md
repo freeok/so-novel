@@ -219,9 +219,36 @@ Linux / macOS：[run-linux.sh](bundle/run-linux.sh) / [run-macos.sh](bundle/run-
 >
 > 开启后会把书籍正文发送给你配置的第三方 AI 服务。请先确认你接受该数据外发，并自行承担相应责任。
 
-1. 在 `config.ini` 的 `[ai]` 段设置 `enabled = 1`，填写 `base-url`（OpenAI 兼容地址，需含 `/v1`）与 `model`
+1. 在 `config.ini` 的 `[ai]` 段设置 `enabled = 1`
 2. 提供密钥，优先级由高到低：环境变量 `SONOVEL_AI_KEY` → 启动参数 `-Dai.api-key` → `config.ini` 的 `api-key`
    （前两种可避免密钥明文落盘；WebUI 设置页里的密钥只会回显掩码，不修改时保持 `********` 即可）
+
+### 方式一：内置预设（推荐，不用手填地址）
+
+`provider` 选一个内置方案，程序自动补齐 `base-url` 与 `model`：
+
+| provider              | 服务             | 模型                    |
+|----------------------|------------------|-------------------------|
+| `eac-qwen-cn`        | EAC router 千问国内版 | `qodercn/qmodel`         |
+| `eac-qwen-intl`      | EAC router 千问国际版 | `qoder/qmodel`           |
+
+EAC 预设的密钥从本机插件自己的配置文件读取（`~/.dsh/our-free-model/settings.json`，
+可用 `eac-key-file` 改路径），**不需要你复制粘贴任何密钥**。前提是 DSH 的 Our Free Model 插件正在运行。
+
+### 方式二：自定义 OpenAI 兼容服务
+
+不选预设，直接填 `base-url`（需含 `/v1`）、`model`、`api-key`。
+DeepSeek / 通义 / Kimi / 智谱 / OpenAI / Ollama / vLLM / LM Studio 等均兼容。
+
+> [!NOTE]
+> 预设**只补你没填的字段**：自己填过的 `base-url` / `model` 一律优先，
+> 所以选了预设也还能混用自定义地址。
+
+### 关于「模型思考」
+
+校对是确定性任务，不需要推理链。`enable-thinking` 默认关 —— 实测开启时 reasoning tokens
+占回复的 80%+，关掉后单次 token 降 3.8 倍、耗时降 2~3 倍。仅对内置预设服务发送该字段，
+避免给不接受此参数的自定义服务添麻烦。
 
 四种入口：
 
