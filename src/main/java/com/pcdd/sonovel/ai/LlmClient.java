@@ -97,11 +97,16 @@ public class LlmClient implements ProofreadEngine.Suggester {
 
         try (Response resp = CrawlUtils.request(client, builder, cfg.getTimeout())) {
             if (!resp.isSuccessful()) {
-                String err = StrUtil.maxLength(resp.body().string(), 400);
-                throw new IllegalStateException("AI 服务返回 HTTP " + resp.code() + "：" + err);
+                // 把网关吐出的原始 JSON 翻成命令行用户能看懂的一句话（原文仍附在末尾）
+                throw new IllegalStateException(AiErrors.describe(resp.code(), resp.body().string(), url));
             }
             String raw = resp.body().string();
             return parse(raw);
+        } catch (IllegalStateException e) {
+            throw e;
+        } catch (Exception e) {
+            // 连不上/超时这类没有 HTTP 响应的失败，也要给「下一步做什么」的提示
+            throw new IllegalStateException(AiErrors.describe(e, url), e);
         }
     }
 

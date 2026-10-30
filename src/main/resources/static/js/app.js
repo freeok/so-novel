@@ -106,8 +106,15 @@ function App() {
       {name: 'ai', fields: [
         {key: 'enabled', label: 'AI 校对（错字/乱码）', options: ['0', '1'], restart: false},
         {key: 'fix-garbled', label: '删除乱码（不耗 token）', options: ['0', '1']},
-        {key: 'provider', label: '服务预设', options: ['', 'eac-qwen-cn', 'eac-qwen-intl'], restart: false},
-        {key: 'enable-thinking', label: '模型思考', options: ['0', '1'], restart: false},
+        {key: 'provider', label: '服务预设', restart: false,
+          options: ['', 'eac-qwen-cn', 'eac-qwen-intl'],
+          optionLabels: {
+            '': '自定义（手填地址 / 模型 / 密钥）',
+            'eac-qwen-cn': 'EAC 千问 · 国内版（本机网关可直接用）',
+            'eac-qwen-intl': 'EAC 千问 · 国际版（需 Qoder 账号登录）'
+          }},
+        {key: 'enable-thinking', label: '模型思考', restart: false,
+          options: ['0', '1'], optionLabels: {'0': '关（省 token，推荐）', '1': '开'}},
         {key: 'base-url', label: 'AI 服务地址', placeholder: 'https://api.deepseek.com/v1'},
         {key: 'model', label: '模型名', placeholder: 'deepseek-chat'},
         {key: 'api-key', label: 'API 密钥', secret: true, placeholder: '未配置，粘贴密钥后保存'},

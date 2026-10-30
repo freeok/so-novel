@@ -229,11 +229,22 @@ Linux / macOS：[run-linux.sh](bundle/run-linux.sh) / [run-macos.sh](bundle/run-
 
 | provider              | 服务             | 模型                    |
 |----------------------|------------------|-------------------------|
-| `eac-qwen-cn`        | EAC router 千问国内版 | `qodercn/qmodel`         |
-| `eac-qwen-intl`      | EAC router 千问国际版 | `qoder/qmodel`           |
+| `eac-qwen-cn`        | EAC router 千问国内版 | `qodercn/qfmodel`        |
+| `eac-qwen-intl`      | EAC router 千问国际版 | `qoder/qfmodel`          |
 
 EAC 预设的密钥从本机插件自己的配置文件读取（`~/.dsh/our-free-model/settings.json`，
-可用 `eac-key-file` 改路径），**不需要你复制粘贴任何密钥**。前提是 DSH 的 Our Free Model 插件正在运行。
+可用 `eac-key-file` 改路径），**不需要你复制粘贴任何密钥**。前提是 DSH 的 Our Free Model 插件正在运行
+（默认监听 `127.0.0.1:18326`）。
+
+> [!IMPORTANT]
+> - **国内版 `eac-qwen-cn`**：插件跑起来即可直接用。
+> - **国际版 `eac-qwen-intl`**：需先在 Qoder 登录对应账号，否则网关会返回 502/503
+>   （未登录或无可用上游）。登录前建议先用国内版。
+> - 预设用 `qfmodel` 而非 `qmodel`：实测 `qmodel` 不遵守「关闭思考」参数，推理会吃掉
+>   整个 `max-tokens` 导致正文被截断；`qfmodel` 才尊重该参数，token 与耗时都低一大截。
+
+若插件没运行、连不上地址，或账号未登录/限流，校对会在命令行与审计日志里给出**中文原因 + 下一步建议**
+（并保留网关原文便于排查），而不是甩一段看不懂的 JSON 或静默失败。
 
 ### 方式二：自定义 OpenAI 兼容服务
 

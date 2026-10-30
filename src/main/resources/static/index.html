@@ -399,7 +399,7 @@
                 <template x-if="f.options">
                   <select class="mt-1 w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm" x-model="configForm[g.name][f.key]">
                     <template x-for="o in f.options" :key="o">
-                      <option :value="o" x-text="o"></option>
+                      <option :value="o" x-text="(f.optionLabels && f.optionLabels[o] != null) ? f.optionLabels[o] : o"></option>
                     </template>
                   </select>
                 </template>
