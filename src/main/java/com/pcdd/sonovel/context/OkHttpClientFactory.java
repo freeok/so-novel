@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class OkHttpClientFactory {
 
-    public final int TIMEOUT = 10;
+    public final int TIMEOUT = 120;
 
     public OkHttpClient create() {
         return create(null, false);
