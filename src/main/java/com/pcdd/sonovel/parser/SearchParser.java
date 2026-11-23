@@ -43,7 +43,16 @@ import static org.fusesource.jansi.AnsiRenderer.render;
 public class SearchParser extends Source {
 
     private static final int TEXT_LIMIT_LENGTH = 30;
+    // 触发书源搜索间隔限制时，单次最多自动等待的秒数
+    private static final long SEARCH_INTERVAL_MAX_WAIT = 30;
+    // 多次重试累计自动等待的上限（秒）：允许在时钟偏差/首次重试仍限流时再重试一次
+    private static final long SEARCH_INTERVAL_TOTAL_MAX_WAIT = 45;
     private final OkHttpClient httpClient = HttpClientContext.get();
+
+    // 本次搜索的状态（供聚合搜索逐源回传前端）：ok/empty/timeout/error/interval
+    public String searchStatus = "ok";
+    public String statusMessage = "";
+    public long elapsedMs;
 
     public SearchParser(AppConfig config) {
         super(config);
@@ -51,15 +60,16 @@ public class SearchParser extends Source {
 
     @SneakyThrows
     public List<SearchResult> parse(String keyword) {
+        long start = System.currentTimeMillis();
         Rule.Search r = this.rule.getSearch();
 
         if (r == null) {
             Console.log(render("<== 书源 {} 不支持搜索", "yellow"), config.getSourceId());
-            return Collections.emptyList();
+            return finish("error", "该书源不支持搜索", Collections.emptyList(), start);
         }
         if (this.rule.isDisabled()) {
             Console.error(render("<== 书源 {} ({}) 已被禁用", "yellow"), this.rule.getId(), this.rule.getName());
-            return Collections.emptyList();
+            return finish("error", "书源已被禁用", Collections.emptyList(), start);
         }
 
         Document document;
@@ -67,45 +77,49 @@ public class SearchParser extends Source {
             String searchUrl = processUrl(r.getUrl(), keyword);
             URI uri = URI.create(searchUrl);
             String referer = uri.getScheme() + "://" + uri.getAuthority();
-            Request.Builder builder = new Request.Builder()
-                    .addHeader(Header.REFERER.toString(), referer)
-                    .url(searchUrl);
 
-            if (StrUtil.isNotBlank(r.getCookies())) {
-                builder.addHeader("Cookie", r.getCookies());
-            }
-            if ("post".equalsIgnoreCase(r.getMethod())) {
-                builder = builder.post(CrawlUtils.buildData(r.getData(), keyword));
-            }
+            Request.Builder builder = buildSearchRequest(r, keyword, searchUrl, referer);
+            document = fetchSearchDocument(builder, r, searchUrl);
 
-            try (Response resp = CrawlUtils.request(httpClient, builder, r.getTimeout())) {
-                String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
-                document = Jsoup.parse(body, r.getBaseUri());
-            }
-
-            if (CrawlUtils.hasCf(document)) {
-                Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()), "🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", searchUrl);
-                Console.log("🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", searchUrl);
-                String html = HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), searchUrl));
-                document = Jsoup.parse(html);
+            // 搜索频率间隔提示（如少年小说网：两次搜索需间隔 N 秒）：等待后重试，重试后再次检测，
+            // 必要时在累计上限内二次重试，避免被当成空结果静默丢弃（旧逻辑只重试一次，时钟偏差时白等仍 0 结果）
+            long totalWaited = 0;
+            int intervalAttempt = 0;
+            while (true) {
+                long waitSec = CrawlUtils.detectSearchInterval(document.html());
+                if (waitSec <= 0) break;
+                if (waitSec > SEARCH_INTERVAL_MAX_WAIT || totalWaited + waitSec > SEARCH_INTERVAL_TOTAL_MAX_WAIT) {
+                    Console.log("书源 {} ({}) 搜索间隔限制需等待 {}s（超过自动等待上限），本次跳过",
+                            this.rule.getId(), this.rule.getName(), waitSec);
+                    return finish("interval",
+                            StrUtil.format("触发搜索间隔限制，需等待 {}s（超过自动等待上限）", waitSec),
+                            Collections.emptyList(), start);
+                }
+                intervalAttempt++;
+                totalWaited += waitSec;
+                Console.log("书源 {} ({}) 触发搜索间隔限制，第 {} 次等待 {}s 后重试（累计等待 {}s）...",
+                        this.rule.getId(), this.rule.getName(), intervalAttempt, waitSec, totalWaited);
+                Thread.sleep(waitSec * 1000);
+                document = fetchSearchDocument(buildSearchRequest(r, keyword, searchUrl, referer), r, searchUrl);
             }
 
         } catch (Exception e) {
+            String msg = e.getMessage() == null ? e.toString() : e.getMessage();
             Console.error(render("<== 书源 {} ({}) 搜索解析出错: {}", "red"),
-                    this.rule.getId(), this.rule.getName(), e.getMessage());
-            return Collections.emptyList();
+                    this.rule.getId(), this.rule.getName(), msg);
+            return finish(isTimeout(e) ? "timeout" : "error", msg, Collections.emptyList(), start);
         }
 
         List<SearchResult> firstPageResults = getSearchResults(document, r);
         // 搜索结果无分页
         if (StrUtil.isBlank(r.getNextPage())) {
-            return firstPageResults;
+            return done(firstPageResults, start);
         }
         // 注意，css 或 xpath 的查询结果必须为多个 a 元素
         Elements nextPageUrls = HtmlExtractor.select(document, r.getNextPage());
         // 只有一页时，底部可能没有分页菜单
         if (nextPageUrls.isEmpty()) {
-            return firstPageResults;
+            return done(firstPageResults, start);
         }
         // 分页搜索结果的 URL，不含首页
         Set<String> urls = new LinkedHashSet<>();
@@ -123,7 +137,38 @@ public class SearchParser extends Source {
         List<SearchResult> searchResults = CollUtil.unionAll(firstPageResults, additionalResults);
         int limit = config.getSearchLimit() == -1 ? Integer.MAX_VALUE : config.getSearchLimit();
         // TODO 优化，需要几条获取几条，而不是一次性获取然后截取
-        return CollUtil.sub(searchResults, 0, limit);
+        return done(CollUtil.sub(searchResults, 0, limit), start);
+    }
+
+    // 记录本次搜索状态并返回结果
+    private List<SearchResult> finish(String status, String message, List<SearchResult> list, long start) {
+        this.searchStatus = status;
+        this.statusMessage = message;
+        this.elapsedMs = System.currentTimeMillis() - start;
+        return list;
+    }
+
+    // 根据结果条数判定 ok / empty
+    private List<SearchResult> done(List<SearchResult> list, long start) {
+        if (CollUtil.isEmpty(list)) {
+            return finish("empty", "已连通但未搜索到结果", Collections.emptyList(), start);
+        }
+        return finish("ok", StrUtil.format("搜索到 {} 条", list.size()), list, start);
+    }
+
+    // 判断异常（遍历因果链）是否为连接/读取超时
+    private boolean isTimeout(Throwable e) {
+        for (Throwable t = e; t != null; t = t.getCause()) {
+            String cn = t.getClass().getName().toLowerCase();
+            if (cn.contains("timeoutexception") || cn.contains("sockettimeout")) {
+                return true;
+            }
+            String msg = t.getMessage();
+            if (msg != null && (msg.toLowerCase().contains("timeout") || msg.contains("timed out"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SneakyThrows
@@ -131,6 +176,38 @@ public class SearchParser extends Source {
         try (Response resp = CrawlUtils.request(httpClient, url, r.getTimeout())) {
             String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
             return Jsoup.parse(body, r.getBaseUri());
+        }
+    }
+
+    // 构造搜索请求（GET/POST、Cookie）
+    private static Request.Builder buildSearchRequest(Rule.Search r, String keyword, String searchUrl, String referer) {
+        Request.Builder builder = new Request.Builder()
+                .addHeader(Header.REFERER.toString(), referer)
+                .url(searchUrl);
+
+        if (StrUtil.isNotBlank(r.getCookies())) {
+            builder.addHeader("Cookie", r.getCookies());
+        }
+        if ("post".equalsIgnoreCase(r.getMethod())) {
+            builder = builder.post(CrawlUtils.buildData(r.getData(), keyword));
+        }
+        return builder;
+    }
+
+    // 发起搜索请求并解析为 Document，含 Cloudflare 绕过
+    @SneakyThrows
+    private Document fetchSearchDocument(Request.Builder builder, Rule.Search r, String searchUrl) {
+        try (Response resp = CrawlUtils.request(httpClient, builder, r.getTimeout())) {
+            String body = processResultWithJs(resp.peekBody(Long.MAX_VALUE).string(), r.getResult());
+            Document document = Jsoup.parse(body, r.getBaseUri());
+
+            if (CrawlUtils.hasCf(document)) {
+                Assert.isTrue(StrUtil.isNotEmpty(config.getCfBypass()),
+                        "🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，但未设置 cf-bypass 配置项，故跳过", searchUrl);
+                Console.log("🤖 检测到搜索页 {} 存在 Cloudflare 真人验证，正在尝试绕过...", searchUrl);
+                return Jsoup.parse(HttpUtil.get("%s/html?url=%s".formatted(this.config.getCfBypass(), searchUrl)));
+            }
+            return document;
         }
     }
 

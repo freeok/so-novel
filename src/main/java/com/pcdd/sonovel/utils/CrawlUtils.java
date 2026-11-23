@@ -11,10 +11,14 @@ import okhttp3.*;
 import org.jsoup.nodes.Document;
 
 import java.net.URL;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -102,6 +106,50 @@ public class CrawlUtils {
         if (document == null) return false;
         String title = document.title();
         return CF_STRONG_TITLES.contains(title);
+    }
+
+    // 搜索频率间隔提示（笔趣阁系 CMS，如少年小说网）：搜索间隔【20】秒，请于 22:27:51 后再进行搜索！
+    private final Pattern SEARCH_INTERVAL_HINT = Pattern.compile(
+            "搜索间隔【(\\d+)】秒，请于\\s*(\\d{1,2}):(\\d{2}):(\\d{2})\\s*后再进行搜索");
+    // 通用搜索间隔提示（如笔趣阁365：alert('搜索间隔15秒,请稍后重新搜索！')），只能取间隔秒数、无目标时钟
+    private final Pattern SEARCH_INTERVAL_GENERIC = Pattern.compile(
+            "搜索间隔[【]?(\\d+)[】]?秒");
+
+    /**
+     * 检测搜索频率间隔提示，返回建议等待秒数（含 2s 余量）；无提示返回 0。
+     * <p>
+     * 该类站点在两次搜索间隔不足时返回 HTTP 200，但结果区只有提示文本（无结果 li），
+     * 若不处理会被当成"无结果"静默丢弃。支持两种提示：带"请于 HH:mm:ss"的精确提示（按时钟差值等待），
+     * 以及仅"搜索间隔 N 秒"的通用提示（等待完整间隔）。
+     */
+    public long detectSearchInterval(String html) {
+        if (StrUtil.isBlank(html)) return 0;
+
+        // 优先：带"请于 HH:mm:ss"的精确提示，可按本地时钟差值等待
+        Matcher m = SEARCH_INTERVAL_HINT.matcher(html);
+        if (m.find()) {
+            int interval = Integer.parseInt(m.group(1));
+            try {
+                LocalTime target = LocalTime.of(
+                        Integer.parseInt(m.group(2)),
+                        Integer.parseInt(m.group(3)),
+                        Integer.parseInt(m.group(4)));
+                long byClock = Duration.between(LocalTime.now(), target).getSeconds() + 2;
+                // 时钟异常（目标已过/偏差过大）时回退到完整间隔
+                if (byClock >= 0 && byClock <= interval + 5L) {
+                    return Math.max(0, byClock);
+                }
+            } catch (Exception ignore) {
+            }
+            return interval + 2L;
+        }
+
+        // 通用：仅间隔秒数（无目标时钟），等待完整间隔 + 2s 余量
+        Matcher g = SEARCH_INTERVAL_GENERIC.matcher(html);
+        if (g.find()) {
+            return Integer.parseInt(g.group(1)) + 2L;
+        }
+        return 0;
     }
 
 }

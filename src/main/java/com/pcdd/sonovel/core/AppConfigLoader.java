@@ -119,6 +119,17 @@ public class AppConfigLoader {
         return StrUtil.isBlank(value) ? defaultValue : value;
     }
 
+    /**
+     * 获取用户配置文件的绝对路径（供 Web 配置可视化在写回时备份/行级编辑）
+     */
+    public String getConfigFilePath() {
+        String configFilePath = System.getProperty("config.file");
+        if (StrUtil.isNotBlank(configFilePath) && FileUtil.exist(configFilePath)) {
+            return Paths.get(configFilePath).toAbsolutePath().toString();
+        }
+        return resolveConfigFileName();
+    }
+
     private String resolveConfigFileName() {
         return FileUtils.toAbsolutePath(EnvUtils.isDev() ? "config-dev.ini" : "config.ini");
     }

@@ -158,6 +158,21 @@ public class SourceUtils {
     }
 
     /**
+     * 获取当前激活的规则文件（书源可视化管理直接读写该文件）
+     */
+    public File getActiveRulesFile() {
+        return new File(getActiveRulesPath());
+    }
+
+    /**
+     * 规则文件被外部修改后，清空内存缓存，下次获取时重新加载
+     */
+    public void refreshCache() {
+        cachedActivatedRules = null;
+        cachedAllRules = null;
+    }
+
+    /**
      * @param pathname 规则目录路径 or 规则文件路径
      */
     private List<Rule> loadRulesFromPath(String pathname) {
@@ -212,9 +227,12 @@ public class SourceUtils {
                     Call call = client.newCall(new Request.Builder()
                             .url(r.getUrl())
                             .header(Header.USER_AGENT.toString(), RandomUA.generate())
-                            .head() // 只发 HEAD 请求，不获取 body，更快！
+                            // 用 GET：部分服务器/CDN/WAF 对 HEAD 处理异常(挂起/拒绝)会造成误报；
+                            // execute() 拿到响应头即判定 code，不读取 body(close 时丢弃)，延迟同样准确
+                            .get()
                             .build());
-                    call.timeout().timeout(3, TimeUnit.SECONDS);
+                    // 放宽到 8s：部分可达但较慢的源(4~6s)在旧的 3s 阈值下被误判为超时
+                    call.timeout().timeout(8, TimeUnit.SECONDS);
 
                     // 放这里才最准确
                     long startTime = System.currentTimeMillis();
@@ -240,11 +258,8 @@ public class SourceUtils {
         }
         executor.shutdown();
 
-        res.sort((o1, o2) -> {
-            int delay1 = o1.getDelay() < 0 ? Integer.MAX_VALUE : o1.getDelay();
-            int delay2 = o2.getDelay() < 0 ? Integer.MAX_VALUE : o2.getDelay();
-            return Integer.compare(delay1, delay2);
-        });
+        // 固定按书源 ID 升序，避免因并发检测完成先后 / 延迟高低导致列表顺序错乱
+        res.sort(java.util.Comparator.comparingInt(SourceInfo::getId));
 
         return res;
     }
