@@ -155,7 +155,7 @@
       "content": "#content",
       "paragraphTagClosed": true,
       "filterTxt": "和图书|hetushu\\.com|\\(本章完\\)",
-      "filterTag": ""
+      "filterTag": "var, q, dfn, kbd, cite, tt, acronym, big, code, u, s, samp, bdo, strike"
     },
     "crawl": {
       "concurrency": 2,
