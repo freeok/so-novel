@@ -6,9 +6,63 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+
 jobs:
-  docker:
+  build:
+    name: Build ${{ matrix.platform }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            platform: linux/amd64
+            artifact: app-amd64
+          - arch: arm64
+            platform: linux/arm64
+            artifact: app-arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Setup Maven
+        run: |
+          if ! command -v mvn >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y maven
+          fi
+
+      - name: Build application
+        run: |
+          bash bin/release-linux.sh ${{ matrix.arch }}
+
+          mkdir -p artifact
+          cp -r target/sonovel-linux_${{ matrix.arch }}/{app.jar,config.ini,rules} artifact/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: artifact/
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: Publish multi-arch image
+    runs-on: ubuntu-latest
+    needs: build
+
     permissions:
       contents: read
       packages: write
@@ -17,41 +71,53 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Setup Maven
-        run: sudo apt-get update && sudo apt-get install -y maven
-
-      - name: Setup JDK
-        uses: actions/setup-java@v5
+      - name: Download AMD64 artifact
+        uses: actions/download-artifact@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          name: app-amd64
+          path: docker-context/amd64/
 
-      - name: Debug Maven compiler version
+      - name: Download ARM64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-arm64
+          path: docker-context/arm64/
+
+      - name: Verify build artifacts
         run: |
-          mvn help:effective-pom | grep -A 15 maven-compiler-plugin || echo "No explicit compiler plugin found"
-          echo ${GITHUB_REF_NAME}
+          for arch in amd64 arm64; do
+            dir="docker-context/$arch"
+            test -s "$dir/app.jar"
+            test -f "$dir/config.ini"
+            test -d "$dir/rules"
+          done
 
-      - name: Build app.jar
+      - name: Set image tag
+        id: meta
         run: |
-          bash bin/release-linux.sh
-          cp -r target/sonovel-linux_x64/{app.jar,config.ini,rules} .
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "tag=dev" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            exit 1
+          fi
 
-      # 登录 GHCR
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - uses: docker/setup-buildx-action@v3
 
-      # 构建并推送 Docker 镜像到 GHCR
-      - name: Build and Push Docker image
-        run: |
-          VERSION=${GITHUB_REF_NAME#v}
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/sonovel
-          echo "Building Docker image $IMAGE_NAME:$VERSION ..."
-          docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest .
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest  
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 输出镜像地址
-      - name: Output image info
-        run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/sonovel
-          echo "Docker image published: ${IMAGE_NAME}:$VERSION"
+      - name: Build and push multi-platform image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/sonovel:${{ steps.meta.outputs.tag }}
+          cache-from: type=gha,scope=sonovel
+          cache-to: type=gha,mode=max,scope=sonovel
+          provenance: false

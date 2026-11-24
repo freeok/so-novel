@@ -8,7 +8,14 @@ set -e
 set -o pipefail
 
 # 获取最新版本号
-LATEST_VERSION=$(curl -s https://api.github.com/repos/freeok/so-novel/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
+RESPONSE=$(curl -fsSL https://api.github.com/repos/freeok/so-novel/releases/latest)
+LATEST_VERSION=$(echo "$RESPONSE" | grep -m1 '"tag_name":' | cut -d '"' -f4)
+
+if [[ -z "$LATEST_VERSION" ]]; then
+  echo "$RESPONSE"
+  exit 1
+fi
+
 echo "🔖 最新版本：$LATEST_VERSION"
 
 # 自动识别架构
